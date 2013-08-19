@@ -1,0 +1,34 @@
+name: PvPManager
+main: me.NoChance.PvPManager.PvPManager
+version: 0.1
+author: NoChance20
+description: Allows Players To Change Their PvP To Enabled or Disabled.
+
+commands:
+   pm:
+      description: Shows Main PvPManager Page.
+   pm pvp on:
+      description: Enables PvP for yourself.
+   pm pvp off:
+      description: Disables PvP for yourself.
+   pm pvp status:
+      description: Allows you to check your current PvP status.
+      usage: /<command> (name)
+
+permissions:
+   pvpmanager.pvpstatus.*:
+     description: Gives access to all PvPManager commands
+     default: op
+     children:
+       pvpmanager.pvpstatus.change: true
+       pvpmanager.pvpstatus.self: true
+       pvpmanager.pvpstatus.others: true
+   pvpmanager.pvpstatus.change:
+     description: Allows you to change your PvP status between <on> and <off>
+     default: false
+   pvpmanager.pvpstatus.self:
+     description: Allows you to check your current PvP status
+     default: false
+   pvpmanager.pvpstatus.others:
+     description: Allows you to check other players PvP status
+     default: false
