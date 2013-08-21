@@ -1,0 +1,13 @@
+# PvPManager Configuration File
+# -> The line "Time" sets for how long a player in "In Combat" after being attacked
+# -> The "Punishments - Enabled" line sets if you want to punish or not a player that logs out while in combat
+# and what punishments you want to apply.
+# -> Everything is enabled by default, just set to false to disable a feature you don't want to use.
+PvPManager Settings:
+  In Combat:
+    Time(seconds): 15
+    Stop Commands: true
+    Punishments:
+      Enabled: true
+      Drop Itens: true
+      Kill on Logout: true
