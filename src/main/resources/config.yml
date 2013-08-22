@@ -9,6 +9,6 @@ PvPManager Settings:
     Stop Commands: true
     Punishments:
       Enabled: true
-      Keep Items: false
+      Keep Itens: false
       Keep Exp: false
       Kill on Logout: true
