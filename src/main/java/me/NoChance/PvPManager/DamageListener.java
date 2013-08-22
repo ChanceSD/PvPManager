@@ -20,7 +20,6 @@ public class DamageListener implements Listener {
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
 			Player attacker = (Player) event.getDamager();
 			Player attacked = (Player) event.getEntity();
-			inCombat(attacker, attacked);
 			if (!plugin.hasPvpEnabled(attacked.getName())) {
 				event.setCancelled(true);
 				attacker.sendMessage(ChatColor.DARK_RED + attacked.getName() + " Has PvP Disabled!");
@@ -29,6 +28,9 @@ public class DamageListener implements Listener {
 				event.setCancelled(true);
 				attacker.sendMessage(ChatColor.DARK_RED + "Your PvP is Disabled!");
 			}
+			else if(!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())){
+				inCombat(attacker, attacked);
+			}
 		}
 	}
 
@@ -36,7 +38,9 @@ public class DamageListener implements Listener {
 		String pl1 = player1.getName();
 		String pl2 = player2.getName();
 		plugin.inCombat.add(pl1);
+		player1.sendMessage(ChatColor.RED + "You are In Combat!");
 		plugin.inCombat.add(pl2);
+		player2.sendMessage(ChatColor.RED + "You are In Combat!");
 		Timer(pl1, pl2);	
 	}
 	
@@ -44,6 +48,12 @@ public class DamageListener implements Listener {
 		int time = plugin.getConfig().getInt("PvPManager Settings.In Combat.Time(seconds)");
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 		public void run() {
+		if(plugin.getServer().getPlayerExact(player1) != null)
+		plugin.getServer().getPlayerExact(player1).sendMessage(ChatColor.DARK_PURPLE + "You are no longer in combat.");
+		
+		if(plugin.getServer().getPlayerExact(player2) != null)
+		plugin.getServer().getPlayerExact(player2).sendMessage(ChatColor.DARK_PURPLE + "You are no longer in combat.");
+		
 		plugin.inCombat.remove(player1);
 		plugin.inCombat.remove(player2);
 		}
