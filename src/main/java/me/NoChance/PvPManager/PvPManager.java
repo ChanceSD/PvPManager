@@ -19,7 +19,9 @@ public final class PvPManager extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		new DamageListener(this);
+		new PlayerListener(this);
 		saveDefaultConfig();
+		reloadConfig();
 		if(getConfig().getBoolean("PvPManager Settings.In Combat.Stop Commands")){
 			new CommandListener(this);
 		}
@@ -30,8 +32,6 @@ public final class PvPManager extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		reloadConfig();
-		saveConfig();
 		configM.saveUsers();
 		configM.save();
 	}
@@ -102,6 +102,10 @@ public final class PvPManager extends JavaPlugin {
 					}
 				}
 			}
+			else{
+				player.sendMessage(cmd.getUsage());	
+				return false;
+			}	
 		}
 		return false;
 	}
