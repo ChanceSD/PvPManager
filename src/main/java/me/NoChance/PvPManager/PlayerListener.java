@@ -32,7 +32,7 @@ public class PlayerListener implements Listener {
 					if (plugin
 							.getConfig()
 							.getBoolean(
-									"PvPManager Settings.In Combat.Punishments.Keep Itens")
+									"PvPManager Settings.In Combat.Punishments.Keep Items")
 							&& loggedOut.isDead()) {
 						loggedOut.setHealth(20);
 						loggedOut.getInventory().setContents(it);
@@ -56,7 +56,7 @@ public class PlayerListener implements Listener {
 		Player player = event.getEntity();
 		if (loggedOut.equals(player)) {
 			if (plugin.getConfig().getBoolean(
-					"PvPManager Settings.In Combat.Punishments.Keep Itens")) {
+					"PvPManager Settings.In Combat.Punishments.Keep Items")) {
 				it = loggedOut.getInventory().getContents();
 				event.getDrops().clear();
 			}
