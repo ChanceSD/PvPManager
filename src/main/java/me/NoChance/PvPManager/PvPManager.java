@@ -1,13 +1,15 @@
 package me.NoChance.PvPManager;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.logging.Logger;
-
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 public final class PvPManager extends JavaPlugin {
 
@@ -28,6 +30,11 @@ public final class PvPManager extends JavaPlugin {
 		configM = new ConfigManager(this);
 		configM.load();
 		configM.loadUsers();
+		try {
+		    Metrics metrics = new Metrics(this);
+		    metrics.start();
+		} catch (IOException e) {
+		}
 	}
 
 	@Override
@@ -44,9 +51,20 @@ public final class PvPManager extends JavaPlugin {
 			if (args.length == 0) {
 				player.sendMessage(ChatColor.GOLD + "===== PvPManager Help Page =====");
 				player.sendMessage(ChatColor.DARK_AQUA + "/pm " + "| Shows This Help Page");
+				player.sendMessage(ChatColor.DARK_AQUA + "/pm reload" + "| Reloads PvPManager");
 				player.sendMessage(ChatColor.DARK_AQUA + "/pm pvp <on/off> " + "| Sets PvP Enabled or Disabled.");
 				player.sendMessage(ChatColor.DARK_AQUA + "/pm pvp status " + "| Checks if Your PvP is Enabled or Disabled.");
 				return true;
+			}
+			if (args.length == 1) {
+				if(args[0].equalsIgnoreCase("reload") && player.hasPermission("pvpmanager.reload")){
+					reload(player);
+					return true;
+				}
+				else if(args[0].equalsIgnoreCase("reload")){
+					player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");
+					return false;
+				}
 			}
 			if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("pvp")) {
@@ -103,13 +121,19 @@ public final class PvPManager extends JavaPlugin {
 				}
 			}
 			else{
-				player.sendMessage(cmd.getUsage());	
 				return false;
-			}	
+			}
 		}
+
 		return false;
 	}
 	
+	private void reload(Player player) {
+	    Bukkit.getServer().getPluginManager().disablePlugin(this);
+	    Bukkit.getServer().getPluginManager().enablePlugin(this);
+	    player.sendMessage("PvPManager Reloaded!");
+	}
+
 	public boolean hasPvpEnabled(String name){
 		for (String n : playersStatusOff){
 			if (n.equalsIgnoreCase(name))

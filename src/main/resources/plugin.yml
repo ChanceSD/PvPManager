@@ -13,13 +13,15 @@ commands:
       description: Disables PvP for yourself.
    pm pvp status:
       description: Allows you to check your current PvP status.
-      usage: /<command> (name)
+   pm reload:
+      description: Reloads PvPManager.
 
 permissions:
-   pvpmanager.pvpstatus.*:
+   pvpmanager.*:
      description: Gives access to all PvPManager commands
      default: op
      children:
+       pvpmanager.reload: true
        pvpmanager.pvpstatus.change: true
        pvpmanager.pvpstatus.self: true
        pvpmanager.pvpstatus.others: true
@@ -31,4 +33,7 @@ permissions:
      default: false
    pvpmanager.pvpstatus.others:
      description: Allows you to check other players PvP status
+     default: false
+   pvpmanager.reload:
+     description: Allows you to reload PvPManager
      default: false
