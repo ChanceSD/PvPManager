@@ -50,7 +50,6 @@ public class ConfigManager {
 		store = users.getStringList("players");
 		for (String a : store) {
 			plugin.playersStatusOff.add(a);
-			System.out.println(a);
 		}
 		store.clear();
 	}
