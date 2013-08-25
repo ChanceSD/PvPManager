@@ -3,6 +3,7 @@ package me.NoChance.PvPManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
@@ -15,7 +16,7 @@ public class DamageListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler
+	@EventHandler (priority = EventPriority.HIGH)
 	public void PlayerDamageListener(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
 			Player attacker = (Player) event.getDamager();
@@ -28,8 +29,10 @@ public class DamageListener implements Listener {
 				event.setCancelled(true);
 				attacker.sendMessage(ChatColor.DARK_RED + "Your PvP is Disabled!");
 			}
-			else if(!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())){
+			else if(!event.isCancelled() && Variables.inCombatEnabled){
+			if(!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())){
 				inCombat(attacker, attacked);
+			}
 			}
 		}
 	}
@@ -45,7 +48,7 @@ public class DamageListener implements Listener {
 	}
 	
 	public void Timer(final String player1, final String player2) {
-		int time = plugin.getConfig().getInt("PvPManager Settings.In Combat.Time(seconds)");
+		int time = Variables.timeInCombat;
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 		public void run() {
 		if(plugin.getServer().getPlayerExact(player1) != null)
