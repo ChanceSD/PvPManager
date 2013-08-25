@@ -3,12 +3,13 @@
 # -> The "Punishments - Enabled" line sets if you want to punish or not a player that logs out while in combat
 # and what punishments you want to apply.
 # -> Everything is enabled by default, just set to false to disable a feature you don't want to use.
-PvPManager Settings:
-  In Combat:
-    Time(seconds): 15
-    Stop Commands: true
-    Punishments:
-      Enabled: true
-      Keep Itens: false
+In Combat:
+  Enabled: true
+  Time(seconds): 15
+  Stop Commands: true
+  Punishments:
+    Enabled: true
+    Kill on Logout:
+      Enabled: true      
+      Keep Items: false
       Keep Exp: false
-      Kill on Logout: true
