@@ -29,7 +29,7 @@ public class DamageListener implements Listener {
 				event.setCancelled(true);
 				attacker.sendMessage(ChatColor.DARK_RED + "Your PvP is Disabled!");
 			}
-			else if(!event.isCancelled() && Variables.inCombatEnabled){
+			else if(!event.isCancelled() && Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())){
 			if(!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())){
 				inCombat(attacker, attacked);
 			}

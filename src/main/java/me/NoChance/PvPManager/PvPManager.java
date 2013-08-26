@@ -2,7 +2,6 @@ package me.NoChance.PvPManager;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,17 +16,20 @@ public final class PvPManager extends JavaPlugin {
 	public HashSet<String> playersStatusOff = new HashSet<String>();
 	public HashSet<String> inCombat = new HashSet<String>();
 	private ConfigManager configM;
-	public Logger logger = Logger.getLogger("Minecraft");
 
 	@Override
 	public void onEnable() {
+		if(Variables.configVersion == 0){
+			getConfig().options().copyDefaults(true);
+			this.saveConfig();
+		}
 		saveDefaultConfig();
 		reloadConfig();
 		configM = new ConfigManager(this);
 		configM.load();
 		configM.loadUsers();
 		new Variables(this);
-		if (Variables.stopCommands) {
+		if (Variables.stopCommands && Variables.inCombatEnabled) {
 			new CommandListener(this);
 		}
 		new DamageListener(this);
@@ -151,8 +153,7 @@ public final class PvPManager extends JavaPlugin {
 	private void initMetrics() {
 		try {
 			Metrics metrics = new Metrics(this);
-			Graph keepItemsExp = metrics
-					.createGraph("Percentage of Keep and Drop");
+			Graph keepItemsExp = metrics.createGraph("Percentage of Keep and Drop");
 			keepItemsExp.addPlotter(new Metrics.Plotter("Keep Everything") {
 				@Override
 				public int getValue() {

@@ -24,7 +24,7 @@ public class ConfigManager {
 			if (!usersFile.exists()) {
 				plugin.saveResource("users.yml", false);
 				getDefaults();
-				plugin.logger.info("[PvPManager] New Users File Created Successfully!");
+				plugin.getLogger().info("New Users File Created Successfully!");
 				return;
 			}
 			users.load(usersFile);

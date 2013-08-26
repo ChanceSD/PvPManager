@@ -1,8 +1,13 @@
 # PvPManager Configuration File
-# -> The line "Time" sets for how long a player in "In Combat" after being attacked
-# -> The "Punishments - Enabled" line sets if you want to punish or not a player that logs out while in combat
-# and what punishments you want to apply.
-# -> Everything is enabled by default, just set to false to disable a feature you don't want to use.
+# -> Time: Sets for how long a player is in "In Combat" after being attacked
+# -> Stop Commands: Stop a player from using commands like /home, etc while in combat.
+# -> Punishments: Sets if you want to punish or not a player that logs out while in combat.
+# -> World Exclusions: Write the name of worlds where you don't want to use PvPManager. 
+# Just delete the examples and write the name of your worlds to disable.
+# Everything is enabled by default, just set to false to disable a feature you don't want to use.
+
+Config Version: 1
+
 In Combat:
   Enabled: true
   Time(seconds): 15
@@ -13,3 +18,7 @@ In Combat:
       Enabled: true      
       Keep Items: false
       Keep Exp: false
+
+World Exclusions:
+  - Example
+  - Example2
