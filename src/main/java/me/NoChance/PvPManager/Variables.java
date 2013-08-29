@@ -5,6 +5,7 @@ import java.util.List;
 public class Variables {
 
 	private PvPManager plugin;
+
 	public static boolean inCombatEnabled;
 	public static int timeInCombat;
 	public static boolean stopCommands;
@@ -14,6 +15,7 @@ public class Variables {
 	public static boolean killOnLogout;
 	public static List<String> worldsExcluded;
 	public static int configVersion;
+	public static boolean disableFly;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -30,6 +32,7 @@ public class Variables {
 		killOnLogout = getBoolean("In Combat.Punishments.Kill on Logout.Enabled");
 		worldsExcluded = getStringList("World Exclusions");
 		configVersion = getInt("Config Version");
+		disableFly = getBoolean("In Combat.Disable Fly");
 	}
 
 	public boolean getBoolean(String a) {

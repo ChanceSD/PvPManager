@@ -12,6 +12,7 @@ In Combat:
   Enabled: true
   Time(seconds): 15
   Stop Commands: true
+  Disable Fly: true
   Punishments:
     Enabled: true
     Kill on Logout:
