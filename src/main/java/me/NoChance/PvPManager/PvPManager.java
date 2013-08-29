@@ -23,8 +23,8 @@ public final class PvPManager extends JavaPlugin {
 			getConfig().options().copyDefaults(true);
 			this.saveConfig();
 		}
-		saveDefaultConfig();
-		reloadConfig();
+		this.saveDefaultConfig();
+		this.reloadConfig();
 		configM = new ConfigManager(this);
 		configM.load();
 		configM.loadUsers();
@@ -34,7 +34,7 @@ public final class PvPManager extends JavaPlugin {
 		}
 		new DamageListener(this);
 		new PlayerListener(this);
-		initMetrics();
+		this.initMetrics();
 	}
 
 	@Override

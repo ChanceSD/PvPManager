@@ -2,6 +2,7 @@ package me.NoChance.PvPManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,7 +17,7 @@ public class DamageListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler (priority = EventPriority.HIGH)
+	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void PlayerDamageListener(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
 			Player attacker = (Player) event.getDamager();
@@ -24,16 +25,57 @@ public class DamageListener implements Listener {
 			if (!plugin.hasPvpEnabled(attacked.getName())) {
 				event.setCancelled(true);
 				attacker.sendMessage(ChatColor.DARK_RED + attacked.getName() + " Has PvP Disabled!");
+				return;
 			}
 			else if (!plugin.hasPvpEnabled(attacker.getName())){
 				event.setCancelled(true);
-				attacker.sendMessage(ChatColor.DARK_RED + "Your PvP is Disabled!");
+				attacker.sendMessage(ChatColor.DARK_RED + "You have PvP is Disabled!");
+				return;
 			}
-			else if(!event.isCancelled() && Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())){
+			else if(Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())){
 			if(!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())){
-				inCombat(attacker, attacked);
+				inCombat(attacker, attacked);	
 			}
 			}
+			if(Variables.disableFly)
+			checkFly(attacker, attacked, event);
+		}
+		if(event.getDamager() instanceof Projectile && event.getEntity() instanceof Player){
+			Projectile proj = (Projectile) event.getDamager();
+			if(proj.getShooter() instanceof Player){
+			Player attacker = (Player) proj.getShooter();
+			Player attacked = (Player) event.getEntity();
+			if (!plugin.hasPvpEnabled(attacked.getName())) {
+				event.setCancelled(true);
+				attacker.sendMessage(ChatColor.DARK_RED + attacked.getName() + " Has PvP Disabled!");
+				return;
+			}
+			else if (!plugin.hasPvpEnabled(attacker.getName())){
+				event.setCancelled(true);
+				attacker.sendMessage(ChatColor.DARK_RED + "You have PvP is Disabled!");
+				return;
+			}
+			else if(Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())){
+				if(!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())){	
+					inCombat(attacker, attacked);	
+				}
+			}
+			if(Variables.disableFly)
+			checkFly(attacker, attacked, event);
+			}	
+		}
+	}
+	
+	public void checkFly(Player player1, Player player2, EntityDamageByEntityEvent event){
+		if(player1.isFlying() && player1.getAllowFlight()){
+			player1.setFlying(false);
+			player1.setAllowFlight(false);
+			event.setCancelled(true);
+		}
+		else if(player2.isFlying() && player2.getAllowFlight()){
+			player2.setFlying(false);
+			player2.setAllowFlight(false);
+			event.setCancelled(true);
 		}
 	}
 
