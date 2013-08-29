@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 0.7.5
+version: 0.7.6.3
 author: NoChance20
 description: Allows Players To Change Their PvP To Enabled or Disabled.
 
