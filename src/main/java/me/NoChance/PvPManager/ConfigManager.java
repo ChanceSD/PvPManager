@@ -10,8 +10,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ConfigManager {
 	private PvPManager plugin;
-	public File usersFile;
-	public YamlConfiguration users;
+	private File usersFile;
+	private YamlConfiguration users;
 
 	public ConfigManager(PvPManager plugin) {
 		this.plugin = plugin;
@@ -30,7 +30,6 @@ public class ConfigManager {
 			users.load(usersFile);
 			save();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

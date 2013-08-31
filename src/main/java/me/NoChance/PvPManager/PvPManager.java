@@ -1,116 +1,96 @@
 package me.NoChance.PvPManager;
 
-import java.io.IOException;
 import java.util.HashSet;
+
+import me.NoChance.PvPManager.Listeners.CommandListener;
+import me.NoChance.PvPManager.Listeners.DamageListener;
+import me.NoChance.PvPManager.Listeners.PlayerListener;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
-import org.mcstats.Metrics.Graph;
 
 public final class PvPManager extends JavaPlugin {
 
 	public HashSet<String> playersStatusOff = new HashSet<String>();
 	public HashSet<String> inCombat = new HashSet<String>();
 	private ConfigManager configM;
+	public Variables variables;
 
 	@Override
 	public void onEnable() {
-		if(Variables.configVersion == 0){
-			getConfig().options().copyDefaults(true);
-			this.saveConfig();
-		}
-		this.saveDefaultConfig();
-		this.reloadConfig();
-		configM = new ConfigManager(this);
-		configM.load();
-		configM.loadUsers();
-		new Variables(this);
+		loadFiles();
 		if (Variables.stopCommands && Variables.inCombatEnabled) {
 			new CommandListener(this);
 		}
 		new DamageListener(this);
 		new PlayerListener(this);
-		this.initMetrics();
+		new CustomGraph(this);
 	}
 
 	@Override
 	public void onDisable() {
-		configM.saveUsers();
-		configM.save();
+		this.configM.saveUsers();
+		this.configM.save();
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,
 			String[] args) {
-		if (label.equalsIgnoreCase("pm") && sender instanceof Player) {
+		if (label.equalsIgnoreCase("pm") && sender instanceof Player) { 
 			Player player = (Player) sender;
 			if (args.length == 0) {
-				player.sendMessage(ChatColor.GOLD
-						+ "===== PvPManager Help Page =====");
-				player.sendMessage(ChatColor.DARK_AQUA + "/pm "
-						+ "| Shows This Help Page");
-				player.sendMessage(ChatColor.DARK_AQUA + "/pm reload"
-						+ "| Reloads PvPManager");
-				player.sendMessage(ChatColor.DARK_AQUA + "/pm pvp <on/off> "
-						+ "| Sets PvP Enabled or Disabled.");
-				player.sendMessage(ChatColor.DARK_AQUA + "/pm pvp status "
-						+ "| Checks if Your PvP is Enabled or Disabled.");
+				variables.helpMenu(player);
 				return true;
 			}
 			if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("reload")
-						&& player.hasPermission("pvpmanager.reload")) {
+				if (args[0].equalsIgnoreCase("reload") 
+						&& player.hasPermission("pvpmanager.reload")) { 
 					reload(player);
 					return true;
-				} else if (args[0].equalsIgnoreCase("reload")) {
+				} else if (args[0].equalsIgnoreCase("reload")) { 
 					player.sendMessage(ChatColor.DARK_RED
-							+ "You don't have permission!");
+							+ "You don't have permission!"); 
 					return false;
 				}
 			}
 			if (args.length == 2) {
-				if (args[0].equalsIgnoreCase("pvp")) {
-					if (args[1].equalsIgnoreCase("off")
+				if (args[0].equalsIgnoreCase("pvp")) { 
+					if (args[1].equalsIgnoreCase("off") 
 							&& player
-									.hasPermission("pvpmanager.pvpstatus.change")) {
+									.hasPermission("pvpmanager.pvpstatus.change")) { 
 						if (hasPvpEnabled(player.getName())) {
 							playersStatusOff.add(player.getName());
-							player.sendMessage(ChatColor.GREEN
-									+ "PvP Disabled!");
+							player.sendMessage(Messages.PvP_Disabled); 
 							return true;
 						} else {
-							player.sendMessage(ChatColor.DARK_RED
-									+ "You Already Have PvP Disabled!");
+							player.sendMessage(Messages.Already_Disabled); 
 							return true;
 						}
 					}
-					if (args[1].equalsIgnoreCase("on")
+					if (args[1].equalsIgnoreCase("on") 
 							&& player
-									.hasPermission("pvpmanager.pvpstatus.change")) {
+									.hasPermission("pvpmanager.pvpstatus.change")) { 
 						if (!hasPvpEnabled(player.getName())) {
 							playersStatusOff.remove(player.getName());
-							player.sendMessage(ChatColor.RED + "PvP Enabled!");
+							player.sendMessage(Messages.PvP_Enabled); 
 							return true;
 						} else {
-							player.sendMessage(ChatColor.DARK_RED
-									+ "You Already Have PvP Enabled!");
+							player.sendMessage(Messages.Already_Enabled); 
 							return true;
 						}
 					}
-					if (args[1].equalsIgnoreCase("status")
+					if (args[1].equalsIgnoreCase("status") 
 							&& player
-									.hasPermission("pvpmanager.pvpstatus.self")) {
+									.hasPermission("pvpmanager.pvpstatus.self")) { 
 						if (!hasPvpEnabled(player.getName())) {
-							player.sendMessage(ChatColor.AQUA
-									+ "You Have PvP Disabled");
+							player.sendMessage(Messages.Self_Status_Disabled); 
 							return true;
 						} else {
-							player.sendMessage(ChatColor.AQUA
-									+ "You Have PvP Enabled");
+							player.sendMessage(Messages.Self_Status_Enabled); 
 							return true;
 						}
 					}
@@ -118,21 +98,19 @@ public final class PvPManager extends JavaPlugin {
 				return false;
 			}
 			if (args.length == 3) {
-				if (args[0].equalsIgnoreCase("pvp")
-						&& args[1].equalsIgnoreCase("status")
-						&& player.hasPermission("pvpmanager.pvpstatus.others")) {
+				if (args[0].equalsIgnoreCase("pvp") 
+						&& args[1].equalsIgnoreCase("status") 
+						&& player.hasPermission("pvpmanager.pvpstatus.others")) { 
 					if (!hasPvpEnabled(args[2])) {
-						player.sendMessage(ChatColor.AQUA + args[2]
-								+ " Has PvP disabled");
+						player.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[2]));
 						return true;
 					} else if (getServer().getPlayerExact(args[2]) != null
 							&& hasPvpEnabled(args[2])) {
-						player.sendMessage(ChatColor.AQUA + args[2]
-								+ " Has PvP enabled");
+						player.sendMessage(Messages.Other_Status_Enabled.replace("%p", args[2])); 
 						return true;
 					} else {
 						player.sendMessage(ChatColor.DARK_RED + args[2]
-								+ " Does Not Exist or is Offline");
+								+ " Does Not Exist or is Offline"); 
 						return true;
 					}
 				}
@@ -140,65 +118,28 @@ public final class PvPManager extends JavaPlugin {
 				return false;
 			}
 		}
-
 		return false;
 	}
 
+	public void loadFiles(){
+		if(getConfig().getInt("Config Version") == 0){
+			getConfig().options().copyDefaults(true);
+			this.saveConfig();
+		}
+		this.saveDefaultConfig();
+		this.reloadConfig();
+		this.configM = new ConfigManager(this);
+		this.configM.load();
+		this.configM.loadUsers();
+		variables = new Variables(this);
+		Messages messages = new Messages(this);
+		messages.load();
+	}
+	
 	private void reload(Player player) {
 		Bukkit.getServer().getPluginManager().disablePlugin(this);
 		Bukkit.getServer().getPluginManager().enablePlugin(this);
-		player.sendMessage("PvPManager Reloaded!");
-	}
-
-	private void initMetrics() {
-		try {
-			Metrics metrics = new Metrics(this);
-			Graph keepItemsExp = metrics.createGraph("Percentage of Keep and Drop");
-			keepItemsExp.addPlotter(new Metrics.Plotter("Keep Everything") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.keepItems && Variables.keepExp)
-						i++;
-					
-					return i;
-				}
-			});
-			keepItemsExp.addPlotter(new Metrics.Plotter("Drop Everything") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Variables.keepItems && !Variables.keepExp)
-						i++;
-					
-					return i;
-				}
-			});
-			keepItemsExp.addPlotter(new Metrics.Plotter(
-					"Keep Items and Drop Exp") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.keepItems && !Variables.keepExp)
-						i++;
-					
-					return i;
-				}
-			});
-			keepItemsExp.addPlotter(new Metrics.Plotter(
-					"Keep Exp and Drop Items") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Variables.keepItems && Variables.keepExp)
-						i++;
-					
-					return i;
-				}
-			});	
-			metrics.start();
-		} catch (IOException e) {
-		}
+		player.sendMessage("PvPManager Reloaded!"); 
 	}
 
 	public boolean hasPvpEnabled(String name) {
