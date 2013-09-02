@@ -1,8 +1,9 @@
 package me.NoChance.PvPManager.Listeners;
 
-import me.NoChance.PvPManager.Messages;
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Variables;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
