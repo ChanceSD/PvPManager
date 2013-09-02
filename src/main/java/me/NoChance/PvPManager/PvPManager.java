@@ -169,6 +169,7 @@ public final class PvPManager extends JavaPlugin {
 					getConfig().getConfigurationSection("PvP Timer").createSection(w.getName());
 					getConfig().set("PvP Timer." + w.getName() + ".Start PvP", 13000);
 					getConfig().set("PvP Timer." + w.getName() + ".End PvP", 0);
+					this.saveConfig();
 				}
 				if (!schedulers.isEmpty()) {
 					for (PvPTimer a : schedulers) {
