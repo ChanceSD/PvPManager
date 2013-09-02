@@ -6,7 +6,7 @@
 # Just delete the examples and write the name of your worlds to disable.
 # Everything is enabled by default, just set to false to disable a feature you don't want to use.
 
-Config Version: 1
+Config Version: 2
 
 In Combat:
   Enabled: true
@@ -19,6 +19,9 @@ In Combat:
       Enabled: true      
       Keep Items: false
       Keep Exp: false
+      
+PvP Timer:
+  Enabled: true
 
 World Exclusions:
   - Example
