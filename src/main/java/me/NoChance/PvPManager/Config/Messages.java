@@ -1,9 +1,11 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Config;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
+import me.NoChance.PvPManager.PvPManager;
 
 import org.bukkit.ChatColor;
 
@@ -26,6 +28,8 @@ public class Messages {
 	public static String Attack_Denied_Other;
 	public static String You_Are_InCombat;
 	public static String Out_Of_Combat;
+	public static String PvP_On;
+	public static String PvP_Off;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
@@ -34,8 +38,10 @@ public class Messages {
 
 	public void load() {
 
-		if (!messagesFile.exists())
+		if (!messagesFile.exists()){
 			plugin.saveResource("messages.properties", false);
+			plugin.getLogger().info("New Messages File Created Successfully!");
+		}
 		try {
 			if (messagesFile.exists()) {
 				FileInputStream in = new FileInputStream(messagesFile);
@@ -65,5 +71,7 @@ public class Messages {
 		Attack_Denied_Other = getString("Attack_Denied_Other");
 		You_Are_InCombat = getString("You_Are_InCombat");
 		Out_Of_Combat = getString("Out_Of_Combat");
+		PvP_On = getString("PvP_On");
+		PvP_Off = getString("PvP_Off");
 	}
 }

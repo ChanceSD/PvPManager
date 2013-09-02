@@ -1,6 +1,8 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Config;
 
 import java.util.List;
+
+import me.NoChance.PvPManager.PvPManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,6 +20,7 @@ public class Variables {
 	public static boolean killOnLogout;
 	public static List<String> worldsExcluded;
 	public static boolean disableFly;
+	public static boolean pvpTimerEnabled;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -34,6 +37,7 @@ public class Variables {
 		killOnLogout = getBoolean("In Combat.Punishments.Kill on Logout.Enabled");
 		worldsExcluded = getStringList("World Exclusions");
 		disableFly = getBoolean("In Combat.Disable Fly");
+		pvpTimerEnabled = getBoolean("PvP Timer.Enabled");
 	}
 
 	public boolean getBoolean(String a) {
@@ -55,10 +59,12 @@ public class Variables {
 				+ ChatColor.DARK_AQUA + "| Shows This Help Page");
 		player.sendMessage(ChatColor.GOLD + "/pm reload "
 				+ ChatColor.DARK_AQUA + "| Reloads PvPManager");
-		player.sendMessage(ChatColor.GOLD + "/pm pvp <on/off> "
+		player.sendMessage(ChatColor.GOLD + "/pvp <on/off> "
 				+ ChatColor.DARK_AQUA + "| Sets PvP Enabled or Disabled.");
-		player.sendMessage(ChatColor.GOLD + "/pm pvp status "
+		player.sendMessage(ChatColor.GOLD + "/pvp status "
 				+ ChatColor.DARK_AQUA + "| Checks if Your PvP is Enabled or Disabled.");
+		player.sendMessage(ChatColor.GOLD + "/pvp status <player>"
+				+ ChatColor.DARK_AQUA + "| Checks if a Player Has PvP Enabled or Disabled.");
 		player.sendMessage(ChatColor.GOLD
 				+ "================================");
 	}
