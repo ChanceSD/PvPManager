@@ -1,7 +1,7 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Variables;
+import me.NoChance.PvPManager.Config.Variables;
 
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -16,6 +16,7 @@ public class PlayerListener implements Listener {
 	private PvPManager plugin;
 	public Player loggedOut;
 	public ItemStack[] it;
+	public ItemStack[] armor;
 
 	public PlayerListener(PvPManager plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -31,12 +32,14 @@ public class PlayerListener implements Listener {
 				if (Variables.keepItems) {
 					loggedOut.setHealth(20);
 					loggedOut.getInventory().setContents(it);
+					loggedOut.getInventory().setArmorContents(armor);
 					if (!Variables.keepExp) {
 						loggedOut.setLevel(0);
 						loggedOut.setExp(0);
 					}
 				}
 			}
+		armor = null;
 		it = null;
 		loggedOut = null;
 		}
@@ -48,6 +51,7 @@ public class PlayerListener implements Listener {
 			Player player = event.getEntity();
 			if (loggedOut.equals(player)) {
 				if (Variables.keepItems) {
+					armor = player.getInventory().getArmorContents();
 					it = player.getInventory().getContents();
 					event.getDrops().clear();
 				}
