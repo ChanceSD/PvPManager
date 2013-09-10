@@ -55,16 +55,20 @@ public class Variables {
 	public void helpMenu(Player player){
 		player.sendMessage(ChatColor.GOLD
 				+ "===== PvPManager Help Page =====");
-		player.sendMessage(ChatColor.GOLD + "/pm "
-				+ ChatColor.DARK_AQUA + "| Shows This Help Page");
-		player.sendMessage(ChatColor.GOLD + "/pm reload "
-				+ ChatColor.DARK_AQUA + "| Reloads PvPManager");
-		player.sendMessage(ChatColor.GOLD + "/pvp <on/off> "
+		player.sendMessage(ChatColor.GOLD + "/pvp toggle or /pvp <on/off>"
 				+ ChatColor.DARK_AQUA + "| Sets PvP Enabled or Disabled.");
 		player.sendMessage(ChatColor.GOLD + "/pvp status "
 				+ ChatColor.DARK_AQUA + "| Checks if Your PvP is Enabled or Disabled.");
 		player.sendMessage(ChatColor.GOLD + "/pvp status <player>"
 				+ ChatColor.DARK_AQUA + "| Checks if a Player Has PvP Enabled or Disabled.");
+		player.sendMessage(ChatColor.GOLD + "/pm "
+				+ ChatColor.DARK_AQUA + "| Shows This Help Page");
+		player.sendMessage(ChatColor.GOLD + "/pm reload "
+				+ ChatColor.DARK_AQUA + "| Reloads PvPManager");
+		player.sendMessage(ChatColor.GOLD + "/pm pvpstart <time> [world]"
+				+ ChatColor.DARK_AQUA + "| Changes the time PvP Starts in a world");
+		player.sendMessage(ChatColor.GOLD + "/pm pvpend <time> [world]"
+				+ ChatColor.DARK_AQUA + "| Changes the time PvP Ends in a world");
 		player.sendMessage(ChatColor.GOLD
 				+ "================================");
 	}
