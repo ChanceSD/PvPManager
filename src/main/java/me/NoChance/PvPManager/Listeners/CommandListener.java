@@ -1,10 +1,8 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPTimer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -30,10 +28,8 @@ public class CommandListener implements Listener {
 		if (Variables.pvpTimerEnabled) {
 			String[] cmd = event.getMessage().split(" ");
 			if (cmd[0].equalsIgnoreCase("/time")) {
-				for (PvPTimer a : plugin.schedulers) {
-					if (event.getPlayer().getWorld().equals(a.w)) {
-						a.checkWorldPvP();
-					}
+				if (plugin.schedulers.containsKey(event.getPlayer().getWorld().getName().toLowerCase())) {
+					plugin.schedulers.get(event.getPlayer().getWorld().getName().toLowerCase()).checkWorldPvP();
 				}
 			}
 		}
@@ -45,16 +41,13 @@ public class CommandListener implements Listener {
 		if (Variables.pvpTimerEnabled) {
 			String[] cmd = event.getCommand().split(" ");
 			if (cmd[0].equalsIgnoreCase("time")) {
-				for (PvPTimer a : plugin.schedulers) {
-					if (a.w.equals(plugin.getServer().getWorld("world"))) {
-						a.checkWorldPvP();
-					}
+				if (plugin.schedulers.containsKey("world")) {
+					plugin.schedulers.get("world").checkWorldPvP();
 				}
+
 				if (cmd.length == 3) {
-					for (PvPTimer a : plugin.schedulers) {
-						if (cmd[3].equals(a.w.getName())) {
-							a.checkWorldPvP();
-						}
+					if (plugin.schedulers.containsKey(cmd[3].toLowerCase())) {
+						plugin.schedulers.get(cmd[3].toLowerCase()).checkWorldPvP();
 					}
 				}
 			}
