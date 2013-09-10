@@ -25,35 +25,32 @@ public class PvPTimer {
 	}
 
 	public void checkWorldPvP() {
-		scheduledTasks[4] = plugin.getServer().getScheduler()
-				.scheduleSyncDelayedTask(plugin, new Runnable() {
-					public void run() {
-						if (endPvP > startPvP) {
-							if (w.getTime() < startPvP || w.getTime() > endPvP) {
-								w.setPVP(false);
-								setPvpClock(false);
-								announcePvP(false);
-							} else if (w.getTime() > startPvP
-									&& w.getTime() < endPvP) {
-								w.setPVP(true);
-								setPvpClock(true);
-								announcePvP(true);
-							}
-						}
-						if (endPvP < startPvP) {
-							if (w.getTime() > endPvP && w.getTime() < startPvP) {
-								w.setPVP(false);
-								setPvpClock(false);
-								announcePvP(false);
-							} else if (w.getTime() < endPvP
-									|| w.getTime() > startPvP) {
-								w.setPVP(true);
-								setPvpClock(true);
-								announcePvP(true);
-							}
-						}
+		scheduledTasks[4] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				if (endPvP > startPvP) {
+					if (w.getTime() < startPvP || w.getTime() > endPvP) {
+						w.setPVP(false);
+						setPvpClock(false);
+						announcePvP(false);
+					} else if (w.getTime() > startPvP && w.getTime() < endPvP) {
+						w.setPVP(true);
+						setPvpClock(true);
+						announcePvP(true);
 					}
-				}, 20);
+				}
+				if (endPvP < startPvP) {
+					if (w.getTime() > endPvP && w.getTime() < startPvP) {
+						w.setPVP(false);
+						setPvpClock(false);
+						announcePvP(false);
+					} else if (w.getTime() < endPvP || w.getTime() > startPvP) {
+						w.setPVP(true);
+						setPvpClock(true);
+						announcePvP(true);
+					}
+				}
+			}
+		}, 20);
 	}
 
 	public void setPvpClock(boolean pvpOn) {
@@ -61,54 +58,48 @@ public class PvPTimer {
 			plugin.getServer().getScheduler().cancelTask(scheduledTasks[i]);
 		}
 		if (pvpOn) {
-			scheduledTasks[0] = plugin.getServer().getScheduler()
-					.scheduleSyncDelayedTask(plugin, new Runnable() {
-						public void run() {
-							timeForPvp = false;
-							announcePvP(false);
-							pvpScheduler();
-						}
-					}, calculateClockDelay());
+			scheduledTasks[0] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					timeForPvp = false;
+					announcePvP(false);
+					pvpScheduler();
+				}
+			}, calculateClockDelay());
 		} else {
-			scheduledTasks[1] = plugin.getServer().getScheduler()
-					.scheduleSyncDelayedTask(plugin, new Runnable() {
-						public void run() {
-							timeForPvp = true;
-							announcePvP(true);
-							pvpScheduler();
-						}
-					}, calculateClockDelay());
+			scheduledTasks[1] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					timeForPvp = true;
+					announcePvP(true);
+					pvpScheduler();
+				}
+			}, calculateClockDelay());
 		}
 	}
 
 	public void pvpScheduler() {
 		if (timeForPvp) {
 			w.setPVP(true);
-			scheduledTasks[2] = plugin.getServer().getScheduler()
-					.scheduleSyncDelayedTask(plugin, new Runnable() {
-						public void run() {
-							timeForPvp = !timeForPvp;
-							announcePvP(false);
-							pvpScheduler();
-						}
-					}, pvpOnDelay);
+			scheduledTasks[2] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					timeForPvp = !timeForPvp;
+					announcePvP(false);
+					pvpScheduler();
+				}
+			}, pvpOnDelay);
 		} else {
-			scheduledTasks[3] = plugin.getServer().getScheduler()
-					.scheduleSyncDelayedTask(plugin, new Runnable() {
-						public void run() {
-							timeForPvp = !timeForPvp;
-							announcePvP(true);
-							pvpScheduler();
-						}
-					}, pvpOffDelay);
+			scheduledTasks[3] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					timeForPvp = !timeForPvp;
+					announcePvP(true);
+					pvpScheduler();
+				}
+			}, pvpOffDelay);
 		}
 	}
 
 	public void calculateDelays() {
-		startPvP = plugin.getConfig().getLong(
-				"PvP Timer." + w.getName() + ".Start PvP");
-		endPvP = plugin.getConfig().getLong(
-				"PvP Timer." + w.getName() + ".End PvP");
+		startPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".Start PvP");
+		endPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".End PvP");
 		if (endPvP > startPvP) {
 			pvpOnDelay = endPvP - startPvP;
 			pvpOffDelay = 24000 - pvpOnDelay;
@@ -141,30 +132,37 @@ public class PvPTimer {
 	}
 
 	public void announcePvP(boolean status) {
-		if (lastAnnounce == "Off" && !status || lastAnnounce == "On"
-				&& status) {
+		if (lastAnnounce == "Off" && !status || lastAnnounce == "On" && status) {
 			return;
 		}
-		if (lastAnnounce == null && !status || lastAnnounce == "On"
-				&& !status) {
+		if (lastAnnounce == null && !status || lastAnnounce == "On" && !status) {
 			for (Player p : w.getPlayers()) {
 				p.sendMessage(Messages.PvP_Off);
 			}
 			lastAnnounce = "Off";
-		} else if (lastAnnounce == null && status || lastAnnounce == "Off"
-				&& status) {
+		} else if (lastAnnounce == null && status || lastAnnounce == "Off" && status) {
 			for (Player p : w.getPlayers()) {
 				p.sendMessage(Messages.PvP_On);
 			}
 			lastAnnounce = "On";
 		}
 	}
-	
-	public void reload(){
+
+	public void reload() {
 		for (int i = 0; i < scheduledTasks.length; i++) {
 			plugin.getServer().getScheduler().cancelTask(scheduledTasks[i]);
 		}
 		calculateDelays();
 		checkWorldPvP();
+	}
+
+	public void setStartPvP(long startPvP) {
+		plugin.getConfig().set("PvP Timer." + w.getName() + ".Start PvP", startPvP);
+		plugin.saveConfig();
+	}
+
+	public void setEndPvP(long endPvP) {
+		plugin.getConfig().set("PvP Timer." + w.getName() + ".End PvP", endPvP);
+		plugin.saveConfig();
 	}
 }
