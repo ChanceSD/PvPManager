@@ -2,7 +2,7 @@ package me.NoChance.PvPManager.Commands;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPTimer;
-
+import me.NoChance.PvPManager.Config.Variables;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,7 +33,7 @@ public class PM implements CommandExecutor {
 					return false;
 				}
 			}
-			if (args.length == 2 && player.hasPermission("pvpmanager.*")) {
+			if (args.length == 2 && player.hasPermission("pvpmanager.pvptimer")) {
 				if (args[0].equalsIgnoreCase("pvpstart")) {
 					PvPTimer a = plugin.schedulers.get(player.getWorld().getName().toLowerCase());
 					a.setStartPvP(Integer.parseInt(args[1]));
@@ -51,7 +51,7 @@ public class PM implements CommandExecutor {
 					return true;
 				}
 			}
-			if (args.length == 3 && player.hasPermission("pvpmanager.*")) {
+			if (args.length == 3 && player.hasPermission("pvpmanager.pvptimer")) {
 				if (args[0].equalsIgnoreCase("pvpstart")) {
 					if (plugin.schedulers.containsKey(args[2].toLowerCase())) {
 						PvPTimer a = plugin.schedulers.get(args[2].toLowerCase());
@@ -126,8 +126,13 @@ public class PM implements CommandExecutor {
 		plugin.getServer().getPluginManager().disablePlugin(plugin);
 		plugin.getServer().getPluginManager().enablePlugin(plugin);
 		for (PvPTimer a : plugin.schedulers.values()) {
-			a.reload();
+			if(Variables.pvpTimerEnabled)
+				a.reload();
+			else if (!Variables.pvpTimerEnabled)
+				a.cancelAllTasks();
 		}
+		if (!Variables.pvpTimerEnabled)
+			plugin.schedulers.clear();
 		player.sendMessage("PvPManager Reloaded!");
 	}
 
