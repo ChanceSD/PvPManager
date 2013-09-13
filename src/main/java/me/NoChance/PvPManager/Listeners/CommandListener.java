@@ -13,8 +13,8 @@ public class CommandListener implements Listener {
 	private PvPManager plugin;
 
 	public CommandListener(PvPManager plugin) {
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.plugin = plugin;
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler
@@ -45,7 +45,7 @@ public class CommandListener implements Listener {
 					plugin.schedulers.get("world").checkWorldPvP();
 				}
 
-				if (cmd.length == 3) {
+				if (cmd.length == 4) {
 					if (plugin.schedulers.containsKey(cmd[3].toLowerCase())) {
 						plugin.schedulers.get(cmd[3].toLowerCase()).checkWorldPvP();
 					}
