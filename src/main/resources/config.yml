@@ -2,11 +2,14 @@
 # -> Time: Sets for how long a player is in "In Combat" after being attacked
 # -> Stop Commands: Stop a player from using commands like /home, etc while in combat.
 # -> Punishments: Sets if you want to punish or not a player that logs out while in combat.
+# -> Toggle Signs: You can do the same as the command "/pvp toggle" does but by clicking signs. 
+# Just write [pvpmanager] on the first line of a sign, make sure you have the permissions to create one.
+# -> PvPTimer: Toggle PvP automatically on the times specified for each world.
 # -> World Exclusions: Write the name of worlds where you don't want to use PvPManager. 
 # Just delete the examples and write the name of your worlds to disable.
-# Everything is enabled by default, just set to false to disable a feature you don't want to use.
+# Set to false to disable a feature you don't want to use and to true to enable one you want to use.
 
-Config Version: 2
+Config Version: 3
 
 In Combat:
   Enabled: true
@@ -19,7 +22,11 @@ In Combat:
       Enabled: true      
       Keep Items: false
       Keep Exp: false
-      
+  
+Toggle Signs:
+    Enabled: false
+    Disable Toggle Command: true
+  
 PvP Timer:
   Enabled: true
 
