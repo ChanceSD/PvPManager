@@ -32,7 +32,7 @@ public class PvP implements CommandExecutor {
 					}
 				}
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
-						|| (player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand)) {
+						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
 					if (args[0].equalsIgnoreCase("off")) {
 						if (plugin.hasPvpEnabled(player.getName())) {
 							plugin.playersStatusOff.add(player.getName());
