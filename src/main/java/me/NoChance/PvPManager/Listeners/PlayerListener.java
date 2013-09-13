@@ -19,8 +19,8 @@ public class PlayerListener implements Listener {
 	public ItemStack[] armor;
 
 	public PlayerListener(PvPManager plugin) {
-		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		this.plugin = plugin;
 	}
 
 	@EventHandler

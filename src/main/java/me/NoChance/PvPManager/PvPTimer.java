@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager;
 
 import me.NoChance.PvPManager.Config.Messages;
+
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -9,7 +10,7 @@ public class PvPTimer {
 	private PvPManager plugin;
 	private long pvpOnDelay;
 	private long pvpOffDelay;
-	public boolean timeForPvp;
+	private boolean timeForPvp;
 	private String lastAnnounce;
 	public World w;
 	private int[] scheduledTasks = new int[5];
@@ -28,22 +29,22 @@ public class PvPTimer {
 			public void run() {
 				if (endPvP > startPvP) {
 					if (w.getTime() < startPvP || w.getTime() > endPvP) {
-						timeForPvp = false;
+						w.setPVP(false);
 						setPvpClock(false);
 						announcePvP(false);
 					} else if (w.getTime() > startPvP && w.getTime() < endPvP) {
-						timeForPvp = true;
+						w.setPVP(true);
 						setPvpClock(true);
 						announcePvP(true);
 					}
 				}
 				if (endPvP < startPvP) {
 					if (w.getTime() > endPvP && w.getTime() < startPvP) {
-						timeForPvp = false;
+						w.setPVP(false);
 						setPvpClock(false);
 						announcePvP(false);
 					} else if (w.getTime() < endPvP || w.getTime() > startPvP) {
-						timeForPvp = true;
+						w.setPVP(true);
 						setPvpClock(true);
 						announcePvP(true);
 					}
@@ -53,7 +54,9 @@ public class PvPTimer {
 	}
 
 	public void setPvpClock(boolean pvpOn) {
-		cancelAllTasks();
+		for (int i = 0; i < scheduledTasks.length; i++) {
+			plugin.getServer().getScheduler().cancelTask(scheduledTasks[i]);
+		}
 		if (pvpOn) {
 			scheduledTasks[0] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
@@ -75,6 +78,7 @@ public class PvPTimer {
 
 	public void pvpScheduler() {
 		if (timeForPvp) {
+			w.setPVP(true);
 			scheduledTasks[2] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
 					timeForPvp = !timeForPvp;
@@ -145,17 +149,13 @@ public class PvPTimer {
 	}
 
 	public void reload() {
-		cancelAllTasks();
-		calculateDelays();
-		checkWorldPvP();	
-	}
-
-	public void cancelAllTasks(){
 		for (int i = 0; i < scheduledTasks.length; i++) {
 			plugin.getServer().getScheduler().cancelTask(scheduledTasks[i]);
 		}
+		calculateDelays();
+		checkWorldPvP();
 	}
-	
+
 	public void setStartPvP(long startPvP) {
 		plugin.getConfig().set("PvP Timer." + w.getName() + ".Start PvP", startPvP);
 		plugin.saveConfig();

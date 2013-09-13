@@ -16,52 +16,54 @@ public class DamageListener implements Listener {
 	private PvPManager plugin;
 
 	public DamageListener(PvPManager plugin) {
-		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		this.plugin = plugin;
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void PlayerDamageListener(EntityDamageByEntityEvent event) {
-		Player attacker = null;
-		Player attacked = null;
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
-			attacker = (Player) event.getDamager();
-			attacked = (Player) event.getEntity();
-		}
-		if (event.getDamager() instanceof Projectile && event.getEntity() instanceof Player) {
-			Projectile proj = (Projectile) event.getDamager();
-			if (proj.getShooter() instanceof Player) {
-				attacker = (Player) proj.getShooter();
-				attacked = (Player) event.getEntity();
-			}
-		}
-		if (attacker != null && attacked != null) {
-			if (!plugin.hasPvpEnabled(attacked.getName())) {
+			Player attacker = (Player) event.getDamager();
+			Player attacked = (Player) event.getEntity();
+			if (!hasPvpEnabled(attacked.getName())) {
 				event.setCancelled(true);
 				attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
 				return;
-			} else if (!plugin.hasPvpEnabled(attacker.getName())) {
+			} else if (!hasPvpEnabled(attacker.getName())) {
 				event.setCancelled(true);
 				attacker.sendMessage(Messages.Attack_Denied_You);
 				return;
-			}
-			if (Variables.pvpTimerEnabled) {
-				if (plugin.schedulers.containsKey(attacker.getWorld().getName().toLowerCase())) {
-					if (!plugin.schedulers.get(attacker.getWorld().getName().toLowerCase()).timeForPvp) {
-						if (!attacker.hasPermission("pvpmanager.override")) {
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
-			}
-			if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
+			} else if (Variables.inCombatEnabled
+					&& !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
 				if (!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())) {
 					inCombat(attacker, attacked);
 				}
 			}
 			if (Variables.disableFly)
 				checkFly(attacker, attacked, event);
+		}
+		if (event.getDamager() instanceof Projectile && event.getEntity() instanceof Player) {
+			Projectile proj = (Projectile) event.getDamager();
+			if (proj.getShooter() instanceof Player) {
+				Player attacker = (Player) proj.getShooter();
+				Player attacked = (Player) event.getEntity();
+				if (!hasPvpEnabled(attacked.getName())) {
+					event.setCancelled(true);
+					attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
+					return;
+				} else if (!hasPvpEnabled(attacker.getName())) {
+					event.setCancelled(true);
+					attacker.sendMessage(Messages.Attack_Denied_You);
+					return;
+				} else if (Variables.inCombatEnabled
+						&& !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
+					if (!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())) {
+						inCombat(attacker, attacked);
+					}
+				}
+				if (Variables.disableFly)
+					checkFly(attacker, attacked, event);
+			}
 		}
 	}
 
@@ -101,5 +103,13 @@ public class DamageListener implements Listener {
 				plugin.inCombat.remove(player2);
 			}
 		}, time * 20);
+	}
+
+	public boolean hasPvpEnabled(String name) {
+		for (String n : plugin.playersStatusOff) {
+			if (n.equalsIgnoreCase(name))
+				return false;
+		}
+		return true;
 	}
 }
