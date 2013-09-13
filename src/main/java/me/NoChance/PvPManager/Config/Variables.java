@@ -21,6 +21,8 @@ public class Variables {
 	public static List<String> worldsExcluded;
 	public static boolean disableFly;
 	public static boolean pvpTimerEnabled;
+	public static boolean toggleSignsEnabled;
+	public static boolean disableToggleCommand;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -38,6 +40,8 @@ public class Variables {
 		worldsExcluded = getStringList("World Exclusions");
 		disableFly = getBoolean("In Combat.Disable Fly");
 		pvpTimerEnabled = getBoolean("PvP Timer.Enabled");
+		toggleSignsEnabled = getBoolean("Toggle Signs.Enabled");
+		disableToggleCommand = getBoolean("Toggle Signs.Disable Toggle Command");
 	}
 
 	public boolean getBoolean(String a) {

@@ -27,6 +27,9 @@ public final class PvPManager extends JavaPlugin {
 		}
 		new DamageListener(this);
 		new PlayerListener(this);
+		if (Variables.toggleSignsEnabled) {
+			new SignListener(this);
+		}
 		getCommand("pvp").setExecutor(new PvP(this));
 		getCommand("pm").setExecutor(new PM(this));
 		new CustomGraph(this);
@@ -39,9 +42,9 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	public void loadFiles() {
-		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 2) {
+		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 3) {
 			getConfig().options().copyDefaults(true);
-			getConfig().set("Config Version", 2);
+			getConfig().set("Config Version", 3);
 			this.saveConfig();
 		}
 		this.saveDefaultConfig();
@@ -70,4 +73,11 @@ public final class PvPManager extends JavaPlugin {
 		}
 	}
 
+	public boolean hasPvpEnabled(String name) {
+		for (String n : playersStatusOff) {
+			if (n.equalsIgnoreCase(name))
+				return false;
+		}
+		return true;
+	}
 }
