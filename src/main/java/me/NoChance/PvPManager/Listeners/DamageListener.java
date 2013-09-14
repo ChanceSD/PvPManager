@@ -20,7 +20,7 @@ public class DamageListener implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void PlayerDamageListener(EntityDamageByEntityEvent event) {
 		Player attacker = null;
 		Player attacked = null;
@@ -80,11 +80,17 @@ public class DamageListener implements Listener {
 	public void inCombat(Player player1, Player player2) {
 		String pl1 = player1.getName();
 		String pl2 = player2.getName();
-		plugin.inCombat.add(pl1);
-		player1.sendMessage(Messages.You_Are_InCombat);
-		plugin.inCombat.add(pl2);
-		player2.sendMessage(Messages.You_Are_InCombat);
-		Timer(pl1, pl2);
+		if (!Variables.onlyTagAttacker) {
+			plugin.inCombat.add(pl1);
+			player1.sendMessage(Messages.You_Are_InCombat);
+			plugin.inCombat.add(pl2);
+			player2.sendMessage(Messages.You_Are_InCombat);
+			Timer(pl1, pl2);
+		} else if (Variables.onlyTagAttacker) {
+			plugin.inCombat.add(pl1);
+			player1.sendMessage(Messages.You_Are_InCombat);
+			Timer(pl1, "null!");
+		}
 	}
 
 	public void Timer(final String player1, final String player2) {
@@ -94,11 +100,12 @@ public class DamageListener implements Listener {
 				if (plugin.getServer().getPlayerExact(player1) != null)
 					plugin.getServer().getPlayerExact(player1).sendMessage(Messages.Out_Of_Combat);
 
-				if (plugin.getServer().getPlayerExact(player2) != null)
+				if (plugin.getServer().getPlayerExact(player2) != null && player2 != "null!")
 					plugin.getServer().getPlayerExact(player2).sendMessage(Messages.Out_Of_Combat);
 
+				if (player2 != "null!")
+					plugin.inCombat.remove(player2);
 				plugin.inCombat.remove(player1);
-				plugin.inCombat.remove(player2);
 			}
 		}, time * 20);
 	}
