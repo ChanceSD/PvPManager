@@ -9,13 +9,14 @@
 # Just delete the examples and write the name of your worlds to disable.
 # Set to false to disable a feature you don't want to use and to true to enable one you want to use.
 
-Config Version: 3
+Config Version: 4
 
 In Combat:
   Enabled: true
   Time(seconds): 15
   Stop Commands: true
   Disable Fly: true
+  Only Tag Attacker: false
   Punishments:
     Enabled: true
     Kill on Logout:

@@ -42,9 +42,9 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	public void loadFiles() {
-		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 3) {
+		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 4) {
 			getConfig().options().copyDefaults(true);
-			getConfig().set("Config Version", 3);
+			getConfig().set("Config Version", 4);
 			this.saveConfig();
 		}
 		this.saveDefaultConfig();

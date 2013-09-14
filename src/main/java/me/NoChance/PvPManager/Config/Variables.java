@@ -23,6 +23,7 @@ public class Variables {
 	public static boolean pvpTimerEnabled;
 	public static boolean toggleSignsEnabled;
 	public static boolean disableToggleCommand;
+	public static boolean onlyTagAttacker;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -42,6 +43,7 @@ public class Variables {
 		pvpTimerEnabled = getBoolean("PvP Timer.Enabled");
 		toggleSignsEnabled = getBoolean("Toggle Signs.Enabled");
 		disableToggleCommand = getBoolean("Toggle Signs.Disable Toggle Command");
+		onlyTagAttacker = getBoolean("In Combat.Only Tag Attacker");
 	}
 
 	public boolean getBoolean(String a) {
