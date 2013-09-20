@@ -24,6 +24,7 @@ public class Variables {
 	public static boolean toggleSignsEnabled;
 	public static boolean disableToggleCommand;
 	public static boolean onlyTagAttacker;
+	public static boolean updateCheck;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -44,6 +45,7 @@ public class Variables {
 		toggleSignsEnabled = getBoolean("Toggle Signs.Enabled");
 		disableToggleCommand = getBoolean("Toggle Signs.Disable Toggle Command");
 		onlyTagAttacker = getBoolean("In Combat.Only Tag Attacker");
+		updateCheck = getBoolean("Update Check");
 	}
 
 	public boolean getBoolean(String a) {
@@ -60,23 +62,23 @@ public class Variables {
 	
 	public void helpMenu(Player player){
 		player.sendMessage(ChatColor.GOLD
-				+ "===== PvPManager Help Page =====");
-		player.sendMessage(ChatColor.GOLD + "/pvp toggle or /pvp <on/off>"
-				+ ChatColor.DARK_AQUA + "| Sets PvP Enabled or Disabled.");
+				+ "-------------- PvPManager Help Page --------------");
+		player.sendMessage(ChatColor.GOLD + "/pvp "
+				+ ChatColor.WHITE + "| Set PvP Enabled or Disabled.");
 		player.sendMessage(ChatColor.GOLD + "/pvp status "
-				+ ChatColor.DARK_AQUA + "| Checks if Your PvP is Enabled or Disabled.");
-		player.sendMessage(ChatColor.GOLD + "/pvp status <player>"
-				+ ChatColor.DARK_AQUA + "| Checks if a Player Has PvP Enabled or Disabled.");
+				+ ChatColor.WHITE + "| Check What is your PvP Status.");
+		player.sendMessage(ChatColor.GOLD + "/pvp status <player> "
+				+ ChatColor.WHITE + "| Check Another Player PvP Status.");
 		player.sendMessage(ChatColor.GOLD + "/pm "
-				+ ChatColor.DARK_AQUA + "| Shows This Help Page");
+				+ ChatColor.WHITE + "| Show This Help Page");
 		player.sendMessage(ChatColor.GOLD + "/pm reload "
-				+ ChatColor.DARK_AQUA + "| Reloads PvPManager");
-		player.sendMessage(ChatColor.GOLD + "/pm pvpstart <time> [world]"
-				+ ChatColor.DARK_AQUA + "| Changes the time PvP Starts in a world");
-		player.sendMessage(ChatColor.GOLD + "/pm pvpend <time> [world]"
-				+ ChatColor.DARK_AQUA + "| Changes the time PvP Ends in a world");
+				+ ChatColor.WHITE + "| Reload PvPManager");
+		player.sendMessage(ChatColor.GOLD + "/pm pvpstart <time> [world] "
+				+ ChatColor.WHITE + "| Change the time PvP Starts in a world");
+		player.sendMessage(ChatColor.GOLD + "/pm pvpend <time> [world] "
+				+ ChatColor.WHITE + "| Change the time PvP Ends in a world");
 		player.sendMessage(ChatColor.GOLD
-				+ "================================");
+				+ "-------------------------------------------------");
 	}
 	
 }
