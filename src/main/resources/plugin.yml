@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 1.2.5
+version: 1.2.6
 author: NoChance20
 description: Allows Administrators To Change Their PvP Mechanics.
 
@@ -8,7 +8,7 @@ commands:
    pm:
       description: Shows Main PvPManager Page.
    pvp:
-      description: Main PvP Status command.
+      description: Change your PvP Status.
    pvp on:
       description: Enables PvP for yourself.
    pvp off:
@@ -30,6 +30,7 @@ permissions:
        pvpmanager.pvptimer: true
        pvpmanager.sign: true
        pvpmanager.override: true
+       pvpmanager.nodrop: true
    pvpmanager.admin:
      description: Gives access to PvPManager features
      default: false
@@ -67,4 +68,7 @@ permissions:
      default: false
    pvpmanager.override:
      description: Enables a player to override PvP being off in a world
+     default: false
+   pvpmanager.nodrop:
+     description: Exempts a player from losing items in PvP
      default: false

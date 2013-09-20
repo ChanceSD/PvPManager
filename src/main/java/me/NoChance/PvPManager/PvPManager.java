@@ -2,6 +2,8 @@ package me.NoChance.PvPManager;
 
 import java.util.HashMap;
 import java.util.HashSet;
+
+import me.NoChance.PvPManager.Updater.UpdateResult;
 import me.NoChance.PvPManager.Commands.*;
 import me.NoChance.PvPManager.Config.*;
 import me.NoChance.PvPManager.Listeners.*;
@@ -15,6 +17,8 @@ public final class PvPManager extends JavaPlugin {
 	public ConfigManager configM;
 	public Variables variables;
 	public HashMap<String, PvPTimer> schedulers = new HashMap<String, PvPTimer>();
+	public boolean update;
+	public String newVersion;
 
 	@Override
 	public void onEnable() {
@@ -33,6 +37,17 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvp").setExecutor(new PvP(this));
 		getCommand("pm").setExecutor(new PM(this));
 		new CustomGraph(this);
+		if (Variables.updateCheck) {
+			getLogger().info("Checking for updates...");
+			Updater updater = new Updater(this, "pvpmanager", this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+			if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE){
+				update = true;
+				newVersion = updater.getLatestVersionString();
+				getLogger().info("Update Available: " + newVersion);
+				getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+			}
+			getLogger().info("No update found");
+		}
 	}
 
 	@Override
@@ -42,9 +57,9 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	public void loadFiles() {
-		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 4) {
+		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 5) {
 			getConfig().options().copyDefaults(true);
-			getConfig().set("Config Version", 4);
+			getConfig().set("Config Version", 5);
 			this.saveConfig();
 		}
 		this.saveDefaultConfig();

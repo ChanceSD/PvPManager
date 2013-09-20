@@ -123,6 +123,7 @@ public class PM implements CommandExecutor {
 	}
 
 	public void reload(CommandSender player) {
+		plugin.update = false;
 		plugin.getServer().getPluginManager().disablePlugin(plugin);
 		plugin.getServer().getPluginManager().enablePlugin(plugin);
 		for (PvPTimer a : plugin.schedulers.values()) {
