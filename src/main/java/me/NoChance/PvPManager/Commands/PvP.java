@@ -21,6 +21,23 @@ public class PvP implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
+			if (args.length == 0) {
+				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
+						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
+					if (plugin.hasPvpEnabled(player.getName())) {
+						plugin.playersStatusOff.add(player.getName());
+						player.sendMessage(Messages.PvP_Disabled);
+						return true;
+					} else {
+						plugin.playersStatusOff.remove(player.getName());
+						player.sendMessage(Messages.PvP_Enabled);
+						return true;
+					}
+				} else if (Variables.toggleSignsEnabled && Variables.disableToggleCommand) {
+					player.sendMessage(ChatColor.DARK_RED + "This command is disabled! You have to use a Sign!");
+					return false;
+				}
+			}
 			if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("status") && player.hasPermission("pvpmanager.pvpstatus.self")) {
 					if (!plugin.hasPvpEnabled(player.getName())) {
@@ -64,7 +81,7 @@ public class PvP implements CommandExecutor {
 							return true;
 						}
 					}
-				} else if(Variables.toggleSignsEnabled && Variables.disableToggleCommand){
+				} else if (Variables.toggleSignsEnabled && Variables.disableToggleCommand) {
 					player.sendMessage(ChatColor.DARK_RED + "This command is disabled! You have to use a Sign!");
 					return false;
 				}
