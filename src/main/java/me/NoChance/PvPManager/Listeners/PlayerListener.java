@@ -1,14 +1,18 @@
 package me.NoChance.PvPManager.Listeners;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
-
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener {
@@ -17,6 +21,7 @@ public class PlayerListener implements Listener {
 	public Player loggedOut;
 	public ItemStack[] it;
 	public ItemStack[] armor;
+	public HashMap<String, ArrayList<ItemStack[]>> noDrop = new HashMap<String, ArrayList<ItemStack[]>>();
 
 	public PlayerListener(PvPManager plugin) {
 		this.plugin = plugin;
@@ -39,9 +44,9 @@ public class PlayerListener implements Listener {
 					}
 				}
 			}
-		armor = null;
-		it = null;
-		loggedOut = null;
+			armor = null;
+			it = null;
+			loggedOut = null;
 		}
 	}
 
@@ -60,11 +65,44 @@ public class PlayerListener implements Listener {
 					event.setDroppedExp(0);
 				}
 				if (!Variables.keepExp && Variables.keepItems) {
-					player.getWorld()
-							.spawn(player.getLocation(), ExperienceOrb.class)
+					player.getWorld().spawn(player.getLocation(), ExperienceOrb.class)
 							.setExperience(event.getDroppedExp());
 				}
 			}
+		}
+		if (plugin.inCombat.contains(event.getEntity().getName())) {
+			Player player = event.getEntity();
+			if (player.hasPermission("pvpmanager.nodrop")) {
+				ArrayList<ItemStack[]> inv = new ArrayList<ItemStack[]>();
+				inv.add(player.getInventory().getContents());
+				inv.add(player.getInventory().getArmorContents());
+				noDrop.put(player.getName(), inv);
+				event.getDrops().clear();
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerLogin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
+			if (plugin.update) {
+				player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + plugin.newVersion);
+				player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v"
+						+ plugin.getDescription().getVersion());
+				player.sendMessage("§2Go to this page to download the latest version:");
+				player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		if (noDrop.containsKey(event.getPlayer().getName())) {
+			Player player = event.getPlayer();
+			player.getInventory().setContents(noDrop.get(event.getPlayer().getName()).get(0));
+			player.getInventory().setArmorContents(noDrop.get(event.getPlayer().getName()).get(1));
+			noDrop.remove(event.getPlayer().getName());
 		}
 	}
 }
