@@ -25,6 +25,8 @@ public class Variables {
 	public static boolean disableToggleCommand;
 	public static boolean onlyTagAttacker;
 	public static boolean updateCheck;
+	public static boolean newbieProtectionEnabled;
+	public static int newbieProtectionTime;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -46,6 +48,8 @@ public class Variables {
 		disableToggleCommand = getBoolean("Toggle Signs.Disable Toggle Command");
 		onlyTagAttacker = getBoolean("In Combat.Only Tag Attacker");
 		updateCheck = getBoolean("Update Check");
+		newbieProtectionEnabled = getBoolean("Newbie Protection.Enabled");
+		newbieProtectionTime = getInt("Newbie Protection.Time(minutes)");
 	}
 
 	public boolean getBoolean(String a) {

@@ -16,6 +16,7 @@ public final class PvPManager extends JavaPlugin {
 	public HashSet<String> inCombat = new HashSet<String>();
 	public ConfigManager configM;
 	public Variables variables;
+	public HashSet<String> newbies = new HashSet<String>();
 	public HashMap<String, PvPTimer> schedulers = new HashMap<String, PvPTimer>();
 	public boolean update;
 	public String newVersion;
@@ -40,13 +41,13 @@ public final class PvPManager extends JavaPlugin {
 		if (Variables.updateCheck) {
 			getLogger().info("Checking for updates...");
 			Updater updater = new Updater(this, "pvpmanager", this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
-			if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE){
+			if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 				update = true;
 				newVersion = updater.getLatestVersionString();
 				getLogger().info("Update Available: " + newVersion);
 				getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
-			}
-			getLogger().info("No update found");
+			} else
+				getLogger().info("No update found");
 		}
 	}
 
@@ -57,9 +58,9 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	public void loadFiles() {
-		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 5) {
+		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 6) {
 			getConfig().options().copyDefaults(true);
-			getConfig().set("Config Version", 5);
+			getConfig().set("Config Version", 6);
 			this.saveConfig();
 		}
 		this.saveDefaultConfig();
@@ -68,8 +69,7 @@ public final class PvPManager extends JavaPlugin {
 		this.configM.load();
 		this.configM.loadUsers();
 		variables = new Variables(this);
-		Messages messages = new Messages(this);
-		messages.load();
+		new Messages(this);
 	}
 
 	public void enablePvPScheduler() {

@@ -6,10 +6,11 @@
 # Just write [pvpmanager] on the first line of a sign, make sure you have the permissions to create one.
 # -> PvPTimer: Toggle PvP automatically on the times specified for each world.
 # -> World Exclusions: Write the name of worlds where you don't want to use PvPManager. 
+# -> Newbie Protection: New players on your server will be protected from PvP for the time you define.
 # Just delete the examples and write the name of your worlds to disable.
 # Set to false to disable a feature you don't want to use and to true to enable one you want to use.
 
-Config Version: 5
+Config Version: 6
 Update Check: true
 
 In Combat:
@@ -28,6 +29,10 @@ In Combat:
 Toggle Signs:
     Enabled: false
     Disable Toggle Command: true
+    
+Newbie Protection:
+  Enabled: true
+  Time(minutes): 5
   
 PvP Timer:
   Enabled: true
