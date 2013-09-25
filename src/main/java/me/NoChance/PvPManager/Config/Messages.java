@@ -2,11 +2,12 @@ package me.NoChance.PvPManager.Config;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.Properties;
-
 import me.NoChance.PvPManager.PvPManager;
-
 import org.bukkit.ChatColor;
 
 public class Messages {
@@ -30,15 +31,20 @@ public class Messages {
 	public static String Out_Of_Combat;
 	public static String PvP_On;
 	public static String PvP_Off;
+	public static String Newbie_Protection;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
 		this.messagesFile = new File(plugin.getDataFolder(), "messages.properties");
+		if (plugin.getConfig().getInt("Config Version") < 6) {
+			resetMessages();
+		}
+		load();
 	}
 
 	public void load() {
 
-		if (!messagesFile.exists()){
+		if (!messagesFile.exists()) {
 			plugin.saveResource("messages.properties", false);
 			plugin.getLogger().info("New Messages File Created Successfully!");
 		}
@@ -46,6 +52,7 @@ public class Messages {
 			if (messagesFile.exists()) {
 				FileInputStream in = new FileInputStream(messagesFile);
 				lang.load(in);
+				checkChanges();
 				getMessages();
 				in.close();
 			}
@@ -73,5 +80,39 @@ public class Messages {
 		Out_Of_Combat = getString("Out_Of_Combat");
 		PvP_On = getString("PvP_On");
 		PvP_Off = getString("PvP_Off");
+		Newbie_Protection = getString("Newbie_Protection");
+	}
+
+	public void checkChanges() {
+		Properties original = new Properties();
+		try {
+			original.load(plugin.getResource("messages.properties"));
+			Enumeration<Object> originalKeys = original.keys();
+			while (originalKeys.hasMoreElements()) {
+				String a = (String) originalKeys.nextElement();
+				if (!lang.containsKey(a)) {
+					addMessage(a + " = " + original.getProperty(a));
+					lang.setProperty(a, original.getProperty(a));
+				}
+			}
+		} catch (IOException e) {
+		}
+	}
+
+	public void addMessage(String a) {
+		try {
+			FileWriter fw = new FileWriter(messagesFile, true);
+			PrintWriter pw = new PrintWriter(fw);
+			pw.println(a);
+			pw.close();
+			fw.close();
+		} catch (IOException e) {
+		}
+	}
+
+	public void resetMessages() {
+		if (messagesFile.exists()) {
+			messagesFile.delete();
+		}
 	}
 }

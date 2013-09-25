@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -94,6 +95,20 @@ public class PlayerListener implements Listener {
 				player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 			}
 		}
+		if (!player.hasPlayedBefore()) {
+			plugin.newbies.add(player.getName());
+			player.sendMessage(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
+			scheduleNewbieRemoval(player.getName());
+		}
+	}
+
+	private void scheduleNewbieRemoval(final String name) {
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				plugin.newbies.remove(name);
+			}
+		}, Variables.newbieProtectionTime * 1200);
+
 	}
 
 	@EventHandler
