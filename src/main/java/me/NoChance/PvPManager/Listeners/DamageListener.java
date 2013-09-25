@@ -4,6 +4,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -35,16 +36,8 @@ public class DamageListener implements Listener {
 				attacked = (Player) event.getEntity();
 			}
 		}
+
 		if (attacker != null && attacked != null) {
-			if (!plugin.hasPvpEnabled(attacked.getName())) {
-				event.setCancelled(true);
-				attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
-				return;
-			} else if (!plugin.hasPvpEnabled(attacker.getName())) {
-				event.setCancelled(true);
-				attacker.sendMessage(Messages.Attack_Denied_You);
-				return;
-			}
 			if (Variables.pvpTimerEnabled) {
 				if (plugin.schedulers.containsKey(attacker.getWorld().getName().toLowerCase())) {
 					if (!plugin.schedulers.get(attacker.getWorld().getName().toLowerCase()).timeForPvp) {
@@ -55,6 +48,21 @@ public class DamageListener implements Listener {
 					}
 				}
 			}
+			if(plugin.newbies.contains(attacked.getName())){
+				event.setCancelled(true);
+				attacker.sendMessage(ChatColor.DARK_RED + attacked.getName() + " has Newbie Protection!");
+				return;
+			}
+			if (!plugin.hasPvpEnabled(attacked.getName())) {
+				event.setCancelled(true);
+				attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
+				return;
+			} else if (!plugin.hasPvpEnabled(attacker.getName())) {
+				event.setCancelled(true);
+				attacker.sendMessage(Messages.Attack_Denied_You);
+				return;
+			}
+
 			if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
 				if (!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())) {
 					inCombat(attacker, attacked);
@@ -80,33 +88,35 @@ public class DamageListener implements Listener {
 	public void inCombat(Player player1, Player player2) {
 		String pl1 = player1.getName();
 		String pl2 = player2.getName();
-		if (!Variables.onlyTagAttacker) {
-			plugin.inCombat.add(pl1);
-			player1.sendMessage(Messages.You_Are_InCombat);
-			plugin.inCombat.add(pl2);
-			player2.sendMessage(Messages.You_Are_InCombat);
-			Timer(pl1, pl2);
-		} else if (Variables.onlyTagAttacker) {
-			plugin.inCombat.add(pl1);
-			player1.sendMessage(Messages.You_Are_InCombat);
-			Timer(pl1, "null!");
+		if (Variables.onlyTagAttacker) {
+			if (!player1.hasPermission("pvpmanager.nocombat")) {
+				plugin.inCombat.add(pl1);
+				player1.sendMessage(Messages.You_Are_InCombat);
+				Timer(pl1);
+			}
+			return;
+		} else {
+			if (!player1.hasPermission("pvpmanager.nocombat")) {
+				plugin.inCombat.add(pl1);
+				player1.sendMessage(Messages.You_Are_InCombat);
+				Timer(pl1);
+			}
+			if (!player2.hasPermission("pvpmanager.nocombat")) {
+				plugin.inCombat.add(pl2);
+				player2.sendMessage(Messages.You_Are_InCombat);
+				Timer(pl2);
+			}
 		}
 	}
 
-	public void Timer(final String player1, final String player2) {
-		int time = Variables.timeInCombat;
+	public void Timer(final String player) {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				if (plugin.getServer().getPlayerExact(player1) != null)
-					plugin.getServer().getPlayerExact(player1).sendMessage(Messages.Out_Of_Combat);
+				if (plugin.getServer().getPlayerExact(player) != null)
+					plugin.getServer().getPlayerExact(player).sendMessage(Messages.Out_Of_Combat);
 
-				if (plugin.getServer().getPlayerExact(player2) != null && player2 != "null!")
-					plugin.getServer().getPlayerExact(player2).sendMessage(Messages.Out_Of_Combat);
-
-				if (player2 != "null!")
-					plugin.inCombat.remove(player2);
-				plugin.inCombat.remove(player1);
+				plugin.inCombat.remove(player);
 			}
-		}, time * 20);
+		}, Variables.timeInCombat * 20);
 	}
 }
