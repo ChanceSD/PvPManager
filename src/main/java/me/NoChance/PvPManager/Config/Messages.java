@@ -36,7 +36,7 @@ public class Messages {
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
 		this.messagesFile = new File(plugin.getDataFolder(), "messages.properties");
-		if (plugin.getConfig().getInt("Config Version") < 6) {
+		if (plugin.getConfig().getInt("Config Version") < 7) {
 			resetMessages();
 		}
 		load();

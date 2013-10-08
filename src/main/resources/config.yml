@@ -10,7 +10,7 @@
 # Just delete the examples and write the name of your worlds to disable.
 # Set to false to disable a feature you don't want to use and to true to enable one you want to use.
 
-Config Version: 6
+Config Version: 7
 Update Check: true
 
 In Combat:
@@ -27,8 +27,8 @@ In Combat:
       Keep Exp: false
   
 Toggle Signs:
-    Enabled: false
-    Disable Toggle Command: true
+  Enabled: false
+  Disable Toggle Command: true
     
 Newbie Protection:
   Enabled: true

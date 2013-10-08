@@ -3,7 +3,6 @@ package me.NoChance.PvPManager.Listeners;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -11,13 +10,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class DamageListener implements Listener {
 
 	private PvPManager plugin;
+	private WorldGuardPlugin wg;
 
 	public DamageListener(PvPManager plugin) {
 		this.plugin = plugin;
+		wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
+		if (worldGuardEnabled())
+			plugin.getLogger().info("WorldGuard Detected!");
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -28,8 +34,7 @@ public class DamageListener implements Listener {
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
 			attacker = (Player) event.getDamager();
 			attacked = (Player) event.getEntity();
-		}
-		if (event.getDamager() instanceof Projectile && event.getEntity() instanceof Player) {
+		} else if (event.getDamager() instanceof Projectile && event.getEntity() instanceof Player) {
 			Projectile proj = (Projectile) event.getDamager();
 			if (proj.getShooter() instanceof Player) {
 				attacker = (Player) proj.getShooter();
@@ -38,6 +43,12 @@ public class DamageListener implements Listener {
 		}
 
 		if (attacker != null && attacked != null) {
+			if (worldGuardEnabled()) {
+				RegionManager set = wg.getRegionManager(attacked.getWorld());
+				if (set.getApplicableRegions(attacked.getLocation()).allows(DefaultFlag.PVP)) {
+					return;
+				}
+			}
 			if (Variables.pvpTimerEnabled) {
 				if (plugin.schedulers.containsKey(attacker.getWorld().getName().toLowerCase())) {
 					if (!plugin.schedulers.get(attacker.getWorld().getName().toLowerCase()).timeForPvp) {
@@ -48,7 +59,7 @@ public class DamageListener implements Listener {
 					}
 				}
 			}
-			if(plugin.newbies.contains(attacked.getName())){
+			if (plugin.newbies.contains(attacked.getName())) {
 				event.setCancelled(true);
 				attacker.sendMessage(ChatColor.DARK_RED + attacked.getName() + " has Newbie Protection!");
 				return;
@@ -65,27 +76,21 @@ public class DamageListener implements Listener {
 
 			if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
 				if (!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())) {
-					inCombat(attacker, attacked);
+					inCombat(attacker, attacked, event);
 				}
 			}
-			if (Variables.disableFly)
-				checkFly(attacker, attacked, event);
 		}
 	}
 
-	public void checkFly(Player player1, Player player2, EntityDamageByEntityEvent event) {
-		if (player1.isFlying() && player1.getAllowFlight()) {
-			player1.setFlying(false);
-			player1.setAllowFlight(false);
-			event.setCancelled(true);
-		} else if (player2.isFlying() && player2.getAllowFlight()) {
-			player2.setFlying(false);
-			player2.setAllowFlight(false);
+	public void checkFly(Player player, EntityDamageByEntityEvent event) {
+		if (player.isFlying() && player.getAllowFlight()) {
+			player.setFlying(false);
+			player.setAllowFlight(false);
 			event.setCancelled(true);
 		}
 	}
 
-	public void inCombat(Player player1, Player player2) {
+	public void inCombat(Player player1, Player player2, EntityDamageByEntityEvent event) {
 		String pl1 = player1.getName();
 		String pl2 = player2.getName();
 		if (Variables.onlyTagAttacker) {
@@ -93,6 +98,9 @@ public class DamageListener implements Listener {
 				plugin.inCombat.add(pl1);
 				player1.sendMessage(Messages.You_Are_InCombat);
 				Timer(pl1);
+				if (Variables.disableFly) {
+					checkFly(player1, event);
+				}
 			}
 			return;
 		} else {
@@ -100,11 +108,17 @@ public class DamageListener implements Listener {
 				plugin.inCombat.add(pl1);
 				player1.sendMessage(Messages.You_Are_InCombat);
 				Timer(pl1);
+				if (Variables.disableFly) {
+					checkFly(player1, event);
+				}
 			}
 			if (!player2.hasPermission("pvpmanager.nocombat")) {
 				plugin.inCombat.add(pl2);
 				player2.sendMessage(Messages.You_Are_InCombat);
 				Timer(pl2);
+				if (Variables.disableFly) {
+					checkFly(player2, event);
+				}
 			}
 		}
 	}
@@ -118,5 +132,12 @@ public class DamageListener implements Listener {
 				plugin.inCombat.remove(player);
 			}
 		}, Variables.timeInCombat * 20);
+	}
+
+	public boolean worldGuardEnabled() {
+		if (wg != null)
+			return true;
+		else
+			return false;
 	}
 }

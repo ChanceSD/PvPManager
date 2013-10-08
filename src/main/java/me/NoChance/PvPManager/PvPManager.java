@@ -58,9 +58,10 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	public void loadFiles() {
-		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 6) {
+		new Messages(this);
+		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 7) {
 			getConfig().options().copyDefaults(true);
-			getConfig().set("Config Version", 6);
+			getConfig().set("Config Version", 7);
 			this.saveConfig();
 		}
 		this.saveDefaultConfig();
@@ -69,7 +70,6 @@ public final class PvPManager extends JavaPlugin {
 		this.configM.load();
 		this.configM.loadUsers();
 		variables = new Variables(this);
-		new Messages(this);
 	}
 
 	public void enablePvPScheduler() {

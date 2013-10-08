@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 1.3.0
+version: 1.3.5
 author: NoChance20
 description: Allows Administrators To Change Their PvP Mechanics.
 
@@ -9,14 +9,6 @@ commands:
       description: Shows Main PvPManager Page.
    pvp:
       description: Change your PvP Status.
-   pvp on:
-      description: Enables PvP for yourself.
-   pvp off:
-      description: Disables PvP for yourself.
-   pvp status:
-      description: Allows you to check your current PvP status.
-   pm reload:
-      description: Reloads PvPManager.
 
 permissions:
    pvpmanager.*:
