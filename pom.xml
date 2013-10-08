@@ -16,7 +16,7 @@
 		</repository>
 		<repository>
 			<id>sk89q-repo</id>
-			<url>http://maven.sk89q.com/repo/com/sk89q</url>
+			<url>http://maven.sk89q.com/repo/</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -36,48 +36,12 @@
 			<artifactId>worldguard</artifactId>
 			<version>5.8.1-SNAPSHOT</version>
 			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>iconomy</artifactId>
-					<groupId>com.nijikokun</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>prtree</artifactId>
-					<groupId>org.khelekore</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>commandbook</artifactId>
-					<groupId>com.sk89q</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>opencsv</artifactId>
-					<groupId>net.sf.opencsv</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
 			<artifactId>worldedit</artifactId>
 			<version>5.5.8</version>
 			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>js</artifactId>
-					<groupId>rhino</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jchronic</artifactId>
-					<groupId>com.sk89q</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>truezip</artifactId>
-					<groupId>de.schlichtherle</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>
