@@ -32,6 +32,8 @@ public class Messages {
 	public static String PvP_On;
 	public static String PvP_Off;
 	public static String Newbie_Protection;
+	public static String Newbie_Protection_End;
+	public static String PvPLog_Broadcast;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
@@ -43,7 +45,6 @@ public class Messages {
 	}
 
 	public void load() {
-
 		if (!messagesFile.exists()) {
 			plugin.saveResource("messages.properties", false);
 			plugin.getLogger().info("New Messages File Created Successfully!");
@@ -81,6 +82,8 @@ public class Messages {
 		PvP_On = getString("PvP_On");
 		PvP_Off = getString("PvP_Off");
 		Newbie_Protection = getString("Newbie_Protection");
+		Newbie_Protection_End = getString("Newbie_Protection_End");
+		PvPLog_Broadcast = getString("PvPLog_Broadcast");
 	}
 
 	public void checkChanges() {
