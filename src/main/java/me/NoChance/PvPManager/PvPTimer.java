@@ -1,6 +1,8 @@
 package me.NoChance.PvPManager;
 
 import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -134,28 +136,39 @@ public class PvPTimer {
 		if (lastAnnounce == null && !status || lastAnnounce == "On" && !status) {
 			for (Player p : w.getPlayers()) {
 				p.sendMessage(Messages.PvP_Off);
+				if (Variables.enableSound)
+					p.playSound(p.getLocation(), Sound.valueOf(Variables.pvpOffSound), 1, 0);
 			}
 			lastAnnounce = "Off";
 		} else if (lastAnnounce == null && status || lastAnnounce == "Off" && status) {
 			for (Player p : w.getPlayers()) {
 				p.sendMessage(Messages.PvP_On);
+				if (Variables.enableSound)
+					p.playSound(p.getLocation(), Sound.valueOf(Variables.pvpOnSound), 1, 0);
 			}
 			lastAnnounce = "On";
 		}
 	}
 
+	public void announcePvP(Player p) {
+		if (timeForPvp)
+			p.sendMessage(Messages.PvP_On);
+		else
+			p.sendMessage(Messages.PvP_Off);
+	}
+
 	public void reload() {
 		cancelAllTasks();
 		calculateDelays();
-		checkWorldPvP();	
+		checkWorldPvP();
 	}
 
-	public void cancelAllTasks(){
+	public void cancelAllTasks() {
 		for (int i = 0; i < scheduledTasks.length; i++) {
 			plugin.getServer().getScheduler().cancelTask(scheduledTasks[i]);
 		}
 	}
-	
+
 	public void setStartPvP(long startPvP) {
 		plugin.getConfig().set("PvP Timer." + w.getName() + ".Start PvP", startPvP);
 		plugin.saveConfig();
