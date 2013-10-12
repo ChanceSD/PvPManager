@@ -1,14 +1,13 @@
 # PvPManager Configuration File
-# -> Time: Sets for how long a player is in "In Combat" after being attacked
-# -> Stop Commands: Stop a player from using commands like /home, etc while in combat.
-# -> Punishments: Sets if you want to punish or not a player that logs out while in combat.
+# -> In Combat: Tag players on PvP and what should happen when they are in combat
+# -> Punishments: Set if you want to punish or not a player that logs out while in combat.
 # -> Toggle Signs: You can do the same as the command "/pvp" does but by clicking signs. 
 # Just write [pvpmanager] on the first line of a sign, make sure you have the permissions to create one.
+# -> Newbie Protection: New players on your server will be protected from PvP for the time you define.
 # -> PvPTimer: Toggle PvP automatically on the times specified for each world.
 # -> World Exclusions: Write the name of worlds where you don't want to use PvPManager. 
-# -> Newbie Protection: New players on your server will be protected from PvP for the time you define.
 # Just delete the examples and write the name of your worlds to disable.
-# Set to false to disable a feature you don't want to use and to true to enable one you want to use.
+# For a more detailed explanation of each setting go to: 
 
 Config Version: 7
 Update Check: true
@@ -21,6 +20,7 @@ In Combat:
   Only Tag Attacker: false
   Punishments:
     Enabled: true
+    Broadcast PvPLog: true
     Kill on Logout:
       Enabled: true      
       Keep Items: false
@@ -36,6 +36,11 @@ Newbie Protection:
   
 PvP Timer:
   Enabled: true
+  Announce On World Change: true
+  Sound:
+    Enabled: true
+    PvP Off Sound: SUCCESSFUL_HIT
+    PvP On Sound: GHAST_FIREBALL
 
 World Exclusions:
   - Example

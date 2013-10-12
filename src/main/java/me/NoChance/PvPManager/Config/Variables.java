@@ -27,6 +27,11 @@ public class Variables {
 	public static boolean updateCheck;
 	public static boolean newbieProtectionEnabled;
 	public static int newbieProtectionTime;
+	public static String pvpOffSound;
+	public static String pvpOnSound;
+	public static boolean enableSound;
+	public static boolean announcePvpOnWorldChange;
+	public static boolean broadcastPvpLog;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -50,6 +55,11 @@ public class Variables {
 		updateCheck = getBoolean("Update Check");
 		newbieProtectionEnabled = getBoolean("Newbie Protection.Enabled");
 		newbieProtectionTime = getInt("Newbie Protection.Time(minutes)");
+		pvpOffSound = getString("PvP Timer.Sound.PvP Off Sound");
+		pvpOnSound = getString("PvP Timer.Sound.PvP On Sound");
+		enableSound = getBoolean("PvP Timer.Sound.Enabled");
+		announcePvpOnWorldChange = getBoolean("PvP Timer.Announce On World Change");
+		broadcastPvpLog = getBoolean("In Combat.Punishments.Broadcast PvPLog");
 	}
 
 	public boolean getBoolean(String a) {
@@ -62,6 +72,10 @@ public class Variables {
 	
 	public List<String> getStringList(String a){
 		return plugin.getConfig().getStringList(a);
+	}
+	
+	public String getString(String a){
+		return plugin.getConfig().getString(a);
 	}
 	
 	public void helpMenu(Player player){
