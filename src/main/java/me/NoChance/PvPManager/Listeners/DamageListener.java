@@ -9,20 +9,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class DamageListener implements Listener {
 
 	private PvPManager plugin;
-	private WorldGuardPlugin wg;
+//	private WorldGuardPlugin wg;
 
 	public DamageListener(PvPManager plugin) {
 		this.plugin = plugin;
-		wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-		if (worldGuardEnabled())
-			plugin.getLogger().info("WorldGuard Found! Detecting PvP regions...");
+//		wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
+//		if (worldGuardEnabled())
+//			plugin.getLogger().info("WorldGuard Found! Detecting PvP regions...");
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -42,12 +39,13 @@ public class DamageListener implements Listener {
 		}
 
 		if (attacker != null && attacked != null) {
-			if (worldGuardEnabled()) {
-				RegionManager set = wg.getRegionManager(attacked.getWorld());
-				if (set.getApplicableRegions(attacked.getLocation()).allows(DefaultFlag.PVP)) {
-					return;
-				}
-			}
+//			To fix in future version
+//			if (worldGuardEnabled()) {
+//				RegionManager set = wg.getRegionManager(attacked.getWorld());
+//				if (set.getApplicableRegions(attacked.getLocation()).allows(DefaultFlag.PVP)) {
+//					return;
+//				}
+//			}
 			if (Variables.pvpTimerEnabled) {
 				if (plugin.schedulers.containsKey(attacker.getWorld().getName().toLowerCase())) {
 					if (!plugin.schedulers.get(attacker.getWorld().getName().toLowerCase()).timeForPvp) {
@@ -136,10 +134,10 @@ public class DamageListener implements Listener {
 		}, Variables.timeInCombat * 20);
 	}
 
-	public boolean worldGuardEnabled() {
-		if (wg != null)
-			return true;
-		else
-			return false;
-	}
+//	public boolean worldGuardEnabled() {
+//		if (wg != null)
+//			return true;
+//		else
+//			return false;
+//	}
 }
