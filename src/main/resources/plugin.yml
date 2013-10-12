@@ -68,3 +68,6 @@ permissions:
    pvpmanager.nocombat:
      description: Exempts a player from being tagged in combat
      default: false
+   pvpmanager.nopvp:
+     description: Players with this permission always have PvP disabled
+     default: false
