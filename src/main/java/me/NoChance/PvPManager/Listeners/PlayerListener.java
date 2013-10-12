@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -35,6 +36,8 @@ public class PlayerListener implements Listener {
 			if (plugin.inCombat.contains(event.getPlayer().getName())) {
 				loggedOut = event.getPlayer();
 				loggedOut.setHealth(0);
+				if (Variables.broadcastPvpLog)
+					plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", loggedOut.getName()));
 				if (Variables.keepItems) {
 					loggedOut.setHealth(20);
 					loggedOut.getInventory().setContents(it);
@@ -66,8 +69,7 @@ public class PlayerListener implements Listener {
 					event.setDroppedExp(0);
 				}
 				if (!Variables.keepExp && Variables.keepItems) {
-					player.getWorld().spawn(player.getLocation(), ExperienceOrb.class)
-							.setExperience(event.getDroppedExp());
+					player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(event.getDroppedExp());
 				}
 			}
 		}
@@ -94,11 +96,13 @@ public class PlayerListener implements Listener {
 				player.sendMessage("§2Go to this page to download the latest version:");
 				player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 			}
-		}
-		if (!player.hasPlayedBefore()) {
+		} else if (!player.hasPlayedBefore()) {
 			plugin.newbies.add(player.getName());
 			player.sendMessage(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
 			scheduleNewbieRemoval(player.getName());
+		}
+		if (player.hasPermission("pvpmanager.nopvp")) {
+			plugin.playersStatusOff.add(player.getName());
 		}
 	}
 
@@ -118,6 +122,14 @@ public class PlayerListener implements Listener {
 			player.getInventory().setContents(noDrop.get(event.getPlayer().getName()).get(0));
 			player.getInventory().setArmorContents(noDrop.get(event.getPlayer().getName()).get(1));
 			noDrop.remove(event.getPlayer().getName());
+		}
+	}
+
+	@EventHandler
+	public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
+		if (Variables.announcePvpOnWorldChange) {
+			Player p = event.getPlayer();
+			plugin.schedulers.get(p.getWorld().getName().toLowerCase()).announcePvP(p);
 		}
 	}
 }
