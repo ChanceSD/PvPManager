@@ -3,7 +3,6 @@ package me.NoChance.PvPManager.Listeners;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -23,7 +22,7 @@ public class DamageListener implements Listener {
 		this.plugin = plugin;
 		wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 		if (worldGuardEnabled())
-			plugin.getLogger().info("WorldGuard Detected!");
+			plugin.getLogger().info("WorldGuard Found! Detecting PvP regions...");
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -59,9 +58,12 @@ public class DamageListener implements Listener {
 					}
 				}
 			}
-			if (plugin.newbies.contains(attacked.getName())) {
+			if (plugin.newbies.contains(attacked.getName()) || plugin.newbies.contains(attacker.getName())) {
 				event.setCancelled(true);
-				attacker.sendMessage(ChatColor.DARK_RED + attacked.getName() + " has Newbie Protection!");
+				if (plugin.newbies.contains(attacked.getName()))
+					attacker.sendMessage("§6[§8PvPManager§6]§4" + attacked.getName() + " has Newbie Protection!");
+				else
+					attacked.sendMessage("§6[§8PvPManager§6]§4" + "Please wait until your PvP protection expires");
 				return;
 			}
 			if (!plugin.hasPvpEnabled(attacked.getName())) {
