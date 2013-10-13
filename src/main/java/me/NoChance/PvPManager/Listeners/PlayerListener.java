@@ -90,11 +90,11 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer();
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
 			if (plugin.update) {
-				player.sendMessage("Â§6[Â§fPvPManagerÂ§6] " + "Â§2An update is available: Â§e" + plugin.newVersion);
-				player.sendMessage("Â§6[Â§fPvPManagerÂ§6] " + "Â§2Your current version is: Â§ePvPManager v"
+				player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + plugin.newVersion);
+				player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v"
 						+ plugin.getDescription().getVersion());
-				player.sendMessage("Â§2Go to this page to download the latest version:");
-				player.sendMessage("Â§2Link: Â§ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+				player.sendMessage("§2Go to this page to download the latest version:");
+				player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 			}
 		} else if (!player.hasPlayedBefore()) {
 			plugin.newbies.add(player.getName());
