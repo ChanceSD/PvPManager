@@ -40,10 +40,10 @@ public final class PvPManager extends JavaPlugin {
 		new CustomGraph(this);
 		if (Variables.updateCheck) {
 			getLogger().info("Checking for updates...");
-			Updater updater = new Updater(this, "pvpmanager", this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+			Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
 			if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 				update = true;
-				newVersion = updater.getLatestVersionString();
+				newVersion = updater.getLatestName();
 				getLogger().info("Update Available: " + newVersion);
 				getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 			} else
