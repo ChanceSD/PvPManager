@@ -128,8 +128,10 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
 		if (Variables.announcePvpOnWorldChange) {
-			Player p = event.getPlayer();
-			plugin.schedulers.get(p.getWorld().getName().toLowerCase()).announcePvP(p);
+			if (plugin.schedulers.containsKey(event.getPlayer().getWorld().getName().toLowerCase())) {
+				Player p = event.getPlayer();
+				plugin.schedulers.get(p.getWorld().getName().toLowerCase()).sendWorldChangeMessage(p);
+			}
 		}
 	}
 }

@@ -178,4 +178,15 @@ public class PvPTimer {
 		plugin.getConfig().set("PvP Timer." + w.getName() + ".End PvP", endPvP);
 		plugin.saveConfig();
 	}
+
+	public String getWorldChangeMessage() {
+		if (timeForPvp)
+			return plugin.getConfig().getString("PvP Timer." + w.getName() + "On World Change.On");
+		else
+			return plugin.getConfig().getString("PvP Timer." + w.getName() + "On World Change.Off");
+	}
+	
+	public void sendWorldChangeMessage(Player p){
+		p.sendMessage(getWorldChangeMessage());
+	}
 }
