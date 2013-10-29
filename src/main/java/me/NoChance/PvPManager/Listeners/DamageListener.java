@@ -33,61 +33,82 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void PlayerDamageListener(EntityDamageByEntityEvent event) {
-		Player attacker = null;
-		Player attacked = null;
+		if (!isPvP(event)) {
+			return;
+		}
+		Player attacker = getAttacker(event);
+		Player attacked = getAttacked(event);
+
+		if (worldGuardEnabled()) {
+			ApplicableRegionSet set = wg.getRegionManager(attacked.getWorld()).getApplicableRegions(attacked.getLocation());
+			if (set.getFlag(DefaultFlag.PVP) != null) {
+				if (set.getFlag(DefaultFlag.PVP).equals(State.ALLOW))
+					return;
+			}
+		}
+		if (Variables.pvpTimerEnabled) {
+			if (plugin.schedulers.containsKey(attacker.getWorld().getName().toLowerCase())) {
+				if (!plugin.schedulers.get(attacker.getWorld().getName().toLowerCase()).timeForPvp) {
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
+		if (plugin.newbies.contains(attacked.getName()) || plugin.newbies.contains(attacker.getName())) {
+			event.setCancelled(true);
+			if (plugin.newbies.contains(attacked.getName()))
+				attacker.sendMessage("§6[§8PvPManager§6]§4" + attacked.getName() + " has Newbie Protection!");
+			else
+				attacked.sendMessage("§6[§8PvPManager§6]§4" + "Please wait until your PvP protection expires");
+			return;
+		}
+		if (!plugin.hasPvpEnabled(attacked.getName())) {
+			event.setCancelled(true);
+			attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
+			return;
+		} else if (!plugin.hasPvpEnabled(attacker.getName())) {
+			event.setCancelled(true);
+			attacker.sendMessage(Messages.Attack_Denied_You);
+			return;
+		}
+
+		if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
+			if (!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())) {
+				inCombat(attacker, attacked, event);
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void DamageListenerForOverride(EntityDamageByEntityEvent event) {
+		if (!isPvP(event)) {
+			return;
+		}
+		if (getAttacker(event).hasPermission("pvpmanager.override") && event.isCancelled())
+			event.setCancelled(false);
+	}
+
+	public boolean isPvP(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
-			attacker = (Player) event.getDamager();
-			attacked = (Player) event.getEntity();
+			return true;
 		} else if (event.getDamager() instanceof Projectile && event.getEntity() instanceof Player) {
 			Projectile proj = (Projectile) event.getDamager();
 			if (proj.getShooter() instanceof Player) {
-				attacker = (Player) proj.getShooter();
-				attacked = (Player) event.getEntity();
+				return true;
 			}
 		}
+		return false;
+	}
 
-		if (attacker != null && attacked != null) {
-			if (worldGuardEnabled()) {
-				ApplicableRegionSet set = wg.getRegionManager(attacked.getWorld()).getApplicableRegions(attacked.getLocation());
-				if (set.getFlag(DefaultFlag.PVP) != null) {
-					if (set.getFlag(DefaultFlag.PVP).equals(State.ALLOW))
-						return;
-				}
-			}
-			if (Variables.pvpTimerEnabled) {
-				if (plugin.schedulers.containsKey(attacker.getWorld().getName().toLowerCase())) {
-					if (!plugin.schedulers.get(attacker.getWorld().getName().toLowerCase()).timeForPvp) {
-						if (!attacker.hasPermission("pvpmanager.override")) {
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
-			}
-			if (plugin.newbies.contains(attacked.getName()) || plugin.newbies.contains(attacker.getName())) {
-				event.setCancelled(true);
-				if (plugin.newbies.contains(attacked.getName()))
-					attacker.sendMessage("§6[§8PvPManager§6]§4" + attacked.getName() + " has Newbie Protection!");
-				else
-					attacked.sendMessage("§6[§8PvPManager§6]§4" + "Please wait until your PvP protection expires");
-				return;
-			}
-			if (!plugin.hasPvpEnabled(attacked.getName())) {
-				event.setCancelled(true);
-				attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
-				return;
-			} else if (!plugin.hasPvpEnabled(attacker.getName())) {
-				event.setCancelled(true);
-				attacker.sendMessage(Messages.Attack_Denied_You);
-				return;
-			}
+	public Player getAttacker(EntityDamageByEntityEvent event) {
+		if (event.getDamager() instanceof Projectile)
+			return (Player) ((Projectile) event.getDamager()).getShooter();
+		else
+			return (Player) event.getDamager();
+	}
 
-			if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
-				if (!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())) {
-					inCombat(attacker, attacked, event);
-				}
-			}
-		}
+	public Player getAttacked(EntityDamageByEntityEvent event) {
+		return (Player) event.getEntity();
 	}
 
 	public void checkFly(Player player, EntityDamageByEntityEvent event) {

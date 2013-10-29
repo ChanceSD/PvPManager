@@ -24,7 +24,30 @@ public class CustomGraph {
 			Graph inCombatTime = metrics.createGraph("Time in Combat");
 			Graph toggleSigns = metrics.createGraph("Toggle Signs Usage");
 			Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
+			Graph updateCheck = metrics.createGraph("Update Check Usage");
+			
+			updateCheck.addPlotter(new Metrics.Plotter("Enabled") {
+				@Override
+				public int getValue() {
+					int i = 0;
+					if (Variables.updateCheck)
+						i++;
 
+					return i;
+				}
+			});
+
+			updateCheck.addPlotter(new Metrics.Plotter("Disabled") {
+				@Override
+				public int getValue() {
+					int i = 0;
+					if (!Variables.updateCheck)
+						i++;
+
+					return i;
+				}
+			});
+			
 			newbieProtection.addPlotter(new Metrics.Plotter("Enabled") {
 				@Override
 				public int getValue() {
@@ -69,77 +92,11 @@ public class CustomGraph {
 				}
 			});
 
-			inCombatTime.addPlotter(new Metrics.Plotter("15 seconds") {
+			inCombatTime.addPlotter(new Metrics.Plotter(Variables.timeInCombat + " seconds") {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.timeInCombat == 15)
-						i++;
-
-					return i;
-				}
-			});
-
-			inCombatTime.addPlotter(new Metrics.Plotter("Between 10 and 15 seconds") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.timeInCombat < 15 && Variables.timeInCombat >= 10)
-						i++;
-
-					return i;
-				}
-			});
-
-			inCombatTime.addPlotter(new Metrics.Plotter("Less than 10 seconds") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.timeInCombat < 10)
-						i++;
-
-					return i;
-				}
-			});
-
-			inCombatTime.addPlotter(new Metrics.Plotter("Between 15 and 30 seconds") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.timeInCombat > 15 && Variables.timeInCombat <= 30)
-						i++;
-
-					return i;
-				}
-			});
-
-			inCombatTime.addPlotter(new Metrics.Plotter("Between 31 and 45 seconds") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.timeInCombat > 30 && Variables.timeInCombat <= 45)
-						i++;
-
-					return i;
-				}
-			});
-
-			inCombatTime.addPlotter(new Metrics.Plotter("Between 46 and 60 seconds") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.timeInCombat > 45 && Variables.timeInCombat <= 60)
-						i++;
-
-					return i;
-				}
-			});
-
-			inCombatTime.addPlotter(new Metrics.Plotter("More than 60 seconds") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.timeInCombat > 60)
+					if (Variables.inCombatEnabled)
 						i++;
 
 					return i;
@@ -172,7 +129,7 @@ public class CustomGraph {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.keepItems && Variables.keepExp)
+					if (Variables.keepItems && Variables.keepExp && Variables.punishmentsEnabled)
 						i++;
 
 					return i;
@@ -182,7 +139,7 @@ public class CustomGraph {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.keepItems && !Variables.keepExp)
+					if (!Variables.keepItems && !Variables.keepExp && Variables.punishmentsEnabled)
 						i++;
 
 					return i;
@@ -192,7 +149,7 @@ public class CustomGraph {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.keepItems && !Variables.keepExp)
+					if (Variables.keepItems && !Variables.keepExp && Variables.punishmentsEnabled)
 						i++;
 
 					return i;
@@ -202,7 +159,7 @@ public class CustomGraph {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.keepItems && Variables.keepExp)
+					if (!Variables.keepItems && Variables.keepExp && Variables.punishmentsEnabled)
 						i++;
 
 					return i;

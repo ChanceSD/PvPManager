@@ -17,7 +17,7 @@ public class CommandListener implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onCommand(PlayerCommandPreprocessEvent event) {
 		if (Variables.stopCommands && Variables.inCombatEnabled) {
 			if (plugin.inCombat.contains(event.getPlayer().getName())) {
@@ -25,12 +25,11 @@ public class CommandListener implements Listener {
 				event.getPlayer().sendMessage(Messages.Command_Denied_InCombat);
 			}
 		}
+		// Checking if PvPTimer is right every time a command is executed
+		// Using this instead of a repeating task, seems less resource intensive
 		if (Variables.pvpTimerEnabled) {
-			String[] cmd = event.getMessage().split(" ");
-			if (cmd[0].equalsIgnoreCase("/time")) {
-				if (plugin.schedulers.containsKey(event.getPlayer().getWorld().getName().toLowerCase())) {
-					plugin.schedulers.get(event.getPlayer().getWorld().getName().toLowerCase()).checkWorldPvP();
-				}
+			if (plugin.schedulers.containsKey(event.getPlayer().getWorld().getName().toLowerCase())) {
+				plugin.schedulers.get(event.getPlayer().getWorld().getName().toLowerCase()).checkWorldPvP();
 			}
 		}
 
