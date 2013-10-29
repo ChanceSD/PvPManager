@@ -13,13 +13,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class PvPManager extends JavaPlugin {
 
 	public HashSet<String> playersStatusOff = new HashSet<String>();
-	public HashSet<String> inCombat = new HashSet<String>();
 	public ConfigManager configM;
 	public Variables variables;
 	public HashSet<String> newbies = new HashSet<String>();
 	public HashMap<String, PvPTimer> schedulers = new HashMap<String, PvPTimer>();
 	public boolean update;
 	public String newVersion;
+	private CombatManager combatManager;
+	private GlobalManager globalManager;
 
 	@Override
 	public void onEnable() {
@@ -35,6 +36,8 @@ public final class PvPManager extends JavaPlugin {
 		if (Variables.toggleSignsEnabled) {
 			new SignListener(this);
 		}
+		this.combatManager = new CombatManager(this);
+		this.globalManager = new GlobalManager(this);
 		getCommand("pvp").setExecutor(new PvP(this));
 		getCommand("pm").setExecutor(new PM(this));
 		new CustomGraph(this);

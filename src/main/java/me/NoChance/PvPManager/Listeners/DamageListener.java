@@ -1,5 +1,7 @@
 package me.NoChance.PvPManager.Listeners;
 
+import me.NoChance.PvPManager.CombatManager;
+import me.NoChance.PvPManager.GlobalManager;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
@@ -18,9 +20,11 @@ public class DamageListener implements Listener {
 
 	private PvPManager plugin;
 	private WorldGuardPlugin wg;
+	private GlobalManager gm;
 
-	public DamageListener(PvPManager plugin) {
-		this.plugin = plugin;
+	public DamageListener(GlobalManager globalManager) {
+		this.plugin = globalManager.getPlugin();
+		this.gm = globalManager;
 		wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 		if (worldGuardEnabled())
 			plugin.getLogger().info("WorldGuard Found! Detecting PvP regions...");
