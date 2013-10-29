@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Listeners;
 
+import me.NoChance.PvPManager.GlobalManager;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
@@ -12,9 +13,9 @@ public class CommandListener implements Listener {
 
 	private PvPManager plugin;
 
-	public CommandListener(PvPManager plugin) {
-		this.plugin = plugin;
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	public CommandListener(GlobalManager globalManager) {
+		this.plugin = globalManager;
+		globalManager.getServer().getPluginManager().registerEvents(this, globalManager);
 	}
 
 	@EventHandler(ignoreCancelled = true)

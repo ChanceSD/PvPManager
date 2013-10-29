@@ -18,13 +18,13 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public class DamageListener implements Listener {
 
-	private PvPManager plugin;
 	private WorldGuardPlugin wg;
-	private GlobalManager gm;
+	private CombatManager cm;
 
 	public DamageListener(GlobalManager globalManager) {
-		this.plugin = globalManager.getPlugin();
 		this.gm = globalManager;
+		this.cm = gm.getCM();
+		PvPManager plugin = globalManager.getPlugin();
 		wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 		if (worldGuardEnabled())
 			plugin.getLogger().info("WorldGuard Found! Detecting PvP regions...");
@@ -33,7 +33,7 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void PlayerDamageListener(EntityDamageByEntityEvent event) {
-		if (!isPvP(event)) {
+		if (!cm.isPvP(event)) {
 			return;
 		}
 		Player attacker = getAttacker(event);
@@ -73,7 +73,7 @@ public class DamageListener implements Listener {
 		}
 
 		if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
-			if (!plugin.inCombat.contains(attacker.getName()) && !plugin.inCombat.contains(attacked.getName())) {
+			if (!cm.isInCombat(attacker) && !cm.isInCombat(attacked)) {
 				inCombat(attacker, attacked, event);
 			}
 		}
@@ -81,23 +81,11 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void DamageListenerForOverride(EntityDamageByEntityEvent event) {
-		if (!isPvP(event)) {
+		if (!cm.isPvP(event)) {
 			return;
 		}
 		if (getAttacker(event).hasPermission("pvpmanager.override") && event.isCancelled())
 			event.setCancelled(false);
-	}
-
-	public boolean isPvP(EntityDamageByEntityEvent event) {
-		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
-			return true;
-		} else if (event.getDamager() instanceof Projectile && event.getEntity() instanceof Player) {
-			Projectile proj = (Projectile) event.getDamager();
-			if (proj.getShooter() instanceof Player) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public Player getAttacker(EntityDamageByEntityEvent event) {
@@ -120,13 +108,11 @@ public class DamageListener implements Listener {
 	}
 
 	public void inCombat(Player player1, Player player2, EntityDamageByEntityEvent event) {
-		String pl1 = player1.getName();
-		String pl2 = player2.getName();
 		if (Variables.onlyTagAttacker) {
 			if (!player1.hasPermission("pvpmanager.nocombat")) {
-				plugin.inCombat.add(pl1);
+				cm.tag(player1);
 				player1.sendMessage(Messages.You_Are_InCombat);
-				Timer(pl1);
+				Timer(player1);
 				if (Variables.disableFly) {
 					checkFly(player1, event);
 				}
@@ -134,17 +120,17 @@ public class DamageListener implements Listener {
 			return;
 		} else {
 			if (!player1.hasPermission("pvpmanager.nocombat")) {
-				plugin.inCombat.add(pl1);
+				cm.tag(player1);
 				player1.sendMessage(Messages.You_Are_InCombat);
-				Timer(pl1);
+				Timer(player1);
 				if (Variables.disableFly) {
 					checkFly(player1, event);
 				}
 			}
 			if (!player2.hasPermission("pvpmanager.nocombat")) {
-				plugin.inCombat.add(pl2);
+				cm.tag(player2);
 				player2.sendMessage(Messages.You_Are_InCombat);
-				Timer(pl2);
+				Timer(player2);
 				if (Variables.disableFly) {
 					checkFly(player2, event);
 				}
@@ -152,13 +138,13 @@ public class DamageListener implements Listener {
 		}
 	}
 
-	public void Timer(final String player) {
+	public void Timer(final Player player) {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				if (plugin.getServer().getPlayerExact(player) != null)
-					plugin.getServer().getPlayerExact(player).sendMessage(Messages.Out_Of_Combat);
+				if (cm.isOnline(player))
+					player.sendMessage(Messages.Out_Of_Combat);
 
-				plugin.inCombat.remove(player);
+				cm.untag(player);
 			}
 		}, Variables.timeInCombat * 20);
 	}

@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Listeners;
 
+import me.NoChance.PvPManager.GlobalManager;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 
@@ -17,9 +18,9 @@ public class SignListener implements Listener {
 
 	private PvPManager plugin;
 
-	public SignListener(PvPManager plugin) {
-		this.plugin = plugin;
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	public SignListener(GlobalManager globalManager) {
+		this.plugin = globalManager;
+		globalManager.getServer().getPluginManager().registerEvents(this, globalManager);
 	}
 
 	@EventHandler

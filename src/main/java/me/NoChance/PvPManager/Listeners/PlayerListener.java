@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Listeners;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.NoChance.PvPManager.GlobalManager;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
@@ -25,9 +26,9 @@ public class PlayerListener implements Listener {
 	public ItemStack[] armor;
 	public HashMap<String, ArrayList<ItemStack[]>> noDrop = new HashMap<String, ArrayList<ItemStack[]>>();
 
-	public PlayerListener(PvPManager plugin) {
-		this.plugin = plugin;
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	public PlayerListener(GlobalManager globalManager) {
+		this.plugin = globalManager;
+		globalManager.getServer().getPluginManager().registerEvents(this, globalManager);
 	}
 
 	@EventHandler
