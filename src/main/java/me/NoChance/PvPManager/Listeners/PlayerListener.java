@@ -2,9 +2,8 @@ package me.NoChance.PvPManager.Listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import me.NoChance.PvPManager.GlobalManager;
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Utils;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import org.bukkit.entity.ExperienceOrb;
@@ -21,20 +20,20 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerListener implements Listener {
 
 	private PvPManager plugin;
-	public Player loggedOut;
-	public ItemStack[] it;
-	public ItemStack[] armor;
-	public HashMap<String, ArrayList<ItemStack[]>> noDrop = new HashMap<String, ArrayList<ItemStack[]>>();
+	private Player loggedOut;
+	private ItemStack[] it;
+	private ItemStack[] armor;
+	private HashMap<String, ArrayList<ItemStack[]>> noDrop = new HashMap<String, ArrayList<ItemStack[]>>();
 
-	public PlayerListener(GlobalManager globalManager) {
-		this.plugin = globalManager;
-		globalManager.getServer().getPluginManager().registerEvents(this, globalManager);
+	public PlayerListener(PvPManager plugin) {
+		this.plugin = plugin;
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler
 	public void onPlayerLogout(PlayerQuitEvent event) {
 		if (Variables.punishmentsEnabled && Variables.killOnLogout) {
-			if (plugin.inCombat.contains(event.getPlayer().getName())) {
+			if (plugin.getCm().isInCombat(event.getPlayer())) {
 				loggedOut = event.getPlayer();
 				loggedOut.setHealth(0);
 				if (Variables.broadcastPvpLog)
@@ -74,7 +73,7 @@ public class PlayerListener implements Listener {
 				}
 			}
 		}
-		if (plugin.inCombat.contains(event.getEntity().getName())) {
+		if (plugin.getCm().isInCombat(event.getEntity())) {
 			Player player = event.getEntity();
 			if (player.hasPermission("pvpmanager.nodrop")) {
 				ArrayList<ItemStack[]> inv = new ArrayList<ItemStack[]>();
@@ -98,19 +97,19 @@ public class PlayerListener implements Listener {
 				player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 			}
 		} else if (!player.hasPlayedBefore()) {
-			plugin.newbies.add(player.getName());
+			plugin.getCm().addNewbie(player);
 			player.sendMessage(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
 			scheduleNewbieRemoval(player.getName());
 		}
 		if (player.hasPermission("pvpmanager.nopvp")) {
-			plugin.playersStatusOff.add(player.getName());
+			plugin.getCm().disablePvp(player);
 		}
 	}
 
 	private void scheduleNewbieRemoval(final String name) {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				plugin.newbies.remove(name);
+				plugin.getCm().removeNewbie(Utils.getPlayer(name));
 			}
 		}, Variables.newbieProtectionTime * 1200);
 
@@ -129,9 +128,9 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
 		if (Variables.announcePvpOnWorldChange) {
-			if (plugin.schedulers.containsKey(event.getPlayer().getWorld().getName().toLowerCase())) {
+			if (plugin.getWtm().contains(event.getPlayer().getWorld())) {
 				Player p = event.getPlayer();
-				plugin.schedulers.get(p.getWorld().getName().toLowerCase()).sendWorldChangeMessage(p);
+				plugin.getWtm().getPvpTimer(p.getWorld()).sendWorldChangeMessage(p);
 			}
 		}
 	}

@@ -1,10 +1,9 @@
 package me.NoChance.PvPManager.Listeners;
 
-import me.NoChance.PvPManager.CombatManager;
-import me.NoChance.PvPManager.GlobalManager;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Managers.CombatManager;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -21,14 +20,12 @@ public class DamageListener implements Listener {
 	private WorldGuardPlugin wg;
 	private CombatManager cm;
 
-	public DamageListener(GlobalManager globalManager) {
-		this.gm = globalManager;
-		this.cm = gm.getCM();
-		PvPManager plugin = globalManager.getPlugin();
+	public DamageListener(PvPManager pvPManager) {
+		this.cm = pvPManager.getCm();
+		PvPManager plugin = pvPManager;
 		wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 		if (worldGuardEnabled())
 			plugin.getLogger().info("WorldGuard Found! Detecting PvP regions...");
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -47,26 +44,26 @@ public class DamageListener implements Listener {
 			}
 		}
 		if (Variables.pvpTimerEnabled) {
-			if (plugin.schedulers.containsKey(attacker.getWorld().getName().toLowerCase())) {
-				if (!plugin.schedulers.get(attacker.getWorld().getName().toLowerCase()).timeForPvp) {
+			if (cm.isPvpTimerWorld(attacker.getWorld())) {
+				if (!cm.isTimeForPvp(attacker.getWorld())) {
 					event.setCancelled(true);
 					return;
 				}
 			}
 		}
-		if (plugin.newbies.contains(attacked.getName()) || plugin.newbies.contains(attacker.getName())) {
+		if (cm.isNewbie(attacked) || cm.isNewbie(attacker)) {
 			event.setCancelled(true);
-			if (plugin.newbies.contains(attacked.getName()))
+			if (cm.isNewbie(attacked))
 				attacker.sendMessage("§6[§8PvPManager§6]§4" + attacked.getName() + " has Newbie Protection!");
 			else
 				attacked.sendMessage("§6[§8PvPManager§6]§4" + "Please wait until your PvP protection expires");
 			return;
 		}
-		if (!plugin.hasPvpEnabled(attacked.getName())) {
+		if (!cm.hasPvpEnabled(attacked.getName())) {
 			event.setCancelled(true);
 			attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
 			return;
-		} else if (!plugin.hasPvpEnabled(attacker.getName())) {
+		} else if (!cm.hasPvpEnabled(attacker.getName())) {
 			event.setCancelled(true);
 			attacker.sendMessage(Messages.Attack_Denied_You);
 			return;
@@ -112,7 +109,7 @@ public class DamageListener implements Listener {
 			if (!player1.hasPermission("pvpmanager.nocombat")) {
 				cm.tag(player1);
 				player1.sendMessage(Messages.You_Are_InCombat);
-				Timer(player1);
+				cm.Timer(player1);
 				if (Variables.disableFly) {
 					checkFly(player1, event);
 				}
@@ -122,7 +119,7 @@ public class DamageListener implements Listener {
 			if (!player1.hasPermission("pvpmanager.nocombat")) {
 				cm.tag(player1);
 				player1.sendMessage(Messages.You_Are_InCombat);
-				Timer(player1);
+				cm.Timer(player1);
 				if (Variables.disableFly) {
 					checkFly(player1, event);
 				}
@@ -130,23 +127,12 @@ public class DamageListener implements Listener {
 			if (!player2.hasPermission("pvpmanager.nocombat")) {
 				cm.tag(player2);
 				player2.sendMessage(Messages.You_Are_InCombat);
-				Timer(player2);
+				cm.Timer(player2);
 				if (Variables.disableFly) {
 					checkFly(player2, event);
 				}
 			}
 		}
-	}
-
-	public void Timer(final Player player) {
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			public void run() {
-				if (cm.isOnline(player))
-					player.sendMessage(Messages.Out_Of_Combat);
-
-				cm.untag(player);
-			}
-		}, Variables.timeInCombat * 20);
 	}
 
 	public boolean worldGuardEnabled() {

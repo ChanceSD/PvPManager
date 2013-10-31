@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager.Listeners;
 
-import me.NoChance.PvPManager.GlobalManager;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
@@ -13,15 +12,14 @@ public class CommandListener implements Listener {
 
 	private PvPManager plugin;
 
-	public CommandListener(GlobalManager globalManager) {
-		this.plugin = globalManager;
-		globalManager.getServer().getPluginManager().registerEvents(this, globalManager);
+	public CommandListener(PvPManager plugin) {
+		this.plugin = plugin;
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onCommand(PlayerCommandPreprocessEvent event) {
 		if (Variables.stopCommands && Variables.inCombatEnabled) {
-			if (plugin.inCombat.contains(event.getPlayer().getName())) {
+			if (plugin.getCm().isInCombat(event.getPlayer())) {
 				event.setCancelled(true);
 				event.getPlayer().sendMessage(Messages.Command_Denied_InCombat);
 			}
@@ -29,8 +27,8 @@ public class CommandListener implements Listener {
 		// Checking if PvPTimer is right every time a command is executed
 		// Using this instead of a repeating task, seems less resource intensive
 		if (Variables.pvpTimerEnabled) {
-			if (plugin.schedulers.containsKey(event.getPlayer().getWorld().getName().toLowerCase())) {
-				plugin.schedulers.get(event.getPlayer().getWorld().getName().toLowerCase()).checkWorldPvP();
+			if (plugin.getWtm().contains(event.getPlayer().getWorld())) {
+				plugin.getWtm().getPvpTimer(event.getPlayer().getWorld()).checkWorldPvP();
 			}
 		}
 
@@ -41,13 +39,13 @@ public class CommandListener implements Listener {
 		if (Variables.pvpTimerEnabled) {
 			String[] cmd = event.getCommand().split(" ");
 			if (cmd[0].equalsIgnoreCase("time")) {
-				if (plugin.schedulers.containsKey("world")) {
-					plugin.schedulers.get("world").checkWorldPvP();
+				if (plugin.getWtm().contains("world")) {
+					plugin.getWtm().getPvpTimer("world").checkWorldPvP();
 				}
 
 				if (cmd.length == 4) {
-					if (plugin.schedulers.containsKey(cmd[3].toLowerCase())) {
-						plugin.schedulers.get(cmd[3].toLowerCase()).checkWorldPvP();
+					if (plugin.getWtm().contains(cmd[3].toLowerCase())) {
+						plugin.getWtm().getPvpTimer(cmd[3].toLowerCase()).checkWorldPvP();
 					}
 				}
 			}

@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Commands;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPTimer;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,16 +13,18 @@ import org.bukkit.entity.Player;
 public class PM implements CommandExecutor {
 
 	private PvPManager plugin;
+	private WorldTimerManager wtm;
 
 	public PM(PvPManager plugin) {
 		this.plugin = plugin;
+		this.wtm = plugin.getWtm();
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (args.length == 0) {
-				plugin.variables.helpMenu(player);
+				Variables.helpMenu(player);
 				return true;
 			}
 			if (args.length == 1) {
@@ -35,7 +38,7 @@ public class PM implements CommandExecutor {
 			}
 			if (args.length == 2 && player.hasPermission("pvpmanager.pvptimer")) {
 				if (args[0].equalsIgnoreCase("pvpstart")) {
-					PvPTimer a = plugin.schedulers.get(player.getWorld().getName().toLowerCase());
+					PvPTimer a = plugin.getWtm().getPvpTimer(player.getWorld());
 					a.setStartPvP(Integer.parseInt(args[1]));
 					player.sendMessage(ChatColor.DARK_GREEN + "PvP Start Time Changed to " + args[1] + " on World "
 							+ player.getWorld().getName());
@@ -43,7 +46,7 @@ public class PM implements CommandExecutor {
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("pvpend")) {
-					PvPTimer a = plugin.schedulers.get(player.getWorld().getName().toLowerCase());
+					PvPTimer a = plugin.getWtm().getPvpTimer(player.getWorld());
 					a.setEndPvP(Integer.parseInt(args[1]));
 					player.sendMessage(ChatColor.DARK_GREEN + "PvP End Time Changed to " + args[1] + " on World "
 							+ player.getWorld().getName());
@@ -53,26 +56,26 @@ public class PM implements CommandExecutor {
 			}
 			if (args.length == 3 && player.hasPermission("pvpmanager.pvptimer")) {
 				if (args[0].equalsIgnoreCase("pvpstart")) {
-					if (plugin.schedulers.containsKey(args[2].toLowerCase())) {
-						PvPTimer a = plugin.schedulers.get(args[2].toLowerCase());
+					if (wtm.contains(args[2])) {
+						PvPTimer a = wtm.getPvpTimer(args[2]);
 						a.setStartPvP(Integer.parseInt(args[1]));
 						player.sendMessage(ChatColor.DARK_GREEN + "PvP Start Time Changed to " + args[1] + " on World "
-								+ a.w.getName());
+								+ a.getWorld().getName());
 						a.reload();
 						return true;
 					}
 				}
 				if (args[0].equalsIgnoreCase("pvpend")) {
-					if (plugin.schedulers.containsKey(args[2].toLowerCase())) {
-						PvPTimer a = plugin.schedulers.get(args[2].toLowerCase());
+					if (wtm.contains(args[2])) {
+						PvPTimer a = wtm.getPvpTimer(args[2]);
 						a.setEndPvP(Integer.parseInt(args[1]));
 						player.sendMessage(ChatColor.DARK_GREEN + "PvP End Time Changed to " + args[1] + " on World "
-								+ a.w.getName());
+								+ a.getWorld().getName());
 						a.reload();
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("pvpstart") || args[0].equalsIgnoreCase("pvpend"))
-					if (!plugin.schedulers.containsKey(args[2].toLowerCase()))
+					if (!wtm.contains(args[2]))
 						player.sendMessage(ChatColor.DARK_RED + "World not found!");
 				return false;
 			}
@@ -93,28 +96,28 @@ public class PM implements CommandExecutor {
 			}
 			if (args.length == 3) {
 				if (args[0].equalsIgnoreCase("pvpstart")) {
-					if (plugin.schedulers.containsKey(args[2].toLowerCase())) {
-						PvPTimer a = plugin.schedulers.get(args[2].toLowerCase());
+					if (wtm.contains(args[2])) {
+						PvPTimer a = wtm.getPvpTimer(args[2]);
 						a.setStartPvP(Integer.parseInt(args[1]));
 						sender.sendMessage(ChatColor.DARK_GREEN + "PvP Start Time Changed to " + args[1] + " on World "
-								+ a.w.getName());
+								+ a.getWorld().getName());
 						a.reload();
 						return true;
 					}
 
 				}
 				if (args[0].equalsIgnoreCase("pvpend")) {
-					if (plugin.schedulers.containsKey(args[2].toLowerCase())) {
-						PvPTimer a = plugin.schedulers.get(args[2].toLowerCase());
+					if (wtm.contains(args[2])) {
+						PvPTimer a = wtm.getPvpTimer(args[2]);
 						a.setEndPvP(Integer.parseInt(args[1]));
 						sender.sendMessage(ChatColor.DARK_GREEN + "PvP End Time Changed to " + args[1] + " on World "
-								+ a.w.getName());
+								+ a.getWorld().getName());
 						a.reload();
 						return true;
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("pvpstart") || args[0].equalsIgnoreCase("pvpend"))
-				if (!plugin.schedulers.containsKey(args[2].toLowerCase()))
+				if (!wtm.contains(args[2]))
 					sender.sendMessage(ChatColor.DARK_RED + "World not found!");
 			return false;
 		}
@@ -126,14 +129,7 @@ public class PM implements CommandExecutor {
 		plugin.update = false;
 		plugin.getServer().getPluginManager().disablePlugin(plugin);
 		plugin.getServer().getPluginManager().enablePlugin(plugin);
-		for (PvPTimer a : plugin.schedulers.values()) {
-			if(Variables.pvpTimerEnabled)
-				a.reload();
-			else if (!Variables.pvpTimerEnabled)
-				a.cancelAllTasks();
-		}
-		if (!Variables.pvpTimerEnabled)
-			plugin.schedulers.clear();
+		wtm.reloadPvpTimers();
 		player.sendMessage("PvPManager Reloaded!");
 	}
 

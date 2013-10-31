@@ -1,32 +1,31 @@
 package me.NoChance.PvPManager;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 import me.NoChance.PvPManager.Updater.UpdateResult;
 import me.NoChance.PvPManager.Commands.*;
 import me.NoChance.PvPManager.Config.*;
 import me.NoChance.PvPManager.Listeners.*;
-import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
+import me.NoChance.PvPManager.Managers.CombatManager;
+import me.NoChance.PvPManager.Managers.ConfigManager;
+import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PvPManager extends JavaPlugin {
 
-	public HashSet<String> playersStatusOff = new HashSet<String>();
-	public ConfigManager configM;
-	public Variables variables;
-	public HashSet<String> newbies = new HashSet<String>();
-	public HashMap<String, PvPTimer> schedulers = new HashMap<String, PvPTimer>();
+	private ConfigManager configM;
 	public boolean update;
 	public String newVersion;
-	private GlobalManager globalManager;
+	private CombatManager combatManager;
+	private WorldTimerManager worldTimerManager;
 
 	@Override
 	public void onEnable() {
 		loadFiles();
-		this.globalManager = new GlobalManager(this);
-		getCommand("pvp").setExecutor(new PvP(this));
+		if (Variables.pvpTimerEnabled) {
+			this.worldTimerManager = new WorldTimerManager(this);
+		}
+		startListeners();
+		this.combatManager = new CombatManager(this);
+		getCommand("pvp").setExecutor(new PvP(combatManager));
 		getCommand("pm").setExecutor(new PM(this));
 		new CustomGraph(this);
 		if (Variables.updateCheck) {
@@ -60,14 +59,25 @@ public final class PvPManager extends JavaPlugin {
 		this.configM = new ConfigManager(this);
 		this.configM.load();
 		this.configM.loadUsers();
-		variables = new Variables(this);
+	}
+	
+	private void startListeners() {
+		if ((Variables.stopCommands && Variables.inCombatEnabled) || Variables.pvpTimerEnabled) {
+			Utils.register(new CommandListener(this), this);
+		}
+		Utils.register(new DamageListener(this), this);
+		Utils.register(new PlayerListener(this), this);
+		if (Variables.toggleSignsEnabled) {
+			Utils.register(new SignListener(this), this);
+		}
+	}
+	
+	public CombatManager getCm(){
+		return combatManager;
 	}
 
-	public boolean hasPvpEnabled(String name) {
-		for (String n : playersStatusOff) {
-			if (n.equalsIgnoreCase(name))
-				return false;
-		}
-		return true;
+	public WorldTimerManager getWtm() {
+		return worldTimerManager;
 	}
+
 }

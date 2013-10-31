@@ -11,9 +11,9 @@ public class PvPTimer {
 	private PvPManager plugin;
 	private long pvpOnDelay;
 	private long pvpOffDelay;
-	public boolean timeForPvp;
+	private boolean timeForPvp;
 	private String lastAnnounce;
-	public World w;
+	private World w;
 	private int[] scheduledTasks = new int[5];
 	private long startPvP;
 	private long endPvP;
@@ -188,5 +188,13 @@ public class PvPTimer {
 	
 	public void sendWorldChangeMessage(Player p){
 		p.sendMessage(getWorldChangeMessage());
+	}
+	
+	public boolean isPvpTime(){
+		return timeForPvp;
+	}
+	
+	public World getWorld(){
+		return w;
 	}
 }

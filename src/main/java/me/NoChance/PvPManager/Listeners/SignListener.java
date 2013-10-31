@@ -1,9 +1,7 @@
 package me.NoChance.PvPManager.Listeners;
 
-import me.NoChance.PvPManager.GlobalManager;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,9 +16,9 @@ public class SignListener implements Listener {
 
 	private PvPManager plugin;
 
-	public SignListener(GlobalManager globalManager) {
-		this.plugin = globalManager;
-		globalManager.getServer().getPluginManager().registerEvents(this, globalManager);
+	public SignListener(PvPManager plugin) {
+		this.plugin = plugin;
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler
@@ -48,11 +46,11 @@ public class SignListener implements Listener {
 				if (player.hasPermission("pvpmanager.pvpstatus.change")) {
 					Sign sign = (Sign) clicked.getState();
 					if (sign.getLine(0).equalsIgnoreCase("§5[PvPManager]")) {
-						if (plugin.hasPvpEnabled(player.getName())) {
-							plugin.playersStatusOff.add(player.getName());
+						if (plugin.getCm().hasPvpEnabled(player.getName())) {
+							plugin.getCm().disablePvp(player);
 							player.sendMessage(Messages.PvP_Disabled);
 						} else {
-							plugin.playersStatusOff.remove(player.getName());
+							plugin.getCm().enablePvp(player);
 							player.sendMessage(Messages.PvP_Enabled);
 						}
 					}

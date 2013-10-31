@@ -38,7 +38,7 @@ public class Variables {
 		InitialiseVariables();
 	}
 
-	public void InitialiseVariables() {
+	private void InitialiseVariables() {
 		inCombatEnabled = getBoolean("In Combat.Enabled");
 		timeInCombat = getInt("In Combat.Time(seconds)");
 		stopCommands = getBoolean("In Combat.Stop Commands");
@@ -62,41 +62,32 @@ public class Variables {
 		broadcastPvpLog = getBoolean("In Combat.Punishments.Broadcast PvPLog");
 	}
 
-	public boolean getBoolean(String a) {
+	private boolean getBoolean(String a) {
 		return plugin.getConfig().getBoolean(a);
 	}
 
-	public int getInt(String a) {
+	private int getInt(String a) {
 		return plugin.getConfig().getInt(a);
 	}
-	
-	public List<String> getStringList(String a){
+
+	private List<String> getStringList(String a) {
 		return plugin.getConfig().getStringList(a);
 	}
-	
-	public String getString(String a){
+
+	private String getString(String a) {
 		return plugin.getConfig().getString(a);
 	}
-	
-	public void helpMenu(Player player){
-		player.sendMessage(ChatColor.GOLD
-				+ "-------------- PvPManager Help Page --------------");
-		player.sendMessage(ChatColor.GOLD + "/pvp "
-				+ ChatColor.WHITE + "| Set PvP Enabled or Disabled.");
-		player.sendMessage(ChatColor.GOLD + "/pvp status "
-				+ ChatColor.WHITE + "| Check What is your PvP Status.");
-		player.sendMessage(ChatColor.GOLD + "/pvp status <player> "
-				+ ChatColor.WHITE + "| Check Another Player PvP Status.");
-		player.sendMessage(ChatColor.GOLD + "/pm "
-				+ ChatColor.WHITE + "| Show This Help Page");
-		player.sendMessage(ChatColor.GOLD + "/pm reload "
-				+ ChatColor.WHITE + "| Reload PvPManager");
-		player.sendMessage(ChatColor.GOLD + "/pm pvpstart <time> [world] "
-				+ ChatColor.WHITE + "| Change the time PvP Starts in a world");
-		player.sendMessage(ChatColor.GOLD + "/pm pvpend <time> [world] "
-				+ ChatColor.WHITE + "| Change the time PvP Ends in a world");
-		player.sendMessage(ChatColor.GOLD
-				+ "-------------------------------------------------");
+
+	public static void helpMenu(Player player) {
+		player.sendMessage(ChatColor.GOLD + "-------------- PvPManager Help Page --------------");
+		player.sendMessage(ChatColor.GOLD + "/pvp " + ChatColor.WHITE + "| Set PvP Enabled or Disabled.");
+		player.sendMessage(ChatColor.GOLD + "/pvp status " + ChatColor.WHITE + "| Check What is your PvP Status.");
+		player.sendMessage(ChatColor.GOLD + "/pvp status <player> " + ChatColor.WHITE + "| Check Another Player PvP Status.");
+		player.sendMessage(ChatColor.GOLD + "/pm " + ChatColor.WHITE + "| Show This Help Page");
+		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");
+		player.sendMessage(ChatColor.GOLD + "/pm pvpstart <time> [world] " + ChatColor.WHITE + "| Change the time PvP Starts in a world");
+		player.sendMessage(ChatColor.GOLD + "/pm pvpend <time> [world] " + ChatColor.WHITE + "| Change the time PvP Ends in a world");
+		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
 	}
-	
+
 }
