@@ -27,7 +27,7 @@ public class CommandListener implements Listener {
 		// Checking if PvPTimer is right every time a command is executed
 		// Using this instead of a repeating task, seems less resource intensive
 		if (Variables.pvpTimerEnabled) {
-			if (plugin.getWtm().contains(event.getPlayer().getWorld())) {
+			if (plugin.getWtm().isPvpTimerWorld(event.getPlayer().getWorld())) {
 				plugin.getWtm().getPvpTimer(event.getPlayer().getWorld()).checkWorldPvP();
 			}
 		}
@@ -39,12 +39,12 @@ public class CommandListener implements Listener {
 		if (Variables.pvpTimerEnabled) {
 			String[] cmd = event.getCommand().split(" ");
 			if (cmd[0].equalsIgnoreCase("time")) {
-				if (plugin.getWtm().contains("world")) {
+				if (plugin.getWtm().isPvpTimerWorld("world")) {
 					plugin.getWtm().getPvpTimer("world").checkWorldPvP();
 				}
 
 				if (cmd.length == 4) {
-					if (plugin.getWtm().contains(cmd[3].toLowerCase())) {
+					if (plugin.getWtm().isPvpTimerWorld(cmd[3].toLowerCase())) {
 						plugin.getWtm().getPvpTimer(cmd[3].toLowerCase()).checkWorldPvP();
 					}
 				}

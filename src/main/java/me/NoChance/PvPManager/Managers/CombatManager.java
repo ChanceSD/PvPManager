@@ -1,13 +1,11 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.HashSet;
-
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Utils;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-
-import org.bukkit.World;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -23,17 +21,6 @@ public class CombatManager {
 	public CombatManager(PvPManager plugin) {
 		this.plugin = plugin;
 		this.wtm = plugin.getWtm();
-	}
-
-	public boolean isPvpTimerWorld(World w) {
-		return wtm.contains(w);
-	}
-
-	public boolean isTimeForPvp(World w) {
-		if (wtm.getPvpTimer(w).isPvpTime())
-			return true;
-		else
-			return false;
 	}
 
 	public boolean isPvP(EntityDamageByEntityEvent event) {
@@ -56,11 +43,41 @@ public class CombatManager {
 	}
 
 	public void tag(Player p) {
+		if (p.hasPermission("pvpmanager.nocombat")) {
+			return;
+		}
 		inCombat.add(p.getName());
+		p.sendMessage(Messages.You_Are_InCombat);
+		untagTimer(p);
+		if (Variables.disableFly && p.isFlying() && p.getAllowFlight()) {
+			disableFly(p);
+		}
+		//to finish (add config option for gamemode)
+		if (p.getGameMode().equals(GameMode.CREATIVE)) {
+			p.setGameMode(GameMode.SURVIVAL);
+		}
+
 	}
 
 	public void untag(Player p) {
 		inCombat.remove(p.getName());
+		if (Utils.isOnline(p))
+			p.sendMessage(Messages.Out_Of_Combat);
+	}
+
+	public void disableFly(Player player) {
+		player.setFlying(false);
+		player.setAllowFlight(false);
+	}
+	
+	public void inCombat(Player attacker, Player attacked) {
+		if (Variables.onlyTagAttacker) {
+			tag(attacker);
+			return;
+		} else {
+			tag(attacker);
+			tag(attacked);
+		}
 	}
 
 	public boolean isNewbie(Player p) {
@@ -78,12 +95,9 @@ public class CombatManager {
 		return true;
 	}
 
-	public void Timer(final Player player) {
+	public void untagTimer(final Player player) {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				if (Utils.isOnline(player))
-					player.sendMessage(Messages.Out_Of_Combat);
-
 				untag(player);
 			}
 		}, Variables.timeInCombat * 20);
@@ -107,5 +121,9 @@ public class CombatManager {
 
 	public HashSet<String> getPlayersStatusOff() {
 		return playersStatusOff;
+	}
+
+	public WorldTimerManager getWtm() {
+		return wtm;
 	}
 }

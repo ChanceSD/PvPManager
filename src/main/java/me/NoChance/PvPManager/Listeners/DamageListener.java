@@ -22,20 +22,22 @@ public class DamageListener implements Listener {
 
 	public DamageListener(PvPManager pvPManager) {
 		this.cm = pvPManager.getCm();
-		PvPManager plugin = pvPManager;
-		wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
+		wg = (WorldGuardPlugin) pvPManager.getServer().getPluginManager().getPlugin("WorldGuard");
 		if (worldGuardEnabled())
-			plugin.getLogger().info("WorldGuard Found! Detecting PvP regions...");
+			pvPManager.getLogger().info("WorldGuard Found! Detecting PvP regions...");
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void PlayerDamageListener(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event)) {
+		if (!cm.isPvP(event))
+			return;
+		Player attacker = getAttacker(event);
+		Player attacked = (Player) event.getEntity();
+
+		if (attacker.hasPermission("pvpmanager.override")) {
+			event.setCancelled(false);
 			return;
 		}
-		Player attacker = getAttacker(event);
-		Player attacked = getAttacked(event);
-
 		if (worldGuardEnabled()) {
 			ApplicableRegionSet set = wg.getRegionManager(attacked.getWorld()).getApplicableRegions(attacked.getLocation());
 			if (set.getFlag(DefaultFlag.PVP) != null) {
@@ -44,8 +46,8 @@ public class DamageListener implements Listener {
 			}
 		}
 		if (Variables.pvpTimerEnabled) {
-			if (cm.isPvpTimerWorld(attacker.getWorld())) {
-				if (!cm.isTimeForPvp(attacker.getWorld())) {
+			if (cm.getWtm().isPvpTimerWorld(attacker.getWorld())) {
+				if (!cm.getWtm().isTimeForPvp(attacker.getWorld())) {
 					event.setCancelled(true);
 					return;
 				}
@@ -68,21 +70,19 @@ public class DamageListener implements Listener {
 			attacker.sendMessage(Messages.Attack_Denied_You);
 			return;
 		}
-
-		if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
-			if (!cm.isInCombat(attacker) && !cm.isInCombat(attacked)) {
-				inCombat(attacker, attacked, event);
-			}
-		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void DamageListenerForOverride(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event)) {
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void LastDamageListener(EntityDamageByEntityEvent event) {
+		if (!cm.isPvP(event))
 			return;
+		Player attacker = getAttacker(event);
+		Player attacked = (Player) event.getEntity();
+		if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
+			if (!cm.isInCombat(attacker) && !cm.isInCombat(attacked)) {
+				cm.inCombat(attacker, attacked);
+			}
 		}
-		if (getAttacker(event).hasPermission("pvpmanager.override") && event.isCancelled())
-			event.setCancelled(false);
 	}
 
 	public Player getAttacker(EntityDamageByEntityEvent event) {
@@ -90,49 +90,6 @@ public class DamageListener implements Listener {
 			return (Player) ((Projectile) event.getDamager()).getShooter();
 		else
 			return (Player) event.getDamager();
-	}
-
-	public Player getAttacked(EntityDamageByEntityEvent event) {
-		return (Player) event.getEntity();
-	}
-
-	public void checkFly(Player player, EntityDamageByEntityEvent event) {
-		if (player.isFlying() && player.getAllowFlight()) {
-			player.setFlying(false);
-			player.setAllowFlight(false);
-			event.setCancelled(true);
-		}
-	}
-
-	public void inCombat(Player player1, Player player2, EntityDamageByEntityEvent event) {
-		if (Variables.onlyTagAttacker) {
-			if (!player1.hasPermission("pvpmanager.nocombat")) {
-				cm.tag(player1);
-				player1.sendMessage(Messages.You_Are_InCombat);
-				cm.Timer(player1);
-				if (Variables.disableFly) {
-					checkFly(player1, event);
-				}
-			}
-			return;
-		} else {
-			if (!player1.hasPermission("pvpmanager.nocombat")) {
-				cm.tag(player1);
-				player1.sendMessage(Messages.You_Are_InCombat);
-				cm.Timer(player1);
-				if (Variables.disableFly) {
-					checkFly(player1, event);
-				}
-			}
-			if (!player2.hasPermission("pvpmanager.nocombat")) {
-				cm.tag(player2);
-				player2.sendMessage(Messages.You_Are_InCombat);
-				cm.Timer(player2);
-				if (Variables.disableFly) {
-					checkFly(player2, event);
-				}
-			}
-		}
 	}
 
 	public boolean worldGuardEnabled() {

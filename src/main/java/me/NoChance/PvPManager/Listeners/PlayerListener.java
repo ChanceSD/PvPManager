@@ -128,7 +128,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
 		if (Variables.announcePvpOnWorldChange) {
-			if (plugin.getWtm().contains(event.getPlayer().getWorld())) {
+			if (plugin.getWtm().isPvpTimerWorld(event.getPlayer().getWorld())) {
 				Player p = event.getPlayer();
 				plugin.getWtm().getPvpTimer(p.getWorld()).sendWorldChangeMessage(p);
 			}

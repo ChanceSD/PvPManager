@@ -56,7 +56,7 @@ public class PM implements CommandExecutor {
 			}
 			if (args.length == 3 && player.hasPermission("pvpmanager.pvptimer")) {
 				if (args[0].equalsIgnoreCase("pvpstart")) {
-					if (wtm.contains(args[2])) {
+					if (wtm.isPvpTimerWorld(args[2])) {
 						PvPTimer a = wtm.getPvpTimer(args[2]);
 						a.setStartPvP(Integer.parseInt(args[1]));
 						player.sendMessage(ChatColor.DARK_GREEN + "PvP Start Time Changed to " + args[1] + " on World "
@@ -66,7 +66,7 @@ public class PM implements CommandExecutor {
 					}
 				}
 				if (args[0].equalsIgnoreCase("pvpend")) {
-					if (wtm.contains(args[2])) {
+					if (wtm.isPvpTimerWorld(args[2])) {
 						PvPTimer a = wtm.getPvpTimer(args[2]);
 						a.setEndPvP(Integer.parseInt(args[1]));
 						player.sendMessage(ChatColor.DARK_GREEN + "PvP End Time Changed to " + args[1] + " on World "
@@ -75,7 +75,7 @@ public class PM implements CommandExecutor {
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("pvpstart") || args[0].equalsIgnoreCase("pvpend"))
-					if (!wtm.contains(args[2]))
+					if (!wtm.isPvpTimerWorld(args[2]))
 						player.sendMessage(ChatColor.DARK_RED + "World not found!");
 				return false;
 			}
@@ -96,7 +96,7 @@ public class PM implements CommandExecutor {
 			}
 			if (args.length == 3) {
 				if (args[0].equalsIgnoreCase("pvpstart")) {
-					if (wtm.contains(args[2])) {
+					if (wtm.isPvpTimerWorld(args[2])) {
 						PvPTimer a = wtm.getPvpTimer(args[2]);
 						a.setStartPvP(Integer.parseInt(args[1]));
 						sender.sendMessage(ChatColor.DARK_GREEN + "PvP Start Time Changed to " + args[1] + " on World "
@@ -107,7 +107,7 @@ public class PM implements CommandExecutor {
 
 				}
 				if (args[0].equalsIgnoreCase("pvpend")) {
-					if (wtm.contains(args[2])) {
+					if (wtm.isPvpTimerWorld(args[2])) {
 						PvPTimer a = wtm.getPvpTimer(args[2]);
 						a.setEndPvP(Integer.parseInt(args[1]));
 						sender.sendMessage(ChatColor.DARK_GREEN + "PvP End Time Changed to " + args[1] + " on World "
@@ -117,7 +117,7 @@ public class PM implements CommandExecutor {
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("pvpstart") || args[0].equalsIgnoreCase("pvpend"))
-				if (!wtm.contains(args[2]))
+				if (!wtm.isPvpTimerWorld(args[2]))
 					sender.sendMessage(ChatColor.DARK_RED + "World not found!");
 			return false;
 		}

@@ -27,14 +27,21 @@ public class WorldTimerManager {
 		return schedulers.get(worldName.toLowerCase());
 	}
 
-	public boolean contains(World w) {
+	public boolean isPvpTimerWorld(World w) {
 		if (schedulers.containsKey(w.getName().toLowerCase()))
 			return true;
 		else
 			return false;
 	}
+	
+	public boolean isTimeForPvp(World w) {
+		if (getPvpTimer(w).isPvpTime())
+			return true;
+		else
+			return false;
+	}
 
-	public boolean contains(String worldName) {
+	public boolean isPvpTimerWorld(String worldName) {
 		if (schedulers.containsKey(worldName.toLowerCase()))
 			return true;
 		else
