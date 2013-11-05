@@ -6,16 +6,16 @@ import me.NoChance.PvPManager.Config.*;
 import me.NoChance.PvPManager.Listeners.*;
 import me.NoChance.PvPManager.Managers.CombatManager;
 import me.NoChance.PvPManager.Managers.ConfigManager;
+import me.NoChance.PvPManager.Managers.PunishmentsManager;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
-	public boolean update;
-	public String newVersion;
 	private CombatManager combatManager;
 	private WorldTimerManager worldTimerManager;
+	private PunishmentsManager punishmentsManager;
 
 	@Override
 	public void onEnable() {
@@ -25,19 +25,12 @@ public final class PvPManager extends JavaPlugin {
 		}
 		startListeners();
 		this.combatManager = new CombatManager(this);
+		this.punishmentsManager = new PunishmentsManager(this);
 		getCommand("pvp").setExecutor(new PvP(combatManager));
 		getCommand("pm").setExecutor(new PM(this));
 		new CustomGraph(this);
 		if (Variables.updateCheck) {
-			getLogger().info("Checking for updates...");
-			Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
-			if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
-				update = true;
-				newVersion = updater.getLatestName();
-				getLogger().info("Update Available: " + newVersion);
-				getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
-			} else
-				getLogger().info("No update found");
+			checkForUpdates();
 		}
 	}
 
@@ -47,7 +40,7 @@ public final class PvPManager extends JavaPlugin {
 		this.configM.save();
 	}
 
-	public void loadFiles() {
+	private void loadFiles() {
 		new Messages(this);
 		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 7) {
 			getConfig().options().copyDefaults(true);
@@ -60,7 +53,7 @@ public final class PvPManager extends JavaPlugin {
 		this.configM.load();
 		this.configM.loadUsers();
 	}
-	
+
 	private void startListeners() {
 		if ((Variables.stopCommands && Variables.inCombatEnabled) || Variables.pvpTimerEnabled) {
 			Utils.register(new CommandListener(this), this);
@@ -71,13 +64,29 @@ public final class PvPManager extends JavaPlugin {
 			Utils.register(new SignListener(this), this);
 		}
 	}
-	
-	public CombatManager getCm(){
+
+	private void checkForUpdates() {
+		getLogger().info("Checking for updates...");
+		Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
+			Variables.update = true;
+			Variables.newVersion = updater.getLatestName();
+			getLogger().info("Update Available: " + Variables.newVersion);
+			getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+		} else
+			getLogger().info("No update found");
+	}
+
+	public CombatManager getCm() {
 		return combatManager;
 	}
 
 	public WorldTimerManager getWtm() {
 		return worldTimerManager;
+	}
+
+	public PunishmentsManager getPm() {
+		return punishmentsManager;
 	}
 
 }

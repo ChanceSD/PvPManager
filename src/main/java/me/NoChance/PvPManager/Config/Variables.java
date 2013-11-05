@@ -10,13 +10,13 @@ import org.bukkit.entity.Player;
 public class Variables {
 
 	private PvPManager plugin;
-
 	public static boolean inCombatEnabled;
 	public static int timeInCombat;
 	public static boolean stopCommands;
 	public static boolean punishmentsEnabled;
-	public static boolean keepItems;
-	public static boolean keepExp;
+	public static boolean dropInventory;
+	public static boolean dropExp;
+	public static boolean dropArmor;
 	public static boolean killOnLogout;
 	public static List<String> worldsExcluded;
 	public static boolean disableFly;
@@ -25,6 +25,7 @@ public class Variables {
 	public static boolean disableToggleCommand;
 	public static boolean onlyTagAttacker;
 	public static boolean updateCheck;
+	public static boolean autoUpdate;
 	public static boolean newbieProtectionEnabled;
 	public static int newbieProtectionTime;
 	public static String pvpOffSound;
@@ -32,6 +33,13 @@ public class Variables {
 	public static boolean enableSound;
 	public static boolean announcePvpOnWorldChange;
 	public static boolean broadcastPvpLog;
+	public static boolean fineEnabled;
+	public static double fineAmount;
+	public static boolean pvpBlood;
+	public static boolean disableGamemode;
+	public static boolean update = false;
+	public static String newVersion;
+	public static String currentVersion;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -43,16 +51,18 @@ public class Variables {
 		timeInCombat = getInt("In Combat.Time(seconds)");
 		stopCommands = getBoolean("In Combat.Stop Commands");
 		punishmentsEnabled = getBoolean("In Combat.Punishments.Enabled");
-		keepItems = getBoolean("In Combat.Punishments.Kill on Logout.Keep Items");
-		keepExp = getBoolean("In Combat.Punishments.Kill on Logout.Keep Exp");
-		killOnLogout = getBoolean("In Combat.Punishments.Kill on Logout.Enabled");
+		dropInventory = getBoolean("In Combat.Punishments.Drops.Inventory");
+		dropExp = getBoolean("In Combat.Punishments.Drops.Experience");
+		dropArmor = getBoolean("In Combat.Punishments.Drops.Armor");
+		killOnLogout = getBoolean("In Combat.Punishments.Kill on Logout");
 		worldsExcluded = getStringList("World Exclusions");
 		disableFly = getBoolean("In Combat.Disable Fly");
 		pvpTimerEnabled = getBoolean("PvP Timer.Enabled");
 		toggleSignsEnabled = getBoolean("Toggle Signs.Enabled");
 		disableToggleCommand = getBoolean("Toggle Signs.Disable Toggle Command");
 		onlyTagAttacker = getBoolean("In Combat.Only Tag Attacker");
-		updateCheck = getBoolean("Update Check");
+		updateCheck = getBoolean("Update Check.Enabled");
+		autoUpdate = getBoolean("Update Check.Auto Update");
 		newbieProtectionEnabled = getBoolean("Newbie Protection.Enabled");
 		newbieProtectionTime = getInt("Newbie Protection.Time(minutes)");
 		pvpOffSound = getString("PvP Timer.Sound.PvP Off Sound");
@@ -60,6 +70,15 @@ public class Variables {
 		enableSound = getBoolean("PvP Timer.Sound.Enabled");
 		announcePvpOnWorldChange = getBoolean("PvP Timer.Announce On World Change");
 		broadcastPvpLog = getBoolean("In Combat.Punishments.Broadcast PvPLog");
+		fineEnabled = getBoolean("In Combat.Punishments.Fine.Enabled");
+		fineAmount = getDouble("In Combat.Punishments.Fine.Amount");
+		pvpBlood = getBoolean("PvP Blood");
+		disableGamemode = getBoolean("In Combat.Disable GameMode");
+		currentVersion = plugin.getDescription().getVersion();
+	}
+
+	private double getDouble(String a) {
+		return plugin.getConfig().getDouble(a);
 	}
 
 	private boolean getBoolean(String a) {

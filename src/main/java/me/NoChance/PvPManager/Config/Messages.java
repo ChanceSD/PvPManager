@@ -9,13 +9,13 @@ import java.util.Enumeration;
 import java.util.Properties;
 import me.NoChance.PvPManager.PvPManager;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class Messages {
 
-	public PvPManager plugin;
-	public Properties lang = new Properties();
-	public final File messagesFile;
-
+	private PvPManager plugin;
+	private Properties lang = new Properties();
+	private final File messagesFile;
 	public static String Already_Disabled;
 	public static String Already_Enabled;
 	public static String Other_Status_Enabled;
@@ -117,5 +117,12 @@ public class Messages {
 		if (messagesFile.exists()) {
 			messagesFile.delete();
 		}
+	}
+
+	public static void updateMessage(Player player) {
+		player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + Variables.newVersion);
+		player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v" + Variables.currentVersion);
+		player.sendMessage("§2Go to this page to download the latest version:");
+		player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 	}
 }

@@ -12,22 +12,27 @@
 # Full list of Sounds you can use on PvP Timer feature: 
 # http://dev.bukkit.org/bukkit-plugins/pvpmanager/pages/list-of-sounds/
 
-Config Version: 7
-Update Check: true
+Config Version: 7 //change version, dont forget
+PvP Blood: true
 
 In Combat:
   Enabled: true
   Time(seconds): 15
   Stop Commands: true
   Disable Fly: true
+  Disable GameMode: true
   Only Tag Attacker: false
   Punishments:
     Enabled: true
     Broadcast PvPLog: true
-    Kill on Logout:
-      Enabled: true      
-      Keep Items: false
-      Keep Exp: false
+    Kill on Logout: true
+    Drops:
+      Inventory: true
+      Armor: true
+      Experience: true
+    Fine:
+      Enabled: true
+      Amount: 10.00
   
 Toggle Signs:
   Enabled: true
@@ -44,6 +49,10 @@ PvP Timer:
     Enabled: true
     PvP Off Sound: SUCCESSFUL_HIT
     PvP On Sound: GHAST_FIREBALL
+
+Update Check:
+  Enabled: true
+  Auto Update: true
 
 World Exclusions:
   - Example

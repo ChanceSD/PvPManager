@@ -4,6 +4,9 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.CombatManager;
+
+import org.bukkit.Effect;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -24,7 +27,7 @@ public class DamageListener implements Listener {
 		this.cm = pvPManager.getCm();
 		wg = (WorldGuardPlugin) pvPManager.getServer().getPluginManager().getPlugin("WorldGuard");
 		if (worldGuardEnabled())
-			pvPManager.getLogger().info("WorldGuard Found! Detecting PvP regions...");
+			pvPManager.getLogger().info("WorldGuard Found! Using it to detect PvP Zones");
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -78,6 +81,8 @@ public class DamageListener implements Listener {
 			return;
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
+		if (Variables.pvpBlood)
+			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
 			if (!cm.isInCombat(attacker) && !cm.isInCombat(attacked)) {
 				cm.inCombat(attacker, attacked);

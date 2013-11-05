@@ -52,11 +52,11 @@ public class CombatManager {
 		if (Variables.disableFly && p.isFlying() && p.getAllowFlight()) {
 			disableFly(p);
 		}
-		//to finish (add config option for gamemode)
-		if (p.getGameMode().equals(GameMode.CREATIVE)) {
-			p.setGameMode(GameMode.SURVIVAL);
+		if (Variables.disableGamemode) {
+			if (!p.getGameMode().equals(GameMode.SURVIVAL)) {
+				p.setGameMode(GameMode.SURVIVAL);
+			}
 		}
-
 	}
 
 	public void untag(Player p) {
@@ -69,7 +69,7 @@ public class CombatManager {
 		player.setFlying(false);
 		player.setAllowFlight(false);
 	}
-	
+
 	public void inCombat(Player attacker, Player attacked) {
 		if (Variables.onlyTagAttacker) {
 			tag(attacker);
@@ -103,8 +103,18 @@ public class CombatManager {
 		}, Variables.timeInCombat * 20);
 	}
 
+	public void removeNewbieTimer(final String name) {
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				removeNewbie(Utils.getPlayer(name));
+			}
+		}, Variables.newbieProtectionTime * 1200);
+
+	}
+
 	public void addNewbie(Player p) {
 		newbies.add(p.getName());
+		p.sendMessage(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
 	}
 
 	public void removeNewbie(Player p) {

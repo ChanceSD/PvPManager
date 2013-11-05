@@ -124,7 +124,7 @@ public class CustomGraph {
 					return i;
 				}
 			});
-
+//			Broken, need changing to new format
 			keepItemsExp.addPlotter(new Metrics.Plotter("Keep Everything") {
 				@Override
 				public int getValue() {

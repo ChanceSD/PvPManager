@@ -3,10 +3,9 @@ package me.NoChance.PvPManager.Listeners;
 import java.util.ArrayList;
 import java.util.HashMap;
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-import org.bukkit.entity.ExperienceOrb;
+import me.NoChance.PvPManager.Managers.PunishmentsManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,61 +19,57 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerListener implements Listener {
 
 	private PvPManager plugin;
-	private Player loggedOut;
-	private ItemStack[] it;
-	private ItemStack[] armor;
+	private PunishmentsManager pm;
 	private HashMap<String, ArrayList<ItemStack[]>> noDrop = new HashMap<String, ArrayList<ItemStack[]>>();
 
 	public PlayerListener(PvPManager plugin) {
 		this.plugin = plugin;
+		this.pm = plugin.getPm();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler
 	public void onPlayerLogout(PlayerQuitEvent event) {
-		if (Variables.punishmentsEnabled && Variables.killOnLogout) {
-			if (plugin.getCm().isInCombat(event.getPlayer())) {
-				loggedOut = event.getPlayer();
-				loggedOut.setHealth(0);
-				if (Variables.broadcastPvpLog)
-					plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", loggedOut.getName()));
-				if (Variables.keepItems) {
-					loggedOut.setHealth(20);
-					loggedOut.getInventory().setContents(it);
-					loggedOut.getInventory().setArmorContents(armor);
-					if (!Variables.keepExp) {
-						loggedOut.setLevel(0);
-						loggedOut.setExp(0);
+		Player player = event.getPlayer();
+		if (plugin.getCm().isInCombat(player)) {
+			if (Variables.broadcastPvpLog)
+				plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
+			if (Variables.punishmentsEnabled) {
+				if (Variables.killOnLogout) {
+					pm.addPvpLog(player);
+					if (!Variables.dropInventory || !Variables.dropArmor) {
+						pm.noDropKill(player);
+					} else
+						player.setHealth(0);
+				} else if (!Variables.killOnLogout) {
+					if (Variables.dropInventory) {
+						pm.fakeInventoryDrop(player, player.getInventory().getContents());
+						player.getInventory().clear();
+					}
+					if (Variables.dropArmor) {
+						pm.fakeInventoryDrop(player, player.getInventory().getArmorContents());
+						player.getInventory().setArmorContents(null);
+					}
+					if (Variables.dropExp) {
+						pm.fakeExpDrop(player);
 					}
 				}
+				if (Variables.fineEnabled)
+					pm.applyFine(player);
 			}
-			armor = null;
-			it = null;
-			loggedOut = null;
 		}
 	}
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		if (loggedOut != null) {
-			Player player = event.getEntity();
-			if (loggedOut.equals(player)) {
-				if (Variables.keepItems) {
-					armor = player.getInventory().getArmorContents();
-					it = player.getInventory().getContents();
-					event.getDrops().clear();
-				}
-				if (Variables.keepExp) {
-					event.setKeepLevel(true);
-					event.setDroppedExp(0);
-				}
-				if (!Variables.keepExp && Variables.keepItems) {
-					player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(event.getDroppedExp());
-				}
+		Player player = event.getEntity();
+		if (pm.pvplogged(player)) {
+			if (!Variables.dropExp) {
+				event.setKeepLevel(true);
+				event.setDroppedExp(0);
 			}
 		}
-		if (plugin.getCm().isInCombat(event.getEntity())) {
-			Player player = event.getEntity();
+		if (plugin.getCm().isInCombat(player)) {
 			if (player.hasPermission("pvpmanager.nodrop")) {
 				ArrayList<ItemStack[]> inv = new ArrayList<ItemStack[]>();
 				inv.add(player.getInventory().getContents());
@@ -89,30 +84,16 @@ public class PlayerListener implements Listener {
 	public void onPlayerLogin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
-			if (plugin.update) {
-				player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + plugin.newVersion);
-				player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v"
-						+ plugin.getDescription().getVersion());
-				player.sendMessage("§2Go to this page to download the latest version:");
-				player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+			if (Variables.update) {
+				Messages.updateMessage(player);
 			}
 		} else if (!player.hasPlayedBefore()) {
 			plugin.getCm().addNewbie(player);
-			player.sendMessage(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
-			scheduleNewbieRemoval(player.getName());
+			plugin.getCm().removeNewbieTimer(player.getName());
 		}
 		if (player.hasPermission("pvpmanager.nopvp")) {
 			plugin.getCm().disablePvp(player);
 		}
-	}
-
-	private void scheduleNewbieRemoval(final String name) {
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			public void run() {
-				plugin.getCm().removeNewbie(Utils.getPlayer(name));
-			}
-		}, Variables.newbieProtectionTime * 1200);
-
 	}
 
 	@EventHandler
