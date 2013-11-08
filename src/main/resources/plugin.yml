@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 1.4.1
+version: 1.4.7
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard]
@@ -16,12 +16,7 @@ permissions:
      description: Gives access to all PvPManager features
      default: op
      children:
-       pvpmanager.reload: true
-       pvpmanager.pvpstatus.change: true
-       pvpmanager.pvpstatus.self: true
-       pvpmanager.pvpstatus.others: true
-       pvpmanager.pvptimer: true
-       pvpmanager.sign: true
+       pvpmanager.admin: true
        pvpmanager.override: true
        pvpmanager.nodrop: true
        pvpmanager.nocombat: true

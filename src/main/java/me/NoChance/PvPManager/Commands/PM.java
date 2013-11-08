@@ -35,6 +35,20 @@ public class PM implements CommandExecutor {
 					player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");
 					return false;
 				}
+				if (args[0].equalsIgnoreCase("update") && player.hasPermission("pvpmanager.admin")) {
+					if (Variables.updateCheck) {
+						if (Variables.update) {
+							if (plugin.downloadUpdate())
+								player.sendMessage("§2Update Successful. On next restart you will have §e" + Variables.newVersion);
+							else
+								player.sendMessage("§4An error ocurred while updating, please report to the developer");
+						}
+						else 
+							player.sendMessage("§2You have the latest version: §ePvPManager v" + Variables.currentVersion);
+					} else
+						player.sendMessage("§4Update Checking is disabled, enable it in the Config file");
+					return true;
+				}
 			}
 			if (args.length == 2 && player.hasPermission("pvpmanager.pvptimer")) {
 				if (args[0].equalsIgnoreCase("pvpstart")) {

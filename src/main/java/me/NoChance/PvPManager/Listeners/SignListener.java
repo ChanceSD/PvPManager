@@ -18,7 +18,6 @@ public class SignListener implements Listener {
 
 	public SignListener(PvPManager plugin) {
 		this.plugin = plugin;
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler

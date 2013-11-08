@@ -25,23 +25,32 @@ public class CustomGraph {
 			Graph toggleSigns = metrics.createGraph("Toggle Signs Usage");
 			Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
 			Graph updateCheck = metrics.createGraph("Update Check Usage");
-			
-			updateCheck.addPlotter(new Metrics.Plotter("Enabled") {
+
+			updateCheck.addPlotter(new Metrics.Plotter("Auto Update") {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.updateCheck)
+					if (Variables.updateCheck && Variables.autoUpdate)
 						i++;
 
 					return i;
 				}
 			});
-
 			updateCheck.addPlotter(new Metrics.Plotter("Disabled") {
 				@Override
 				public int getValue() {
 					int i = 0;
 					if (!Variables.updateCheck)
+						i++;
+
+					return i;
+				}
+			});
+			updateCheck.addPlotter(new Metrics.Plotter("Update Check") {
+				@Override
+				public int getValue() {
+					int i = 0;
+					if (Variables.updateCheck && !Variables.autoUpdate)
 						i++;
 
 					return i;
@@ -58,7 +67,6 @@ public class CustomGraph {
 					return i;
 				}
 			});
-
 			newbieProtection.addPlotter(new Metrics.Plotter("Disabled") {
 				@Override
 				public int getValue() {
@@ -80,7 +88,6 @@ public class CustomGraph {
 					return i;
 				}
 			});
-
 			toggleSigns.addPlotter(new Metrics.Plotter("Disabled") {
 				@Override
 				public int getValue() {
@@ -113,7 +120,6 @@ public class CustomGraph {
 					return i;
 				}
 			});
-
 			pvpTimerUsage.addPlotter(new Metrics.Plotter("Disabled") {
 				@Override
 				public int getValue() {
@@ -124,47 +130,89 @@ public class CustomGraph {
 					return i;
 				}
 			});
-//			Broken, need changing to new format
-			keepItemsExp.addPlotter(new Metrics.Plotter("Keep Everything") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.keepItems && Variables.keepExp && Variables.punishmentsEnabled)
-						i++;
+			
+			if (Variables.punishmentsEnabled) {
+				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Everything") {
+					@Override
+					public int getValue() {
+						int i = 0;
+						if (!Variables.dropInventory && !Variables.dropExp && !Variables.dropArmor)
+							i++;
 
-					return i;
-				}
-			});
-			keepItemsExp.addPlotter(new Metrics.Plotter("Drop Everything") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Variables.keepItems && !Variables.keepExp && Variables.punishmentsEnabled)
-						i++;
+						return i;
+					}
+				});
+				keepItemsExp.addPlotter(new Metrics.Plotter("Drop Everything") {
+					@Override
+					public int getValue() {
+						int i = 0;
+						if (Variables.dropInventory && Variables.dropExp && Variables.dropArmor)
+							i++;
 
-					return i;
-				}
-			});
-			keepItemsExp.addPlotter(new Metrics.Plotter("Keep Items and Drop Exp") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.keepItems && !Variables.keepExp && Variables.punishmentsEnabled)
-						i++;
+						return i;
+					}
+				});
+				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Inventory/Armor and Drop Exp") {
+					@Override
+					public int getValue() {
+						int i = 0;
+						if (!Variables.dropInventory && !Variables.dropArmor && Variables.dropExp)
+							i++;
 
-					return i;
-				}
-			});
-			keepItemsExp.addPlotter(new Metrics.Plotter("Keep Exp and Drop Items") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Variables.keepItems && Variables.keepExp && Variables.punishmentsEnabled)
-						i++;
+						return i;
+					}
+				});
+				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Inventory/Exp and Drop Armor") {
+					@Override
+					public int getValue() {
+						int i = 0;
+						if (!Variables.dropInventory && !Variables.dropExp && Variables.dropArmor)
+							i++;
 
-					return i;
-				}
-			});
+						return i;
+					}
+				});
+				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Exp/Armor and Drop Inventory") {
+					@Override
+					public int getValue() {
+						int i = 0;
+						if (Variables.dropInventory && !Variables.dropExp && !Variables.dropArmor)
+							i++;
+
+						return i;
+					}
+				});
+				keepItemsExp.addPlotter(new Metrics.Plotter("Drop Exp/Armor and Keep Inventory") {
+					@Override
+					public int getValue() {
+						int i = 0;
+						if (!Variables.dropInventory && Variables.dropExp && Variables.dropArmor)
+							i++;
+
+						return i;
+					}
+				});
+				keepItemsExp.addPlotter(new Metrics.Plotter("Drop Exp/Inventory and Keep Armor") {
+					@Override
+					public int getValue() {
+						int i = 0;
+						if (Variables.dropInventory && Variables.dropExp && !Variables.dropArmor)
+							i++;
+
+						return i;
+					}
+				});
+				keepItemsExp.addPlotter(new Metrics.Plotter("Drop Inventory/Armor and Keep Exp") {
+					@Override
+					public int getValue() {
+						int i = 0;
+						if (Variables.dropInventory && !Variables.dropExp && Variables.dropArmor)
+							i++;
+
+						return i;
+					}
+				});
+			}
 			metrics.start();
 		} catch (IOException e) {
 		}

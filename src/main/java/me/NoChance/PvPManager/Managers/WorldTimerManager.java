@@ -33,7 +33,7 @@ public class WorldTimerManager {
 		else
 			return false;
 	}
-	
+
 	public boolean isTimeForPvp(World w) {
 		if (getPvpTimer(w).isPvpTime())
 			return true;
@@ -65,18 +65,26 @@ public class WorldTimerManager {
 				if (plugin.getConfig().getConfigurationSection("PvP Timer." + w.getName()) == null) {
 					ConfigurationSection world = plugin.getConfig().getConfigurationSection("PvP Timer").createSection(w.getName());
 					world.set("Start PvP", 13000);
+					world.set("Start Difficulty", "NORMAL");
 					world.set("End PvP", 0);
+					world.set("End Difficulty", "EASY");
 					if (Variables.announcePvpOnWorldChange) {
 						world.set("On World Change.On", "&4PvP is currently enabled in " + w.getName());
 						world.set("On World Change.Off", "&2PvP is currently disabled in " + w.getName());
 					}
 					plugin.saveConfig();
 				}
+				// temporary way to update older configuration files
 				if (!plugin.getConfig().isSet("PvP Timer." + w.getName() + ".On World Change")) {
 					plugin.getConfig().set("PvP Timer." + w.getName() + ".On World Change.On",
 							"&4PvP is currently enabled in " + w.getName());
 					plugin.getConfig().set("PvP Timer." + w.getName() + ".On World Change.Off",
 							"&2PvP is currently disabled in " + w.getName());
+					plugin.saveConfig();
+				}
+				if (!plugin.getConfig().isSet("PvP Timer." + w.getName() + ".Start Difficulty")) {
+					plugin.getConfig().set("PvP Timer." + w.getName() + ".Start Difficulty", "NORMAL");
+					plugin.getConfig().set("PvP Timer." + w.getName() + ".End Difficulty", "EASY");
 					plugin.saveConfig();
 				}
 

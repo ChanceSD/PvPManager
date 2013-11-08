@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Managers;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Utils;
@@ -17,6 +18,7 @@ public class CombatManager {
 	private HashSet<String> inCombat = new HashSet<String>();
 	private HashSet<String> playersStatusOff = new HashSet<String>();
 	private HashSet<String> newbies = new HashSet<String>();
+	private HashMap<String, Integer> newbieTimers = new HashMap<String,Integer>();
 
 	public CombatManager(PvPManager plugin) {
 		this.plugin = plugin;
@@ -104,12 +106,12 @@ public class CombatManager {
 	}
 
 	public void removeNewbieTimer(final String name) {
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		int i = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				removeNewbie(Utils.getPlayer(name));
+				removeNewbie(name);
 			}
 		}, Variables.newbieProtectionTime * 1200);
-
+		newbieTimers.put(name, i);
 	}
 
 	public void addNewbie(Player p) {
@@ -117,14 +119,24 @@ public class CombatManager {
 		p.sendMessage(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
 	}
 
-	public void removeNewbie(Player p) {
-		newbies.remove(p.getName());
+	private void removeNewbie(String name) {
+		newbies.remove(name);
 	}
 
+	public void forceNewbieRemoval(Player p) {
+		String name = p.getName();
+		plugin.getServer().getScheduler().cancelTask(newbieTimers.get(name));
+		removeNewbie(name);
+	}
+	
 	public void disablePvp(Player p) {
 		playersStatusOff.add(p.getName());
 	}
 
+	public void disablePvp(String name) {
+		playersStatusOff.add(name);
+	}
+	
 	public void enablePvp(Player p) {
 		playersStatusOff.remove(p.getName());
 	}

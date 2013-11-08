@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils;
-
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ConfigManager {
@@ -51,7 +48,7 @@ public class ConfigManager {
 		List<String> store = new ArrayList<String>();
 		store = users.getStringList("players");
 		for (String a : store) {
-			plugin.getCm().disablePvp(Utils.getPlayer(a));
+			plugin.getCm().disablePvp(a);
 		}
 		store.clear();
 	}

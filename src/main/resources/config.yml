@@ -12,7 +12,7 @@
 # Full list of Sounds you can use on PvP Timer feature: 
 # http://dev.bukkit.org/bukkit-plugins/pvpmanager/pages/list-of-sounds/
 
-Config Version: 7 //change version, dont forget
+Config Version: 8
 PvP Blood: true
 
 In Combat:

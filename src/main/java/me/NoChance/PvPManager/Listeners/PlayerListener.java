@@ -25,7 +25,6 @@ public class PlayerListener implements Listener {
 	public PlayerListener(PvPManager plugin) {
 		this.plugin = plugin;
 		this.pm = plugin.getPm();
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler

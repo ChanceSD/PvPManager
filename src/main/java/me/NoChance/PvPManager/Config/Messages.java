@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Properties;
 import me.NoChance.PvPManager.PvPManager;
@@ -34,6 +35,7 @@ public class Messages {
 	public static String Newbie_Protection;
 	public static String Newbie_Protection_End;
 	public static String PvPLog_Broadcast;
+	public static String Newbie_Protection_On_Hit;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
@@ -62,7 +64,14 @@ public class Messages {
 	}
 
 	public String getString(String key) {
-		return ChatColor.translateAlternateColorCodes('&', lang.getProperty(key));
+		String message = null;
+		try {
+			message = new String(lang.getProperty(key).getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+			return "Encoding error! Please report to the developer";
+		}
+		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
 	public void getMessages() {
@@ -84,6 +93,7 @@ public class Messages {
 		Newbie_Protection = getString("Newbie_Protection");
 		Newbie_Protection_End = getString("Newbie_Protection_End");
 		PvPLog_Broadcast = getString("PvPLog_Broadcast");
+		Newbie_Protection_On_Hit = getString("Newbie_Protection_On_Hit");
 	}
 
 	public void checkChanges() {
@@ -124,5 +134,6 @@ public class Messages {
 		player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v" + Variables.currentVersion);
 		player.sendMessage("§2Go to this page to download the latest version:");
 		player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+		player.sendMessage("§2Use §e/pm update §2to update automatically");
 	}
 }

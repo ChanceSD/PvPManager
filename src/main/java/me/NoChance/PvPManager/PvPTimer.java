@@ -2,6 +2,9 @@ package me.NoChance.PvPManager;
 
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Difficulty;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -17,10 +20,15 @@ public class PvPTimer {
 	private int[] scheduledTasks = new int[5];
 	private long startPvP;
 	private long endPvP;
+	private String startDifficulty;
+	private String endDifficulty;
+	private String worldChangeOn;
+	private String worldChangeOff;
 
 	public PvPTimer(PvPManager plugin, World w) {
 		this.plugin = plugin;
 		this.w = w;
+		getWorldValues();
 		calculateDelays();
 		checkWorldPvP();
 	}
@@ -96,8 +104,6 @@ public class PvPTimer {
 	}
 
 	public void calculateDelays() {
-		startPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".Start PvP");
-		endPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".End PvP");
 		if (endPvP > startPvP) {
 			pvpOnDelay = endPvP - startPvP;
 			pvpOffDelay = 24000 - pvpOnDelay;
@@ -139,6 +145,7 @@ public class PvPTimer {
 				if (Variables.enableSound)
 					p.playSound(p.getLocation(), Sound.valueOf(Variables.pvpOffSound), 1, 0);
 			}
+			w.setDifficulty(Difficulty.valueOf(endDifficulty));
 			lastAnnounce = "Off";
 		} else if (lastAnnounce == null && status || lastAnnounce == "Off" && status) {
 			for (Player p : w.getPlayers()) {
@@ -146,6 +153,7 @@ public class PvPTimer {
 				if (Variables.enableSound)
 					p.playSound(p.getLocation(), Sound.valueOf(Variables.pvpOnSound), 1, 0);
 			}
+			w.setDifficulty(Difficulty.valueOf(startDifficulty));
 			lastAnnounce = "On";
 		}
 	}
@@ -157,6 +165,15 @@ public class PvPTimer {
 			p.sendMessage(Messages.PvP_Off);
 	}
 
+	public void getWorldValues(){
+		startPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".Start PvP");
+		endPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".End PvP");
+		startDifficulty = plugin.getConfig().getString("PvP Timer." + w.getName() + ".Start Difficulty");
+		endDifficulty = plugin.getConfig().getString("PvP Timer." + w.getName() + ".End Difficulty");
+		worldChangeOn = plugin.getConfig().getString("PvP Timer." + w.getName() + ".On World Change.On");
+		worldChangeOff = plugin.getConfig().getString("PvP Timer." + w.getName() + ".On World Change.Off");
+	}
+	
 	public void reload() {
 		cancelAllTasks();
 		calculateDelays();
@@ -181,9 +198,9 @@ public class PvPTimer {
 
 	public String getWorldChangeMessage() {
 		if (timeForPvp)
-			return plugin.getConfig().getString("PvP Timer." + w.getName() + "On World Change.On");
+			return ChatColor.translateAlternateColorCodes('&', worldChangeOn);
 		else
-			return plugin.getConfig().getString("PvP Timer." + w.getName() + "On World Change.Off");
+			return ChatColor.translateAlternateColorCodes('&', worldChangeOff);
 	}
 	
 	public void sendWorldChangeMessage(Player p){

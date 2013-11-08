@@ -87,6 +87,16 @@ public class PvP implements CommandExecutor {
 				}
 			}
 			if (args.length == 2) {
+				if (args[0].equalsIgnoreCase("disable") && args[1].equalsIgnoreCase("protection")) {
+					if (cm.isNewbie(player)) {
+						cm.forceNewbieRemoval(player);
+						player.sendMessage("§eYou Removed Your PvP Protection! Be Careful");
+						return true;
+					} else {
+						player.sendMessage(ChatColor.DARK_RED + "You are not protected!");
+						return false;
+					}
+				}
 				if (args[0].equalsIgnoreCase("status") && player.hasPermission("pvpmanager.pvpstatus.others")) {
 					if (!cm.hasPvpEnabled(args[1])) {
 						player.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));

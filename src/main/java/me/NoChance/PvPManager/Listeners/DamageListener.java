@@ -30,8 +30,8 @@ public class DamageListener implements Listener {
 			pvPManager.getLogger().info("WorldGuard Found! Using it to detect PvP Zones");
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void PlayerDamageListener(EntityDamageByEntityEvent event) {
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void playerDamageListener(EntityDamageByEntityEvent event) {
 		if (!cm.isPvP(event))
 			return;
 		Player attacker = getAttacker(event);
@@ -59,9 +59,9 @@ public class DamageListener implements Listener {
 		if (cm.isNewbie(attacked) || cm.isNewbie(attacker)) {
 			event.setCancelled(true);
 			if (cm.isNewbie(attacked))
-				attacker.sendMessage("§6[§8PvPManager§6]§4" + attacked.getName() + " has Newbie Protection!");
+				attacker.sendMessage("§6[§8PvPManager§6]§4 " + attacked.getName() + " has Newbie Protection!");
 			else
-				attacked.sendMessage("§6[§8PvPManager§6]§4" + "Please wait until your PvP protection expires");
+				attacked.sendMessage(Messages.Newbie_Protection_On_Hit);
 			return;
 		}
 		if (!cm.hasPvpEnabled(attacked.getName())) {
@@ -75,8 +75,18 @@ public class DamageListener implements Listener {
 		}
 	}
 
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void damageListenerHighest(EntityDamageByEntityEvent event) {
+		if (!cm.isPvP(event))
+			return;
+		if (getAttacker(event).hasPermission("pvpmanager.override")) {
+			event.setCancelled(false);
+			return;
+		}
+	}
+
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void LastDamageListener(EntityDamageByEntityEvent event) {
+	public void damageListenerMonitor(EntityDamageByEntityEvent event) {
 		if (!cm.isPvP(event))
 			return;
 		Player attacker = getAttacker(event);
