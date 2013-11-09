@@ -34,13 +34,21 @@ public class PlayerListener implements Listener {
 			if (Variables.broadcastPvpLog)
 				plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
 			if (Variables.punishmentsEnabled) {
+				boolean dead = false;
 				if (Variables.killOnLogout) {
 					pm.addPvpLog(player);
 					if (!Variables.dropInventory || !Variables.dropArmor) {
 						pm.noDropKill(player);
-					} else
+						dead = true;
+					}
+					if (Variables.dropExp) {
+						pm.fakeExpDrop(player);
+						if (!dead)
+							player.setHealth(0);
+					} else if(Variables.dropInventory && Variables.dropArmor && !Variables.dropExp)
 						player.setHealth(0);
 				} else if (!Variables.killOnLogout) {
+
 					if (Variables.dropInventory) {
 						pm.fakeInventoryDrop(player, player.getInventory().getContents());
 						player.getInventory().clear();

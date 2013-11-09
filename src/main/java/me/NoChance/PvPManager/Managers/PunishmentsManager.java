@@ -1,10 +1,9 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.HashSet;
-
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -12,24 +11,27 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Utils;
 import me.NoChance.PvPManager.Config.Variables;
 
 public class PunishmentsManager {
 
 	private PvPManager plugin;
-	private Economy vault;
-	private boolean vaultEnabled = false;
+	private Economy economy;
 	private HashSet<String> pvpLogPlayers = new HashSet<String>();
 
 	public PunishmentsManager(PvPManager plugin) {
 		this.plugin = plugin;
 		if (Variables.fineEnabled) {
-			if (setupEconomy()){
-				vaultEnabled = true;
-				plugin.getLogger().info("Vault Found! Using it for fines punishment");
+			if (Utils.isVaultEnabled()) {
+				if (setupEconomy()) {
+					plugin.getLogger().info("Vault Found! Using it for fines punishment");
+				} else
+					plugin.getLogger().severe("Error! No Economy plugin found for fines feature!");
+			} else {
+				plugin.getLogger().severe("Vault not found! Disabling fines feature...");
+				Variables.fineEnabled = false;
 			}
-			else
-				plugin.getLogger().severe("Error! Need Vault for fines feature!");
 		}
 	}
 
@@ -37,7 +39,8 @@ public class PunishmentsManager {
 		Location playerLocation = player.getLocation();
 		World playerWorld = player.getWorld();
 		for (ItemStack itemstack : inventory) {
-			playerWorld.dropItemNaturally(playerLocation, itemstack);
+			if (itemstack != null && !itemstack.getType().equals(Material.AIR))
+				playerWorld.dropItemNaturally(playerLocation, itemstack);
 		}
 	}
 
@@ -52,7 +55,7 @@ public class PunishmentsManager {
 	}
 
 	public void noDropKill(Player player) {
-		ItemStack[] inventory = null;
+		ItemStack[] inventory = new ItemStack[36];
 		ItemStack[] armor = null;
 		if (!Variables.dropInventory) {
 			inventory = player.getInventory().getContents();
@@ -69,27 +72,28 @@ public class PunishmentsManager {
 	}
 
 	public void applyFine(Player p) {
-		if (vaultEnabled) {
-			vault.bankWithdraw(p.getName(), Variables.fineAmount);
+		if (economy != null) {
+			economy.bankWithdraw(p.getName(), Variables.fineAmount);
+		} else {
+			plugin.getLogger().severe("Tried to apply fine but no Economy plugin found!");
+			plugin.getLogger().severe("Disable fines feature or get an Economy plugin to fix this error");
 		}
-		plugin.getLogger().severe("Tried to apply fine but Vault not detected! " +
-				"Disable fines feature or get Vault to fix this error.");
 	}
 
 	private boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager()
 				.getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null) {
-			vault = economyProvider.getProvider();
+			economy = economyProvider.getProvider();
 		}
-		return (vault != null);
+		return (economy != null);
 	}
-	
-	public void addPvpLog(Player p){
+
+	public void addPvpLog(Player p) {
 		pvpLogPlayers.add(p.getName());
 	}
-	
-	public boolean pvplogged(Player p){
+
+	public boolean pvplogged(Player p) {
 		return pvpLogPlayers.contains(p.getName());
 	}
 }

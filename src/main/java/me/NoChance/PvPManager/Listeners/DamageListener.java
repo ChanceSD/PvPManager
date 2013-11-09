@@ -1,10 +1,11 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Utils;
+import me.NoChance.PvPManager.WGDependency;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.CombatManager;
-
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,21 +14,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public class DamageListener implements Listener {
 
-	private WorldGuardPlugin wg;
+	private WGDependency wg;
 	private CombatManager cm;
 
-	public DamageListener(PvPManager pvPManager) {
-		this.cm = pvPManager.getCm();
-		wg = (WorldGuardPlugin) pvPManager.getServer().getPluginManager().getPlugin("WorldGuard");
-		if (worldGuardEnabled())
-			pvPManager.getLogger().info("WorldGuard Found! Using it to detect PvP Zones");
+	public DamageListener(PvPManager pvpManager) {
+		this.cm = pvpManager.getCm();
+		if (Utils.isWGEnabled()) {
+			this.wg = new WGDependency(pvpManager);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -37,16 +34,8 @@ public class DamageListener implements Listener {
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
 
-		if (attacker.hasPermission("pvpmanager.override")) {
-			event.setCancelled(false);
+		if (wg.hasWGPvPFlag(attacked.getWorld(), attacked.getLocation())) {
 			return;
-		}
-		if (worldGuardEnabled()) {
-			ApplicableRegionSet set = wg.getRegionManager(attacked.getWorld()).getApplicableRegions(attacked.getLocation());
-			if (set.getFlag(DefaultFlag.PVP) != null) {
-				if (set.getFlag(DefaultFlag.PVP).equals(State.ALLOW))
-					return;
-			}
 		}
 		if (Variables.pvpTimerEnabled) {
 			if (cm.getWtm().isPvpTimerWorld(attacker.getWorld())) {
@@ -107,10 +96,4 @@ public class DamageListener implements Listener {
 			return (Player) event.getDamager();
 	}
 
-	public boolean worldGuardEnabled() {
-		if (wg != null)
-			return true;
-		else
-			return false;
-	}
 }
