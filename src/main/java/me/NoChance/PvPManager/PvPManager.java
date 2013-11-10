@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager;
 
-import me.NoChance.PvPManager.Updater.UpdateResult;
 import me.NoChance.PvPManager.Commands.*;
 import me.NoChance.PvPManager.Config.*;
 import me.NoChance.PvPManager.Listeners.*;
@@ -8,6 +7,10 @@ import me.NoChance.PvPManager.Managers.CombatManager;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.PunishmentsManager;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
+import me.NoChance.PvPManager.Others.CustomGraph;
+import me.NoChance.PvPManager.Others.Updater;
+import me.NoChance.PvPManager.Others.Utils;
+import me.NoChance.PvPManager.Others.Updater.UpdateResult;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PvPManager extends JavaPlugin {

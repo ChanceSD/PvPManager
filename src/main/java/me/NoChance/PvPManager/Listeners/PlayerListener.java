@@ -45,7 +45,7 @@ public class PlayerListener implements Listener {
 						pm.fakeExpDrop(player);
 						if (!dead)
 							player.setHealth(0);
-					} else if(Variables.dropInventory && Variables.dropArmor && !Variables.dropExp)
+					} else if (Variables.dropInventory && Variables.dropArmor && !Variables.dropExp)
 						player.setHealth(0);
 				} else if (!Variables.killOnLogout) {
 
@@ -115,9 +115,9 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
-		if (Variables.announcePvpOnWorldChange) {
-			if (plugin.getWtm().isPvpTimerWorld(event.getPlayer().getWorld())) {
-				Player p = event.getPlayer();
+		if (Variables.announcePvpOnWorldChange && Variables.pvpTimerEnabled) {
+			Player p = event.getPlayer();
+			if (plugin.getWtm().isPvpTimerWorld(p.getWorld())) {
 				plugin.getWtm().getPvpTimer(p.getWorld()).sendWorldChangeMessage(p);
 			}
 		}

@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Others.Utils;
 
 public class PunishmentsManager {
 

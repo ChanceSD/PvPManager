@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Others;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

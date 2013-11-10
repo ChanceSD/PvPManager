@@ -1,11 +1,12 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils;
 import me.NoChance.PvPManager.WGDependency;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.CombatManager;
+import me.NoChance.PvPManager.Others.Utils;
+
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,9 +35,10 @@ public class DamageListener implements Listener {
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
 
-		if (wg.hasWGPvPFlag(attacked.getWorld(), attacked.getLocation())) {
-			return;
-		}
+		if (Utils.isWGEnabled())
+			if (wg.hasWGPvPFlag(attacked.getWorld(), attacked.getLocation()))
+				return;
+
 		if (Variables.pvpTimerEnabled) {
 			if (cm.getWtm().isPvpTimerWorld(attacker.getWorld())) {
 				if (!cm.getWtm().isTimeForPvp(attacker.getWorld())) {
@@ -68,7 +70,7 @@ public class DamageListener implements Listener {
 	public void damageListenerHighest(EntityDamageByEntityEvent event) {
 		if (!cm.isPvP(event))
 			return;
-		if (getAttacker(event).hasPermission("pvpmanager.override")) {
+		if (getAttacker(event).hasPermission("pvpmanager.override") && event.isCancelled()) {
 			event.setCancelled(false);
 			return;
 		}

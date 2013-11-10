@@ -3,9 +3,10 @@ package me.NoChance.PvPManager.Managers;
 import java.util.HashMap;
 import java.util.HashSet;
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Others.Utils;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;

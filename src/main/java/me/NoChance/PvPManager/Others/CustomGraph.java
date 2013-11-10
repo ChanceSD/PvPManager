@@ -1,7 +1,8 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Others;
 
 import java.io.IOException;
 
+import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
 
 import org.mcstats.Metrics;
