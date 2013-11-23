@@ -132,7 +132,7 @@ public class CustomGraph {
 				}
 			});
 			
-			if (Variables.punishmentsEnabled) {
+			if (Variables.punishmentsEnabled && Variables.inCombatEnabled) {
 				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Everything") {
 					@Override
 					public int getValue() {

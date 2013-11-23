@@ -20,8 +20,10 @@ public class CommandListener implements Listener {
 	public void onCommand(PlayerCommandPreprocessEvent event) {
 		if (Variables.stopCommands && Variables.inCombatEnabled) {
 			if (plugin.getCm().isInCombat(event.getPlayer())) {
-				event.setCancelled(true);
-				event.getPlayer().sendMessage(Messages.Command_Denied_InCombat);
+				if (!Variables.commandsAllowed.contains("/" + event.getMessage().split(" ")[0])) {
+					event.setCancelled(true);
+					event.getPlayer().sendMessage(Messages.Command_Denied_InCombat);
+				}
 			}
 		}
 		// Checking if PvPTimer is right every time a command is executed

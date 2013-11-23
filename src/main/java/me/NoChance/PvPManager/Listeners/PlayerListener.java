@@ -6,12 +6,15 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PunishmentsManager;
+import me.NoChance.PvPManager.Others.Utils;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -94,22 +97,25 @@ public class PlayerListener implements Listener {
 			if (Variables.update) {
 				Messages.updateMessage(player);
 			}
-		} else if (!player.hasPlayedBefore()) {
-			plugin.getCm().addNewbie(player);
-			plugin.getCm().removeNewbieTimer(player.getName());
 		}
-		if (player.hasPermission("pvpmanager.nopvp")) {
-			plugin.getCm().disablePvp(player);
+		if (Utils.PMAllowed(player.getWorld().getName())) {
+			if (!player.hasPlayedBefore()) {
+				plugin.getCm().addNewbie(player);
+				plugin.getCm().removeNewbieTimer(player.getName());
+			}
+			if (player.hasPermission("pvpmanager.nopvp")) {
+				plugin.getCm().disablePvp(player);
+			}
 		}
 	}
 
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (noDrop.containsKey(event.getPlayer().getName())) {
-			Player player = event.getPlayer();
+		Player player = event.getPlayer();
+		if (noDrop.containsKey(player.getName())) {
 			player.getInventory().setContents(noDrop.get(event.getPlayer().getName()).get(0));
 			player.getInventory().setArmorContents(noDrop.get(event.getPlayer().getName()).get(1));
-			noDrop.remove(event.getPlayer().getName());
+			noDrop.remove(player.getName());
 		}
 	}
 
@@ -121,5 +127,11 @@ public class PlayerListener implements Listener {
 				plugin.getWtm().getPvpTimer(p.getWorld()).sendWorldChangeMessage(p);
 			}
 		}
+	}
+
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent event) {
+		Player p = event.getPlayer();
+		plugin.getCm().untag(p);
 	}
 }

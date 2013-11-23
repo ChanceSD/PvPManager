@@ -19,7 +19,7 @@ public class CombatManager {
 	private HashSet<String> inCombat = new HashSet<String>();
 	private HashSet<String> playersStatusOff = new HashSet<String>();
 	private HashSet<String> newbies = new HashSet<String>();
-	private HashMap<String, Integer> newbieTimers = new HashMap<String,Integer>();
+	private HashMap<String, Integer> newbieTimers = new HashMap<String, Integer>();
 
 	public CombatManager(PvPManager plugin) {
 		this.plugin = plugin;
@@ -39,10 +39,7 @@ public class CombatManager {
 	}
 
 	public boolean isInCombat(Player p) {
-		if (inCombat.contains(p.getName()))
-			return true;
-
-		return false;
+		return inCombat.contains(p.getName());
 	}
 
 	public void tag(Player p) {
@@ -63,9 +60,11 @@ public class CombatManager {
 	}
 
 	public void untag(Player p) {
-		inCombat.remove(p.getName());
-		if (Utils.isOnline(p))
-			p.sendMessage(Messages.Out_Of_Combat);
+		if (isInCombat(p)) {
+			inCombat.remove(p.getName());
+			if (Utils.isOnline(p))
+				p.sendMessage(Messages.Out_Of_Combat);
+		}
 	}
 
 	public void disableFly(Player player) {
@@ -84,10 +83,7 @@ public class CombatManager {
 	}
 
 	public boolean isNewbie(Player p) {
-		if (newbies.contains(p.getName()))
-			return true;
-		else
-			return false;
+		return newbies.contains(p.getName());
 	}
 
 	public boolean hasPvpEnabled(String name) {
@@ -129,7 +125,7 @@ public class CombatManager {
 		plugin.getServer().getScheduler().cancelTask(newbieTimers.get(name));
 		removeNewbie(name);
 	}
-	
+
 	public void disablePvp(Player p) {
 		playersStatusOff.add(p.getName());
 	}
@@ -137,7 +133,7 @@ public class CombatManager {
 	public void disablePvp(String name) {
 		playersStatusOff.add(name);
 	}
-	
+
 	public void enablePvp(Player p) {
 		playersStatusOff.remove(p.getName());
 	}
@@ -148,5 +144,9 @@ public class CombatManager {
 
 	public WorldTimerManager getWtm() {
 		return wtm;
+	}
+
+	public HashSet<String> getInCombat() {
+		return inCombat;
 	}
 }

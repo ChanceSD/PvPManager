@@ -30,7 +30,7 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void playerDamageListener(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event))
+		if (!cm.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
@@ -50,7 +50,7 @@ public class DamageListener implements Listener {
 		if (cm.isNewbie(attacked) || cm.isNewbie(attacker)) {
 			event.setCancelled(true);
 			if (cm.isNewbie(attacked))
-				attacker.sendMessage("§6[§8PvPManager§6]§4 " + attacked.getName() + " has Newbie Protection!");
+				attacker.sendMessage("§6[§8PvPManager§6]§4 " + attacked.getName() + " has Protection!");
 			else
 				attacked.sendMessage(Messages.Newbie_Protection_On_Hit);
 			return;
@@ -59,7 +59,7 @@ public class DamageListener implements Listener {
 			event.setCancelled(true);
 			attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
 			return;
-		} else if (!cm.hasPvpEnabled(attacker.getName())) {
+		} else if (!cm.hasPvpEnabled(attacker.getName()) && !attacker.hasPermission("pvpmanager.override")) {
 			event.setCancelled(true);
 			attacker.sendMessage(Messages.Attack_Denied_You);
 			return;
@@ -68,7 +68,7 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void damageListenerHighest(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event))
+		if (!cm.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
 		if (getAttacker(event).hasPermission("pvpmanager.override") && event.isCancelled()) {
 			event.setCancelled(false);
@@ -78,13 +78,13 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void damageListenerMonitor(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event))
+		if (!cm.isPvP(event)  || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
 		if (Variables.pvpBlood)
 			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
-		if (Variables.inCombatEnabled && !Variables.worldsExcluded.contains(event.getEntity().getWorld().getName())) {
+		if (Variables.inCombatEnabled) {
 			if (!cm.isInCombat(attacker) && !cm.isInCombat(attacked)) {
 				cm.inCombat(attacker, attacked);
 			}

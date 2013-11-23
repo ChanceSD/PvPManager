@@ -1,5 +1,7 @@
 package me.NoChance.PvPManager.Others;
 
+import me.NoChance.PvPManager.Config.Variables;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -41,5 +43,9 @@ public class Utils {
 			return true;
 		else
 			return false;
+	}
+	
+	public static boolean PMAllowed(String worldName){
+		return !Variables.worldsExcluded.contains(worldName);
 	}
 }

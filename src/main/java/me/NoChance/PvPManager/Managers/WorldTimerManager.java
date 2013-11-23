@@ -5,6 +5,7 @@ import java.util.HashMap;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPTimer;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Others.Utils;
 
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,24 +29,15 @@ public class WorldTimerManager {
 	}
 
 	public boolean isPvpTimerWorld(World w) {
-		if (schedulers.containsKey(w.getName().toLowerCase()))
-			return true;
-		else
-			return false;
+		return schedulers.containsKey(w.getName().toLowerCase());
 	}
 
 	public boolean isTimeForPvp(World w) {
-		if (getPvpTimer(w).isPvpTime())
-			return true;
-		else
-			return false;
+		return getPvpTimer(w).isPvpTime();
 	}
 
 	public boolean isPvpTimerWorld(String worldName) {
-		if (schedulers.containsKey(worldName.toLowerCase()))
-			return true;
-		else
-			return false;
+		return schedulers.containsKey(worldName.toLowerCase());
 	}
 
 	public void reloadPvpTimers() {
@@ -61,7 +53,7 @@ public class WorldTimerManager {
 
 	private void enablePvPScheduler() {
 		for (World w : plugin.getServer().getWorlds()) {
-			if (!Variables.worldsExcluded.contains(w.getName())) {
+			if (Utils.PMAllowed(w.getName())) {
 				if (plugin.getConfig().getConfigurationSection("PvP Timer." + w.getName()) == null) {
 					ConfigurationSection world = plugin.getConfig().getConfigurationSection("PvP Timer").createSection(w.getName());
 					world.set("Start PvP", 13000);

@@ -18,10 +18,14 @@ PvP Blood: true
 In Combat:
   Enabled: true
   Time(seconds): 15
-  Stop Commands: true
   Disable Fly: true
   Disable GameMode: true
   Only Tag Attacker: false
+  Stop Commands:
+    Enabled: true
+    Allowed Commands:
+      - tell
+      - money
   Punishments:
     Enabled: true
     Broadcast PvPLog: true

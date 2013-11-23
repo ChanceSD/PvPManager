@@ -40,6 +40,7 @@ public class Variables {
 	public static boolean update = false;
 	public static String newVersion;
 	public static String currentVersion;
+	public static List<String> commandsAllowed;
 
 	public Variables(PvPManager plugin) {
 		this.plugin = plugin;
@@ -49,7 +50,7 @@ public class Variables {
 	private void InitialiseVariables() {
 		inCombatEnabled = getBoolean("In Combat.Enabled");
 		timeInCombat = getInt("In Combat.Time(seconds)");
-		stopCommands = getBoolean("In Combat.Stop Commands");
+		stopCommands = getBoolean("In Combat.Stop Commands.Enabled");
 		punishmentsEnabled = getBoolean("In Combat.Punishments.Enabled");
 		dropInventory = getBoolean("In Combat.Punishments.Drops.Inventory");
 		dropExp = getBoolean("In Combat.Punishments.Drops.Experience");
@@ -75,6 +76,7 @@ public class Variables {
 		pvpBlood = getBoolean("PvP Blood");
 		disableGamemode = getBoolean("In Combat.Disable GameMode");
 		currentVersion = plugin.getDescription().getVersion();
+		commandsAllowed = getStringList("In Combat.Stop Commands.Allowed Commands");
 	}
 
 	private double getDouble(String a) {

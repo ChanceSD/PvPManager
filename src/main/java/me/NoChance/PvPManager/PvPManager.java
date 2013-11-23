@@ -40,13 +40,14 @@ public final class PvPManager extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		combatManager.getInCombat().clear();
 		this.configM.saveUsers();
 		this.configM.save();
 	}
 
 	private void loadFiles() {
 		new Messages(this);
-		if (getConfig().getInt("Config Version") == 0 || getConfig().getInt("Config Version") < 8) {
+		if (getConfig().getInt("Config Version", 0) < 8) {
 			getConfig().set("Update Check", null);
 			getConfig().set("In Combat.Punishments.Kill on Logout", null);
 			saveConfig();
