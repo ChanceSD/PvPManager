@@ -36,7 +36,7 @@ public class SimpleConfigManager {
 		File file = this.getConfigFile(filePath);
 
 		if (!file.exists()) {
-			this.prepareFile(filePath);
+			this.prepareFile(filePath, filePath);
 
 			if (header != null && header.length != 0) {
 				this.setHeader(file, header);

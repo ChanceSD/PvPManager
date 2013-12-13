@@ -9,12 +9,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class SimpleConfig {
+public class SimpleConfig extends YamlConfiguration{
 	private int comments;
 	private SimpleConfigManager manager;
-
 	private File file;
-	private YamlConfiguration config;
+	private FileConfiguration config;
 
 	public SimpleConfig(InputStream configStream, File configFile, int comments, PvPManager plugin) {
 		this.comments = comments;
