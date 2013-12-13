@@ -6,8 +6,6 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Others.Utils;
-
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -49,14 +47,6 @@ public class CombatManager {
 		inCombat.add(p.getName());
 		p.sendMessage(Messages.You_Are_InCombat);
 		untagTimer(p);
-		if (Variables.disableFly && p.isFlying() && p.getAllowFlight()) {
-			disableFly(p);
-		}
-		if (Variables.disableGamemode) {
-			if (!p.getGameMode().equals(GameMode.SURVIVAL)) {
-				p.setGameMode(GameMode.SURVIVAL);
-			}
-		}
 	}
 
 	public void untag(Player p) {
@@ -140,6 +130,10 @@ public class CombatManager {
 		playersStatusOff.remove(p.getName());
 	}
 
+	public void enablePvp(String name) {
+		playersStatusOff.remove(name);
+	}
+	
 	public HashSet<String> getPlayersStatusOff() {
 		return playersStatusOff;
 	}

@@ -8,6 +8,7 @@ import me.NoChance.PvPManager.Managers.CombatManager;
 import me.NoChance.PvPManager.Others.Utils;
 
 import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -78,12 +79,18 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void damageListenerMonitor(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event)  || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
+		if (!cm.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
 		if (Variables.pvpBlood)
 			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
+		if (Variables.disableFly && attacker.isFlying() && attacker.getAllowFlight()) {
+			cm.disableFly(attacker);
+		}
+		if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
+			attacker.setGameMode(GameMode.SURVIVAL);
+		}
 		if (Variables.inCombatEnabled) {
 			if (!cm.isInCombat(attacker) && !cm.isInCombat(attacked)) {
 				cm.inCombat(attacker, attacked);

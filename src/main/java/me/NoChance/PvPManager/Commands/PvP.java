@@ -62,7 +62,7 @@ public class PvP implements CommandExecutor {
 							return true;
 						}
 					}
-					if (args[0].equalsIgnoreCase("on")) {
+					else if (args[0].equalsIgnoreCase("on")) {
 						if (!cm.hasPvpEnabled(player.getName())) {
 							cm.enablePvp(player);
 							player.sendMessage(Messages.PvP_Enabled);
@@ -72,7 +72,7 @@ public class PvP implements CommandExecutor {
 							return true;
 						}
 					}
-					if (args[0].equalsIgnoreCase("toggle")) {
+					else if (args[0].equalsIgnoreCase("toggle")) {
 						if (cm.hasPvpEnabled(player.getName())) {
 							cm.disablePvp(player);
 							player.sendMessage(Messages.PvP_Disabled);
@@ -80,6 +80,21 @@ public class PvP implements CommandExecutor {
 						} else {
 							cm.enablePvp(player);
 							player.sendMessage(Messages.PvP_Enabled);
+							return true;
+						}
+					}
+					else if(player.hasPermission("pvpmanager.admin")){
+						if(!Utils.isOnline(args[0])){
+							player.sendMessage("§4Player not online!");
+							return false;
+						}
+						if (cm.hasPvpEnabled(args[0])) {
+							cm.disablePvp(Utils.getPlayer(args[0]));
+							player.sendMessage("§6[§8PvPManager§6] §2PvP disabled for " + args[0]);
+							return true;
+						} else {
+							cm.enablePvp(Utils.getPlayer(args[0]));
+							player.sendMessage("§6[§8PvPManager§6] §4PvP enabled for " + args[0]);
 							return true;
 						}
 					}
