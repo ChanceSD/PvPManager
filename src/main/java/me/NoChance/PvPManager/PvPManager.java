@@ -1,7 +1,8 @@
 package me.NoChance.PvPManager;
 
 import me.NoChance.PvPManager.Commands.*;
-import me.NoChance.PvPManager.Config.*;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Listeners.*;
 import me.NoChance.PvPManager.Managers.CombatManager;
 import me.NoChance.PvPManager.Managers.ConfigManager;
@@ -32,7 +33,7 @@ public final class PvPManager extends JavaPlugin {
 		this.configM.loadUsers();
 		getCommand("pvp").setExecutor(new PvP(combatManager));
 		getCommand("pm").setExecutor(new PM(this));
-		new CustomGraph(this);
+		//new CustomGraph(this);
 		if (Variables.updateCheck) {
 			checkForUpdates();
 		}
@@ -47,19 +48,18 @@ public final class PvPManager extends JavaPlugin {
 
 	private void loadFiles() {
 		new Messages(this);
-		if (getConfig().getInt("Config Version", 0) < 8) {
-			getConfig().set("Update Check", null);
-			getConfig().set("In Combat.Punishments.Kill on Logout", null);
-			saveConfig();
-			getConfig().options().copyDefaults(true);
-			getConfig().set("Config Version", 8);
-			saveConfig();
-		}
-		this.saveDefaultConfig();
-		this.reloadConfig();
+//		if (getConfig().getInt("Config Version", 0) < 8) {
+//			getConfig().set("Update Check", null);
+//			getConfig().set("In Combat.Punishments.Kill on Logout", null);
+//			saveConfig();
+//			getConfig().options().copyDefaults(true);
+//			getConfig().set("Config Version", 8);
+//			saveConfig();
+//		}
+//		this.saveDefaultConfig();
+//		this.reloadConfig();
 		this.configM = new ConfigManager(this);
 		this.configM.load();
-		new Variables(this);
 	}
 
 	private void startListeners() {

@@ -1,15 +1,14 @@
 package me.NoChance.PvPManager.Config;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import me.NoChance.PvPManager.PvPManager;
-
+import me.NoChance.PvPManager.Managers.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Variables {
 
-	private PvPManager plugin;
+	private ConfigManager configManager;
 	public static boolean inCombatEnabled;
 	public static int timeInCombat;
 	public static boolean stopCommands;
@@ -18,7 +17,7 @@ public class Variables {
 	public static boolean dropExp;
 	public static boolean dropArmor;
 	public static boolean killOnLogout;
-	public static List<String> worldsExcluded;
+	public static List<String> worldsExcluded = new ArrayList<String>();
 	public static boolean disableFly;
 	public static boolean pvpTimerEnabled;
 	public static boolean toggleSignsEnabled;
@@ -40,63 +39,44 @@ public class Variables {
 	public static boolean update = false;
 	public static String newVersion;
 	public static String currentVersion;
-	public static List<String> commandsAllowed;
+	public static List<String> commandsAllowed = new ArrayList<String>();
 
-	public Variables(PvPManager plugin) {
-		this.plugin = plugin;
+	public Variables(ConfigManager configM) {
+		this.configManager = configM;
 		InitialiseVariables();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void InitialiseVariables() {
-		inCombatEnabled = getBoolean("In Combat.Enabled");
-		timeInCombat = getInt("In Combat.Time(seconds)");
-		stopCommands = getBoolean("In Combat.Stop Commands.Enabled");
-		punishmentsEnabled = getBoolean("In Combat.Punishments.Enabled");
-		dropInventory = getBoolean("In Combat.Punishments.Drops.Inventory");
-		dropExp = getBoolean("In Combat.Punishments.Drops.Experience");
-		dropArmor = getBoolean("In Combat.Punishments.Drops.Armor");
-		killOnLogout = getBoolean("In Combat.Punishments.Kill on Logout");
-		worldsExcluded = getStringList("World Exclusions");
-		disableFly = getBoolean("In Combat.Disable Fly");
-		pvpTimerEnabled = getBoolean("PvP Timer.Enabled");
-		toggleSignsEnabled = getBoolean("Toggle Signs.Enabled");
-		disableToggleCommand = getBoolean("Toggle Signs.Disable Toggle Command");
-		onlyTagAttacker = getBoolean("In Combat.Only Tag Attacker");
-		updateCheck = getBoolean("Update Check.Enabled");
-		autoUpdate = getBoolean("Update Check.Auto Update");
-		newbieProtectionEnabled = getBoolean("Newbie Protection.Enabled");
-		newbieProtectionTime = getInt("Newbie Protection.Time(minutes)");
-		pvpOffSound = getString("PvP Timer.Sound.PvP Off Sound");
-		pvpOnSound = getString("PvP Timer.Sound.PvP On Sound");
-		enableSound = getBoolean("PvP Timer.Sound.Enabled");
-		announcePvpOnWorldChange = getBoolean("PvP Timer.Announce On World Change");
-		broadcastPvpLog = getBoolean("In Combat.Punishments.Broadcast PvPLog");
-		fineEnabled = getBoolean("In Combat.Punishments.Fine.Enabled");
-		fineAmount = getDouble("In Combat.Punishments.Fine.Amount");
-		pvpBlood = getBoolean("PvP Blood");
-		disableGamemode = getBoolean("In Combat.Disable GameMode");
-		currentVersion = plugin.getDescription().getVersion();
-		commandsAllowed = getStringList("In Combat.Stop Commands.Allowed Commands");
-	}
-
-	private double getDouble(String a) {
-		return plugin.getConfig().getDouble(a);
-	}
-
-	private boolean getBoolean(String a) {
-		return plugin.getConfig().getBoolean(a);
-	}
-
-	private int getInt(String a) {
-		return plugin.getConfig().getInt(a);
-	}
-
-	private List<String> getStringList(String a) {
-		return plugin.getConfig().getStringList(a);
-	}
-
-	private String getString(String a) {
-		return plugin.getConfig().getString(a);
+		inCombatEnabled = configManager.getConfig().getBoolean("In Combat.Enabled", true);
+		timeInCombat = configManager.getConfig().getInt("In Combat.Time(seconds)", 15);
+		stopCommands = configManager.getConfig().getBoolean("In Combat.Stop Commands.Enabled", true);
+		punishmentsEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Enabled", true);
+		dropInventory = configManager.getConfig().getBoolean("In Combat.Punishments.Drops.Inventory", true);
+		dropExp = configManager.getConfig().getBoolean("In Combat.Punishments.Drops.Experience", true);
+		dropArmor = configManager.getConfig().getBoolean("In Combat.Punishments.Drops.Armor", true);
+		killOnLogout = configManager.getConfig().getBoolean("In Combat.Punishments.Kill on Logout", true);
+		worldsExcluded = (List<String>) configManager.getConfig().getList("World Exclusions", worldsExcluded);
+		disableFly = configManager.getConfig().getBoolean("In Combat.Disable Fly", true);
+		pvpTimerEnabled = configManager.getConfig().getBoolean("PvP Timer.Enabled", true);
+		toggleSignsEnabled = configManager.getConfig().getBoolean("Toggle Signs.Enabled", true);
+		disableToggleCommand = configManager.getConfig().getBoolean("Toggle Signs.Disable Toggle Command", false);
+		onlyTagAttacker = configManager.getConfig().getBoolean("In Combat.Only Tag Attacker", false);
+		updateCheck = configManager.getConfig().getBoolean("Update Check.Enabled", true);
+		autoUpdate = configManager.getConfig().getBoolean("Update Check.Auto Update", true);
+		newbieProtectionEnabled = configManager.getConfig().getBoolean("Newbie Protection.Enabled", true);
+		newbieProtectionTime = configManager.getConfig().getInt("Newbie Protection.Time(minutes)", 5);
+		pvpOffSound = configManager.getConfig().getString("PvP Timer.Sound.PvP Off Sound");
+		pvpOnSound = configManager.getConfig().getString("PvP Timer.Sound.PvP On Sound");
+		enableSound = configManager.getConfig().getBoolean("PvP Timer.Sound.Enabled");
+		announcePvpOnWorldChange = configManager.getConfig().getBoolean("PvP Timer.Announce On World Change");
+		broadcastPvpLog = configManager.getConfig().getBoolean("In Combat.Punishments.Broadcast PvPLog", true);
+		fineEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Fine.Enabled", true);
+		fineAmount = configManager.getConfig().getDouble("In Combat.Punishments.Fine.Amount", 10.00);
+		pvpBlood = configManager.getConfig().getBoolean("PvP Blood", true);
+		disableGamemode = configManager.getConfig().getBoolean("In Combat.Disable GameMode", true);
+		commandsAllowed = (List<String>) configManager.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
+		currentVersion = configManager.getPlugin().getDescription().getVersion();
 	}
 
 	public static void helpMenu(Player player) {

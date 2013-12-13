@@ -35,6 +35,7 @@ public class PvPTimer {
 
 	public void checkWorldPvP() {
 		scheduledTasks[4] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
 			public void run() {
 				if (endPvP > startPvP) {
 					if (w.getTime() < startPvP || w.getTime() > endPvP) {
@@ -66,6 +67,7 @@ public class PvPTimer {
 		cancelAllTasks();
 		if (pvpOn) {
 			scheduledTasks[0] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				@Override
 				public void run() {
 					timeForPvp = false;
 					announcePvP(false);
@@ -74,6 +76,7 @@ public class PvPTimer {
 			}, calculateClockDelay());
 		} else {
 			scheduledTasks[1] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				@Override
 				public void run() {
 					timeForPvp = true;
 					announcePvP(true);
@@ -86,6 +89,7 @@ public class PvPTimer {
 	public void pvpScheduler() {
 		if (timeForPvp) {
 			scheduledTasks[2] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				@Override
 				public void run() {
 					timeForPvp = !timeForPvp;
 					announcePvP(false);
@@ -94,6 +98,7 @@ public class PvPTimer {
 			}, pvpOnDelay);
 		} else {
 			scheduledTasks[3] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				@Override
 				public void run() {
 					timeForPvp = !timeForPvp;
 					announcePvP(true);
@@ -166,12 +171,12 @@ public class PvPTimer {
 	}
 
 	public void getWorldValues(){
-		startPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".Start PvP");
-		endPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".End PvP");
-		startDifficulty = plugin.getConfig().getString("PvP Timer." + w.getName() + ".Start Difficulty");
-		endDifficulty = plugin.getConfig().getString("PvP Timer." + w.getName() + ".End Difficulty");
-		worldChangeOn = plugin.getConfig().getString("PvP Timer." + w.getName() + ".On World Change.On");
-		worldChangeOff = plugin.getConfig().getString("PvP Timer." + w.getName() + ".On World Change.Off");
+//		startPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".Start PvP");
+//		endPvP = plugin.getConfig().getLong("PvP Timer." + w.getName() + ".End PvP");
+//		startDifficulty = plugin.getConfig().getString("PvP Timer." + w.getName() + ".Start Difficulty");
+//		endDifficulty = plugin.getConfig().getString("PvP Timer." + w.getName() + ".End Difficulty");
+//		worldChangeOn = plugin.getConfig().getString("PvP Timer." + w.getName() + ".On World Change.On");
+//		worldChangeOff = plugin.getConfig().getString("PvP Timer." + w.getName() + ".On World Change.Off");
 	}
 	
 	public void reload() {

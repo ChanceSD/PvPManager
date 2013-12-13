@@ -96,6 +96,7 @@ public class CombatManager {
 
 	public void untagTimer(final Player player) {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
 			public void run() {
 				untag(player);
 			}
@@ -104,6 +105,7 @@ public class CombatManager {
 
 	public void removeNewbieTimer(final String name) {
 		int i = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
 			public void run() {
 				removeNewbie(name);
 			}

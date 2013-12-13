@@ -40,9 +40,6 @@ public class Messages {
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
 		this.messagesFile = new File(plugin.getDataFolder(), "messages.properties");
-		if (plugin.getConfig().getInt("Config Version") < 7) {
-			resetMessages();
-		}
 		load();
 	}
 
@@ -120,12 +117,6 @@ public class Messages {
 			pw.close();
 			fw.close();
 		} catch (IOException e) {
-		}
-	}
-
-	public void resetMessages() {
-		if (messagesFile.exists()) {
-			messagesFile.delete();
 		}
 	}
 
