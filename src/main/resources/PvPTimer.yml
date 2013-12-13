@@ -21,8 +21,8 @@ PvP Timer:
     Enabled: true
     PvP Off Sound: SUCCESSFUL_HIT
     PvP On Sound: GHAST_FIREBALL
-    PvP Off Pitch: 1
-    PvP On Pitch: 1    
+    PvP Off Pitch: 0
+    PvP On Pitch: 0    
     
 # Here you can set the settings for each world, it will auto-complete on server start
 # Start/End PvP - Time to start/end PvP

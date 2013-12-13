@@ -20,6 +20,7 @@ permissions:
        pvpmanager.override: true
        pvpmanager.nodrop: true
        pvpmanager.nocombat: true
+       pvpmanager.nodisable: true
    pvpmanager.admin:
      description: Gives access to PvPManager features
      default: false
@@ -66,4 +67,7 @@ permissions:
      default: false
    pvpmanager.nopvp:
      description: Players with this permission always have PvP disabled
+     default: false
+   pvpmanager.nodisable:
+     description: Players with this permission don't get fly and gamemode disabled
      default: false
