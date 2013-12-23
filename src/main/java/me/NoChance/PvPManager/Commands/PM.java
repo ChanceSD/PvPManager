@@ -136,7 +136,7 @@ public class PM implements CommandExecutor {
 					sender.sendMessage(ChatColor.DARK_RED + "World not found!");
 			return false;
 		}
-		sender.sendMessage(ChatColor.DARK_RED + "You don't have permission!");
+		sender.sendMessage(ChatColor.DARK_RED + "You don't have permission or command doesn't exist!");
 		return false;
 	}
 
