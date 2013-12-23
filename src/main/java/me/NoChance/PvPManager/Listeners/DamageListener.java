@@ -85,8 +85,8 @@ public class DamageListener implements Listener {
 		Player attacked = (Player) event.getEntity();
 		if (Variables.pvpBlood)
 			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
-		if (!attacked.hasPermission("pvpmanager.nodisable")) {
-			if (Variables.disableFly && attacker.isFlying() && attacker.getAllowFlight()) {
+		if (!attacker.hasPermission("pvpmanager.nodisable")) {
+			if (Variables.disableFly && attacker.isFlying()) {
 				cm.disableFly(attacker);
 			}
 			if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
