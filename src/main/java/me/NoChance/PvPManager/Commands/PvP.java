@@ -128,9 +128,26 @@ public class PvP implements CommandExecutor {
 				}
 			}
 		} else {
-			if (args.length == 1)
+			if (args.length == 0){
 				sender.sendMessage("You are not a player!");
-			if (args.length == 2) {
+				return false;
+			}
+			else if (args.length == 1){
+				if(!Utils.isOnline(args[0])){
+					sender.sendMessage("§4Player not online!");
+					return false;
+				}
+				if (cm.hasPvpEnabled(args[0])) {
+					cm.disablePvp(Utils.getPlayer(args[0]));
+					sender.sendMessage("§6[§8PvPManager§6] §2PvP disabled for " + args[0]);
+					return true;
+				} else {
+					cm.enablePvp(Utils.getPlayer(args[0]));
+					sender.sendMessage("§6[§8PvPManager§6] §4PvP enabled for " + args[0]);
+					return true;
+				}
+			}	
+			else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("status")) {
 					if (!cm.hasPvpEnabled(args[1])) {
 						sender.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));
@@ -145,7 +162,7 @@ public class PvP implements CommandExecutor {
 				}
 			}
 		}
-		sender.sendMessage(ChatColor.DARK_RED + "You don't have permission!");
+		sender.sendMessage(ChatColor.DARK_RED + "You don't have permission or command doesn't exist!");
 		return false;
 	}
 }
