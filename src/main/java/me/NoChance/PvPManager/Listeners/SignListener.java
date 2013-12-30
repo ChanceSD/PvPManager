@@ -50,13 +50,16 @@ public class SignListener implements Listener {
 					if (player.hasPermission("pvpmanager.pvpstatus.change")) {
 						Sign sign = (Sign) clicked.getState();
 						if (sign.getLine(0).equalsIgnoreCase("§5[PvPManager]")) {
-							if (plugin.getCm().hasPvpEnabled(player.getName())) {
-								plugin.getCm().disablePvp(player);
-								player.sendMessage(Messages.PvP_Disabled);
-							} else {
-								plugin.getCm().enablePvp(player);
-								player.sendMessage(Messages.PvP_Enabled);
+							if (plugin.getCm().checkToggleCooldown(player)) {
+								if (plugin.getCm().hasPvpEnabled(player.getName())) {
+									plugin.getCm().disablePvp(player);
+									player.sendMessage(Messages.PvP_Disabled);
+								} else {
+									plugin.getCm().enablePvp(player);
+									player.sendMessage(Messages.PvP_Enabled);
+								}
 							}
+							return;
 						}
 					} else {
 						player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");

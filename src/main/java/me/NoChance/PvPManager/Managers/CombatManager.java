@@ -2,12 +2,15 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Others.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class CombatManager {
@@ -18,6 +21,7 @@ public class CombatManager {
 	private HashSet<String> playersStatusOff = new HashSet<String>();
 	private HashSet<String> newbies = new HashSet<String>();
 	private HashMap<String, Integer> newbieTimers = new HashMap<String, Integer>();
+	private HashMap<String, Long> toggleTimers = new HashMap<String, Long>();
 
 	public CombatManager(PvPManager plugin) {
 		this.plugin = plugin;
@@ -27,10 +31,18 @@ public class CombatManager {
 	public boolean isPvP(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
 			return true;
-		} else if (event.getDamager() instanceof Projectile && event.getEntity() instanceof Player) {
-			Projectile proj = (Projectile) event.getDamager();
-			if (proj.getShooter() instanceof Player) {
-				return true;
+		}
+		if (event.getEntity() instanceof Player) {
+			if (event.getDamager() instanceof Projectile) {
+				Projectile proj = (Projectile) event.getDamager();
+				if (proj.getShooter() instanceof Player) {
+					return true;
+				}
+			} else if (event.getDamager() instanceof ThrownPotion) {
+				ThrownPotion potion = (ThrownPotion) event.getDamager();
+				if (potion.getShooter() instanceof Player) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -119,7 +131,7 @@ public class CombatManager {
 	}
 
 	public void disablePvp(Player p) {
-		playersStatusOff.add(p.getName());
+		disablePvp(p.getName());
 	}
 
 	public void disablePvp(String name) {
@@ -127,13 +139,39 @@ public class CombatManager {
 	}
 
 	public void enablePvp(Player p) {
-		playersStatusOff.remove(p.getName());
+		enablePvp(p.getName());
 	}
 
 	public void enablePvp(String name) {
 		playersStatusOff.remove(name);
 	}
+
+	public boolean checkToggleCooldown(Player p) {
+		String name = p.getName();
+		if(!toggleTimers.containsKey(name)){
+			toggleTimers.put(name, System.currentTimeMillis());
+			return true;
+		}
+		else if (System.currentTimeMillis() - toggleTimers.get(name) < Variables.toggleCooldown * 1000){
+			p.sendMessage("§6[§8PvPManager§6] §cYou can't toggle it yet!");
+			return false;
+		}
+		else {
+			toggleTimers.put(name, System.currentTimeMillis());
+			checkExpiredTimes();
+			return true;
+		}
+	}
 	
+	public void checkExpiredTimes(){
+		Iterator<Long> t = toggleTimers.values().iterator();
+		while(t.hasNext()){
+			long s = t.next();
+			if(System.currentTimeMillis() - s >= Variables.toggleCooldown * 1000)
+				t.remove();
+		}
+	}
+
 	public HashSet<String> getPlayersStatusOff() {
 		return playersStatusOff;
 	}

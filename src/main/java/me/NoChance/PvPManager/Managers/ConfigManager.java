@@ -29,9 +29,10 @@ public class ConfigManager {
 		this.manager = new SimpleConfigManager(plugin);
 		pvpTimer = manager.getNewConfig("PvPTimer.yml");
 		configVersion = getConfig().getInt("Config Version", 0);
-		if (configVersion < 9) {
+		if (configVersion < 10) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
+				config = manager.getNewConfig("config.yml");
 				new Variables(this);
 				configFile.delete();
 				config = manager.getNewConfig("config.yml");
@@ -53,7 +54,6 @@ public class ConfigManager {
 	// }
 
 	private void updateDefaultConfig() {
-		this.config.set("Config Version", 9);
 		this.config.set("PvP Blood", Variables.pvpBlood);
 		this.config.set("Disable Fly", Variables.disableFly);
 		this.config.set("Disable GameMode", Variables.disableGamemode);
@@ -72,6 +72,8 @@ public class ConfigManager {
 		this.config.set("In Combat.Punishments.Fine.Enabled", Variables.fineEnabled);
 		this.config.set("In Combat.Punishments.Fine.Amount", Variables.fineAmount);
 
+		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.toggleCooldown);
+		
 		this.config.set("Toggle Signs.Enabled", Variables.toggleSignsEnabled);
 		this.config.set("Toggle Signs.Disable Toggle Command", Variables.disableToggleCommand);
 

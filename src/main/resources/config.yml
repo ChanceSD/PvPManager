@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 9
+Config Version: 10
 
 # Should blood animation on PvP be enabled
 PvP Blood: true
@@ -40,8 +40,13 @@ In Combat:
       Experience: true
       Armor: true
     Fine:
-      Enabled: true
+      Enabled: false
       Amount: 10.0
+
+# Section for PvP Toggle command(/pvp)
+# Cooldown(seconds) - How many seconds players have to wait until they can use /pvp again
+PvP Toggle:
+  Cooldown(seconds): 30
 
 # Should toggle PvP signs be enabled? (Similar to /pvp command but by clicking signs)
 # To create a toggle sign write [pvpmanager] on the first line (remember you need the right permission)

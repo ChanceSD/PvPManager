@@ -26,15 +26,18 @@ public class PvP implements CommandExecutor {
 			if (args.length == 0) {
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
-					if (cm.hasPvpEnabled(player.getName())) {
-						cm.disablePvp(player);
-						player.sendMessage(Messages.PvP_Disabled);
-						return true;
-					} else {
-						cm.enablePvp(player);
-						player.sendMessage(Messages.PvP_Enabled);
-						return true;
+					if (cm.checkToggleCooldown(player)) {
+						if (cm.hasPvpEnabled(player.getName())) {
+							cm.disablePvp(player);
+							player.sendMessage(Messages.PvP_Disabled);
+							return true;
+						} else {
+							cm.enablePvp(player);
+							player.sendMessage(Messages.PvP_Enabled);
+							return true;
+						}
 					}
+					return false;
 				} else if (Variables.toggleSignsEnabled && Variables.disableToggleCommand) {
 					player.sendMessage(ChatColor.DARK_RED + "This command is disabled! You have to use a Sign!");
 					return false;
@@ -53,38 +56,31 @@ public class PvP implements CommandExecutor {
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
 					if (args[0].equalsIgnoreCase("off")) {
-						if (cm.hasPvpEnabled(player.getName())) {
-							cm.disablePvp(player);
-							player.sendMessage(Messages.PvP_Disabled);
-							return true;
-						} else {
-							player.sendMessage(Messages.Already_Disabled);
-							return true;
+						if (cm.checkToggleCooldown(player)) {
+							if (cm.hasPvpEnabled(player.getName())) {
+								cm.disablePvp(player);
+								player.sendMessage(Messages.PvP_Disabled);
+								return true;
+							} else {
+								player.sendMessage(Messages.Already_Disabled);
+								return true;
+							}
 						}
-					}
-					else if (args[0].equalsIgnoreCase("on")) {
-						if (!cm.hasPvpEnabled(player.getName())) {
-							cm.enablePvp(player);
-							player.sendMessage(Messages.PvP_Enabled);
-							return true;
-						} else {
-							player.sendMessage(Messages.Already_Enabled);
-							return true;
+						return false;
+					} else if (args[0].equalsIgnoreCase("on")) {
+						if (cm.checkToggleCooldown(player)) {
+							if (!cm.hasPvpEnabled(player.getName())) {
+								cm.enablePvp(player);
+								player.sendMessage(Messages.PvP_Enabled);
+								return true;
+							} else {
+								player.sendMessage(Messages.Already_Enabled);
+								return true;
+							}
 						}
-					}
-					else if (args[0].equalsIgnoreCase("toggle")) {
-						if (cm.hasPvpEnabled(player.getName())) {
-							cm.disablePvp(player);
-							player.sendMessage(Messages.PvP_Disabled);
-							return true;
-						} else {
-							cm.enablePvp(player);
-							player.sendMessage(Messages.PvP_Enabled);
-							return true;
-						}
-					}
-					else if(player.hasPermission("pvpmanager.admin")){
-						if(!Utils.isOnline(args[0])){
+						return false;
+					} else if (player.hasPermission("pvpmanager.admin")) {
+						if (!Utils.isOnline(args[0])) {
 							player.sendMessage("§4Player not online!");
 							return false;
 						}
@@ -128,12 +124,11 @@ public class PvP implements CommandExecutor {
 				}
 			}
 		} else {
-			if (args.length == 0){
+			if (args.length == 0) {
 				sender.sendMessage("You are not a player!");
 				return false;
-			}
-			else if (args.length == 1){
-				if(!Utils.isOnline(args[0])){
+			} else if (args.length == 1) {
+				if (!Utils.isOnline(args[0])) {
 					sender.sendMessage("§4Player not online!");
 					return false;
 				}
@@ -146,8 +141,7 @@ public class PvP implements CommandExecutor {
 					sender.sendMessage("§6[§8PvPManager§6] §4PvP enabled for " + args[0]);
 					return true;
 				}
-			}	
-			else if (args.length == 2) {
+			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("status")) {
 					if (!cm.hasPvpEnabled(args[1])) {
 						sender.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));

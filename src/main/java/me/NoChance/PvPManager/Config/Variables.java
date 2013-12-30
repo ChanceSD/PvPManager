@@ -42,6 +42,7 @@ public class Variables {
 	public static List<String> commandsAllowed = Arrays.asList(new String[]{"tell", "money"});
 	public static float pvpOffSoundPitch;
 	public static float pvpOnSoundPitch;
+	public static int toggleCooldown;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -75,12 +76,13 @@ public class Variables {
 		enableSound = configManager.getPvpTimer().getBoolean("PvP Timer.Sound.Enabled");
 		announcePvpOnWorldChange = configManager.getPvpTimer().getBoolean("PvP Timer.Announce On World Change");
 		broadcastPvpLog = configManager.getConfig().getBoolean("In Combat.Punishments.Broadcast PvPLog", true);
-		fineEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Fine.Enabled", true);
+		fineEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Fine.Enabled", false);
 		fineAmount = configManager.getConfig().getDouble("In Combat.Punishments.Fine.Amount", 10.00);
 		pvpBlood = configManager.getConfig().getBoolean("PvP Blood", true);
 		disableGamemode = configManager.getConfig().getBoolean("Disable GameMode", true);
 		commandsAllowed = (List<String>) configManager.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
 		currentVersion = configManager.getPlugin().getDescription().getVersion();
+		toggleCooldown = configManager.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 30);
 	}
 
 	public static void helpMenu(Player player) {
