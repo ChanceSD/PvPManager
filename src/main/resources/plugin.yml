@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 1.5.3
+version: 1.5.4
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard]

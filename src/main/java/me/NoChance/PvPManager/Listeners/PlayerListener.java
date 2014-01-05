@@ -67,6 +67,7 @@ public class PlayerListener implements Listener {
 				if (Variables.fineEnabled)
 					pm.applyFine(player);
 			}
+			plugin.getCm().untag(player);
 		}
 	}
 
@@ -87,6 +88,7 @@ public class PlayerListener implements Listener {
 				noDrop.put(player.getName(), inv);
 				event.getDrops().clear();
 			}
+			plugin.getCm().untag(player);
 		}
 	}
 
@@ -132,6 +134,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		Player p = event.getPlayer();
-		plugin.getCm().untag(p);
+		if (plugin.getCm().isInCombat(p))
+			plugin.getCm().untag(p);
 	}
 }

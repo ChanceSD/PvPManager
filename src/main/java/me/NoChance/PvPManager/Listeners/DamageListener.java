@@ -53,7 +53,7 @@ public class DamageListener implements Listener {
 			if (cm.isNewbie(attacked))
 				attacker.sendMessage("§6[§8PvPManager§6]§4 " + attacked.getName() + " has Protection!");
 			else
-				attacked.sendMessage(Messages.Newbie_Protection_On_Hit);
+				attacker.sendMessage(Messages.Newbie_Protection_On_Hit);
 			return;
 		}
 		if (!cm.hasPvpEnabled(attacked.getName())) {

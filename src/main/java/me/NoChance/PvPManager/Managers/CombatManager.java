@@ -3,14 +3,12 @@ package me.NoChance.PvPManager.Managers;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Others.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class CombatManager {
@@ -35,12 +33,7 @@ public class CombatManager {
 		if (event.getEntity() instanceof Player) {
 			if (event.getDamager() instanceof Projectile) {
 				Projectile proj = (Projectile) event.getDamager();
-				if (proj.getShooter() instanceof Player) {
-					return true;
-				}
-			} else if (event.getDamager() instanceof ThrownPotion) {
-				ThrownPotion potion = (ThrownPotion) event.getDamager();
-				if (potion.getShooter() instanceof Player) {
+				if (proj.getShooter() instanceof Player && !proj.getShooter().equals(event.getEntity())) {
 					return true;
 				}
 			}
@@ -62,11 +55,9 @@ public class CombatManager {
 	}
 
 	public void untag(Player p) {
-		if (isInCombat(p)) {
-			inCombat.remove(p.getName());
-			if (Utils.isOnline(p))
-				p.sendMessage(Messages.Out_Of_Combat);
-		}
+		inCombat.remove(p.getName());
+		if (Utils.isOnline(p))
+			p.sendMessage(Messages.Out_Of_Combat);
 	}
 
 	public void disableFly(Player player) {
@@ -148,26 +139,24 @@ public class CombatManager {
 
 	public boolean checkToggleCooldown(Player p) {
 		String name = p.getName();
-		if(!toggleTimers.containsKey(name)){
+		if (!toggleTimers.containsKey(name)) {
 			toggleTimers.put(name, System.currentTimeMillis());
 			return true;
-		}
-		else if (System.currentTimeMillis() - toggleTimers.get(name) < Variables.toggleCooldown * 1000){
+		} else if (System.currentTimeMillis() - toggleTimers.get(name) < Variables.toggleCooldown * 1000) {
 			p.sendMessage("§6[§8PvPManager§6] §cYou can't toggle it yet!");
 			return false;
-		}
-		else {
+		} else {
 			toggleTimers.put(name, System.currentTimeMillis());
 			checkExpiredTimes();
 			return true;
 		}
 	}
-	
-	public void checkExpiredTimes(){
+
+	public void checkExpiredTimes() {
 		Iterator<Long> t = toggleTimers.values().iterator();
-		while(t.hasNext()){
+		while (t.hasNext()) {
 			long s = t.next();
-			if(System.currentTimeMillis() - s >= Variables.toggleCooldown * 1000)
+			if (System.currentTimeMillis() - s >= Variables.toggleCooldown * 1000)
 				t.remove();
 		}
 	}

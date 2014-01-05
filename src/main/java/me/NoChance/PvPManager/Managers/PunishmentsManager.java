@@ -9,7 +9,6 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Others.Utils;
@@ -73,7 +72,7 @@ public class PunishmentsManager {
 
 	public void applyFine(Player p) {
 		if (economy != null) {
-			economy.bankWithdraw(p.getName(), Variables.fineAmount);
+			economy.withdrawPlayer(p.getName(), Variables.fineAmount);
 		} else {
 			plugin.getLogger().severe("Tried to apply fine but no Economy plugin found!");
 			plugin.getLogger().severe("Disable fines feature or get an Economy plugin to fix this error");
