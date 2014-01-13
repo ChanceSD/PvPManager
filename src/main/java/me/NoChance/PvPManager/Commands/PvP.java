@@ -47,6 +47,7 @@ public class PvP implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("list") && player.hasPermission("pvpmanager.list")) {
 					player.sendMessage(ChatColor.GOLD + "**** Players With PvP Enabled ****");
 					player.sendMessage(ChatColor.DARK_GRAY + pvpList());
+					return true;
 				}
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
@@ -161,6 +162,8 @@ public class PvP implements CommandExecutor {
 				list.append(name + ", ");
 			}
 		}
+		if (list.toString().isEmpty())
+			return "No Players with PvP Enabled";
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
 	}

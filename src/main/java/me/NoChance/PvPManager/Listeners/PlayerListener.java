@@ -94,7 +94,7 @@ public class PlayerListener implements Listener {
 			}
 			plugin.getCm().untag(player);
 		}
-		if (Variables.killAbuseEnabled) {
+		if (Variables.killAbuseEnabled && player.getKiller() != null) {
 			String killer = player.getKiller().getName();
 			if (killers.get(killer) == null) {
 				killers.put(killer, new HashMap<String, Integer>());
