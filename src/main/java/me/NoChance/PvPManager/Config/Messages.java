@@ -36,6 +36,7 @@ public class Messages {
 	public static String Newbie_Protection_End;
 	public static String PvPLog_Broadcast;
 	public static String Newbie_Protection_On_Hit;
+	public static String Newbie_Protection_Atacker;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
@@ -91,6 +92,7 @@ public class Messages {
 		Newbie_Protection_End = getString("Newbie_Protection_End");
 		PvPLog_Broadcast = getString("PvPLog_Broadcast");
 		Newbie_Protection_On_Hit = getString("Newbie_Protection_On_Hit");
+		Newbie_Protection_Atacker = getString("Newbie_Protection_Atacker");
 	}
 
 	public void checkChanges() {

@@ -24,7 +24,7 @@ public class PM implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (args.length == 0) {
+			if (args.length == 0 && player.hasPermission("pvpmanager.menu")) {
 				Variables.helpMenu(player);
 				return true;
 			}

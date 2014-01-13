@@ -1,11 +1,5 @@
 package me.NoChance.PvPManager.Others;
 
-/*
- * Updater for Bukkit.
- *
- * This class provides the means to safely and easily update a plugin, or check to see if it is updated using dev.bukkit.org
- */
-
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,23 +11,6 @@ import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-
-/**
- * Check dev.bukkit.org to find updates for a given plugin, and download the updates if needed.
- * <p/>
- * <b>VERY, VERY IMPORTANT</b>: Because there are no standards for adding auto-update toggles in your plugin's config, this system provides NO CHECK WITH YOUR CONFIG to make sure the user has allowed auto-updating.
- * <br>
- * It is a <b>BUKKIT POLICY</b> that you include a boolean value in your config that prevents the auto-updater from running <b>AT ALL</b>.
- * <br>
- * If you fail to include this option in your config, your plugin will be <b>REJECTED</b> when you attempt to submit it to dev.bukkit.org.
- * <p/>
- * An example of a good configuration option would be something similar to 'auto-update: true' - if this value is set to false you may NOT run the auto-updater.
- * <br>
- * If you are unsure about these rules, please read the plugin submission guidelines: http://goo.gl/8iU5l
- *
- * @author Gravity
- * @version 2.0
- */
 
 public class Updater {
 

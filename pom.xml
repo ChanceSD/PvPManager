@@ -22,13 +22,53 @@
 			<id>vault-repo</id>
 			<url>http://ci.herocraftonline.com/plugin/repository/everything</url>
 		</repository>
+		<repository>
+			<id>disguisecraft-repo</id>
+			<url>http://build.yu8.me:8080/plugin/repository/everything/</url>
+		</repository>
+		<repository>
+			<id>libsdisguises-repo</id>
+			<url>http://repo.md-5.net/content/groups/public/</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
+			<groupId>pgDev</groupId>
+			<artifactId>DisguiseCraft</artifactId>
+			<version>5.1</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>craftbukkit</artifactId>
+					<groupId>org.bukkit</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
-			<version>1.2.27-SNAPSHOT</version>
+			<version>1.2.30</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>LibsDisguises</groupId>
+			<artifactId>LibsDisguises</artifactId>
+			<version>LATEST</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>cglib-nodep</artifactId>
+					<groupId>cglib</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>BukkitExecutors</artifactId>
+					<groupId>com.comphenix.executors</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>ProtocolLib</artifactId>
+					<groupId>com.comphenix.protocol</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.mcstats.bukkit</groupId>

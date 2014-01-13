@@ -3,13 +3,15 @@ main: me.NoChance.PvPManager.PvPManager
 version: 1.5.4
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
-softdepend: [Vault, WorldGuard]
+softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises]
 
 commands:
-   pm:
+   pvpmanager:
       description: Shows Main PvPManager Page.
+      aliases: [pm, pvpm]
    pvp:
       description: Change your PvP Status.
+      aliases: [toggle, pvptoggle]
 
 permissions:
    pvpmanager.*:
@@ -26,9 +28,7 @@ permissions:
      default: false
      children:
        pvpmanager.reload: true
-       pvpmanager.pvpstatus.change: true
-       pvpmanager.pvpstatus.self: true
-       pvpmanager.pvpstatus.others: true
+       pvpmanager.user: true
        pvpmanager.pvptimer: true
        pvpmanager.sign: true
    pvpmanager.user:
@@ -38,6 +38,8 @@ permissions:
        pvpmanager.pvpstatus.change: true
        pvpmanager.pvpstatus.self: true
        pvpmanager.pvpstatus.others: true
+       pvpmanager.list: true
+       pvpmanager.menu: true
    pvpmanager.pvpstatus.change:
      description: Allows you to change your PvP status between <on> and <off>
      default: false
@@ -70,4 +72,10 @@ permissions:
      default: false
    pvpmanager.nodisable:
      description: Players with this permission don't get fly and gamemode disabled
+     default: false
+   pvpmanager.list:
+     description: Allows access to the list of players with PvP enabled
+     default: false
+   pvpmanager.menu:
+     description: Allows access to PvPManager help menu
      default: false

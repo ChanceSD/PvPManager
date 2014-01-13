@@ -1,9 +1,7 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Others.Utils;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -47,22 +45,13 @@ public class SignListener implements Listener {
 			Block clicked = e.getClickedBlock();
 			if (clicked != null) {
 				if (clicked.getType().equals(Material.SIGN_POST) || clicked.getType().equals(Material.WALL_SIGN)) {
-					if (player.hasPermission("pvpmanager.pvpstatus.change")) {
-						Sign sign = (Sign) clicked.getState();
-						if (sign.getLine(0).equalsIgnoreCase("§5[PvPManager]")) {
-							if (plugin.getCm().checkToggleCooldown(player)) {
-								if (plugin.getCm().hasPvpEnabled(player.getName())) {
-									plugin.getCm().disablePvp(player);
-									player.sendMessage(Messages.PvP_Disabled);
-								} else {
-									plugin.getCm().enablePvp(player);
-									player.sendMessage(Messages.PvP_Enabled);
-								}
-							}
+					Sign sign = (Sign) clicked.getState();
+					if (sign.getLine(0).equalsIgnoreCase("§5[PvPManager]")) {
+						if (player.hasPermission("pvpmanager.pvpstatus.change")) {
+							plugin.getCm().togglePvP(player);
 							return;
-						}
-					} else {
-						player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");
+						} else
+							player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");
 					}
 				}
 			}

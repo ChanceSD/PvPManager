@@ -2,12 +2,15 @@ package me.NoChance.PvPManager.Listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PunishmentsManager;
 import me.NoChance.PvPManager.Others.Utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,10 +27,13 @@ public class PlayerListener implements Listener {
 	private PvPManager plugin;
 	private PunishmentsManager pm;
 	private HashMap<String, ArrayList<ItemStack[]>> noDrop = new HashMap<String, ArrayList<ItemStack[]>>();
+	private HashMap<String, Map<String, Integer>> killers = new HashMap<String, Map<String, Integer>>();
 
 	public PlayerListener(PvPManager plugin) {
 		this.plugin = plugin;
 		this.pm = plugin.getPm();
+		if(Variables.killAbuseEnabled)
+			cleanKillers();
 	}
 
 	@EventHandler
@@ -51,7 +57,6 @@ public class PlayerListener implements Listener {
 					} else if (Variables.dropInventory && Variables.dropArmor && !Variables.dropExp)
 						player.setHealth(0);
 				} else if (!Variables.killOnLogout) {
-
 					if (Variables.dropInventory) {
 						pm.fakeInventoryDrop(player, player.getInventory().getContents());
 						player.getInventory().clear();
@@ -60,9 +65,8 @@ public class PlayerListener implements Listener {
 						pm.fakeInventoryDrop(player, player.getInventory().getArmorContents());
 						player.getInventory().setArmorContents(null);
 					}
-					if (Variables.dropExp) {
+					if (Variables.dropExp)
 						pm.fakeExpDrop(player);
-					}
 				}
 				if (Variables.fineEnabled)
 					pm.applyFine(player);
@@ -90,6 +94,28 @@ public class PlayerListener implements Listener {
 			}
 			plugin.getCm().untag(player);
 		}
+		if (Variables.killAbuseEnabled) {
+			String killer = player.getKiller().getName();
+			if (killers.get(killer) == null) {
+				killers.put(killer, new HashMap<String, Integer>());
+				killers.get(killer).put(player.getName(), 1);
+				if (plugin.getCm().getKillAbusers().containsKey(killer))
+					plugin.getCm().getKillAbusers().remove(killer);
+			}
+			if (killers.get(killer).containsKey(player.getName())) {
+				int totalKills = killers.get(killer).get(player.getName());
+				if (totalKills >= Variables.killAbuseMaxKills) {
+					killers.remove(killer);
+					plugin.getCm().getKillAbusers().put(killer, player.getName());
+					for (String command : Variables.killAbuseCommands) {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer));
+					}
+				} else if (totalKills < Variables.killAbuseMaxKills) {
+					killers.get(killer).put(player.getName(), totalKills++);
+				}
+			}
+
+		}
 	}
 
 	@EventHandler
@@ -103,11 +129,11 @@ public class PlayerListener implements Listener {
 		if (Utils.PMAllowed(player.getWorld().getName())) {
 			if (!player.hasPlayedBefore()) {
 				plugin.getCm().addNewbie(player);
-				plugin.getCm().removeNewbieTimer(player.getName());
+				if (!Variables.defaultPvp)
+					plugin.getCm().disablePvp(player);
 			}
-			if (player.hasPermission("pvpmanager.nopvp")) {
+			if (player.hasPermission("pvpmanager.nopvp"))
 				plugin.getCm().disablePvp(player);
-			}
 		}
 	}
 
@@ -136,5 +162,14 @@ public class PlayerListener implements Listener {
 		Player p = event.getPlayer();
 		if (plugin.getCm().isInCombat(p))
 			plugin.getCm().untag(p);
+	}
+	
+	private void cleanKillers(){
+		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
+			@Override
+			public void run() {
+				killers.clear();
+			}	
+		}, 60, Variables.killAbuseTime);
 	}
 }

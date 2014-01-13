@@ -4,6 +4,8 @@ import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.CombatManager;
 import me.NoChance.PvPManager.Others.Utils;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,18 +27,8 @@ public class PvP implements CommandExecutor {
 			if (args.length == 0) {
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
-					if (cm.checkToggleCooldown(player)) {
-						if (cm.hasPvpEnabled(player.getName())) {
-							cm.disablePvp(player);
-							player.sendMessage(Messages.PvP_Disabled);
-							return true;
-						} else {
-							cm.enablePvp(player);
-							player.sendMessage(Messages.PvP_Enabled);
-							return true;
-						}
-					}
-					return false;
+					cm.togglePvP(player);
+					return true;
 				} else if (Variables.toggleSignsEnabled && Variables.disableToggleCommand) {
 					player.sendMessage(ChatColor.DARK_RED + "This command is disabled! You have to use a Sign!");
 					return false;
@@ -52,13 +44,16 @@ public class PvP implements CommandExecutor {
 						return true;
 					}
 				}
+				if (args[0].equalsIgnoreCase("list") && player.hasPermission("pvpmanager.list")) {
+					player.sendMessage(ChatColor.GOLD + "**** Players With PvP Enabled ****");
+					player.sendMessage(ChatColor.DARK_GRAY + pvpList());
+				}
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
 					if (args[0].equalsIgnoreCase("off")) {
 						if (cm.checkToggleCooldown(player)) {
 							if (cm.hasPvpEnabled(player.getName())) {
 								cm.disablePvp(player);
-								player.sendMessage(Messages.PvP_Disabled);
 								return true;
 							} else {
 								player.sendMessage(Messages.Already_Disabled);
@@ -70,7 +65,6 @@ public class PvP implements CommandExecutor {
 						if (cm.checkToggleCooldown(player)) {
 							if (!cm.hasPvpEnabled(player.getName())) {
 								cm.enablePvp(player);
-								player.sendMessage(Messages.PvP_Enabled);
 								return true;
 							} else {
 								player.sendMessage(Messages.Already_Enabled);
@@ -157,5 +151,17 @@ public class PvP implements CommandExecutor {
 		}
 		sender.sendMessage(ChatColor.DARK_RED + "You don't have permission or command doesn't exist!");
 		return false;
+	}
+
+	private String pvpList() {
+		StringBuilder list = new StringBuilder();
+		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+			String name = p.getName();
+			if (cm.hasPvpEnabled(name)) {
+				list.append(name + ", ");
+			}
+		}
+		list.delete(list.length() - 2, list.length());
+		return list.toString();
 	}
 }

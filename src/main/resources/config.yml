@@ -6,14 +6,19 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 10
+Config Version: 11
+
+# All players should start with PvP ON(=true) or OFF(=false) by default(Only works for new players)
+Default PvP: true
 
 # Should blood animation on PvP be enabled
 PvP Blood: true
 
 # What should be disabled on PvP
+# Disabling disguises support DisguiseCraft and LibsDisguises
 Disable Fly: true
 Disable GameMode: true
+Disable Disguise: true
 
 # This section defines everything that will happen when a player is tagged in combat
 # Time(seconds) - For how many seconds should the player be tagged
@@ -54,6 +59,16 @@ PvP Toggle:
 Toggle Signs:
   Enabled: true
   Disable Toggle Command: false
+
+# This feature prevents player abuse by killing the same player several times to rise in rank or get rewards
+# Example - If a player X kills player Y more than 3 times, it blocks the next damage and executes the commands 
+# defined(like kicking, jail, whatever you decide). In this case, it would check every 60 seconds for abusers
+Kill Abuse:
+  Enabled: true
+  Max Kills: 3
+  Time Limit: 60
+  Commands on Abuse:
+    - kick <player> Kill Abuse Is Not Allowed!
 
 # Should new players on your server be protected from PvP (If they want to PvP just use /pvp disable protection)
 # Time(minutes) - If so, for how many minutes should protection last

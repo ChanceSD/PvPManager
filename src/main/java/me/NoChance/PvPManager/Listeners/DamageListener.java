@@ -6,6 +6,7 @@ import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.CombatManager;
 import me.NoChance.PvPManager.Others.Utils;
+import me.libraryaddict.disguise.DisguiseAPI;
 
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
@@ -48,10 +49,19 @@ public class DamageListener implements Listener {
 				}
 			}
 		}
+		if (Variables.killAbuseEnabled) {
+			if (cm.getKillAbusers().containsKey(attacker.getName())) {
+				if (cm.getKillAbusers().get(attacker.getName()).equals(attacked.getName())) {
+					attacker.sendMessage("§6[§8PvPManager§6]§4 Attack blocked due to kill abuse!");
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
 		if (cm.isNewbie(attacked) || cm.isNewbie(attacker)) {
 			event.setCancelled(true);
 			if (cm.isNewbie(attacked))
-				attacker.sendMessage("§6[§8PvPManager§6]§4 " + attacked.getName() + " has Protection!");
+				attacker.sendMessage(Messages.Newbie_Protection_Atacker.replace("%p", attacked.getName()));
 			else
 				attacker.sendMessage(Messages.Newbie_Protection_On_Hit);
 			return;
@@ -77,6 +87,7 @@ public class DamageListener implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void damageListenerMonitor(EntityDamageByEntityEvent event) {
 		if (!cm.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
@@ -86,16 +97,23 @@ public class DamageListener implements Listener {
 		if (Variables.pvpBlood)
 			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
-			if (Variables.disableFly && attacker.isFlying()) {
+			if (Variables.disableFly && attacker.isFlying())
 				cm.disableFly(attacker);
-			}
-			if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
+			if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL))
 				attacker.setGameMode(GameMode.SURVIVAL);
+			if (Variables.disableDisguise) {
+				if (Utils.getDisguiseCraft() != null && Utils.getDisguiseCraft().isDisguised(attacker))
+					Utils.getDisguiseCraft().undisguisePlayer(attacker);
+				if (Utils.isLibsDisguisesEnabled() && DisguiseAPI.isDisguised(attacker))
+					DisguiseAPI.undisguiseToAll(attacker);
 			}
 		}
 		if (Variables.inCombatEnabled) {
 			if (!cm.isInCombat(attacker) && !cm.isInCombat(attacked)) {
 				cm.inCombat(attacker, attacked);
+			} else {
+				cm.renewTag(attacker);
+				cm.renewTag(attacked);
 			}
 		}
 	}

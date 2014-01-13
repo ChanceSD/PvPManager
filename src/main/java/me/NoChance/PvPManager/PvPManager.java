@@ -32,7 +32,7 @@ public final class PvPManager extends JavaPlugin {
 		startListeners();
 		this.configM.loadUsers();
 		getCommand("pvp").setExecutor(new PvP(combatManager));
-		getCommand("pm").setExecutor(new PM(this));
+		getCommand("pvpmanager").setExecutor(new PM(this));
 		new CustomGraph(this);
 		if (Variables.updateCheck) {
 			checkForUpdates();
@@ -64,23 +64,20 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void checkForUpdates() {
-		getLogger().info("Checking for updates...");
-		Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
-		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
-			Variables.newVersion = updater.getLatestName();
-			getLogger().info("Update Available: " + Variables.newVersion);
-			if (Variables.autoUpdate) {
-				downloadUpdate();
-				return;
+		if (!Variables.autoUpdate) {
+			Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+			if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
+				Variables.newVersion = updater.getLatestName();
+				getLogger().info("Update Available: " + Variables.newVersion);
+				Variables.update = true;
+				getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 			}
-			Variables.update = true;
-			getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 		} else
-			getLogger().info("No update found");
+			downloadUpdate();
 	}
-	
-	public boolean downloadUpdate(){
-		Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+
+	public boolean downloadUpdate() {
+		Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, false);
 		return updater.getResult() == UpdateResult.SUCCESS;
 	}
 

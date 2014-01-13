@@ -29,7 +29,7 @@ public class ConfigManager {
 		this.manager = new SimpleConfigManager(plugin);
 		pvpTimer = manager.getNewConfig("PvPTimer.yml");
 		configVersion = getConfig().getInt("Config Version", 0);
-		if (configVersion < 10) {
+		if (configVersion < 11) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = manager.getNewConfig("config.yml");
@@ -54,9 +54,11 @@ public class ConfigManager {
 	// }
 
 	private void updateDefaultConfig() {
+		this.config.set("Default PvP", Variables.defaultPvp);
 		this.config.set("PvP Blood", Variables.pvpBlood);
 		this.config.set("Disable Fly", Variables.disableFly);
 		this.config.set("Disable GameMode", Variables.disableGamemode);
+		this.config.set("Disable Disguise", Variables.disableDisguise);
 
 		this.config.set("In Combat.Enabled", Variables.inCombatEnabled);
 		this.config.set("In Combat.Time(seconds)", Variables.timeInCombat);
@@ -77,6 +79,11 @@ public class ConfigManager {
 		this.config.set("Toggle Signs.Enabled", Variables.toggleSignsEnabled);
 		this.config.set("Toggle Signs.Disable Toggle Command", Variables.disableToggleCommand);
 
+		this.config.set("Kill Abuse.Enabled", Variables.killAbuseEnabled);
+		this.config.set("Kill Abuse.Max Kills", Variables.killAbuseMaxKills);
+		this.config.set("Kill Abuse.Time Limit", Variables.killAbuseTime);
+		this.config.set("Kill Abuse.Commands on Abuse", Variables.killAbuseCommands);
+		
 		this.config.set("Newbie Protection.Enabled", Variables.newbieProtectionEnabled);
 		this.config.set("Newbie Protection.Time(minutes)", Variables.newbieProtectionTime);
 

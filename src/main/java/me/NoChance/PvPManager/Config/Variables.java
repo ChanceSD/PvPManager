@@ -43,6 +43,12 @@ public class Variables {
 	public static float pvpOffSoundPitch;
 	public static float pvpOnSoundPitch;
 	public static int toggleCooldown;
+	public static boolean defaultPvp;
+	public static boolean disableDisguise;
+	public static boolean killAbuseEnabled;
+    public static int killAbuseMaxKills;
+    public static int killAbuseTime;
+    public static List<String> killAbuseCommands = Arrays.asList("kick <player> Kill Abuse Is Not Allowed!");
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -83,6 +89,12 @@ public class Variables {
 		commandsAllowed = (List<String>) configManager.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
 		currentVersion = configManager.getPlugin().getDescription().getVersion();
 		toggleCooldown = configManager.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 30);
+		defaultPvp = configManager.getConfig().getBoolean("Default PvP", true);
+		disableDisguise = configManager.getConfig().getBoolean("Disable Disguise", true);
+		killAbuseMaxKills = configManager.getConfig().getInt("Kill Abuse.Max Kills", 3);
+		killAbuseTime = configManager.getConfig().getInt("Kill Abuse.Time Limit", 60);
+		killAbuseCommands = (List<String>) configManager.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
+		killAbuseEnabled = configManager.getConfig().getBoolean("Kill Abuse.Enabled", true);
 	}
 
 	public static void helpMenu(Player player) {

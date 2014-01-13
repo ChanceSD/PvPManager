@@ -1,11 +1,12 @@
 package me.NoChance.PvPManager.Others;
 
 import me.NoChance.PvPManager.Config.Variables;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
+import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
 public class Utils {
 
@@ -32,20 +33,26 @@ public class Utils {
 	}
 
 	public static boolean isWGEnabled() {
-		if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null)
-			return true;
-		else
-			return false;
+		return Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null;
 	}
-	
+
 	public static boolean isVaultEnabled() {
-		if (Bukkit.getServer().getPluginManager().getPlugin("Vault") != null)
-			return true;
-		else
-			return false;
+		return Bukkit.getServer().getPluginManager().getPlugin("Vault") != null;
 	}
-	
-	public static boolean PMAllowed(String worldName){
+
+	public static DisguiseCraftAPI getDisguiseCraft() {
+		if (DisguiseCraft.getAPI() == null)
+			Variables.disableDisguise = false;
+		return DisguiseCraft.getAPI();
+	}
+
+	public static boolean isLibsDisguisesEnabled() {
+		if (Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") == null)
+			Variables.disableDisguise = false;
+		return Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") != null;
+	}
+
+	public static boolean PMAllowed(String worldName) {
 		return !Variables.worldsExcluded.contains(worldName);
 	}
 }
