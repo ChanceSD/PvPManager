@@ -61,11 +61,11 @@ Toggle Signs:
   Disable Toggle Command: false
 
 # This feature prevents player abuse by killing the same player several times to rise in rank or get rewards
-# Example - If a player X kills player Y more than 3 times, it blocks the next damage and executes the commands 
+# Example - If a player X kills player Y more than 5 times, it blocks the next damage and executes the commands 
 # defined(like kicking, jail, whatever you decide). In this case, it would check every 60 seconds for abusers
 Kill Abuse:
   Enabled: true
-  Max Kills: 3
+  Max Kills: 5
   Time Limit: 60
   Commands on Abuse:
     - kick <player> Kill Abuse Is Not Allowed!

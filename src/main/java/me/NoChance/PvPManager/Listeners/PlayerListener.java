@@ -32,7 +32,7 @@ public class PlayerListener implements Listener {
 	public PlayerListener(PvPManager plugin) {
 		this.plugin = plugin;
 		this.pm = plugin.getPm();
-		if(Variables.killAbuseEnabled)
+		if (Variables.killAbuseEnabled)
 			cleanKillers();
 	}
 
@@ -101,20 +101,20 @@ public class PlayerListener implements Listener {
 				killers.get(killer).put(player.getName(), 1);
 				if (plugin.getCm().getKillAbusers().containsKey(killer))
 					plugin.getCm().getKillAbusers().remove(killer);
-			}
-			if (killers.get(killer).containsKey(player.getName())) {
+			} else if (killers.get(killer).containsKey(player.getName())) {
 				int totalKills = killers.get(killer).get(player.getName());
+				if (totalKills < Variables.killAbuseMaxKills) {
+					totalKills++;
+					killers.get(killer).put(player.getName(), totalKills);
+				}
 				if (totalKills >= Variables.killAbuseMaxKills) {
 					killers.remove(killer);
 					plugin.getCm().getKillAbusers().put(killer, player.getName());
 					for (String command : Variables.killAbuseCommands) {
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer));
 					}
-				} else if (totalKills < Variables.killAbuseMaxKills) {
-					killers.get(killer).put(player.getName(), totalKills++);
 				}
 			}
-
 		}
 	}
 
@@ -163,13 +163,13 @@ public class PlayerListener implements Listener {
 		if (plugin.getCm().isInCombat(p))
 			plugin.getCm().untag(p);
 	}
-	
-	private void cleanKillers(){
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
+
+	public void cleanKillers() {
+		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			@Override
 			public void run() {
 				killers.clear();
-			}	
-		}, 60, Variables.killAbuseTime);
+			}
+		}, 1200, Variables.killAbuseTime * 20);
 	}
 }

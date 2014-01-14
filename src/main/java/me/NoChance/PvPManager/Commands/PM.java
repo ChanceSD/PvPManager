@@ -142,6 +142,7 @@ public class PM implements CommandExecutor {
 
 	public void reload(CommandSender player) {
 		Variables.update = false;
+		plugin.getServer().getScheduler().cancelTasks(plugin);
 		plugin.getServer().getPluginManager().disablePlugin(plugin);
 		plugin.getServer().getPluginManager().enablePlugin(plugin);
 		wtm.reloadPvpTimers();

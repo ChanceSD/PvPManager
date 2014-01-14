@@ -41,9 +41,11 @@ public class Utils {
 	}
 
 	public static DisguiseCraftAPI getDisguiseCraft() {
-		if (DisguiseCraft.getAPI() == null)
+		if (Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft") == null) {
 			Variables.disableDisguise = false;
-		return DisguiseCraft.getAPI();
+			return null;
+		} else
+			return DisguiseCraft.getAPI();
 	}
 
 	public static boolean isLibsDisguisesEnabled() {

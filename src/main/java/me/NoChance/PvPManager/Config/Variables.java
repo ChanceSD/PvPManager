@@ -91,7 +91,7 @@ public class Variables {
 		toggleCooldown = configManager.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 30);
 		defaultPvp = configManager.getConfig().getBoolean("Default PvP", true);
 		disableDisguise = configManager.getConfig().getBoolean("Disable Disguise", true);
-		killAbuseMaxKills = configManager.getConfig().getInt("Kill Abuse.Max Kills", 3);
+		killAbuseMaxKills = configManager.getConfig().getInt("Kill Abuse.Max Kills", 5);
 		killAbuseTime = configManager.getConfig().getInt("Kill Abuse.Time Limit", 60);
 		killAbuseCommands = (List<String>) configManager.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
 		killAbuseEnabled = configManager.getConfig().getBoolean("Kill Abuse.Enabled", true);
