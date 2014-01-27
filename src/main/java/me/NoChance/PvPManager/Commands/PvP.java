@@ -1,11 +1,11 @@
 package me.NoChance.PvPManager.Commands;
 
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.CombatManager;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Others.CombatUtils;
 import me.NoChance.PvPManager.Others.Utils;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,20 +14,15 @@ import org.bukkit.entity.Player;
 
 public class PvP implements CommandExecutor {
 
-	private CombatManager cm;
-
-	public PvP(CombatManager combatManager) {
-		this.cm = combatManager;
-	}
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
+			PvPlayer pvpPlayer = PlayerHandler.get(player);
 			if (args.length == 0) {
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
-					cm.togglePvP(player);
+					pvpPlayer.togglePvP();
 					return true;
 				} else if (Variables.toggleSignsEnabled && Variables.disableToggleCommand) {
 					player.sendMessage(ChatColor.DARK_RED + "This command is disabled! You have to use a Sign!");
@@ -36,7 +31,7 @@ public class PvP implements CommandExecutor {
 			}
 			if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("status") && player.hasPermission("pvpmanager.pvpstatus.self")) {
-					if (!cm.hasPvpEnabled(player.getName())) {
+					if (!pvpPlayer.hasPvPEnabled()) {
 						player.sendMessage(Messages.Self_Status_Disabled);
 						return true;
 					} else {
@@ -52,9 +47,9 @@ public class PvP implements CommandExecutor {
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
 					if (args[0].equalsIgnoreCase("off")) {
-						if (cm.checkToggleCooldown(player)) {
-							if (cm.hasPvpEnabled(player.getName())) {
-								cm.disablePvp(player);
+						if (CombatUtils.checkToggleCooldown(pvpPlayer.getToggleTime())) {
+							if (pvpPlayer.hasPvPEnabled()) {
+								pvpPlayer.setPvP(false);
 								return true;
 							} else {
 								player.sendMessage(Messages.Already_Disabled);
@@ -63,9 +58,9 @@ public class PvP implements CommandExecutor {
 						}
 						return false;
 					} else if (args[0].equalsIgnoreCase("on")) {
-						if (cm.checkToggleCooldown(player)) {
-							if (!cm.hasPvpEnabled(player.getName())) {
-								cm.enablePvp(player);
+						if (CombatUtils.checkToggleCooldown(pvpPlayer.getToggleTime())) {
+							if (!pvpPlayer.hasPvPEnabled()) {
+								pvpPlayer.setPvP(true);
 								return true;
 							} else {
 								player.sendMessage(Messages.Already_Enabled);
@@ -78,12 +73,13 @@ public class PvP implements CommandExecutor {
 							player.sendMessage("§4Player not online!");
 							return false;
 						}
-						if (cm.hasPvpEnabled(args[0])) {
-							cm.disablePvp(Utils.getPlayer(args[0]));
+						PvPlayer specifiedPlayer = PlayerHandler.get(Utils.getPlayer(args[0]));
+						if (specifiedPlayer.hasPvPEnabled()) {
+							specifiedPlayer.setPvP(false);
 							player.sendMessage("§6[§8PvPManager§6] §2PvP disabled for " + args[0]);
 							return true;
 						} else {
-							cm.enablePvp(Utils.getPlayer(args[0]));
+							specifiedPlayer.setPvP(true);
 							player.sendMessage("§6[§8PvPManager§6] §4PvP enabled for " + args[0]);
 							return true;
 						}
@@ -95,8 +91,8 @@ public class PvP implements CommandExecutor {
 			}
 			if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("disable") && args[1].equalsIgnoreCase("protection")) {
-					if (cm.isNewbie(player)) {
-						cm.forceNewbieRemoval(player);
+					if (pvpPlayer.isNewbie()) {
+						pvpPlayer.setNewbie(false);
 						player.sendMessage("§eYou Removed Your PvP Protection! Be Careful");
 						return true;
 					} else {
@@ -105,10 +101,11 @@ public class PvP implements CommandExecutor {
 					}
 				}
 				if (args[0].equalsIgnoreCase("status") && player.hasPermission("pvpmanager.pvpstatus.others")) {
-					if (!cm.hasPvpEnabled(args[1])) {
+					PvPlayer specifiedPlayer = PlayerHandler.get(Utils.getPlayer(args[1]));
+					if (!specifiedPlayer.hasPvPEnabled()) {
 						player.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));
 						return true;
-					} else if (Utils.isOnline(args[1]) && cm.hasPvpEnabled(args[1])) {
+					} else if (Utils.isOnline(args[1]) && specifiedPlayer.hasPvPEnabled()) {
 						player.sendMessage(Messages.Other_Status_Enabled.replace("%p", args[1]));
 						return true;
 					} else {
@@ -126,21 +123,23 @@ public class PvP implements CommandExecutor {
 					sender.sendMessage("§4Player not online!");
 					return false;
 				}
-				if (cm.hasPvpEnabled(args[0])) {
-					cm.disablePvp(Utils.getPlayer(args[0]));
+				PvPlayer specifiedPlayer = PlayerHandler.get(Utils.getPlayer(args[0]));
+				if (specifiedPlayer.hasPvPEnabled()) {
+					specifiedPlayer.setPvP(false);
 					sender.sendMessage("§6[§8PvPManager§6] §2PvP disabled for " + args[0]);
 					return true;
 				} else {
-					cm.enablePvp(Utils.getPlayer(args[0]));
+					specifiedPlayer.setPvP(true);
 					sender.sendMessage("§6[§8PvPManager§6] §4PvP enabled for " + args[0]);
 					return true;
 				}
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("status")) {
-					if (!cm.hasPvpEnabled(args[1])) {
+					PvPlayer specifiedPlayer = PlayerHandler.get(Utils.getPlayer(args[1]));
+					if (!specifiedPlayer.hasPvPEnabled()) {
 						sender.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));
 						return true;
-					} else if (Utils.isOnline(args[1]) && cm.hasPvpEnabled(args[1])) {
+					} else if (Utils.isOnline(args[1]) && specifiedPlayer.hasPvPEnabled()) {
 						sender.sendMessage(Messages.Other_Status_Enabled.replace("%p", args[1]));
 						return true;
 					} else {
@@ -156,10 +155,9 @@ public class PvP implements CommandExecutor {
 
 	private String pvpList() {
 		StringBuilder list = new StringBuilder();
-		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-			String name = p.getName();
-			if (cm.hasPvpEnabled(name)) {
-				list.append(name + ", ");
+		for (PvPlayer p : PlayerHandler.getPlayers()) {
+			if (p.hasPvPEnabled()) {
+				list.append(p.getName() + ", ");
 			}
 		}
 		if (list.toString().isEmpty())

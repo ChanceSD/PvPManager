@@ -4,9 +4,8 @@ import me.NoChance.PvPManager.Commands.*;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Listeners.*;
-import me.NoChance.PvPManager.Managers.CombatManager;
 import me.NoChance.PvPManager.Managers.ConfigManager;
-import me.NoChance.PvPManager.Managers.PunishmentsManager;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import me.NoChance.PvPManager.Others.CustomGraph;
 import me.NoChance.PvPManager.Others.Updater;
@@ -17,21 +16,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
-	private CombatManager combatManager;
 	private WorldTimerManager worldTimerManager;
-	private PunishmentsManager punishmentsManager;
 
 	@Override
 	public void onEnable() {
 		loadFiles();
+		new PlayerHandler(this);
 		if (Variables.pvpTimerEnabled) {
 			this.worldTimerManager = new WorldTimerManager(this);
 		}
-		this.combatManager = new CombatManager(this);
-		this.punishmentsManager = new PunishmentsManager(this);
 		startListeners();
-		this.configM.loadUsers();
-		getCommand("pvp").setExecutor(new PvP(combatManager));
+		getCommand("pvp").setExecutor(new PvP());
 		getCommand("pvpmanager").setExecutor(new PM(this));
 		new CustomGraph(this);
 		if (Variables.updateCheck) {
@@ -41,9 +36,9 @@ public final class PvPManager extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		combatManager.getInCombat().clear();
-		this.configM.saveUsers();
-		this.configM.save();
+		for(PvPlayer p : PlayerHandler.getPlayers()){
+			p.setTagged(false);
+		}
 	}
 
 	private void loadFiles() {
@@ -59,7 +54,7 @@ public final class PvPManager extends JavaPlugin {
 		Utils.register(new DamageListener(this), this);
 		Utils.register(new PlayerListener(this), this);
 		if (Variables.toggleSignsEnabled) {
-			Utils.register(new SignListener(this), this);
+			Utils.register(new SignListener(), this);
 		}
 	}
 
@@ -81,16 +76,8 @@ public final class PvPManager extends JavaPlugin {
 		return updater.getResult() == UpdateResult.SUCCESS;
 	}
 
-	public CombatManager getCm() {
-		return combatManager;
-	}
-
 	public WorldTimerManager getWtm() {
 		return worldTimerManager;
-	}
-
-	public PunishmentsManager getPm() {
-		return punishmentsManager;
 	}
 
 	public ConfigManager getConfigM() {

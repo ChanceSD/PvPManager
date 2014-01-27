@@ -10,17 +10,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Others.Utils;
 
-public class PunishmentsManager {
+public class PlayerHandler {
 
+	private static HashSet<PvPlayer> players = new HashSet<PvPlayer>();
+	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
-	private HashSet<String> pvpLogPlayers = new HashSet<String>();
+	private static PlayerHandler instance;
 
-	public PunishmentsManager(PvPManager plugin) {
-		this.plugin = plugin;
+	public PlayerHandler(PvPManager plugin) {
+		this.configManager = plugin.getConfigM();
+		if (Variables.killAbuseEnabled)
+			cleanKillersTask();
 		if (Variables.fineEnabled) {
 			if (Utils.isVaultEnabled()) {
 				if (setupEconomy()) {
@@ -32,8 +37,67 @@ public class PunishmentsManager {
 				Variables.fineEnabled = false;
 			}
 		}
+		instance = this;
 	}
 
+	public static PvPlayer get(Player player) {
+		String name = player.getName();
+		for (PvPlayer p : players) {
+			if (p.getName().equals(name))
+				return p;
+		}
+		return null;
+	}
+
+	public PvPlayer add(Player player) {
+		PvPlayer pvp = new PvPlayer(player, configManager.getUserFile());
+		players.add(pvp);
+		return pvp;
+	}
+
+	public void remove(Player player) {
+		players.remove(get(player));
+		configManager.saveUser(player.getName());
+	}
+
+	public void cleanKillersTask() {
+		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				for (PvPlayer p : players) {
+					p.clearVictims();
+				}
+			}
+		}, 1200, Variables.killAbuseTime * 20);
+	}
+
+	public int scheduleNewbieTimer(final PvPlayer player) {
+		return plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				player.setNewbie(false);
+			}
+		}, Variables.newbieProtectionTime * 1200);
+	}
+
+	public int scheduleTagTimer(final PvPlayer player) {
+		return plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				player.setTagged(false);
+			}
+		}, Variables.timeInCombat * 20);
+	}
+	
+	public void applyFine(Player p) {
+		if (economy != null) {
+			economy.withdrawPlayer(p.getName(), Variables.fineAmount);
+		} else {
+			plugin.getLogger().severe("Tried to apply fine but no Economy plugin found!");
+			plugin.getLogger().severe("Disable fines feature or get an Economy plugin to fix this error");
+		}
+	}
+	
 	public void fakeInventoryDrop(Player player, ItemStack[] inventory) {
 		Location playerLocation = player.getLocation();
 		World playerWorld = player.getWorld();
@@ -69,16 +133,7 @@ public class PunishmentsManager {
 		player.getInventory().setContents(inventory);
 		player.getInventory().setArmorContents(armor);
 	}
-
-	public void applyFine(Player p) {
-		if (economy != null) {
-			economy.withdrawPlayer(p.getName(), Variables.fineAmount);
-		} else {
-			plugin.getLogger().severe("Tried to apply fine but no Economy plugin found!");
-			plugin.getLogger().severe("Disable fines feature or get an Economy plugin to fix this error");
-		}
-	}
-
+	
 	private boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager()
 				.getRegistration(net.milkbowl.vault.economy.Economy.class);
@@ -88,11 +143,12 @@ public class PunishmentsManager {
 		return (economy != null);
 	}
 
-	public void addPvpLog(Player p) {
-		pvpLogPlayers.add(p.getName());
+	public static HashSet<PvPlayer> getPlayers() {
+		return players;
 	}
 
-	public boolean pvplogged(Player p) {
-		return pvpLogPlayers.contains(p.getName());
+	public static PlayerHandler getInstance() {
+		return instance;
 	}
+
 }

@@ -1,13 +1,15 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.WGDependency;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.CombatManager;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Managers.WorldTimerManager;
+import me.NoChance.PvPManager.Others.CombatUtils;
 import me.NoChance.PvPManager.Others.Utils;
+import me.NoChance.PvPManager.Others.WGDependency;
 import me.libraryaddict.disguise.DisguiseAPI;
-
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -21,10 +23,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 public class DamageListener implements Listener {
 
 	private WGDependency wg;
-	private CombatManager cm;
+	private WorldTimerManager wm;
 
 	public DamageListener(PvPManager pvpManager) {
-		this.cm = pvpManager.getCm();
 		if (Utils.isWGEnabled()) {
 			this.wg = new WGDependency(pvpManager);
 		}
@@ -32,54 +33,54 @@ public class DamageListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void playerDamageListener(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
+		if (!CombatUtils.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
-		Player attacker = getAttacker(event);
-		Player attacked = (Player) event.getEntity();
+		PvPlayer attacker = PlayerHandler.get(getAttacker(event));
+		PvPlayer attacked = PlayerHandler.get((Player) event.getEntity());
 
 		if (Utils.isWGEnabled())
-			if (wg.hasWGPvPFlag(attacked.getWorld(), attacked.getLocation()))
+			if (wg.hasWGPvPFlag(attacked.getPlayer().getWorld(), attacked.getPlayer().getLocation()))
 				return;
 
 		if (Variables.pvpTimerEnabled) {
-			if (cm.getWtm().isPvpTimerWorld(attacker.getWorld())) {
-				if (!cm.getWtm().isTimeForPvp(attacker.getWorld())) {
+			if (wm.isPvpTimerWorld(attacker.getWorldName())) {
+				if (!wm.isTimeForPvp(attacker.getWorldName())) {
 					event.setCancelled(true);
 					return;
 				}
 			}
 		}
 		if (Variables.killAbuseEnabled) {
-			if (cm.getKillAbusers().containsKey(attacker.getName())) {
-				if (cm.getKillAbusers().get(attacker.getName()).equals(attacked.getName())) {
-					attacker.sendMessage("§6[§8PvPManager§6]§4 Attack blocked due to kill abuse!");
+			if (attacker.hasKillAbused()) {
+				if (attacker.isVictim(attacked.getName())) {
+					attacker.message("§6[§8PvPManager§6]§4 Attack blocked due to kill abuse!");
 					event.setCancelled(true);
 					return;
 				}
 			}
 		}
-		if (cm.isNewbie(attacked) || cm.isNewbie(attacker)) {
+		if (attacked.isNewbie() || attacker.isNewbie()) {
 			event.setCancelled(true);
-			if (cm.isNewbie(attacked))
-				attacker.sendMessage(Messages.Newbie_Protection_Atacker.replace("%p", attacked.getName()));
+			if (attacked.isNewbie())
+				attacker.message(Messages.Newbie_Protection_Atacker.replace("%p", attacked.getName()));
 			else
-				attacker.sendMessage(Messages.Newbie_Protection_On_Hit);
+				attacker.message(Messages.Newbie_Protection_On_Hit);
 			return;
 		}
-		if (!cm.hasPvpEnabled(attacked.getName())) {
+		if (!attacked.hasPvPEnabled()) {
 			event.setCancelled(true);
-			attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
+			attacker.message(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
 			return;
-		} else if (!cm.hasPvpEnabled(attacker.getName()) && !attacker.hasPermission("pvpmanager.override")) {
+		} else if (!attacker.hasPvPEnabled() && !attacker.overrideAll()) {
 			event.setCancelled(true);
-			attacker.sendMessage(Messages.Attack_Denied_You);
+			attacker.message(Messages.Attack_Denied_You);
 			return;
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void damageListenerHighest(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
+		if (!CombatUtils.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
 		if (getAttacker(event).hasPermission("pvpmanager.override") && event.isCancelled()) {
 			event.setCancelled(false);
@@ -90,15 +91,17 @@ public class DamageListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void damageListenerMonitor(EntityDamageByEntityEvent event) {
-		if (!cm.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
+		if (!CombatUtils.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
+		PvPlayer pvpAttacker = PlayerHandler.get(attacker);
+		PvPlayer pvpAttacked = PlayerHandler.get(attacked);
 		if (Variables.pvpBlood)
 			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
 			if (Variables.disableFly && attacker.isFlying())
-				cm.disableFly(attacker);
+				pvpAttacker.disableFly();
 			if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL))
 				attacker.setGameMode(GameMode.SURVIVAL);
 			if (Variables.disableDisguise) {
@@ -109,11 +112,17 @@ public class DamageListener implements Listener {
 			}
 		}
 		if (Variables.inCombatEnabled) {
-			if (!cm.isInCombat(attacker) && !cm.isInCombat(attacked)) {
-				cm.inCombat(attacker, attacked);
+			if (!PlayerHandler.get(attacker).isInCombat() && !PlayerHandler.get(attacked).isInCombat()) {
+				if (Variables.onlyTagAttacker) {
+					pvpAttacker.setTagged(true);
+					return;
+				} else {
+					pvpAttacker.setTagged(true);
+					pvpAttacked.setTagged(true);
+				}
 			} else {
-				cm.renewTag(attacker);
-				cm.renewTag(attacked);
+				pvpAttacker.renewTag();
+				pvpAttacked.renewTag();
 			}
 		}
 	}

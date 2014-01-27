@@ -1,6 +1,6 @@
 package me.NoChance.PvPManager.Listeners;
 
-import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Others.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,12 +13,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
-
-	private PvPManager plugin;
-
-	public SignListener(PvPManager plugin) {
-		this.plugin = plugin;
-	}
 
 	@EventHandler
 	public void onSignPlace(SignChangeEvent e) {
@@ -48,7 +42,7 @@ public class SignListener implements Listener {
 					Sign sign = (Sign) clicked.getState();
 					if (sign.getLine(0).equalsIgnoreCase("§5[PvPManager]")) {
 						if (player.hasPermission("pvpmanager.pvpstatus.change")) {
-							plugin.getCm().togglePvP(player);
+							PlayerHandler.get(player).togglePvP();
 							return;
 						} else
 							player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");

@@ -2,15 +2,12 @@ package me.NoChance.PvPManager.Listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.PunishmentsManager;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Others.Utils;
-
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,66 +22,66 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerListener implements Listener {
 
 	private PvPManager plugin;
-	private PunishmentsManager pm;
+	private PlayerHandler ph;
 	private HashMap<String, ArrayList<ItemStack[]>> noDrop = new HashMap<String, ArrayList<ItemStack[]>>();
-	private HashMap<String, Map<String, Integer>> killers = new HashMap<String, Map<String, Integer>>();
 
 	public PlayerListener(PvPManager plugin) {
 		this.plugin = plugin;
-		this.pm = plugin.getPm();
-		if (Variables.killAbuseEnabled)
-			cleanKillers();
+		this.ph = PlayerHandler.getInstance();
 	}
 
 	@EventHandler
 	public void onPlayerLogout(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if (plugin.getCm().isInCombat(player)) {
+		PvPlayer pvPlayer = PlayerHandler.get(player);
+		if (pvPlayer.isInCombat()) {
 			if (Variables.broadcastPvpLog)
 				plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
 			if (Variables.punishmentsEnabled) {
 				boolean dead = false;
 				if (Variables.killOnLogout) {
-					pm.addPvpLog(player);
+					pvPlayer.setPvpLogged(true);
 					if (!Variables.dropInventory || !Variables.dropArmor) {
-						pm.noDropKill(player);
+						ph.noDropKill(player);
 						dead = true;
 					}
 					if (Variables.dropExp) {
-						pm.fakeExpDrop(player);
+						ph.fakeExpDrop(player);
 						if (!dead)
 							player.setHealth(0);
 					} else if (Variables.dropInventory && Variables.dropArmor && !Variables.dropExp)
 						player.setHealth(0);
 				} else if (!Variables.killOnLogout) {
 					if (Variables.dropInventory) {
-						pm.fakeInventoryDrop(player, player.getInventory().getContents());
+						ph.fakeInventoryDrop(player, player.getInventory().getContents());
 						player.getInventory().clear();
 					}
 					if (Variables.dropArmor) {
-						pm.fakeInventoryDrop(player, player.getInventory().getArmorContents());
+						ph.fakeInventoryDrop(player, player.getInventory().getArmorContents());
 						player.getInventory().setArmorContents(null);
 					}
 					if (Variables.dropExp)
-						pm.fakeExpDrop(player);
+						ph.fakeExpDrop(player);
 				}
 				if (Variables.fineEnabled)
-					pm.applyFine(player);
+					ph.applyFine(player);
 			}
-			plugin.getCm().untag(player);
+			pvPlayer.setTagged(false);
 		}
+		PlayerHandler.getInstance().remove(player);
 	}
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
-		if (pm.pvplogged(player)) {
+		PvPlayer pvPlayer = PlayerHandler.get(player);
+		if (pvPlayer.hasPvPLogged()) {
 			if (!Variables.dropExp) {
 				event.setKeepLevel(true);
 				event.setDroppedExp(0);
 			}
 		}
-		if (plugin.getCm().isInCombat(player)) {
+		if (pvPlayer.isInCombat()) {
 			if (player.hasPermission("pvpmanager.nodrop")) {
 				ArrayList<ItemStack[]> inv = new ArrayList<ItemStack[]>();
 				inv.add(player.getInventory().getContents());
@@ -92,48 +89,26 @@ public class PlayerListener implements Listener {
 				noDrop.put(player.getName(), inv);
 				event.getDrops().clear();
 			}
-			plugin.getCm().untag(player);
+			pvPlayer.setTagged(false);
 		}
 		if (Variables.killAbuseEnabled && player.getKiller() != null) {
-			String killer = player.getKiller().getName();
-			if (killers.get(killer) == null) {
-				killers.put(killer, new HashMap<String, Integer>());
-				killers.get(killer).put(player.getName(), 1);
-				if (plugin.getCm().getKillAbusers().containsKey(killer))
-					plugin.getCm().getKillAbusers().remove(killer);
-			} else if (killers.get(killer).containsKey(player.getName())) {
-				int totalKills = killers.get(killer).get(player.getName());
-				if (totalKills < Variables.killAbuseMaxKills) {
-					totalKills++;
-					killers.get(killer).put(player.getName(), totalKills);
-				}
-				if (totalKills >= Variables.killAbuseMaxKills) {
-					killers.remove(killer);
-					plugin.getCm().getKillAbusers().put(killer, player.getName());
-					for (String command : Variables.killAbuseCommands) {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer));
-					}
-				}
-			}
+			PvPlayer killer = PlayerHandler.get(player.getKiller());
+			killer.addVictim(player.getName());
 		}
 	}
 
 	@EventHandler
 	public void onPlayerLogin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		PvPlayer pvpPlayer = PlayerHandler.getInstance().add(player);
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
 			if (Variables.update) {
 				Messages.updateMessage(player);
 			}
 		}
 		if (Utils.PMAllowed(player.getWorld().getName())) {
-			if (!player.hasPlayedBefore()) {
-				plugin.getCm().addNewbie(player);
-				if (!Variables.defaultPvp)
-					plugin.getCm().disablePvp(player);
-			}
 			if (player.hasPermission("pvpmanager.nopvp"))
-				plugin.getCm().disablePvp(player);
+				pvpPlayer.setPvP(false);
 		}
 	}
 
@@ -160,16 +135,10 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		Player p = event.getPlayer();
-		if (plugin.getCm().isInCombat(p))
-			plugin.getCm().untag(p);
+		PvPlayer pvPlayer = PlayerHandler.get(p);
+		if (pvPlayer.isInCombat())
+			pvPlayer.setTagged(false);
+		PlayerHandler.getInstance().remove(p);
 	}
 
-	public void cleanKillers() {
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-			@Override
-			public void run() {
-				killers.clear();
-			}
-		}, 1200, Variables.killAbuseTime * 20);
-	}
 }

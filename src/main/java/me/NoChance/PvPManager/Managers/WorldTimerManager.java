@@ -31,8 +31,8 @@ public class WorldTimerManager {
 		return schedulers.containsKey(w.getName().toLowerCase());
 	}
 
-	public boolean isTimeForPvp(World w) {
-		return getPvpTimer(w).isPvpTime();
+	public boolean isTimeForPvp(String world) {
+		return getPvpTimer(world).isPvpTime();
 	}
 
 	public boolean isPvpTimerWorld(String worldName) {
