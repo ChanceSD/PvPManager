@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Others;
+package me.NoChance.PvPManager.Utils;
 
 import me.NoChance.PvPManager.Config.Variables;
 import org.bukkit.Bukkit;
@@ -38,6 +38,10 @@ public class Utils {
 
 	public static boolean isVaultEnabled() {
 		return Bukkit.getServer().getPluginManager().getPlugin("Vault") != null;
+	}
+	
+	public static boolean isTownyEnabled() {
+		return Bukkit.getServer().getPluginManager().getPlugin("Towny") != null;
 	}
 
 	public static DisguiseCraftAPI getDisguiseCraft() {

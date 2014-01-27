@@ -1,9 +1,9 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 1.6.2
+version: 1.6.6
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
-softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises]
+softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Towny]
 
 commands:
    pvpmanager:

@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Others;
+package me.NoChance.PvPManager.Config;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,23 +11,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.List;
+
 import me.NoChance.PvPManager.PvPManager;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class SimpleConfig extends YamlConfiguration {
+public class Config extends YamlConfiguration {
 	private int comments;
 	private File file;
 	private FileConfiguration config;
 	private PvPManager plugin;
 
-	public SimpleConfig(PvPManager plugin, String name) {
-		this.comments = this.getCommentsNum(file);
+	public Config(PvPManager plugin, String name) {
 		this.plugin = plugin;
 		File file = new File(plugin.getDataFolder(), name);
 		if (!file.exists())
 			this.prepareFile(file, name);
 		this.file = file;
+		this.comments = this.getCommentsNum(file);
 		this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file));
 	}
 
@@ -51,6 +54,50 @@ public class SimpleConfig extends YamlConfiguration {
 			}
 		}
 		this.config.set(path, value);
+	}
+
+	public String getString(String path) {
+		return this.config.getString(path);
+	}
+
+	public String getString(String path, String def) {
+		return this.config.getString(path, def);
+	}
+
+	public int getInt(String path) {
+		return this.config.getInt(path);
+	}
+
+	public int getInt(String path, int def) {
+		return this.config.getInt(path, def);
+	}
+
+	public boolean getBoolean(String path) {
+		return this.config.getBoolean(path);
+	}
+
+	public boolean getBoolean(String path, boolean def) {
+		return this.config.getBoolean(path, def);
+	}
+
+	public ConfigurationSection getConfigurationSection(String path) {
+		return this.config.getConfigurationSection(path);
+	}
+
+	public double getDouble(String path) {
+		return this.config.getDouble(path);
+	}
+
+	public double getDouble(String path, double def) {
+		return this.config.getDouble(path, def);
+	}
+
+	public List<?> getList(String path) {
+		return this.config.getList(path);
+	}
+
+	public List<?> getList(String path, List<?> def) {
+		return this.config.getList(path, def);
 	}
 
 	private int getCommentsNum(File file) {

@@ -2,9 +2,11 @@ package me.NoChance.PvPManager.Managers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Others.SimpleConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -14,30 +16,29 @@ public class ConfigManager {
 	private File usersFile;
 	private YamlConfiguration users;
 	private int configVersion;
-	private SimpleConfig config;
-	private SimpleConfig pvpTimer;
+	private Config config;
+	private Config pvpTimer;
 
 	public ConfigManager(PvPManager plugin) {
 		this.plugin = plugin;
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
-		pvpTimer = new SimpleConfig(plugin, "PvPTimer.yml");
+		pvpTimer = new Config(plugin, "PvPTimer.yml");
 		configVersion = getConfig().getInt("Config Version", 0);
 		if (configVersion < 11) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
-				config = new SimpleConfig(plugin, "config.yml");
+				config = new Config(plugin, "config.yml");
 				new Variables(this);
 				configFile.delete();
-				config = new SimpleConfig(plugin, "config.yml");
+				config = new Config(plugin, "config.yml");
 				updateDefaultConfig();
 			}
 		}
-		config = new SimpleConfig(plugin, "config.yml");
+		config = new Config(plugin, "config.yml");
 		new Variables(this);
 	}
 
-	
 	// If PvPTimer.yml ever needs to be updated
 	// private void updatePvpTimerConfig() {
 	// pvpTimer.set("PvP Timer.Enabled", Variables.pvpTimerEnabled);
@@ -101,9 +102,16 @@ public class ConfigManager {
 		}
 	}
 
-	public void saveUser(String name) {
-		if (!users.getStringList("players").contains(name))
-			users.getStringList("players").add(name);
+	public void saveUser(String name, boolean save) {
+		List<String> userList = users.getStringList("players");
+		if (save && userList.contains(name) || !save && !userList.contains(name))
+			return;
+		if (!save && userList.contains(name))
+			userList.remove(name);
+		if (save && !userList.contains(name))
+			userList.add(name);
+
+		users.set("players", userList);
 		try {
 			users.save(usersFile);
 		} catch (IOException e) {
@@ -121,7 +129,7 @@ public class ConfigManager {
 		return users;
 	}
 
-	public SimpleConfig getPvpTimer() {
+	public Config getPvpTimer() {
 		return pvpTimer;
 	}
 

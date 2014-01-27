@@ -5,8 +5,8 @@ import java.util.HashMap;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Others.CombatUtils;
-import me.NoChance.PvPManager.Others.Utils;
+import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,7 +18,6 @@ public class PvPlayer {
 	private boolean newbie;
 	private boolean tagged;
 	private boolean pvpState;
-	private boolean killAbuser;
 	private boolean pvpLogged;
 	private long toggleTime;
 	private int newbieTimer;
@@ -30,7 +29,7 @@ public class PvPlayer {
 		if (!player.hasPlayedBefore()) {
 			this.pvpState = Variables.defaultPvp;
 			setNewbie(true);
-		} else if (!userData.isSet("players." + name))
+		} else if (!userData.getStringList("players").contains(name))
 			this.pvpState = true;
 	}
 
@@ -79,10 +78,6 @@ public class PvPlayer {
 		return this.pvpState;
 	}
 
-	public boolean hasKillAbused() {
-		return this.killAbuser;
-	}
-
 	public boolean hasPvPLogged() {
 		return this.pvpLogged;
 	}
@@ -102,9 +97,12 @@ public class PvPlayer {
 			message(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
 			newbieTimer = PlayerHandler.getInstance().scheduleNewbieTimer(this);
 		} else {
-			if (Bukkit.getServer().getScheduler().isQueued(newbieTimer))
+			if (Bukkit.getServer().getScheduler().isQueued(newbieTimer)) {
 				Bukkit.getServer().getScheduler().cancelTask(newbieTimer);
-			message(Messages.Newbie_Protection_End);
+				if (Utils.isOnline(name))
+					message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
+			} else if (Utils.isOnline(name))
+				message(Messages.Newbie_Protection_End);
 		}
 		this.newbie = newbie;
 	}
@@ -116,15 +114,17 @@ public class PvPlayer {
 			tagTimer = PlayerHandler.getInstance().scheduleTagTimer(this);
 			message(Messages.You_Are_InCombat);
 		} else {
-			if (Utils.isOnline(getPlayer()))
+			if (Utils.isOnline(name))
 				message(Messages.Out_Of_Combat);
 		}
 		this.tagged = tagged;
 	}
 
 	public void renewTag() {
-		Bukkit.getServer().getScheduler().cancelTask(tagTimer);
-		tagTimer = PlayerHandler.getInstance().scheduleTagTimer(this);
+		if (isInCombat()) {
+			Bukkit.getServer().getScheduler().cancelTask(tagTimer);
+			tagTimer = PlayerHandler.getInstance().scheduleTagTimer(this);
+		}
 	}
 
 	public void setPvP(boolean pvpState) {
@@ -138,8 +138,6 @@ public class PvPlayer {
 	public void addVictim(String victimName) {
 		if (!victim.containsKey(victimName)) {
 			victim.put(victimName, 1);
-			if (killAbuser)
-				setKillAbuser(false);
 		} else if (victim.containsKey(victimName)) {
 			int totalKills = victim.get(victimName);
 			if (totalKills < Variables.killAbuseMaxKills) {
@@ -147,8 +145,6 @@ public class PvPlayer {
 				victim.put(victimName, totalKills);
 			}
 			if (totalKills >= Variables.killAbuseMaxKills) {
-				victim.clear();
-				setKillAbuser(true);
 				for (String command : Variables.killAbuseCommands) {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", name));
 				}
@@ -158,10 +154,6 @@ public class PvPlayer {
 
 	public void clearVictims() {
 		victim.clear();
-	}
-
-	public void setKillAbuser(boolean killAbuser) {
-		this.killAbuser = killAbuser;
 	}
 
 	public void setPvpLogged(boolean pvpLogged) {

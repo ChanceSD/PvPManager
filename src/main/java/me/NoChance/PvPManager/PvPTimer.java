@@ -1,8 +1,8 @@
 package me.NoChance.PvPManager;
 
 import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Others.SimpleConfig;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
@@ -172,7 +172,7 @@ public class PvPTimer {
 	}
 
 	public void getWorldValues() {
-		SimpleConfig config = plugin.getConfigM().getPvpTimer();
+		Config config = plugin.getConfigM().getPvpTimer();
 		startPvP = config.getLong("Worlds." + w.getName() + ".Start PvP");
 		endPvP = config.getLong("Worlds." + w.getName() + ".End PvP");
 		startDifficulty = config.getString("Worlds." + w.getName() + ".Start Difficulty");

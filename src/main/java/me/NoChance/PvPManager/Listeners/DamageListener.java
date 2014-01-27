@@ -6,9 +6,9 @@ import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
-import me.NoChance.PvPManager.Others.CombatUtils;
-import me.NoChance.PvPManager.Others.Utils;
 import me.NoChance.PvPManager.Others.WGDependency;
+import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.Utils;
 import me.libraryaddict.disguise.DisguiseAPI;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 public class DamageListener implements Listener {
 
@@ -26,6 +27,7 @@ public class DamageListener implements Listener {
 	private WorldTimerManager wm;
 
 	public DamageListener(PvPManager pvpManager) {
+		this.wm = pvpManager.getWtm();
 		if (Utils.isWGEnabled()) {
 			this.wg = new WGDependency(pvpManager);
 		}
@@ -42,18 +44,13 @@ public class DamageListener implements Listener {
 			if (wg.hasWGPvPFlag(attacked.getPlayer().getWorld(), attacked.getPlayer().getLocation()))
 				return;
 
+		if (Utils.isTownyEnabled())
+			if (CombatUtil.canAttackEnemy(attacker.getName(), attacked.getName()))
+				return;
+
 		if (Variables.pvpTimerEnabled) {
 			if (wm.isPvpTimerWorld(attacker.getWorldName())) {
 				if (!wm.isTimeForPvp(attacker.getWorldName())) {
-					event.setCancelled(true);
-					return;
-				}
-			}
-		}
-		if (Variables.killAbuseEnabled) {
-			if (attacker.hasKillAbused()) {
-				if (attacker.isVictim(attacked.getName())) {
-					attacker.message("§6[§8PvPManager§6]§4 Attack blocked due to kill abuse!");
 					event.setCancelled(true);
 					return;
 				}
@@ -112,7 +109,7 @@ public class DamageListener implements Listener {
 			}
 		}
 		if (Variables.inCombatEnabled) {
-			if (!PlayerHandler.get(attacker).isInCombat() && !PlayerHandler.get(attacked).isInCombat()) {
+			if (!pvpAttacker.isInCombat() && !pvpAttacked.isInCombat()) {
 				if (Variables.onlyTagAttacker) {
 					pvpAttacker.setTagged(true);
 					return;

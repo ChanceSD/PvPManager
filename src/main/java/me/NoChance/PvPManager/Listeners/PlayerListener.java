@@ -7,7 +7,8 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Others.Utils;
+import me.NoChance.PvPManager.Utils.Utils;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -68,7 +69,7 @@ public class PlayerListener implements Listener {
 			}
 			pvPlayer.setTagged(false);
 		}
-		PlayerHandler.getInstance().remove(player);
+		PlayerHandler.getInstance().remove(pvPlayer);
 	}
 
 	@EventHandler
@@ -138,7 +139,6 @@ public class PlayerListener implements Listener {
 		PvPlayer pvPlayer = PlayerHandler.get(p);
 		if (pvPlayer.isInCombat())
 			pvPlayer.setTagged(false);
-		PlayerHandler.getInstance().remove(p);
 	}
 
 }

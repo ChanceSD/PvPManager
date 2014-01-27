@@ -12,7 +12,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Others.Utils;
+import me.NoChance.PvPManager.Utils.Utils;
 
 public class PlayerHandler {
 
@@ -23,6 +23,7 @@ public class PlayerHandler {
 	private static PlayerHandler instance;
 
 	public PlayerHandler(PvPManager plugin) {
+		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		if (Variables.killAbuseEnabled)
 			cleanKillersTask();
@@ -55,9 +56,12 @@ public class PlayerHandler {
 		return pvp;
 	}
 
-	public void remove(Player player) {
-		players.remove(get(player));
-		configManager.saveUser(player.getName());
+	public void remove(PvPlayer player) {
+		players.remove(player);
+		if (!player.hasPvPEnabled())
+			configManager.saveUser(player.getName(), true);
+		else 
+			configManager.saveUser(player.getName(), false);
 	}
 
 	public void cleanKillersTask() {
@@ -88,7 +92,7 @@ public class PlayerHandler {
 			}
 		}, Variables.timeInCombat * 20);
 	}
-	
+
 	public void applyFine(Player p) {
 		if (economy != null) {
 			economy.withdrawPlayer(p.getName(), Variables.fineAmount);
@@ -97,7 +101,7 @@ public class PlayerHandler {
 			plugin.getLogger().severe("Disable fines feature or get an Economy plugin to fix this error");
 		}
 	}
-	
+
 	public void fakeInventoryDrop(Player player, ItemStack[] inventory) {
 		Location playerLocation = player.getLocation();
 		World playerWorld = player.getWorld();
@@ -133,7 +137,7 @@ public class PlayerHandler {
 		player.getInventory().setContents(inventory);
 		player.getInventory().setArmorContents(armor);
 	}
-	
+
 	private boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager()
 				.getRegistration(net.milkbowl.vault.economy.Economy.class);

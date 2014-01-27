@@ -3,9 +3,10 @@ package me.NoChance.PvPManager.Managers;
 import java.util.HashMap;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPTimer;
+import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Others.SimpleConfig;
-import me.NoChance.PvPManager.Others.Utils;
+import me.NoChance.PvPManager.Utils.Utils;
+
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -51,7 +52,7 @@ public class WorldTimerManager {
 	}
 
 	private void enablePvPScheduler() {
-		SimpleConfig config = plugin.getConfigM().getPvpTimer();
+		Config config = plugin.getConfigM().getPvpTimer();
 		for (World w : plugin.getServer().getWorlds()) {
 			if (Utils.PMAllowed(w.getName())) {
 				if (config.getConfigurationSection("Worlds." + w.getName()) == null) {

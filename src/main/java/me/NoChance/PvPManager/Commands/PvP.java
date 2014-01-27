@@ -4,8 +4,9 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Others.CombatUtils;
-import me.NoChance.PvPManager.Others.Utils;
+import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.Utils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -93,7 +94,6 @@ public class PvP implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("disable") && args[1].equalsIgnoreCase("protection")) {
 					if (pvpPlayer.isNewbie()) {
 						pvpPlayer.setNewbie(false);
-						player.sendMessage("§eYou Removed Your PvP Protection! Be Careful");
 						return true;
 					} else {
 						player.sendMessage(ChatColor.DARK_RED + "You are not protected!");

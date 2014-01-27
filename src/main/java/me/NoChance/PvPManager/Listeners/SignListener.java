@@ -1,7 +1,8 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Others.Utils;
+import me.NoChance.PvPManager.Utils.Utils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

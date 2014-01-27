@@ -9,8 +9,9 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import me.NoChance.PvPManager.Others.CustomGraph;
 import me.NoChance.PvPManager.Others.Updater;
-import me.NoChance.PvPManager.Others.Utils;
 import me.NoChance.PvPManager.Others.Updater.UpdateResult;
+import me.NoChance.PvPManager.Utils.Utils;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PvPManager extends JavaPlugin {
@@ -36,8 +37,9 @@ public final class PvPManager extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for(PvPlayer p : PlayerHandler.getPlayers()){
-			p.setTagged(false);
+		for (PvPlayer p : PlayerHandler.getPlayers()) {
+			if (p.isInCombat())
+				p.setTagged(false);
 		}
 	}
 
