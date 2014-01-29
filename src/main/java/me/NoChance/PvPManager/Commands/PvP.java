@@ -15,11 +15,17 @@ import org.bukkit.entity.Player;
 
 public class PvP implements CommandExecutor {
 
+	private PlayerHandler ph;
+
+	public PvP(PlayerHandler playerHandler){
+		this.ph = playerHandler;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			PvPlayer pvpPlayer = PlayerHandler.get(player);
+			PvPlayer pvpPlayer = ph.get(player);
 			if (args.length == 0) {
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
@@ -74,7 +80,7 @@ public class PvP implements CommandExecutor {
 							player.sendMessage("§4Player not online!");
 							return false;
 						}
-						PvPlayer specifiedPlayer = PlayerHandler.get(Utils.getPlayer(args[0]));
+						PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[0]));
 						if (specifiedPlayer.hasPvPEnabled()) {
 							specifiedPlayer.setPvP(false);
 							player.sendMessage("§6[§8PvPManager§6] §2PvP disabled for " + args[0]);
@@ -101,7 +107,7 @@ public class PvP implements CommandExecutor {
 					}
 				}
 				if (args[0].equalsIgnoreCase("status") && player.hasPermission("pvpmanager.pvpstatus.others")) {
-					PvPlayer specifiedPlayer = PlayerHandler.get(Utils.getPlayer(args[1]));
+					PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[1]));
 					if (!specifiedPlayer.hasPvPEnabled()) {
 						player.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));
 						return true;
@@ -123,7 +129,7 @@ public class PvP implements CommandExecutor {
 					sender.sendMessage("§4Player not online!");
 					return false;
 				}
-				PvPlayer specifiedPlayer = PlayerHandler.get(Utils.getPlayer(args[0]));
+				PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[0]));
 				if (specifiedPlayer.hasPvPEnabled()) {
 					specifiedPlayer.setPvP(false);
 					sender.sendMessage("§6[§8PvPManager§6] §2PvP disabled for " + args[0]);
@@ -135,7 +141,7 @@ public class PvP implements CommandExecutor {
 				}
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("status")) {
-					PvPlayer specifiedPlayer = PlayerHandler.get(Utils.getPlayer(args[1]));
+					PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[1]));
 					if (!specifiedPlayer.hasPvPEnabled()) {
 						sender.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));
 						return true;
@@ -155,7 +161,7 @@ public class PvP implements CommandExecutor {
 
 	private String pvpList() {
 		StringBuilder list = new StringBuilder();
-		for (PvPlayer p : PlayerHandler.getPlayers()) {
+		for (PvPlayer p : ph.getPlayers()) {
 			if (p.hasPvPEnabled()) {
 				list.append(p.getName() + ", ");
 			}

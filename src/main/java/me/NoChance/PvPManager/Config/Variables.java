@@ -49,6 +49,8 @@ public class Variables {
     public static int killAbuseMaxKills;
     public static int killAbuseTime;
     public static List<String> killAbuseCommands = Arrays.asList("kick <player> Kill Abuse Is Not Allowed!");
+	public static boolean toggleBroadcast;
+	public static boolean toggleOffOnDeath;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -89,6 +91,8 @@ public class Variables {
 		commandsAllowed = (List<String>) configManager.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
 		currentVersion = configManager.getPlugin().getDescription().getVersion();
 		toggleCooldown = configManager.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 30);
+		toggleBroadcast = configManager.getConfig().getBoolean("PvP Toggle.Broadcast", false);
+		toggleOffOnDeath = configManager.getConfig().getBoolean("PvP Toggle.Toggle Off on Death", false);
 		defaultPvp = configManager.getConfig().getBoolean("Default PvP", true);
 		disableDisguise = configManager.getConfig().getBoolean("Disable Disguise", true);
 		killAbuseMaxKills = configManager.getConfig().getInt("Kill Abuse.Max Kills", 5);

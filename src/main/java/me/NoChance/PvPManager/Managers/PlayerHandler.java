@@ -2,6 +2,7 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashSet;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,11 +17,10 @@ import me.NoChance.PvPManager.Utils.Utils;
 
 public class PlayerHandler {
 
-	private static HashSet<PvPlayer> players = new HashSet<PvPlayer>();
+	private HashSet<PvPlayer> players = new HashSet<PvPlayer>();
 	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
-	private static PlayerHandler instance;
 
 	public PlayerHandler(PvPManager plugin) {
 		this.plugin = plugin;
@@ -38,10 +38,12 @@ public class PlayerHandler {
 				Variables.fineEnabled = false;
 			}
 		}
-		instance = this;
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			add(p);
+		}
 	}
 
-	public static PvPlayer get(Player player) {
+	public PvPlayer get(Player player) {
 		String name = player.getName();
 		for (PvPlayer p : players) {
 			if (p.getName().equals(name))
@@ -51,20 +53,24 @@ public class PlayerHandler {
 	}
 
 	public PvPlayer add(Player player) {
-		PvPlayer pvp = new PvPlayer(player, configManager.getUserFile());
-		players.add(pvp);
-		return pvp;
+		PvPlayer pvPlayer = new PvPlayer(player, configManager.getUserFile());
+		players.add(pvPlayer);
+		return pvPlayer;
 	}
 
 	public void remove(PvPlayer player) {
 		players.remove(player);
-		if (!player.hasPvPEnabled())
-			configManager.saveUser(player.getName(), true);
-		else 
-			configManager.saveUser(player.getName(), false);
+		savePvPState(player.getName(), player.hasPvPEnabled());
 	}
 
-	public void cleanKillersTask() {
+	public void savePvPState(String name, boolean pvpState) {
+		if (!pvpState)
+			configManager.saveUser(name, true);
+		else
+			configManager.saveUser(name, false);
+	}
+
+	private void cleanKillersTask() {
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -75,7 +81,8 @@ public class PlayerHandler {
 		}, 1200, Variables.killAbuseTime * 20);
 	}
 
-	public int scheduleNewbieTimer(final PvPlayer player) {
+	public static int scheduleNewbieTimer(final PvPlayer player) {
+		PvPManager plugin = (PvPManager) Bukkit.getPluginManager().getPlugin("PvPManager");
 		return plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -84,7 +91,8 @@ public class PlayerHandler {
 		}, Variables.newbieProtectionTime * 1200);
 	}
 
-	public int scheduleTagTimer(final PvPlayer player) {
+	public static int scheduleTagTimer(final PvPlayer player) {
+		PvPManager plugin = (PvPManager) Bukkit.getPluginManager().getPlugin("PvPManager");
 		return plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -147,12 +155,8 @@ public class PlayerHandler {
 		return (economy != null);
 	}
 
-	public static HashSet<PvPlayer> getPlayers() {
+	public HashSet<PvPlayer> getPlayers() {
 		return players;
-	}
-
-	public static PlayerHandler getInstance() {
-		return instance;
 	}
 
 }

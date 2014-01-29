@@ -15,6 +15,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
 
+	private PlayerHandler ph;
+
+	public SignListener(PlayerHandler playerHandler) {
+		this.ph = playerHandler;
+	}
+
 	@EventHandler
 	public void onSignPlace(SignChangeEvent e) {
 		Player p = e.getPlayer();
@@ -43,7 +49,7 @@ public class SignListener implements Listener {
 					Sign sign = (Sign) clicked.getState();
 					if (sign.getLine(0).equalsIgnoreCase("§5[PvPManager]")) {
 						if (player.hasPermission("pvpmanager.pvpstatus.change")) {
-							PlayerHandler.get(player).togglePvP();
+							ph.get(player).togglePvP();
 							return;
 						} else
 							player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");

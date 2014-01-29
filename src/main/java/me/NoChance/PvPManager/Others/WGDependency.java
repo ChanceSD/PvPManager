@@ -17,7 +17,7 @@ public class WGDependency {
 	public WGDependency(PvPManager plugin) {
 		if (Utils.isWGEnabled()) {
 			wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-			plugin.getLogger().info("WorldGuard Found! Using it to detect PvP zones");
+			plugin.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
 		}
 	}
 

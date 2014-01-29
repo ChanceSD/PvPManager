@@ -95,7 +95,7 @@ public class PvPlayer {
 	public void setNewbie(boolean newbie) {
 		if (newbie) {
 			message(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
-			newbieTimer = PlayerHandler.getInstance().scheduleNewbieTimer(this);
+			newbieTimer = PlayerHandler.scheduleNewbieTimer(this);
 		} else {
 			if (Bukkit.getServer().getScheduler().isQueued(newbieTimer)) {
 				Bukkit.getServer().getScheduler().cancelTask(newbieTimer);
@@ -111,7 +111,7 @@ public class PvPlayer {
 		if (tagged) {
 			if (getPlayer().hasPermission("pvpmanager.nocombat"))
 				return;
-			tagTimer = PlayerHandler.getInstance().scheduleTagTimer(this);
+			tagTimer = PlayerHandler.scheduleTagTimer(this);
 			message(Messages.You_Are_InCombat);
 		} else {
 			if (Utils.isOnline(name))
@@ -123,16 +123,21 @@ public class PvPlayer {
 	public void renewTag() {
 		if (isInCombat()) {
 			Bukkit.getServer().getScheduler().cancelTask(tagTimer);
-			tagTimer = PlayerHandler.getInstance().scheduleTagTimer(this);
+			tagTimer = PlayerHandler.scheduleTagTimer(this);
 		}
 	}
 
 	public void setPvP(boolean pvpState) {
 		this.pvpState = pvpState;
-		if (!pvpState)
+		if (!pvpState) {
 			message(Messages.PvP_Disabled);
-		else
+			if (Variables.toggleBroadcast)
+				Bukkit.getServer().broadcastMessage(Messages.PvPToggle_Off_Broadcast.replace("%p", name));
+		} else {
 			message(Messages.PvP_Enabled);
+			if (Variables.toggleBroadcast)
+				Bukkit.getServer().broadcastMessage(Messages.PvPToggle_On_Broadcast.replace("%p", name));
+		}
 	}
 
 	public void addVictim(String victimName) {

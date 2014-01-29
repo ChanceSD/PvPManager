@@ -10,6 +10,7 @@ import me.NoChance.PvPManager.Others.WGDependency;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Utils;
 import me.libraryaddict.disguise.DisguiseAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -19,17 +20,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 public class DamageListener implements Listener {
 
 	private WGDependency wg;
 	private WorldTimerManager wm;
+	private PlayerHandler ph;
+	private Towny towny;
 
 	public DamageListener(PvPManager pvpManager) {
 		this.wm = pvpManager.getWtm();
-		if (Utils.isWGEnabled()) {
+		this.ph = pvpManager.getPlayerHandler();
+		if (Utils.isWGEnabled())
 			this.wg = new WGDependency(pvpManager);
+		if (Utils.isTownyEnabled()){
+			this.towny = (Towny) Bukkit.getPluginManager().getPlugin("Towny");
+			pvpManager.getLogger().info("Towny Found! Enabling Towny Support");
 		}
 	}
 
@@ -37,15 +45,15 @@ public class DamageListener implements Listener {
 	public void playerDamageListener(EntityDamageByEntityEvent event) {
 		if (!CombatUtils.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
-		PvPlayer attacker = PlayerHandler.get(getAttacker(event));
-		PvPlayer attacked = PlayerHandler.get((Player) event.getEntity());
+		PvPlayer attacker = ph.get(getAttacker(event));
+		PvPlayer attacked = ph.get((Player) event.getEntity());
 
 		if (Utils.isWGEnabled())
 			if (wg.hasWGPvPFlag(attacked.getPlayer().getWorld(), attacked.getPlayer().getLocation()))
 				return;
 
 		if (Utils.isTownyEnabled())
-			if (CombatUtil.canAttackEnemy(attacker.getName(), attacked.getName()))
+			if (!CombatUtil.preventDamageCall(towny, event.getDamager(), event.getEntity()))
 				return;
 
 		if (Variables.pvpTimerEnabled) {
@@ -92,8 +100,8 @@ public class DamageListener implements Listener {
 			return;
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
-		PvPlayer pvpAttacker = PlayerHandler.get(attacker);
-		PvPlayer pvpAttacked = PlayerHandler.get(attacked);
+		PvPlayer pvpAttacker = ph.get(attacker);
+		PvPlayer pvpAttacked = ph.get(attacked);
 		if (Variables.pvpBlood)
 			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {

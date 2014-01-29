@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 11
+Config Version: 12
 
 # All players should start with PvP ON(=true) or OFF(=false) by default(Only works for new players)
 Default PvP: true
@@ -49,9 +49,13 @@ In Combat:
       Amount: 10.0
 
 # Section for PvP Toggle command(/pvp)
+# Broadcast - Broadcast a message when players toggle PvP
 # Cooldown(seconds) - How many seconds players have to wait until they can use /pvp again
+# Toggle Off on Death - Toggle automatically PvP off for a player on death(if player has toggle permission)
 PvP Toggle:
+  Broadcast: false
   Cooldown(seconds): 30
+  Toggle Off on Death: false
 
 # Should toggle PvP signs be enabled? (Similar to /pvp command but by clicking signs)
 # To create a toggle sign write [pvpmanager] on the first line (remember you need the right permission)

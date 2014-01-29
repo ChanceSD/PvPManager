@@ -3,8 +3,6 @@ package me.NoChance.PvPManager.Listeners;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -21,7 +19,7 @@ public class CommandListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onCommand(PlayerCommandPreprocessEvent event) {
 		if (Variables.stopCommands && Variables.inCombatEnabled) {
-			if (PlayerHandler.get(event.getPlayer()).isInCombat()) {
+			if (plugin.getPlayerHandler().get(event.getPlayer()).isInCombat()) {
 				if (!Variables.commandsAllowed.contains("/" + event.getMessage().split(" ")[0])) {
 					event.setCancelled(true);
 					event.getPlayer().sendMessage(Messages.Command_Denied_InCombat);

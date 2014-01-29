@@ -11,23 +11,23 @@ import me.NoChance.PvPManager.Others.CustomGraph;
 import me.NoChance.PvPManager.Others.Updater;
 import me.NoChance.PvPManager.Others.Updater.UpdateResult;
 import me.NoChance.PvPManager.Utils.Utils;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
 	private WorldTimerManager worldTimerManager;
+	private PlayerHandler playerHandler;
 
 	@Override
 	public void onEnable() {
 		loadFiles();
-		new PlayerHandler(this);
+		playerHandler = new PlayerHandler(this);
 		if (Variables.pvpTimerEnabled) {
 			this.worldTimerManager = new WorldTimerManager(this);
 		}
 		startListeners();
-		getCommand("pvp").setExecutor(new PvP());
+		getCommand("pvp").setExecutor(new PvP(playerHandler));
 		getCommand("pvpmanager").setExecutor(new PM(this));
 		new CustomGraph(this);
 		if (Variables.updateCheck) {
@@ -37,9 +37,10 @@ public final class PvPManager extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for (PvPlayer p : PlayerHandler.getPlayers()) {
+		for (PvPlayer p : playerHandler.getPlayers()) {
 			if (p.isInCombat())
 				p.setTagged(false);
+			playerHandler.savePvPState(p.getName(), p.hasPvPEnabled());
 		}
 	}
 
@@ -56,7 +57,7 @@ public final class PvPManager extends JavaPlugin {
 		Utils.register(new DamageListener(this), this);
 		Utils.register(new PlayerListener(this), this);
 		if (Variables.toggleSignsEnabled) {
-			Utils.register(new SignListener(), this);
+			Utils.register(new SignListener(playerHandler), this);
 		}
 	}
 
@@ -84,6 +85,10 @@ public final class PvPManager extends JavaPlugin {
 
 	public ConfigManager getConfigM() {
 		return configM;
+	}
+
+	public PlayerHandler getPlayerHandler() {
+		return playerHandler;
 	}
 
 }

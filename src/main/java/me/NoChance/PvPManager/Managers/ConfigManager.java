@@ -25,7 +25,7 @@ public class ConfigManager {
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		pvpTimer = new Config(plugin, "PvPTimer.yml");
 		configVersion = getConfig().getInt("Config Version", 0);
-		if (configVersion < 11) {
+		if (configVersion < 12) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -71,7 +71,9 @@ public class ConfigManager {
 		this.config.set("In Combat.Punishments.Fine.Amount", Variables.fineAmount);
 
 		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.toggleCooldown);
-
+		this.config.set("PvP Toggle.Broadcast", Variables.toggleBroadcast);
+		this.config.set("PvP Toggle.Toggle Off on Death", Variables.toggleOffOnDeath);
+		
 		this.config.set("Toggle Signs.Enabled", Variables.toggleSignsEnabled);
 		this.config.set("Toggle Signs.Disable Toggle Command", Variables.disableToggleCommand);
 

@@ -4,7 +4,7 @@
 	<groupId>PvPManager</groupId>
 	<artifactId>PvPManager</artifactId>
 	<packaging>jar</packaging>
-	<version>1.6.6</version>
+	<version>1.7.0</version>
 	<repositories>
 		<repository>
 			<id>bukkit-repo</id>
@@ -79,7 +79,7 @@
 			<artifactId>bukkit</artifactId>
 			<groupId>org.bukkit</groupId>
 			<scope>provided</scope>
-			<version>1.7.2-R0.2</version>
+			<version>1.7.2-R0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
