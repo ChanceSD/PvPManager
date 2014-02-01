@@ -33,6 +33,13 @@
 	</repositories>
 	<dependencies>
 		<dependency>
+			<groupId>com.palmergames</groupId>
+			<artifactId>Towny</artifactId>
+			<version>0.84.0.9</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/repo/Towny-0.84.0.9.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>pgDev</groupId>
 			<artifactId>DisguiseCraft</artifactId>
 			<version>5.1</version>
