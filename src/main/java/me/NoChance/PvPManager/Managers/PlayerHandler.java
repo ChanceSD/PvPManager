@@ -72,7 +72,6 @@ public class PlayerHandler {
 
 	private void cleanKillersTask() {
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-			@Override
 			public void run() {
 				for (PvPlayer p : players) {
 					p.clearVictims();
@@ -84,7 +83,6 @@ public class PlayerHandler {
 	public static int scheduleNewbieTimer(final PvPlayer player) {
 		PvPManager plugin = (PvPManager) Bukkit.getPluginManager().getPlugin("PvPManager");
 		return plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			@Override
 			public void run() {
 				player.setNewbie(false);
 			}
@@ -94,7 +92,6 @@ public class PlayerHandler {
 	public static int scheduleTagTimer(final PvPlayer player) {
 		PvPManager plugin = (PvPManager) Bukkit.getPluginManager().getPlugin("PvPManager");
 		return plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			@Override
 			public void run() {
 				player.setTagged(false);
 			}

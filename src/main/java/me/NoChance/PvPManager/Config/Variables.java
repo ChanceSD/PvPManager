@@ -51,6 +51,7 @@ public class Variables {
     public static List<String> killAbuseCommands = Arrays.asList("kick <player> Kill Abuse Is Not Allowed!");
 	public static boolean toggleBroadcast;
 	public static boolean toggleOffOnDeath;
+	public static boolean blockEnderPearl;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -61,6 +62,7 @@ public class Variables {
 	private void InitialiseVariables() {
 		inCombatEnabled = configManager.getConfig().getBoolean("In Combat.Enabled", true);
 		timeInCombat = configManager.getConfig().getInt("In Combat.Time(seconds)", 15);
+		blockEnderPearl = configManager.getConfig().getBoolean("In Combat.Block EnderPearl", true);
 		stopCommands = configManager.getConfig().getBoolean("In Combat.Stop Commands.Enabled", true);
 		punishmentsEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Enabled", true);
 		dropInventory = configManager.getConfig().getBoolean("In Combat.Punishments.Drops.Inventory", true);

@@ -62,16 +62,19 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void checkForUpdates() {
-		if (!Variables.autoUpdate) {
-			Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-			if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
-				Variables.newVersion = updater.getLatestName();
-				getLogger().info("Update Available: " + Variables.newVersion);
-				Variables.update = true;
-				getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
-			}
-		} else
-			downloadUpdate();
+	    getLogger().info("Checking for updates...");
+        Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+        if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
+                Variables.newVersion = updater.getLatestName();
+                getLogger().info("Update Available: " + Variables.newVersion);
+                if (Variables.autoUpdate) {
+                        downloadUpdate();
+                        return;
+                }
+                Variables.update = true;
+                getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+        } else
+                getLogger().info("No update found");
 	}
 
 	public boolean downloadUpdate() {

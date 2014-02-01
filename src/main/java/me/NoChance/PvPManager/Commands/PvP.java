@@ -21,7 +21,6 @@ public class PvP implements CommandExecutor {
 		this.ph = playerHandler;
 	}
 	
-	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;

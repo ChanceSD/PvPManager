@@ -59,6 +59,7 @@ public class ConfigManager {
 		this.config.set("In Combat.Enabled", Variables.inCombatEnabled);
 		this.config.set("In Combat.Time(seconds)", Variables.timeInCombat);
 		this.config.set("In Combat.Only Tag Attacker", Variables.onlyTagAttacker);
+		this.config.set("In Combat.Block EnderPearl", Variables.blockEnderPearl);
 		this.config.set("In Combat.Stop Commands.Enabled", Variables.stopCommands);
 		this.config.set("In Combat.Stop Commands.Allowed Commands", Variables.commandsAllowed);
 		this.config.set("In Combat.Punishments.Enabled", Variables.punishmentsEnabled);

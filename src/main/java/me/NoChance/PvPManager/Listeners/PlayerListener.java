@@ -14,6 +14,8 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class PlayerListener implements Listener {
 
@@ -118,6 +120,21 @@ public class PlayerListener implements Listener {
 		PvPlayer pvPlayer = ph.get(p);
 		if (pvPlayer.isInCombat())
 			pvPlayer.setTagged(false);
+	}
+
+	@EventHandler
+	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		// Fix incompatibility with Citizens NPC triggering this event
+		if (event.getPlayer().hasMetadata("NPC"))
+			return;
+		PvPlayer player = ph.get(event.getPlayer());
+		if (Variables.inCombatEnabled && Variables.blockEnderPearl) {
+			if (player.isInCombat() && event.getCause().equals(TeleportCause.ENDER_PEARL)) {
+				player.message(Messages.EnderPearl_Blocked_InCombat);
+				event.setCancelled(true);
+			}
+		}
+
 	}
 
 }

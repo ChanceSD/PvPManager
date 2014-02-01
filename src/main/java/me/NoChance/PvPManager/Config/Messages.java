@@ -39,6 +39,7 @@ public class Messages {
 	public static String Newbie_Protection_Atacker;
 	public static String PvPToggle_On_Broadcast;
 	public static String PvPToggle_Off_Broadcast;
+	public static String EnderPearl_Blocked_InCombat;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
@@ -97,6 +98,7 @@ public class Messages {
 		Newbie_Protection_Atacker = getString("Newbie_Protection_Atacker");
 		PvPToggle_On_Broadcast = getString("PvPToggle_On_Broadcast");
 		PvPToggle_Off_Broadcast = getString("PvPToggle_Off_Broadcast");
+		EnderPearl_Blocked_InCombat = getString("EnderPearl_Blocked_InCombat");
 	}
 
 	public void checkChanges() {

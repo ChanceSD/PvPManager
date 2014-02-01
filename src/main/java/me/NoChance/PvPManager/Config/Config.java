@@ -34,6 +34,7 @@ public class Config extends YamlConfiguration {
 		this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file));
 	}
 
+	@Override
 	public void set(String path, Object value) {
 		this.config.set(path, value);
 	}
@@ -56,46 +57,57 @@ public class Config extends YamlConfiguration {
 		this.config.set(path, value);
 	}
 
+	@Override
 	public String getString(String path) {
 		return this.config.getString(path);
 	}
 
+	@Override
 	public String getString(String path, String def) {
 		return this.config.getString(path, def);
 	}
 
+	@Override
 	public int getInt(String path) {
 		return this.config.getInt(path);
 	}
 
+	@Override
 	public int getInt(String path, int def) {
 		return this.config.getInt(path, def);
 	}
 
+	@Override
 	public boolean getBoolean(String path) {
 		return this.config.getBoolean(path);
 	}
 
+	@Override
 	public boolean getBoolean(String path, boolean def) {
 		return this.config.getBoolean(path, def);
 	}
 
+	@Override
 	public ConfigurationSection getConfigurationSection(String path) {
 		return this.config.getConfigurationSection(path);
 	}
 
+	@Override
 	public double getDouble(String path) {
 		return this.config.getDouble(path);
 	}
 
+	@Override
 	public double getDouble(String path, double def) {
 		return this.config.getDouble(path, def);
 	}
 
+	@Override
 	public List<?> getList(String path) {
 		return this.config.getList(path);
 	}
 
+	@Override
 	public List<?> getList(String path, List<?> def) {
 		return this.config.getList(path, def);
 	}

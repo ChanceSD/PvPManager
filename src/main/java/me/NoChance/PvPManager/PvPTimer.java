@@ -36,39 +36,35 @@ public class PvPTimer {
 
 	public void checkWorldPvP() {
 		scheduledTasks[4] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-			@Override
 			public void run() {
 				if (endPvP > startPvP) {
-					if (w.getTime() < startPvP || w.getTime() > endPvP) {
-						timeForPvp = false;
-						setPvpClock(false);
-						announcePvP(false);
-					} else if (w.getTime() > startPvP && w.getTime() < endPvP) {
-						timeForPvp = true;
-						setPvpClock(true);
-						announcePvP(true);
-					}
+					if (w.getTime() < startPvP || w.getTime() > endPvP)
+						setTimeForPvP(false);
+					else if (w.getTime() > startPvP && w.getTime() < endPvP)
+						setTimeForPvP(true);
+
 				}
 				if (endPvP < startPvP) {
-					if (w.getTime() > endPvP && w.getTime() < startPvP) {
-						timeForPvp = false;
-						setPvpClock(false);
-						announcePvP(false);
-					} else if (w.getTime() < endPvP || w.getTime() > startPvP) {
-						timeForPvp = true;
-						setPvpClock(true);
-						announcePvP(true);
-					}
+					if (w.getTime() > endPvP && w.getTime() < startPvP)
+						setTimeForPvP(false);
+					else if (w.getTime() < endPvP || w.getTime() > startPvP)
+						setTimeForPvP(true);
+
 				}
 			}
 		}, 20);
+	}
+
+	private void setTimeForPvP(boolean pvpTime) {
+		timeForPvp = pvpTime;
+		setPvpClock(pvpTime);
+		announcePvP(pvpTime);
 	}
 
 	public void setPvpClock(boolean pvpOn) {
 		cancelAllTasks();
 		if (pvpOn) {
 			scheduledTasks[0] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				@Override
 				public void run() {
 					timeForPvp = false;
 					announcePvP(false);
@@ -77,7 +73,6 @@ public class PvPTimer {
 			}, calculateClockDelay());
 		} else {
 			scheduledTasks[1] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				@Override
 				public void run() {
 					timeForPvp = true;
 					announcePvP(true);
@@ -90,7 +85,6 @@ public class PvPTimer {
 	public void pvpScheduler() {
 		if (timeForPvp) {
 			scheduledTasks[2] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				@Override
 				public void run() {
 					timeForPvp = !timeForPvp;
 					announcePvP(false);
@@ -99,7 +93,6 @@ public class PvPTimer {
 			}, pvpOnDelay);
 		} else {
 			scheduledTasks[3] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				@Override
 				public void run() {
 					timeForPvp = !timeForPvp;
 					announcePvP(true);

@@ -20,7 +20,6 @@ public class PM implements CommandExecutor {
 		this.wtm = plugin.getWtm();
 	}
 
-	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
