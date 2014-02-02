@@ -75,6 +75,10 @@
 					<artifactId>ProtocolLib</artifactId>
 					<groupId>com.comphenix.protocol</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>spigot-api</artifactId>
+					<groupId>org.spigotmc</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
