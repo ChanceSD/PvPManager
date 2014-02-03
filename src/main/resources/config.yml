@@ -6,10 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 12
-
-# All players should start with PvP ON(=true) or OFF(=false) by default(Only works for new players)
-Default PvP: true
+Config Version: 13
 
 # Should blood animation on PvP be enabled
 PvP Blood: true
@@ -80,6 +77,11 @@ Kill Abuse:
 Newbie Protection:
   Enabled: true
   Time(minutes): 5
+
+# Default PvP - All players should start with PvP ON(=true) or OFF(=false) by default(Only works for new players)
+# Towny Support - Let Towny override PvPManager(if using PvPTimer feature, change Towny PvP world flag to noPvP)
+Default PvP: true
+Towny Support: true
 
 # Should PvPManager be allowed to check for updates and tell you about them
 # Auto Update - After checking should we download it automatically for you?
