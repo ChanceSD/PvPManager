@@ -17,10 +17,10 @@ public class PvP implements CommandExecutor {
 
 	private PlayerHandler ph;
 
-	public PvP(PlayerHandler playerHandler){
+	public PvP(PlayerHandler playerHandler) {
 		this.ph = playerHandler;
 	}
-	
+
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
@@ -106,13 +106,15 @@ public class PvP implements CommandExecutor {
 					}
 				}
 				if (args[0].equalsIgnoreCase("status") && player.hasPermission("pvpmanager.pvpstatus.others")) {
-					PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[1]));
-					if (!specifiedPlayer.hasPvPEnabled()) {
-						player.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));
-						return true;
-					} else if (Utils.isOnline(args[1]) && specifiedPlayer.hasPvPEnabled()) {
-						player.sendMessage(Messages.Other_Status_Enabled.replace("%p", args[1]));
-						return true;
+					if (Utils.isOnline(args[1])) {
+						PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[1]));
+						if (!specifiedPlayer.hasPvPEnabled()) {
+							player.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));
+							return true;
+						} else if (specifiedPlayer.hasPvPEnabled()) {
+							player.sendMessage(Messages.Other_Status_Enabled.replace("%p", args[1]));
+							return true;
+						}
 					} else {
 						player.sendMessage(ChatColor.DARK_RED + args[1] + " Does Not Exist or is Offline");
 						return true;
