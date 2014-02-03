@@ -25,7 +25,7 @@ public class ConfigManager {
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		pvpTimer = new Config(plugin, "PvPTimer.yml");
 		configVersion = getConfig().getInt("Config Version", 0);
-		if (configVersion < 12) {
+		if (configVersion < 13) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -51,6 +51,7 @@ public class ConfigManager {
 
 	private void updateDefaultConfig() {
 		this.config.set("Default PvP", Variables.defaultPvp);
+		this.config.set("Towny Support", Variables.townySupport);
 		this.config.set("PvP Blood", Variables.pvpBlood);
 		this.config.set("Disable Fly", Variables.disableFly);
 		this.config.set("Disable GameMode", Variables.disableGamemode);
@@ -74,7 +75,7 @@ public class ConfigManager {
 		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.toggleCooldown);
 		this.config.set("PvP Toggle.Broadcast", Variables.toggleBroadcast);
 		this.config.set("PvP Toggle.Toggle Off on Death", Variables.toggleOffOnDeath);
-		
+
 		this.config.set("Toggle Signs.Enabled", Variables.toggleSignsEnabled);
 		this.config.set("Toggle Signs.Disable Toggle Command", Variables.disableToggleCommand);
 

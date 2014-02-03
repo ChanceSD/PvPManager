@@ -52,6 +52,7 @@ public class Variables {
 	public static boolean toggleBroadcast;
 	public static boolean toggleOffOnDeath;
 	public static boolean blockEnderPearl;
+	public static boolean townySupport;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -101,6 +102,7 @@ public class Variables {
 		killAbuseTime = configManager.getConfig().getInt("Kill Abuse.Time Limit", 60);
 		killAbuseCommands = (List<String>) configManager.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
 		killAbuseEnabled = configManager.getConfig().getBoolean("Kill Abuse.Enabled", true);
+		townySupport = configManager.getConfig().getBoolean("Towny Support", true);
 	}
 
 	public static void helpMenu(Player player) {

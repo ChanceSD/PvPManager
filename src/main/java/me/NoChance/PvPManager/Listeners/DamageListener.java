@@ -35,7 +35,7 @@ public class DamageListener implements Listener {
 		this.ph = pvpManager.getPlayerHandler();
 		if (Utils.isWGEnabled())
 			this.wg = new WGDependency(pvpManager);
-		if (Utils.isTownyEnabled()){
+		if (Utils.isTownyEnabled()) {
 			this.towny = (Towny) Bukkit.getPluginManager().getPlugin("Towny");
 			pvpManager.getLogger().info("Towny Found! Enabling Towny Support");
 		}
@@ -52,7 +52,7 @@ public class DamageListener implements Listener {
 			if (wg.hasWGPvPFlag(attacked.getPlayer().getWorld(), attacked.getPlayer().getLocation()))
 				return;
 
-		if (Utils.isTownyEnabled())
+		if (Utils.isTownyEnabled() && Variables.townySupport)
 			if (!CombatUtil.preventDamageCall(towny, event.getDamager(), event.getEntity()))
 				return;
 
