@@ -8,6 +8,7 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -27,7 +28,7 @@ public class PlayerListener implements Listener {
 		this.ph = plugin.getPlayerHandler();
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogout(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		PvPlayer pvPlayer = ph.get(player);
@@ -124,7 +125,6 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		// Fix incompatibility with Citizens NPC triggering this event
 		if (event.getPlayer().hasMetadata("NPC"))
 			return;
 		PvPlayer player = ph.get(event.getPlayer());

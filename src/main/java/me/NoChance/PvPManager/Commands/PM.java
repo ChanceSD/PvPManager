@@ -42,8 +42,7 @@ public class PM implements CommandExecutor {
 								player.sendMessage("§2Update Successful. On next restart you will have §e" + Variables.newVersion);
 							else
 								player.sendMessage("§4An error ocurred while updating, please report to the developer");
-						}
-						else 
+						} else
 							player.sendMessage("§2You have the latest version: §ePvPManager v" + Variables.currentVersion);
 					} else
 						player.sendMessage("§4Update Checking is disabled, enable it in the Config file");
@@ -144,7 +143,8 @@ public class PM implements CommandExecutor {
 		plugin.getServer().getScheduler().cancelTasks(plugin);
 		plugin.getServer().getPluginManager().disablePlugin(plugin);
 		plugin.getServer().getPluginManager().enablePlugin(plugin);
-		wtm.reloadPvpTimers();
+		if (Variables.pvpTimerEnabled)
+			wtm.reloadPvpTimers();
 		player.sendMessage("PvPManager Reloaded!");
 	}
 
