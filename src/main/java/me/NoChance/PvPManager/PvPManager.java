@@ -31,7 +31,11 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvpmanager").setExecutor(new PM(this));
 		new CustomGraph(this);
 		if (Variables.updateCheck) {
-			checkForUpdates();
+			this.getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
+				public void run() {
+					checkForUpdates();
+				}
+			});
 		}
 	}
 
@@ -62,19 +66,19 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void checkForUpdates() {
-	    getLogger().info("Checking for updates...");
-        Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
-        if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
-                Variables.newVersion = updater.getLatestName();
-                getLogger().info("Update Available: " + Variables.newVersion);
-                if (Variables.autoUpdate) {
-                        downloadUpdate();
-                        return;
-                }
-                Variables.update = true;
-                getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
-        } else
-                getLogger().info("No update found");
+		getLogger().info("Checking for updates...");
+		Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
+			Variables.newVersion = updater.getLatestName();
+			getLogger().info("Update Available: " + Variables.newVersion);
+			if (Variables.autoUpdate) {
+				downloadUpdate();
+				return;
+			}
+			Variables.update = true;
+			getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+		} else
+			getLogger().info("No update found");
 	}
 
 	public boolean downloadUpdate() {
