@@ -33,7 +33,8 @@ public class ConfigManager {
 				configFile.delete();
 				config = new Config(plugin, "config.yml");
 				updateDefaultConfig();
-			}
+			} else
+				plugin.getLogger().info("New Config File Created Successfully!");
 		}
 		config = new Config(plugin, "config.yml");
 		new Variables(this);

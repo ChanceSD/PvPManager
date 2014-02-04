@@ -76,17 +76,17 @@ public class PvP implements CommandExecutor {
 						return false;
 					} else if (player.hasPermission("pvpmanager.admin")) {
 						if (!Utils.isOnline(args[0])) {
-							player.sendMessage("§4Player not online!");
+							player.sendMessage("Â§4Player not online!");
 							return false;
 						}
 						PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[0]));
 						if (specifiedPlayer.hasPvPEnabled()) {
 							specifiedPlayer.setPvP(false);
-							player.sendMessage("§6[§8PvPManager§6] §2PvP disabled for " + args[0]);
+							player.sendMessage("Â§6[Â§8PvPManagerÂ§6] Â§2PvP disabled for " + args[0]);
 							return true;
 						} else {
 							specifiedPlayer.setPvP(true);
-							player.sendMessage("§6[§8PvPManager§6] §4PvP enabled for " + args[0]);
+							player.sendMessage("Â§6[Â§8PvPManagerÂ§6] Â§4PvP enabled for " + args[0]);
 							return true;
 						}
 					}
@@ -127,17 +127,17 @@ public class PvP implements CommandExecutor {
 				return false;
 			} else if (args.length == 1) {
 				if (!Utils.isOnline(args[0])) {
-					sender.sendMessage("§4Player not online!");
+					sender.sendMessage("Â§4Player not online!");
 					return false;
 				}
 				PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[0]));
 				if (specifiedPlayer.hasPvPEnabled()) {
 					specifiedPlayer.setPvP(false);
-					sender.sendMessage("§6[§8PvPManager§6] §2PvP disabled for " + args[0]);
+					sender.sendMessage("Â§6[Â§8PvPManagerÂ§6] Â§2PvP disabled for " + args[0]);
 					return true;
 				} else {
 					specifiedPlayer.setPvP(true);
-					sender.sendMessage("§6[§8PvPManager§6] §4PvP enabled for " + args[0]);
+					sender.sendMessage("Â§6[Â§8PvPManagerÂ§6] Â§4PvP enabled for " + args[0]);
 					return true;
 				}
 			} else if (args.length == 2) {

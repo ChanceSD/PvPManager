@@ -55,7 +55,7 @@ public class PvPlayer {
 
 	public void togglePvP() {
 		if (!CombatUtils.checkToggleCooldown(toggleTime)) {
-			message("§6[§8PvPManager§6] §cYou can't toggle it yet!");
+			message("Â§6[Â§8PvPManagerÂ§6] Â§cYou can't toggle it yet!");
 			return;
 		} else {
 			toggleTime = System.currentTimeMillis();
@@ -100,7 +100,7 @@ public class PvPlayer {
 			if (Bukkit.getServer().getScheduler().isQueued(newbieTimer)) {
 				Bukkit.getServer().getScheduler().cancelTask(newbieTimer);
 				if (Utils.isOnline(name))
-					message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
+					message("Â§6[Â§8PvPManagerÂ§6] Â§eYou Removed Your PvP Protection! Be Careful");
 			} else if (Utils.isOnline(name))
 				message(Messages.Newbie_Protection_End);
 		}

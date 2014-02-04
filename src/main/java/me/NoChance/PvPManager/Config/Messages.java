@@ -129,10 +129,10 @@ public class Messages {
 	}
 
 	public static void updateMessage(Player player) {
-		player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + Variables.newVersion);
-		player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v" + Variables.currentVersion);
-		player.sendMessage("§2Go to this page to download the latest version:");
-		player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
-		player.sendMessage("§2Use §e/pm update §2to update automatically");
+		player.sendMessage("Â§6[Â§fPvPManagerÂ§6] " + "Â§2An update is available: Â§e" + Variables.newVersion);
+		player.sendMessage("Â§6[Â§fPvPManagerÂ§6] " + "Â§2Your current version is: Â§ePvPManager v" + Variables.currentVersion);
+		player.sendMessage("Â§2Go to this page to download the latest version:");
+		player.sendMessage("Â§2Link: Â§ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+		player.sendMessage("Â§2Use Â§e/pm update Â§2to update automatically");
 	}
 }

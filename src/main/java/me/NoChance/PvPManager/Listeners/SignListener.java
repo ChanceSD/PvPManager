@@ -27,7 +27,7 @@ public class SignListener implements Listener {
 		if (Utils.PMAllowed(p.getWorld().getName())) {
 			if (p.hasPermission("pvpmanager.sign")) {
 				if (e.getLine(0).equalsIgnoreCase("[PvPManager]")) {
-					e.setLine(0, "ง5[PvPManager]");
+					e.setLine(0, "ยง5[PvPManager]");
 					if (e.getLine(1).isEmpty() && e.getLine(2).isEmpty() && e.getLine(3).isEmpty()) {
 						e.setLine(1, "Click This");
 						e.setLine(2, "Sign to Change");
@@ -47,7 +47,7 @@ public class SignListener implements Listener {
 			if (clicked != null) {
 				if (clicked.getType().equals(Material.SIGN_POST) || clicked.getType().equals(Material.WALL_SIGN)) {
 					Sign sign = (Sign) clicked.getState();
-					if (sign.getLine(0).equalsIgnoreCase("ง5[PvPManager]")) {
+					if (sign.getLine(0).equalsIgnoreCase("ยง5[PvPManager]")) {
 						if (player.hasPermission("pvpmanager.pvpstatus.change")) {
 							ph.get(player).togglePvP();
 							return;
