@@ -31,6 +31,8 @@ public class PvPlayer {
 			setNewbie(true);
 		} else if (!userData.getStringList("players").contains(name))
 			this.pvpState = true;
+		if (pvpState != Variables.defaultPvp)
+			message("§6[§8PvPManager§6] §6Your PvP Status is §2" + pvpState + " §6do /pvp to change it");
 	}
 
 	public String getName() {
