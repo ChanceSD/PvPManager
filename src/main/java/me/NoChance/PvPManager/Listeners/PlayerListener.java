@@ -5,7 +5,6 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -93,15 +92,10 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerLogin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		PvPlayer pvpPlayer = ph.add(player);
+		ph.add(player);
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
-			if (Variables.update) {
+			if (Variables.update)
 				Messages.updateMessage(player);
-			}
-		}
-		if (Utils.PMAllowed(player.getWorld().getName())) {
-			if (player.hasPermission("pvpmanager.nopvp"))
-				pvpPlayer.setPvP(false);
 		}
 	}
 
@@ -125,8 +119,6 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (event.getPlayer().hasMetadata("NPC"))
-			return;
 		PvPlayer player = ph.get(event.getPlayer());
 		if (Variables.inCombatEnabled && Variables.blockEnderPearl) {
 			if (player.isInCombat() && event.getCause().equals(TeleportCause.ENDER_PEARL)) {

@@ -33,6 +33,12 @@ public class PvPlayer {
 			this.pvpState = true;
 		if (pvpState != Variables.defaultPvp)
 			message("§6[§8PvPManager§6] §6Your PvP Status is §2" + pvpState + " §6do /pvp to change it");
+		if (player.hasPermission("pvpmanager.nopvp"))
+			this.pvpState = false;
+	}
+
+	public PvPlayer() {
+		this.name = "NPC";
 	}
 
 	public String getName() {
