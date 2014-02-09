@@ -93,7 +93,6 @@ public class DamageListener implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void damageListenerMonitor(EntityDamageByEntityEvent event) {
 		if (!CombatUtils.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
@@ -105,7 +104,7 @@ public class DamageListener implements Listener {
 		if (Variables.pvpBlood)
 			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
-			if (Variables.disableFly && attacker.isFlying())
+			if (Variables.disableFly && (attacker.isFlying() || attacker.getAllowFlight()))
 				pvpAttacker.disableFly();
 			if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL))
 				attacker.setGameMode(GameMode.SURVIVAL);
