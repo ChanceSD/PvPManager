@@ -1,6 +1,6 @@
 package me.NoChance.PvPManager.Managers;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,6 +10,8 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
@@ -17,7 +19,7 @@ import me.NoChance.PvPManager.Utils.Utils;
 
 public class PlayerHandler {
 
-	private HashSet<PvPlayer> players = new HashSet<PvPlayer>();
+	private HashMap<String, PvPlayer> players = new HashMap<String, PvPlayer>();
 	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
@@ -38,28 +40,38 @@ public class PlayerHandler {
 				Variables.fineEnabled = false;
 			}
 		}
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			add(p);
-		}
+		addOnlinePlayers();
+	}
+
+	private void addOnlinePlayers() {
+		if (plugin.getServer().getOnlinePlayers() != null)
+			for (Player p : plugin.getServer().getOnlinePlayers()) {
+				add(p);
+			}
 	}
 
 	public PvPlayer get(Player player) {
 		String name = player.getName();
-		for (PvPlayer p : players) {
-			if (p.getName().equals(name))
-				return p;
-		}
-		return null;
+		if (players.containsKey(name))
+			return players.get(name);
+		else
+			return add(player);
 	}
 
-	public PvPlayer add(Player player) {
+	private PvPlayer add(Player player) {
 		PvPlayer pvPlayer = new PvPlayer(player, configManager.getUserFile());
-		players.add(pvPlayer);
+		players.put(player.getName(), pvPlayer);
 		return pvPlayer;
 	}
 
-	public void remove(PvPlayer player) {
-		players.remove(player);
+	public void remove(final PvPlayer player) {
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new BukkitRunnable() {
+			public void run() {
+				if (!player.getPlayer().isOnline()) {
+					players.remove(player);
+				}
+			}
+		}, 1800);
 		savePvPState(player.getName(), player.hasPvPEnabled());
 	}
 
@@ -73,7 +85,7 @@ public class PlayerHandler {
 	private void cleanKillersTask() {
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
-				for (PvPlayer p : players) {
+				for (PvPlayer p : players.values()) {
 					p.clearVictims();
 				}
 			}
@@ -152,7 +164,7 @@ public class PlayerHandler {
 		return (economy != null);
 	}
 
-	public HashSet<PvPlayer> getPlayers() {
+	public HashMap<String, PvPlayer> getPlayers() {
 		return players;
 	}
 

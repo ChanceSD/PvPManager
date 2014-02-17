@@ -29,19 +29,19 @@ public final class PvPManager extends JavaPlugin {
 		startListeners();
 		getCommand("pvp").setExecutor(new PvP(playerHandler));
 		getCommand("pvpmanager").setExecutor(new PM(this));
-		new CustomGraph(this);
+		startMetrics();
 		if (Variables.updateCheck) {
-			this.getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
+			this.getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
 				public void run() {
 					checkForUpdates();
 				}
-			});
+			}, 60);
 		}
 	}
 
 	@Override
 	public void onDisable() {
-		for (PvPlayer p : playerHandler.getPlayers()) {
+		for (PvPlayer p : playerHandler.getPlayers().values()) {
 			if (p.isInCombat())
 				p.setTagged(false);
 			playerHandler.savePvPState(p.getName(), p.hasPvPEnabled());
@@ -63,6 +63,10 @@ public final class PvPManager extends JavaPlugin {
 		if (Variables.toggleSignsEnabled) {
 			Utils.register(new SignListener(playerHandler), this);
 		}
+	}
+
+	private void startMetrics() {
+		new CustomGraph(this);
 	}
 
 	private void checkForUpdates() {
