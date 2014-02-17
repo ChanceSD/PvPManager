@@ -28,17 +28,14 @@ public class PvPlayer {
 		this.name = player.getName();
 		if (!player.hasPlayedBefore()) {
 			this.pvpState = Variables.defaultPvp;
-			setNewbie(true);
+			if (Variables.newbieProtectionEnabled)
+				setNewbie(true);
 		} else if (!userData.getStringList("players").contains(name))
 			this.pvpState = true;
 		if (pvpState != Variables.defaultPvp)
 			message("§6[§8PvPManager§6] §6Your PvP Status is §2" + pvpState + " §6do /pvp to change it");
 		if (player.hasPermission("pvpmanager.nopvp"))
 			this.pvpState = false;
-	}
-
-	public PvPlayer() {
-		this.name = "NPC";
 	}
 
 	public String getName() {
