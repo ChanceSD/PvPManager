@@ -162,7 +162,7 @@ public class PvP implements CommandExecutor {
 
 	private String pvpList() {
 		StringBuilder list = new StringBuilder();
-		for (PvPlayer p : ph.getPlayers()) {
+		for (PvPlayer p : ph.getPlayers().values()) {
 			if (p.hasPvPEnabled()) {
 				list.append(p.getName() + ", ");
 			}

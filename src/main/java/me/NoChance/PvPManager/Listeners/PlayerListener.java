@@ -80,7 +80,7 @@ public class PlayerListener implements Listener {
 		}
 		if (pvPlayer.isInCombat())
 			pvPlayer.setTagged(false);
-		if (Variables.killAbuseEnabled && player.getKiller() != null) {
+		if (Variables.killAbuseEnabled && player.getKiller() != null && !player.getKiller().hasMetadata("NPC")) {
 			PvPlayer killer = ph.get(player.getKiller());
 			killer.addVictim(player.getName());
 		}
@@ -92,7 +92,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerLogin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		ph.add(player);
+		ph.get(player);
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
 			if (Variables.update)
 				Messages.updateMessage(player);
@@ -111,22 +111,20 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
-		Player p = event.getPlayer();
-		PvPlayer pvPlayer = ph.get(p);
+		PvPlayer pvPlayer = ph.get(event.getPlayer());
 		if (pvPlayer.isInCombat())
 			pvPlayer.setTagged(false);
 	}
 
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		PvPlayer player = ph.get(event.getPlayer());
-		if (Variables.inCombatEnabled && Variables.blockEnderPearl) {
-			if (player.isInCombat() && event.getCause().equals(TeleportCause.ENDER_PEARL)) {
+		if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
+			PvPlayer player = ph.get(event.getPlayer());
+			if (Variables.inCombatEnabled && Variables.blockEnderPearl && player.isInCombat()) {
 				player.message(Messages.EnderPearl_Blocked_InCombat);
 				event.setCancelled(true);
 			}
 		}
-
 	}
 
 }
