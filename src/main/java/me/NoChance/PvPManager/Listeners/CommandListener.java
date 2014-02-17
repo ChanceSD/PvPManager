@@ -6,7 +6,6 @@ import me.NoChance.PvPManager.Config.Variables;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.server.ServerCommandEvent;
 
 public class CommandListener implements Listener {
 
@@ -34,24 +33,6 @@ public class CommandListener implements Listener {
 			}
 		}
 
-	}
-
-	@EventHandler
-	public void onConsoleCommand(ServerCommandEvent event) {
-		if (Variables.pvpTimerEnabled) {
-			String[] cmd = event.getCommand().split(" ");
-			if (cmd[0].equalsIgnoreCase("time")) {
-				if (plugin.getWtm().isPvpTimerWorld("world")) {
-					plugin.getWtm().getPvpTimer("world").checkWorldPvP();
-				}
-
-				if (cmd.length == 4) {
-					if (plugin.getWtm().isPvpTimerWorld(cmd[3].toLowerCase())) {
-						plugin.getWtm().getPvpTimer(cmd[3].toLowerCase()).checkWorldPvP();
-					}
-				}
-			}
-		}
 	}
 
 }
