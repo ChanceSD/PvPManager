@@ -67,7 +67,7 @@ public class PlayerHandler {
 	public void remove(final PvPlayer player) {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new BukkitRunnable() {
 			public void run() {
-				if (!player.getPlayer().isOnline()) {
+				if (player.getPlayer() == null) {
 					players.remove(player);
 				}
 			}
