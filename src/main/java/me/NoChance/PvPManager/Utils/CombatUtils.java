@@ -26,7 +26,7 @@ public class CombatUtils {
 			if (event.getDamager() instanceof Projectile) {
 				Projectile proj = (Projectile) event.getDamager();
 				if (proj.getShooter() instanceof Player && !proj.getShooter().equals(event.getEntity())) {
-					if (((Player) proj.getShooter()).hasMetadata("NPC"))
+					if (event.getEntity().hasMetadata("NPC"))
 						return false;
 					return true;
 				}
