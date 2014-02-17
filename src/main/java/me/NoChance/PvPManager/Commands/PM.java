@@ -2,6 +2,7 @@ package me.NoChance.PvPManager.Commands;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPTimer;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import org.bukkit.ChatColor;
@@ -9,6 +10,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class PM implements CommandExecutor {
 
@@ -49,21 +52,35 @@ public class PM implements CommandExecutor {
 					return true;
 				}
 			}
-			if (args.length == 2 && player.hasPermission("pvpmanager.pvptimer")) {
-				if (args[0].equalsIgnoreCase("pvpstart")) {
-					PvPTimer a = plugin.getWtm().getPvpTimer(player.getWorld());
-					a.setStartPvP(Integer.parseInt(args[1]));
-					player.sendMessage(ChatColor.DARK_GREEN + "PvP Start Time Changed to " + args[1] + " on World "
-							+ player.getWorld().getName());
-					a.reload();
-					return true;
+			if (args.length == 2) {
+				if (player.hasPermission("pvpmanager.pvptimer")) {
+					if (args[0].equalsIgnoreCase("pvpstart")) {
+						PvPTimer a = plugin.getWtm().getPvpTimer(player.getWorld());
+						a.setStartPvP(Integer.parseInt(args[1]));
+						player.sendMessage(ChatColor.DARK_GREEN + "PvP Start Time Changed to " + args[1] + " on World "
+								+ player.getWorld().getName());
+						a.reload();
+						return true;
+					}
+					if (args[0].equalsIgnoreCase("pvpend")) {
+						PvPTimer a = plugin.getWtm().getPvpTimer(player.getWorld());
+						a.setEndPvP(Integer.parseInt(args[1]));
+						player.sendMessage(ChatColor.DARK_GREEN + "PvP End Time Changed to " + args[1] + " on World "
+								+ player.getWorld().getName());
+						a.reload();
+						return true;
+					}
 				}
-				if (args[0].equalsIgnoreCase("pvpend")) {
-					PvPTimer a = plugin.getWtm().getPvpTimer(player.getWorld());
-					a.setEndPvP(Integer.parseInt(args[1]));
-					player.sendMessage(ChatColor.DARK_GREEN + "PvP End Time Changed to " + args[1] + " on World "
-							+ player.getWorld().getName());
-					a.reload();
+				if (args[0].equalsIgnoreCase("debug") && player.hasPermission("pvpmanager.debug")) {
+					PvPlayer p = plugin.getPlayerHandler().get(player);
+					if (args[1].equalsIgnoreCase("tag")) {
+						p.setTagged(true);
+					} else if (args[1].equalsIgnoreCase("newbie")) {
+						p.setNewbie(true);
+					} else if (args[1].equalsIgnoreCase("attack")) {
+						plugin.getServer().getPluginManager()
+								.callEvent(new EntityDamageByEntityEvent(player, player, DamageCause.ENTITY_ATTACK, 1.0));
+					}
 					return true;
 				}
 			}
