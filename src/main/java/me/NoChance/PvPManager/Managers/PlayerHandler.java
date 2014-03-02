@@ -2,7 +2,6 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -11,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
-
+import org.bukkit.scheduler.BukkitTask;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
@@ -23,6 +22,7 @@ public class PlayerHandler {
 	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
+	private static PlayerHandler ph;
 
 	public PlayerHandler(PvPManager plugin) {
 		this.plugin = plugin;
@@ -41,6 +41,7 @@ public class PlayerHandler {
 			}
 		}
 		addOnlinePlayers();
+		ph = this;
 	}
 
 	private void addOnlinePlayers() {
@@ -83,31 +84,29 @@ public class PlayerHandler {
 	}
 
 	private void cleanKillersTask() {
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+		new BukkitRunnable() {
 			public void run() {
 				for (PvPlayer p : players.values()) {
 					p.clearVictims();
 				}
 			}
-		}, 1200, Variables.killAbuseTime * 20);
+		}.runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);
 	}
 
-	public static int scheduleNewbieTimer(final PvPlayer player) {
-		PvPManager plugin = (PvPManager) Bukkit.getPluginManager().getPlugin("PvPManager");
-		return plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	public BukkitTask scheduleNewbieTask(final PvPlayer player) {
+		return new BukkitRunnable() {
 			public void run() {
 				player.setNewbie(false);
 			}
-		}, Variables.newbieProtectionTime * 1200);
+		}.runTaskLater(plugin, Variables.newbieProtectionTime * 1200);
 	}
 
-	public static int scheduleTagTimer(final PvPlayer player) {
-		PvPManager plugin = (PvPManager) Bukkit.getPluginManager().getPlugin("PvPManager");
-		return plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	public BukkitTask scheduleTagTask(final PvPlayer player) {
+		return new BukkitRunnable() {
 			public void run() {
 				player.setTagged(false);
 			}
-		}, Variables.timeInCombat * 20);
+		}.runTaskLater(plugin, Variables.timeInCombat * 20);
 	}
 
 	public void applyFine(Player p) {
@@ -166,6 +165,10 @@ public class PlayerHandler {
 
 	public HashMap<String, PvPlayer> getPlayers() {
 		return players;
+	}
+
+	public static PlayerHandler getInstance() {
+		return ph;
 	}
 
 }

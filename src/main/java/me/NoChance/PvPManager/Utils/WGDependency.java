@@ -1,7 +1,6 @@
-package me.NoChance.PvPManager.Others;
+package me.NoChance.PvPManager.Utils;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils.Utils;
 
 import org.bukkit.Location;
 import org.bukkit.World;

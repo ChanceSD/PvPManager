@@ -11,6 +11,7 @@ import me.NoChance.PvPManager.Utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 public class PvPlayer {
 
@@ -20,8 +21,8 @@ public class PvPlayer {
 	private boolean pvpState;
 	private boolean pvpLogged;
 	private long toggleTime;
-	private int newbieTimer;
-	private int tagTimer;
+	private BukkitTask newbieTask;
+	private BukkitTask tagTask;
 	private HashMap<String, Integer> victim = new HashMap<String, Integer>();
 
 	public PvPlayer(Player player, YamlConfiguration userData) {
@@ -87,7 +88,7 @@ public class PvPlayer {
 		return this.pvpLogged;
 	}
 
-	public boolean overrideAll() {
+	public boolean hasOverride() {
 		return getPlayer().hasPermission("pvpmanager.override");
 	}
 
@@ -100,10 +101,10 @@ public class PvPlayer {
 	public void setNewbie(boolean newbie) {
 		if (newbie) {
 			message(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
-			newbieTimer = PlayerHandler.scheduleNewbieTimer(this);
+			newbieTask = PlayerHandler.getInstance().scheduleNewbieTask(this);
 		} else {
-			if (Bukkit.getServer().getScheduler().isQueued(newbieTimer)) {
-				Bukkit.getServer().getScheduler().cancelTask(newbieTimer);
+			if (Bukkit.getServer().getScheduler().isQueued(newbieTask.getTaskId())) {
+				newbieTask.cancel();
 				if (Utils.isOnline(name))
 					message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
 			} else if (Utils.isOnline(name))
@@ -116,10 +117,11 @@ public class PvPlayer {
 		if (tagged) {
 			if (getPlayer().hasPermission("pvpmanager.nocombat"))
 				return;
-			tagTimer = PlayerHandler.scheduleTagTimer(this);
-			message(Messages.You_Are_InCombat);
+			tagTask = PlayerHandler.getInstance().scheduleTagTask(this);
+			if (!Variables.inCombatSilent)
+				message(Messages.You_Are_InCombat);
 		} else {
-			if (Utils.isOnline(name))
+			if (Utils.isOnline(name) && !Variables.inCombatSilent)
 				message(Messages.Out_Of_Combat);
 		}
 		this.tagged = tagged;
@@ -127,8 +129,8 @@ public class PvPlayer {
 
 	public void renewTag() {
 		if (isInCombat()) {
-			Bukkit.getServer().getScheduler().cancelTask(tagTimer);
-			tagTimer = PlayerHandler.scheduleTagTimer(this);
+			tagTask.cancel();
+			tagTask = PlayerHandler.getInstance().scheduleTagTask(this);
 		}
 	}
 

@@ -12,6 +12,7 @@ import me.NoChance.PvPManager.Others.Updater;
 import me.NoChance.PvPManager.Others.Updater.UpdateResult;
 import me.NoChance.PvPManager.Utils.Utils;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public final class PvPManager extends JavaPlugin {
 
@@ -31,11 +32,11 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvpmanager").setExecutor(new PM(this));
 		startMetrics();
 		if (Variables.updateCheck) {
-			this.getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
+			new BukkitRunnable() {
 				public void run() {
 					checkForUpdates();
 				}
-			}, 60);
+			}.runTaskLaterAsynchronously(this, 60);
 		}
 	}
 
@@ -55,9 +56,6 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void startListeners() {
-		if ((Variables.stopCommands && Variables.inCombatEnabled) || Variables.pvpTimerEnabled) {
-			Utils.register(new CommandListener(this), this);
-		}
 		Utils.register(new DamageListener(this), this);
 		Utils.register(new PlayerListener(this), this);
 		if (Variables.toggleSignsEnabled) {

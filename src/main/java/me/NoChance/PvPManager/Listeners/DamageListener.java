@@ -6,9 +6,9 @@ import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
-import me.NoChance.PvPManager.Others.WGDependency;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Utils;
+import me.NoChance.PvPManager.Utils.WGDependency;
 import me.libraryaddict.disguise.DisguiseAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -24,6 +24,10 @@ import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 
 public class DamageListener implements Listener {
+
+	public enum CancelResult {
+		NEWBIE, NEWBIE_OTHER, PVPDISABLED, PVPDISABLED_OTHER, PVPTIMER, FAIL, FAIL_OVERRIDE
+	}
 
 	private WGDependency wg;
 	private WorldTimerManager wm;
@@ -41,62 +45,42 @@ public class DamageListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void playerDamageListener(EntityDamageByEntityEvent event) {
 		if (!CombatUtils.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
 		PvPlayer attacker = ph.get(getAttacker(event));
 		PvPlayer attacked = ph.get((Player) event.getEntity());
+		CancelResult result = tryCancel(attacker, attacked);
 
-		if (Utils.isWGEnabled())
-			if (wg.hasWGPvPFlag(attacked.getPlayer().getWorld(), attacked.getPlayer().getLocation()))
-				return;
+		if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE)
+			event.setCancelled(true);
 
-		if (Utils.isTownyEnabled() && Variables.townySupport)
-			if (!CombatUtil.preventDamageCall(towny, event.getDamager(), event.getEntity()))
-				return;
-
-		if (Variables.pvpTimerEnabled) {
-			if (wm.isPvpTimerWorld(attacker.getWorldName())) {
-				if (!wm.isTimeForPvp(attacker.getWorldName())) {
-					event.setCancelled(true);
-					return;
-				}
-			}
-		}
-		if (attacked.isNewbie() || attacker.isNewbie()) {
-			event.setCancelled(true);
-			if (attacked.isNewbie())
-				attacker.message(Messages.Newbie_Protection_Atacker.replace("%p", attacked.getName()));
-			else
-				attacker.message(Messages.Newbie_Protection_On_Hit);
-			return;
-		}
-		if (!attacked.hasPvPEnabled()) {
-			event.setCancelled(true);
-			attacker.message(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
-			return;
-		} else if (!attacker.hasPvPEnabled() && !attacker.overrideAll()) {
-			event.setCancelled(true);
+		switch (result) {
+		case FAIL_OVERRIDE:
+			if (event.isCancelled())
+				event.setCancelled(false);
+		case FAIL:
+			onDamageActions(event);
+			break;
+		case NEWBIE:
+			attacker.message(Messages.Newbie_Protection_On_Hit);
+			break;
+		case NEWBIE_OTHER:
+			attacker.message(Messages.Newbie_Protection_Atacker.replace("%p", attacked.getName()));
+			break;
+		case PVPDISABLED:
 			attacker.message(Messages.Attack_Denied_You);
-			return;
+			break;
+		case PVPDISABLED_OTHER:
+			attacker.message(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
+			break;
+		case PVPTIMER:
+			break;
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void damageListenerHighest(EntityDamageByEntityEvent event) {
-		if (!CombatUtils.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
-			return;
-		if (getAttacker(event).hasPermission("pvpmanager.override") && event.isCancelled()) {
-			event.setCancelled(false);
-			return;
-		}
-	}
-
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void damageListenerMonitor(EntityDamageByEntityEvent event) {
-		if (!CombatUtils.isPvP(event) || !Utils.PMAllowed(event.getEntity().getWorld().getName()))
-			return;
+	private void onDamageActions(EntityDamageByEntityEvent event) {
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
 		PvPlayer pvpAttacker = ph.get(attacker);
@@ -131,7 +115,36 @@ public class DamageListener implements Listener {
 		}
 	}
 
-	public Player getAttacker(EntityDamageByEntityEvent event) {
+	public CancelResult tryCancel(PvPlayer attacker, PvPlayer attacked) {
+		if (attacker.hasOverride())
+			return CancelResult.FAIL_OVERRIDE;
+
+		if (Utils.isWGEnabled())
+			if (wg.hasWGPvPFlag(attacked.getPlayer().getWorld(), attacked.getPlayer().getLocation()))
+				return CancelResult.FAIL;
+
+		if (Utils.isTownyEnabled() && Variables.townySupport)
+			if (!CombatUtil.preventDamageCall(towny, attacker.getPlayer(), attacked.getPlayer()))
+				return CancelResult.FAIL;
+
+		if (Variables.pvpTimerEnabled)
+			if (wm.isPvpTimerWorld(attacker.getWorldName()))
+				if (!wm.isTimeForPvp(attacker.getWorldName()))
+					return CancelResult.PVPTIMER;
+
+		if (attacked.isNewbie())
+			return CancelResult.NEWBIE_OTHER;
+		if (attacker.isNewbie())
+			return CancelResult.NEWBIE;
+		if (!attacked.hasPvPEnabled())
+			return CancelResult.PVPDISABLED_OTHER;
+		if (!attacker.hasPvPEnabled())
+			return CancelResult.PVPDISABLED;
+
+		return CancelResult.FAIL;
+	}
+
+	private Player getAttacker(EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Projectile)
 			return (Player) ((Projectile) event.getDamager()).getShooter();
 		else
