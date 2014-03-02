@@ -6,10 +6,15 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 13
+Config Version: 14
 
 # Should blood animation on PvP be enabled
 PvP Blood: true
+
+# Should soup instantly heal you
+Auto Soup:
+  Enabled: false
+  Health Gain: 6
 
 # What should be disabled on PvP
 # Disabling disguises support DisguiseCraft and LibsDisguises
@@ -18,6 +23,7 @@ Disable GameMode: true
 Disable Disguise: true
 
 # This section defines everything that will happen when a player is tagged in combat
+# Silent - Should messages be sent when players are in/out combat
 # Time(seconds) - For how many seconds should the player be tagged
 # Stop Commands - Should commands be blocked in combat(Example - To prevent teleports)
 # -> Allowed Commands - All commands will be blocked except the ones here
@@ -26,6 +32,7 @@ Disable Disguise: true
 # -> Fine - Take money from player when he PvP logs (needs Vault)
 In Combat:
   Enabled: true
+  Silent: false
   Time(seconds): 15
   Only Tag Attacker: false
   Block EnderPearl: true

@@ -25,7 +25,7 @@ public class ConfigManager {
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		pvpTimer = new Config(plugin, "PvPTimer.yml");
 		configVersion = getConfig().getInt("Config Version", 0);
-		if (configVersion < 13) {
+		if (configVersion < 14) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -54,11 +54,14 @@ public class ConfigManager {
 		this.config.set("Default PvP", Variables.defaultPvp);
 		this.config.set("Towny Support", Variables.townySupport);
 		this.config.set("PvP Blood", Variables.pvpBlood);
+		this.config.set("Auto Soup.Enabled", Variables.autoSoupEnabled);
+		this.config.set("Auto Soup.Health Gain", Variables.soupHealth);
 		this.config.set("Disable Fly", Variables.disableFly);
 		this.config.set("Disable GameMode", Variables.disableGamemode);
 		this.config.set("Disable Disguise", Variables.disableDisguise);
 
 		this.config.set("In Combat.Enabled", Variables.inCombatEnabled);
+		this.config.set("In Combat.Silent", Variables.inCombatSilent);
 		this.config.set("In Combat.Time(seconds)", Variables.timeInCombat);
 		this.config.set("In Combat.Only Tag Attacker", Variables.onlyTagAttacker);
 		this.config.set("In Combat.Block EnderPearl", Variables.blockEnderPearl);

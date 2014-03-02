@@ -17,7 +17,7 @@ public class Variables {
 	public static boolean dropExp;
 	public static boolean dropArmor;
 	public static boolean killOnLogout;
-	public static List<String> worldsExcluded  = Arrays.asList(new String[]{"Example", "Example2"});
+	public static List<String> worldsExcluded = Arrays.asList(new String[] { "Example", "Example2" });
 	public static boolean disableFly;
 	public static boolean pvpTimerEnabled;
 	public static boolean toggleSignsEnabled;
@@ -39,20 +39,23 @@ public class Variables {
 	public static boolean update = false;
 	public static String newVersion;
 	public static String currentVersion;
-	public static List<String> commandsAllowed = Arrays.asList(new String[]{"tell", "money"});
+	public static List<String> commandsAllowed = Arrays.asList(new String[] { "tell", "money" });
 	public static float pvpOffSoundPitch;
 	public static float pvpOnSoundPitch;
 	public static int toggleCooldown;
 	public static boolean defaultPvp;
 	public static boolean disableDisguise;
 	public static boolean killAbuseEnabled;
-    public static int killAbuseMaxKills;
-    public static int killAbuseTime;
-    public static List<String> killAbuseCommands = Arrays.asList("kick <player> Kill Abuse Is Not Allowed!");
+	public static int killAbuseMaxKills;
+	public static int killAbuseTime;
+	public static List<String> killAbuseCommands = Arrays.asList("kick <player> Kill Abuse Is Not Allowed!");
 	public static boolean toggleBroadcast;
 	public static boolean toggleOffOnDeath;
 	public static boolean blockEnderPearl;
 	public static boolean townySupport;
+	public static boolean autoSoupEnabled;
+	public static double soupHealth;
+	public static boolean inCombatSilent;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -103,6 +106,9 @@ public class Variables {
 		killAbuseCommands = (List<String>) configManager.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
 		killAbuseEnabled = configManager.getConfig().getBoolean("Kill Abuse.Enabled", true);
 		townySupport = configManager.getConfig().getBoolean("Towny Support", true);
+		autoSoupEnabled = configManager.getConfig().getBoolean("Auto Soup.Enabled", false);
+		soupHealth = configManager.getPvpTimer().getDouble("Auto Soup.Health Gain", 6);
+		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
 	}
 
 	public static void helpMenu(Player player) {
