@@ -107,7 +107,7 @@ public class Variables {
 		killAbuseEnabled = configManager.getConfig().getBoolean("Kill Abuse.Enabled", true);
 		townySupport = configManager.getConfig().getBoolean("Towny Support", true);
 		autoSoupEnabled = configManager.getConfig().getBoolean("Auto Soup.Enabled", false);
-		soupHealth = configManager.getPvpTimer().getDouble("Auto Soup.Health Gain", 6);
+		soupHealth = configManager.getConfig().getDouble("Auto Soup.Health Gain", 6);
 		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
 	}
 
