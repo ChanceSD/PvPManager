@@ -75,11 +75,13 @@ public class PM implements CommandExecutor {
 					PvPlayer p = plugin.getPlayerHandler().get(player);
 					if (args[1].equalsIgnoreCase("tag")) {
 						p.setTagged(true);
+					} else if (args[1].equalsIgnoreCase("ct")) {
+						p.message("Tagged: " + p.isInCombat());
 					} else if (args[1].equalsIgnoreCase("newbie")) {
 						p.setNewbie(true);
 					} else if (args[1].equalsIgnoreCase("attack")) {
 						plugin.getServer().getPluginManager()
-								.callEvent(new EntityDamageByEntityEvent(player, player, DamageCause.ENTITY_ATTACK, 1.0));
+								.callEvent(new EntityDamageByEntityEvent(player, player, DamageCause.ENTITY_ATTACK, 5.0));
 					}
 					return true;
 				}
