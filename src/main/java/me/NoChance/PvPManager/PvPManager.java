@@ -10,6 +10,7 @@ import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import me.NoChance.PvPManager.Others.CustomGraph;
 import me.NoChance.PvPManager.Others.Updater;
 import me.NoChance.PvPManager.Others.Updater.UpdateResult;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Utils;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,6 +29,7 @@ public final class PvPManager extends JavaPlugin {
 			this.worldTimerManager = new WorldTimerManager(this);
 		}
 		startListeners();
+		new CombatUtils(this);
 		getCommand("pvp").setExecutor(new PvP(playerHandler));
 		getCommand("pvpmanager").setExecutor(new PM(this));
 		startMetrics();
