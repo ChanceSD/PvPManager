@@ -3,12 +3,13 @@ package me.NoChance.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 public class PvPTimer {
 
@@ -16,155 +17,117 @@ public class PvPTimer {
 	private long pvpOnDelay;
 	private long pvpOffDelay;
 	private boolean timeForPvp;
-	private String lastAnnounce;
+	private boolean startBiggerEnd;
+	private boolean lastAnnounce;
 	private World w;
-	private int[] scheduledTasks = new int[5];
 	private long startPvP;
 	private long endPvP;
 	private String startDifficulty;
 	private String endDifficulty;
 	private String worldChangeOn;
 	private String worldChangeOff;
+	private BukkitTask changePvPTask;
 
 	public PvPTimer(PvPManager plugin, World w) {
 		this.plugin = plugin;
 		this.w = w;
 		getWorldValues();
 		calculateDelays();
-		checkWorldPvP();
+		checkTime();
 	}
 
-	public void checkWorldPvP() {
-		scheduledTasks[4] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+	public void checkTime() {
+		if (!startBiggerEnd) {
+			if (w.getTime() < startPvP || w.getTime() > endPvP)
+				setPvP(false);
+			else if (w.getTime() > startPvP && w.getTime() < endPvP)
+				setPvP(true);
+		} else {
+			if (w.getTime() > endPvP && w.getTime() < startPvP)
+				setPvP(false);
+			else if (w.getTime() < endPvP || w.getTime() > startPvP)
+				setPvP(true);
+		}
+	}
+
+	public void setPvP(boolean pvpState) {
+		if (pvpState == timeForPvp)
+			return;
+		timeForPvp = pvpState;
+		announcePvP();
+		scheduleNextChange();
+	}
+
+	private void scheduleNextChange() {
+		cancel();
+		changePvPTask = new BukkitRunnable() {
 			public void run() {
-				if (endPvP > startPvP) {
-					if (w.getTime() < startPvP || w.getTime() > endPvP)
-						setTimeForPvP(false);
-					else if (w.getTime() > startPvP && w.getTime() < endPvP)
-						setTimeForPvP(true);
-
-				}
-				if (endPvP < startPvP) {
-					if (w.getTime() > endPvP && w.getTime() < startPvP)
-						setTimeForPvP(false);
-					else if (w.getTime() < endPvP || w.getTime() > startPvP)
-						setTimeForPvP(true);
-
-				}
+				setPvP(!timeForPvp);
+				regularScheduler();
 			}
-		}, 20);
+		}.runTaskLater(plugin, calculateClockDelay());
 	}
 
-	private void setTimeForPvP(boolean pvpTime) {
-		timeForPvp = pvpTime;
-		setPvpClock(pvpTime);
-		announcePvP(pvpTime);
+	private void regularScheduler() {
+		changePvPTask = new BukkitRunnable() {
+			public void run() {
+				setPvP(!timeForPvp);
+				regularScheduler();
+			}
+		}.runTaskLater(plugin, timeForPvp ? pvpOnDelay : pvpOffDelay);
 	}
 
-	public void setPvpClock(boolean pvpOn) {
-		cancelAllTasks();
-		if (pvpOn) {
-			scheduledTasks[0] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				public void run() {
-					timeForPvp = false;
-					announcePvP(false);
-					pvpScheduler();
-				}
-			}, calculateClockDelay());
+	private void calculateDelays() {
+		if (endPvP < startPvP) {
+			startBiggerEnd = true;
+			pvpOffDelay = startPvP - endPvP;
+			pvpOnDelay = 24000 - pvpOffDelay;
 		} else {
-			scheduledTasks[1] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				public void run() {
-					timeForPvp = true;
-					announcePvP(true);
-					pvpScheduler();
-				}
-			}, calculateClockDelay());
-		}
-	}
-
-	public void pvpScheduler() {
-		if (timeForPvp) {
-			scheduledTasks[2] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				public void run() {
-					timeForPvp = !timeForPvp;
-					announcePvP(false);
-					pvpScheduler();
-				}
-			}, pvpOnDelay);
-		} else {
-			scheduledTasks[3] = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				public void run() {
-					timeForPvp = !timeForPvp;
-					announcePvP(true);
-					pvpScheduler();
-				}
-			}, pvpOffDelay);
-		}
-	}
-
-	public void calculateDelays() {
-		if (endPvP > startPvP) {
+			startBiggerEnd = false;
 			pvpOnDelay = endPvP - startPvP;
 			pvpOffDelay = 24000 - pvpOnDelay;
 		}
-		if (endPvP < startPvP) {
-			pvpOffDelay = startPvP - endPvP;
-			pvpOnDelay = 24000 - pvpOffDelay;
-		}
 	}
 
-	public long calculateClockDelay() {
+	private long calculateClockDelay() {
 		long clockDelay = 0;
 		long x = w.getTime();
-		if (endPvP > startPvP) {
-			if (x < startPvP)
+		if (startBiggerEnd) {
+			if (timeForPvp)
+				clockDelay = 24000 - x + endPvP;
+			else
 				clockDelay = startPvP - x;
-			if (x > startPvP || x < endPvP)
+		} else {
+			if (timeForPvp)
 				clockDelay = endPvP - x;
-			if (x > endPvP)
-				clockDelay = pvpOffDelay - (x - endPvP);
-		} else if (endPvP < startPvP) {
-			if (x < endPvP)
-				clockDelay = endPvP - x;
-			if (x > endPvP || x < startPvP)
-				clockDelay = startPvP - x;
-			if (x > startPvP)
-				clockDelay = pvpOnDelay - (x - startPvP);
+			else
+				clockDelay = 24000 - x + startPvP;
 		}
 		return clockDelay;
 	}
 
-	public void announcePvP(boolean status) {
-		if (lastAnnounce == "Off" && !status || lastAnnounce == "On" && status) {
+	private void announcePvP() {
+		if (lastAnnounce == timeForPvp)
 			return;
-		}
-		if (lastAnnounce == null && !status || lastAnnounce == "On" && !status) {
-			for (Player p : w.getPlayers()) {
-				p.sendMessage(Messages.PvP_Off);
-				if (Variables.enableSound)
-					p.playSound(p.getLocation(), Sound.valueOf(Variables.pvpOffSound), 1, Variables.pvpOffSoundPitch);
-			}
-			w.setDifficulty(Difficulty.valueOf(endDifficulty));
-			lastAnnounce = "Off";
-		} else if (lastAnnounce == null && status || lastAnnounce == "Off" && status) {
+		if (timeForPvp) {
 			for (Player p : w.getPlayers()) {
 				p.sendMessage(Messages.PvP_On);
 				if (Variables.enableSound)
 					p.playSound(p.getLocation(), Sound.valueOf(Variables.pvpOnSound), 1, Variables.pvpOnSoundPitch);
 			}
 			w.setDifficulty(Difficulty.valueOf(startDifficulty));
-			lastAnnounce = "On";
+		} else {
+			for (Player p : w.getPlayers()) {
+				p.sendMessage(Messages.PvP_Off);
+				if (Variables.enableSound)
+					p.playSound(p.getLocation(), Sound.valueOf(Variables.pvpOffSound), 1, Variables.pvpOffSoundPitch);
+			}
+			w.setDifficulty(Difficulty.valueOf(endDifficulty));
 		}
+		lastAnnounce = !lastAnnounce;
 	}
 
-	public void announcePvP(Player p) {
-		if (timeForPvp)
-			p.sendMessage(Messages.PvP_On);
-		else
-			p.sendMessage(Messages.PvP_Off);
-	}
-
-	public void getWorldValues() {
+	private void getWorldValues() {
 		Config config = plugin.getConfigM().getPvpTimer();
 		startPvP = config.getLong("Worlds." + w.getName() + ".Start PvP");
 		endPvP = config.getLong("Worlds." + w.getName() + ".End PvP");
@@ -175,15 +138,14 @@ public class PvPTimer {
 	}
 
 	public void reload() {
-		cancelAllTasks();
+		cancel();
 		calculateDelays();
-		checkWorldPvP();
+		checkTime();
 	}
 
-	public void cancelAllTasks() {
-		for (int i = 0; i < scheduledTasks.length; i++) {
-			plugin.getServer().getScheduler().cancelTask(scheduledTasks[i]);
-		}
+	public void cancel() {
+		if (changePvPTask != null)
+			changePvPTask.cancel();
 	}
 
 	public void setStartPvP(long startPvP) {
@@ -196,15 +158,8 @@ public class PvPTimer {
 		plugin.saveConfig();
 	}
 
-	public String getWorldChangeMessage() {
-		if (timeForPvp)
-			return ChatColor.translateAlternateColorCodes('&', worldChangeOn);
-		else
-			return ChatColor.translateAlternateColorCodes('&', worldChangeOff);
-	}
-
 	public void sendWorldChangeMessage(Player p) {
-		p.sendMessage(getWorldChangeMessage());
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', timeForPvp ? worldChangeOn : worldChangeOff));
 	}
 
 	public boolean isPvpTime() {

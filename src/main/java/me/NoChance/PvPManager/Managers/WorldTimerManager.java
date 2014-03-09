@@ -45,7 +45,7 @@ public class WorldTimerManager {
 			if (Variables.pvpTimerEnabled)
 				a.reload();
 			else if (!Variables.pvpTimerEnabled)
-				a.cancelAllTasks();
+				a.cancel();
 		}
 		if (!Variables.pvpTimerEnabled)
 			schedulers.clear();
