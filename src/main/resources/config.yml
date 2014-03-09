@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 14
+Config Version: 15
 
 # Should blood animation on PvP be enabled
 PvP Blood: true
@@ -18,9 +18,11 @@ Auto Soup:
 
 # What should be disabled on PvP
 # Disabling disguises support DisguiseCraft and LibsDisguises
+# Disable Border Hopping - Makes players able to be attacked in safe zones if they are in combat
 Disable Fly: true
 Disable GameMode: true
 Disable Disguise: true
+Disable Border Hopping: true
 
 # This section defines everything that will happen when a player is tagged in combat
 # Silent - Should messages be sent when players are in/out combat
@@ -33,7 +35,7 @@ Disable Disguise: true
 In Combat:
   Enabled: true
   Silent: false
-  Time(seconds): 15
+  Time(seconds): 10
   Only Tag Attacker: false
   Block EnderPearl: true
   Stop Commands:
@@ -59,7 +61,7 @@ In Combat:
 # Toggle Off on Death - Toggle automatically PvP off for a player on death(if player has toggle permission)
 PvP Toggle:
   Broadcast: false
-  Cooldown(seconds): 30
+  Cooldown(seconds): 15
   Toggle Off on Death: false
 
 # Should toggle PvP signs be enabled? (Similar to /pvp command but by clicking signs)

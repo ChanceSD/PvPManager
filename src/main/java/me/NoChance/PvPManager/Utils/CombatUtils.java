@@ -14,10 +14,11 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
 
 public class CombatUtils {
-	
+
 	public enum CancelResult {
 		NEWBIE, NEWBIE_OTHER, PVPDISABLED, PVPDISABLED_OTHER, PVPTIMER, FAIL, FAIL_OVERRIDE
 	}
+
 	private static WGDependency wg;
 	private static WorldTimerManager wm;
 	private static Towny towny;
@@ -26,7 +27,7 @@ public class CombatUtils {
 	public CombatUtils(PvPManager pvpManager) {
 		ph = pvpManager.getPlayerHandler();
 		wm = pvpManager.getWtm();
-		if (Utils.isWGEnabled()){
+		if (Utils.isWGEnabled()) {
 			Utils.register(wg = new WGDependency(), pvpManager);
 			pvpManager.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
 		}
@@ -35,7 +36,7 @@ public class CombatUtils {
 			pvpManager.getLogger().info("Towny Found! Enabling Towny Support");
 		}
 	}
-	
+
 	public static boolean checkToggleCooldown(long toggleTime) {
 		if (toggleTime == 0)
 			return true;
@@ -63,9 +64,9 @@ public class CombatUtils {
 		}
 		return false;
 	}
-	
+
 	public static CancelResult tryCancel(PvPlayer attacker, PvPlayer attacked) {
-		if (attacker.hasOverride() || attacker.isInCombat() && attacked.isInCombat())
+		if (attacker.hasOverride() || Variables.stopBorderHopping && attacker.isInCombat() && attacked.isInCombat())
 			return CancelResult.FAIL_OVERRIDE;
 
 		if (Utils.isWGEnabled())
@@ -92,7 +93,7 @@ public class CombatUtils {
 
 		return CancelResult.FAIL;
 	}
-	
+
 	public static CancelResult tryCancel(Player attacker, Player attacked) {
 		return tryCancel(ph.get(attacker), ph.get(attacked));
 	}

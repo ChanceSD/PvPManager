@@ -15,7 +15,6 @@ public class ConfigManager {
 	private PvPManager plugin;
 	private File usersFile;
 	private YamlConfiguration users;
-	private int configVersion;
 	private Config config;
 	private Config pvpTimer;
 
@@ -24,8 +23,8 @@ public class ConfigManager {
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		pvpTimer = new Config(plugin, "PvPTimer.yml");
-		configVersion = getConfig().getInt("Config Version", 0);
-		if (configVersion < 14) {
+		Variables.configVersion = getConfig().getInt("Config Version", 0);
+		if (Variables.configVersion < 15) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -33,6 +32,7 @@ public class ConfigManager {
 				configFile.delete();
 				config = new Config(plugin, "config.yml");
 				updateDefaultConfig();
+				Variables.configUpdated = true;
 			} else
 				plugin.getLogger().info("New Config File Created Successfully!");
 		}
@@ -59,6 +59,7 @@ public class ConfigManager {
 		this.config.set("Disable Fly", Variables.disableFly);
 		this.config.set("Disable GameMode", Variables.disableGamemode);
 		this.config.set("Disable Disguise", Variables.disableDisguise);
+		this.config.set("Disable Border Hopping", Variables.stopBorderHopping);
 
 		this.config.set("In Combat.Enabled", Variables.inCombatEnabled);
 		this.config.set("In Combat.Silent", Variables.inCombatSilent);
@@ -128,7 +129,7 @@ public class ConfigManager {
 	}
 
 	public FileConfiguration getConfig() {
-		if (configVersion < 9)
+		if (Variables.configVersion < 9)
 			return getPlugin().getConfig();
 		return config;
 	}

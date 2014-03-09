@@ -20,7 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({PvPManager.class, Utils.class, CombatUtils.class })
+@PrepareForTest({PvPManager.class, Utils.class, CombatUtils.class})
 public class DamageListenerTest {
 
 	DamageListener damageListener;

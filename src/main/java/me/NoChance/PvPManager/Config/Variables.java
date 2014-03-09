@@ -56,6 +56,9 @@ public class Variables {
 	public static boolean autoSoupEnabled;
 	public static double soupHealth;
 	public static boolean inCombatSilent;
+	public static boolean configUpdated;
+	public static int configVersion;
+	public static boolean stopBorderHopping;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -65,7 +68,7 @@ public class Variables {
 	@SuppressWarnings("unchecked")
 	private void InitialiseVariables() {
 		inCombatEnabled = configManager.getConfig().getBoolean("In Combat.Enabled", true);
-		timeInCombat = configManager.getConfig().getInt("In Combat.Time(seconds)", 15);
+		timeInCombat = configManager.getConfig().getInt("In Combat.Time(seconds)", 10);
 		blockEnderPearl = configManager.getConfig().getBoolean("In Combat.Block EnderPearl", true);
 		stopCommands = configManager.getConfig().getBoolean("In Combat.Stop Commands.Enabled", true);
 		punishmentsEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Enabled", true);
@@ -96,7 +99,7 @@ public class Variables {
 		disableGamemode = configManager.getConfig().getBoolean("Disable GameMode", true);
 		commandsAllowed = (List<String>) configManager.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
 		currentVersion = configManager.getPlugin().getDescription().getVersion();
-		toggleCooldown = configManager.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 30);
+		toggleCooldown = configManager.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
 		toggleBroadcast = configManager.getConfig().getBoolean("PvP Toggle.Broadcast", false);
 		toggleOffOnDeath = configManager.getConfig().getBoolean("PvP Toggle.Toggle Off on Death", false);
 		defaultPvp = configManager.getConfig().getBoolean("Default PvP", true);
@@ -109,6 +112,7 @@ public class Variables {
 		autoSoupEnabled = configManager.getConfig().getBoolean("Auto Soup.Enabled", false);
 		soupHealth = configManager.getConfig().getDouble("Auto Soup.Health Gain", 6);
 		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
+		stopBorderHopping = configManager.getConfig().getBoolean("Disable Border Hopping", true);
 	}
 
 	public static void helpMenu(Player player) {
@@ -124,5 +128,4 @@ public class Variables {
 		player.sendMessage(ChatColor.GOLD + "/pm pvpend <time> [world] " + ChatColor.WHITE + "| Change the time PvP Ends in a world");
 		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
 	}
-
 }
