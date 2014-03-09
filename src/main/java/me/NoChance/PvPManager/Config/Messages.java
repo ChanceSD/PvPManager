@@ -135,4 +135,9 @@ public class Messages {
 		player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 		player.sendMessage("§2Use §e/pm update §2to update automatically");
 	}
+	
+	public static void configUpdated(Player player){
+		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file has been updated to version: §e" + Variables.configVersion);
+		player.sendMessage("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust them to your liking");
+	}
 }

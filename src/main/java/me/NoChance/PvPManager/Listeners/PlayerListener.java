@@ -119,6 +119,8 @@ public class PlayerListener implements Listener {
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
 			if (Variables.update)
 				Messages.updateMessage(player);
+			if(Variables.configUpdated)
+				Messages.configUpdated(player);
 		}
 	}
 
@@ -164,7 +166,7 @@ public class PlayerListener implements Listener {
 		// Using this instead of a repeating task, seems less resource intensive
 		if (Variables.pvpTimerEnabled) {
 			if (plugin.getWtm().isPvpTimerWorld(event.getPlayer().getWorld())) {
-				plugin.getWtm().getPvpTimer(event.getPlayer().getWorld()).checkWorldPvP();
+				plugin.getWtm().getPvpTimer(event.getPlayer().getWorld()).checkTime();
 			}
 		}
 
