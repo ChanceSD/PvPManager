@@ -1,13 +1,11 @@
 package me.NoChance.PvPManager;
 
 import java.util.HashMap;
-
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Utils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -24,6 +22,7 @@ public class PvPlayer {
 	private BukkitTask newbieTask;
 	private BukkitTask tagTask;
 	private HashMap<String, Integer> victim = new HashMap<String, Integer>();
+	public static PlayerHandler ph;
 
 	public PvPlayer(Player player, YamlConfiguration userData) {
 		this.name = player.getName();
@@ -37,6 +36,7 @@ public class PvPlayer {
 			message("§6[§8PvPManager§6] §6Your PvP Status is §2" + pvpState + " §6do /pvp to change it");
 		if (player.hasPermission("pvpmanager.nopvp"))
 			this.pvpState = false;
+		getPlayer().setScoreboard(ph.getMainScoreboard());
 	}
 
 	public String getName() {
@@ -101,7 +101,7 @@ public class PvPlayer {
 	public void setNewbie(boolean newbie) {
 		if (newbie) {
 			message(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
-			newbieTask = PlayerHandler.getInstance().scheduleNewbieTask(this);
+			newbieTask = ph.scheduleNewbieTask(this);
 		} else {
 			if (Bukkit.getServer().getScheduler().isQueued(newbieTask.getTaskId())) {
 				newbieTask.cancel();
@@ -114,15 +114,20 @@ public class PvPlayer {
 	}
 
 	public void setTagged(boolean tagged) {
+		Player p = getPlayer();
 		if (tagged) {
 			if (getPlayer().hasPermission("pvpmanager.nocombat"))
 				return;
-			tagTask = PlayerHandler.getInstance().scheduleTagTask(this);
+			tagTask = ph.scheduleTagTask(this);
+			ph.getTeam().addPlayer(p);
 			if (!Variables.inCombatSilent)
 				message(Messages.You_Are_InCombat);
 		} else {
-			if (Utils.isOnline(name) && !Variables.inCombatSilent)
-				message(Messages.Out_Of_Combat);
+			if (Utils.isOnline(name)) {
+				ph.getTeam().removePlayer(p);
+				if (!Variables.inCombatSilent)
+					message(Messages.Out_Of_Combat);
+			}
 		}
 		this.tagged = tagged;
 	}
@@ -130,7 +135,7 @@ public class PvPlayer {
 	public void renewTag() {
 		if (isInCombat()) {
 			tagTask.cancel();
-			tagTask = PlayerHandler.getInstance().scheduleTagTask(this);
+			tagTask = ph.scheduleTagTask(this);
 		}
 	}
 

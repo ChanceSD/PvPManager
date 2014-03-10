@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
@@ -22,7 +24,8 @@ public class PlayerHandler {
 	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
-	private static PlayerHandler ph;
+	private Team team;
+	private Scoreboard mainScoreboard;
 
 	public PlayerHandler(PvPManager plugin) {
 		this.plugin = plugin;
@@ -40,15 +43,20 @@ public class PlayerHandler {
 				Variables.fineEnabled = false;
 			}
 		}
+		mainScoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
+		if (mainScoreboard.getTeam("InCombat") == null) {
+			team = mainScoreboard.registerNewTeam("InCombat");
+			team.setPrefix("§c");
+		} else
+			team = mainScoreboard.getTeam("InCombat");
 		addOnlinePlayers();
-		ph = this;
+		PvPlayer.ph = this;
 	}
 
 	private void addOnlinePlayers() {
-		if (plugin.getServer().getOnlinePlayers() != null)
-			for (Player p : plugin.getServer().getOnlinePlayers()) {
-				add(p);
-			}
+		for (Player p : plugin.getServer().getOnlinePlayers()) {
+			add(p);
+		}
 	}
 
 	public PvPlayer get(Player player) {
@@ -167,8 +175,12 @@ public class PlayerHandler {
 		return players;
 	}
 
-	public static PlayerHandler getInstance() {
-		return ph;
+	public Team getTeam() {
+		return team;
+	}
+
+	public Scoreboard getMainScoreboard() {
+		return mainScoreboard;
 	}
 
 }
