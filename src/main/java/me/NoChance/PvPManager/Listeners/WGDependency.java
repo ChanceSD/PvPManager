@@ -2,7 +2,6 @@ package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils.CancelResult;
-import me.NoChance.PvPManager.Utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,8 +18,7 @@ public class WGDependency implements Listener {
 	private WorldGuardPlugin wg;
 
 	public WGDependency() {
-		if (Utils.isWGEnabled())
-			wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
+		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 	}
 
 	@EventHandler
@@ -30,12 +28,10 @@ public class WGDependency implements Listener {
 	}
 
 	public boolean hasWGPvPFlag(World world, Location loc) {
-		if (Utils.isWGEnabled()) {
-			ApplicableRegionSet set = wg.getRegionManager(world).getApplicableRegions(loc);
-			if (set.getFlag(DefaultFlag.PVP) != null) {
-				if (set.getFlag(DefaultFlag.PVP).equals(State.ALLOW))
-					return true;
-			}
+		ApplicableRegionSet set = wg.getRegionManager(world).getApplicableRegions(loc);
+		if (set.getFlag(DefaultFlag.PVP) != null) {
+			if (set.getFlag(DefaultFlag.PVP).equals(State.ALLOW))
+				return true;
 		}
 		return false;
 	}

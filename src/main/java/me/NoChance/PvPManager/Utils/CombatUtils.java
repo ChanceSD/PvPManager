@@ -18,7 +18,8 @@ public class CombatUtils {
 	public enum CancelResult {
 		NEWBIE, NEWBIE_OTHER, PVPDISABLED, PVPDISABLED_OTHER, PVPTIMER, FAIL, FAIL_OVERRIDE
 	}
-
+	public static boolean useWG;
+	public static boolean useTowny;
 	private static WGDependency wg;
 	private static WorldTimerManager wm;
 	private static Towny towny;
@@ -30,10 +31,12 @@ public class CombatUtils {
 		if (Utils.isWGEnabled()) {
 			Utils.register(wg = new WGDependency(), pvpManager);
 			pvpManager.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
+			useWG = true;
 		}
 		if (Utils.isTownyEnabled()) {
 			towny = (Towny) Bukkit.getPluginManager().getPlugin("Towny");
 			pvpManager.getLogger().info("Towny Found! Enabling Towny Support");
+			useTowny = true;
 		}
 	}
 
@@ -69,11 +72,11 @@ public class CombatUtils {
 		if (attacker.hasOverride() || Variables.stopBorderHopping && attacker.isInCombat() && attacked.isInCombat())
 			return CancelResult.FAIL_OVERRIDE;
 
-		if (Utils.isWGEnabled())
+		if (useWG)
 			if (wg.hasWGPvPFlag(attacked.getPlayer().getWorld(), attacked.getPlayer().getLocation()))
 				return CancelResult.FAIL;
 
-		if (Utils.isTownyEnabled() && Variables.townySupport)
+		if (useTowny && Variables.townySupport)
 			if (!CombatUtil.preventDamageCall(towny, attacker.getPlayer(), attacked.getPlayer()))
 				return CancelResult.FAIL;
 
