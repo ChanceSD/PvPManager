@@ -38,7 +38,7 @@ public final class PvPManager extends JavaPlugin {
 				public void run() {
 					checkForUpdates();
 				}
-			}.runTaskLaterAsynchronously(this, 60);
+			}.runTaskLaterAsynchronously(this, 40);
 		}
 	}
 
