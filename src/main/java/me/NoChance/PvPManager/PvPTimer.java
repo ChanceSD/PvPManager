@@ -37,25 +37,30 @@ public class PvPTimer {
 	}
 
 	public void checkTime() {
-		if (!startBiggerEnd) {
-			if (w.getTime() < startPvP || w.getTime() > endPvP)
-				setPvP(false);
-			else if (w.getTime() > startPvP && w.getTime() < endPvP)
-				setPvP(true);
-		} else {
-			if (w.getTime() > endPvP && w.getTime() < startPvP)
-				setPvP(false);
-			else if (w.getTime() < endPvP || w.getTime() > startPvP)
-				setPvP(true);
-		}
+		final long time = w.getTime();
+		new BukkitRunnable() {
+			public void run() {
+				if (time == w.getTime() && changePvPTask != null)
+					return;
+				if (!startBiggerEnd) {
+					if (w.getTime() < startPvP || w.getTime() > endPvP)
+						setPvP(false);
+					else if (w.getTime() > startPvP && w.getTime() < endPvP)
+						setPvP(true);
+				} else {
+					if (w.getTime() >= endPvP && w.getTime() < startPvP)
+						setPvP(false);
+					else if (w.getTime() < endPvP || w.getTime() >= startPvP)
+						setPvP(true);
+				}
+				scheduleNextChange();
+			}
+		}.runTaskLater(plugin, 1);
 	}
 
 	public void setPvP(boolean pvpState) {
-		if (pvpState == timeForPvp)
-			return;
 		timeForPvp = pvpState;
 		announcePvP();
-		scheduleNextChange();
 	}
 
 	private void scheduleNextChange() {
@@ -94,20 +99,20 @@ public class PvPTimer {
 		long x = w.getTime();
 		if (startBiggerEnd) {
 			if (timeForPvp)
-				clockDelay = 24000 - x + endPvP;
+				clockDelay = x <= endPvP ? endPvP - x : 24000 - x + endPvP;
 			else
 				clockDelay = startPvP - x;
 		} else {
 			if (timeForPvp)
 				clockDelay = endPvP - x;
 			else
-				clockDelay = 24000 - x + startPvP;
+				clockDelay = x <= startPvP ? startPvP - x : 24000 - x + startPvP;
 		}
 		return clockDelay;
 	}
 
 	private void announcePvP() {
-		if (lastAnnounce == timeForPvp)
+		if (lastAnnounce == timeForPvp && changePvPTask != null)
 			return;
 		if (timeForPvp) {
 			for (Player p : w.getPlayers()) {
