@@ -1,12 +1,9 @@
 package me.NoChance.PvPManager.Others;
 
 import java.io.IOException;
-
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
-
-import org.mcstats.Metrics;
-import org.mcstats.Metrics.Graph;
+import me.NoChance.PvPManager.Others.Metrics.Graph;
 
 public class CustomGraph {
 
@@ -26,6 +23,50 @@ public class CustomGraph {
 			Graph toggleSigns = metrics.createGraph("Toggle Signs Usage");
 			Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
 			Graph updateCheck = metrics.createGraph("Update Check Usage");
+			Graph killAbuse = metrics.createGraph("Kill Abuse Usage");
+			Graph autoSoup = metrics.createGraph("Auto Soup Usage");
+			
+			autoSoup.addPlotter(new Metrics.Plotter("Enabled") {
+				@Override
+				public int getValue() {
+					int i = 0;
+					if (Variables.autoSoupEnabled)
+						i++;
+
+					return i;
+				}
+			});
+			autoSoup.addPlotter(new Metrics.Plotter("Disabled") {
+				@Override
+				public int getValue() {
+					int i = 0;
+					if (!Variables.autoSoupEnabled)
+						i++;
+
+					return i;
+				}
+			});
+			
+			killAbuse.addPlotter(new Metrics.Plotter("Enabled") {
+				@Override
+				public int getValue() {
+					int i = 0;
+					if (Variables.killAbuseEnabled)
+						i++;
+
+					return i;
+				}
+			});
+			killAbuse.addPlotter(new Metrics.Plotter("Disabled") {
+				@Override
+				public int getValue() {
+					int i = 0;
+					if (!Variables.killAbuseEnabled)
+						i++;
+
+					return i;
+				}
+			});
 
 			updateCheck.addPlotter(new Metrics.Plotter("Auto Update") {
 				@Override
