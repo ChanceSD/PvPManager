@@ -57,7 +57,6 @@ public class Variables {
 	public static double soupHealth;
 	public static boolean inCombatSilent;
 	public static boolean configUpdated;
-	public static int configVersion;
 	public static boolean stopBorderHopping;
 
 	public Variables(ConfigManager configM) {

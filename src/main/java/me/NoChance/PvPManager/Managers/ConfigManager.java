@@ -17,14 +17,15 @@ public class ConfigManager {
 	private YamlConfiguration users;
 	private Config config;
 	private Config pvpTimer;
+	public static int configVersion;
 
 	public ConfigManager(PvPManager plugin) {
 		this.plugin = plugin;
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		pvpTimer = new Config(plugin, "PvPTimer.yml");
-		Variables.configVersion = getConfig().getInt("Config Version", 0);
-		if (Variables.configVersion < 15) {
+		configVersion = plugin.getConfig().getInt("Config Version", 0);
+		if (configVersion < 15) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -129,7 +130,7 @@ public class ConfigManager {
 	}
 
 	public FileConfiguration getConfig() {
-		if (Variables.configVersion < 9)
+		if (configVersion < 9)
 			return getPlugin().getConfig();
 		return config;
 	}
