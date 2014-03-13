@@ -142,6 +142,10 @@ public class PvP implements CommandExecutor {
 				}
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("status")) {
+					if (!Utils.isOnline(args[1])) {
+						sender.sendMessage("§4Player not online!");
+						return false;
+					}
 					PvPlayer specifiedPlayer = ph.get(Utils.getPlayer(args[1]));
 					if (!specifiedPlayer.hasPvPEnabled()) {
 						sender.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[1]));
