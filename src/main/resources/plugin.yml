@@ -16,16 +16,14 @@ commands:
 permissions:
    pvpmanager.*:
      description: Gives access to all PvPManager features
-     default: op
      children:
        pvpmanager.admin: true
        pvpmanager.override: true
        pvpmanager.nocombat: true
        pvpmanager.nodisable: true
-       pvpmanager.nopvp: false
    pvpmanager.admin:
      description: Gives access to PvPManager features
-     default: false
+     default: op
      children:
        pvpmanager.reload: true
        pvpmanager.user: true
@@ -60,16 +58,16 @@ permissions:
      default: false
    pvpmanager.override:
      description: Enables a player to override PvP being off in a world
-     default: false
+     default: op
    pvpmanager.nocombat:
      description: Exempts a player from being tagged in combat
-     default: false
+     default: op
    pvpmanager.nopvp:
      description: Players with this permission always have PvP disabled
      default: false
    pvpmanager.nodisable:
      description: Players with this permission don't get fly and gamemode disabled
-     default: false
+     default: op
    pvpmanager.list:
      description: Allows access to the list of players with PvP enabled
      default: false
