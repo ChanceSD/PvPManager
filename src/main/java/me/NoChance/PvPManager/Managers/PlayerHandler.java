@@ -77,7 +77,7 @@ public class PlayerHandler {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new BukkitRunnable() {
 			public void run() {
 				if (player.getPlayer() == null) {
-					players.remove(player);
+					players.remove(player.getName());
 				}
 			}
 		}, 1800);
