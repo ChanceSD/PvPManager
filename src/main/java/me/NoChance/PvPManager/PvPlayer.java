@@ -65,10 +65,7 @@ public class PvPlayer {
 			return;
 		} else {
 			toggleTime = System.currentTimeMillis();
-			if (hasPvPEnabled())
-				setPvP(false);
-			else
-				setPvP(true);
+			setPvP(!pvpState);
 		}
 	}
 
@@ -113,9 +110,13 @@ public class PvPlayer {
 		this.newbie = newbie;
 	}
 
-	public void setTagged(boolean tagged) {
+	public void setTagged(boolean tag) {
 		Player p = getPlayer();
-		if (tagged) {
+		if (tag) {
+			if (tagged) {
+				renewTag();
+				return;
+			}
 			if (getPlayer().hasPermission("pvpmanager.nocombat"))
 				return;
 			tagTask = ph.scheduleTagTask(this);
@@ -129,14 +130,12 @@ public class PvPlayer {
 					message(Messages.Out_Of_Combat);
 			}
 		}
-		this.tagged = tagged;
+		this.tagged = tag;
 	}
 
 	public void renewTag() {
-		if (isInCombat()) {
-			tagTask.cancel();
-			tagTask = ph.scheduleTagTask(this);
-		}
+		tagTask.cancel();
+		tagTask = ph.scheduleTagTask(this);
 	}
 
 	public void setPvP(boolean pvpState) {

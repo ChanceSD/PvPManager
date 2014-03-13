@@ -81,17 +81,12 @@ public class DamageListener implements Listener {
 			}
 		}
 		if (Variables.inCombatEnabled) {
-			if (!pvpAttacker.isInCombat() && !pvpAttacked.isInCombat()) {
-				if (Variables.onlyTagAttacker) {
-					pvpAttacker.setTagged(true);
-					return;
-				} else {
-					pvpAttacker.setTagged(true);
-					pvpAttacked.setTagged(true);
-				}
+			if (Variables.onlyTagAttacker) {
+				pvpAttacker.setTagged(true);
+				return;
 			} else {
-				pvpAttacker.renewTag();
-				pvpAttacked.renewTag();
+				pvpAttacker.setTagged(true);
+				pvpAttacked.setTagged(true);
 			}
 		}
 	}
