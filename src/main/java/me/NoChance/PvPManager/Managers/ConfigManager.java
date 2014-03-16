@@ -25,7 +25,7 @@ public class ConfigManager {
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		pvpTimer = new Config(plugin, "PvPTimer.yml");
 		configVersion = plugin.getConfig().getInt("Config Version", 0);
-		if (configVersion < 15) {
+		if (configVersion < 16) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -39,6 +39,7 @@ public class ConfigManager {
 		}
 		config = new Config(plugin, "config.yml");
 		new Variables(this);
+		loadUsers();
 	}
 
 	// If PvPTimer.yml ever needs to be updated
@@ -65,6 +66,7 @@ public class ConfigManager {
 		this.config.set("In Combat.Enabled", Variables.inCombatEnabled);
 		this.config.set("In Combat.Silent", Variables.inCombatSilent);
 		this.config.set("In Combat.Time(seconds)", Variables.timeInCombat);
+		this.config.set("Name Tag Color", Variables.nameTagColor);
 		this.config.set("In Combat.Only Tag Attacker", Variables.onlyTagAttacker);
 		this.config.set("In Combat.Block EnderPearl", Variables.blockEnderPearl);
 		this.config.set("In Combat.Stop Commands.Enabled", Variables.stopCommands);
@@ -100,7 +102,7 @@ public class ConfigManager {
 		this.config.saveConfig();
 	}
 
-	public void load() {
+	private void loadUsers() {
 		try {
 			if (!usersFile.exists()) {
 				plugin.saveResource("users.yml", false);

@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 15
+Config Version: 16
 
 # Should blood animation on PvP be enabled
 PvP Blood: true
@@ -27,6 +27,8 @@ Disable Border Hopping: true
 # This section defines everything that will happen when a player is tagged in combat
 # Silent - Should messages be sent when players are in/out combat
 # Time(seconds) - For how many seconds should the player be tagged
+# Name Tag Color - Choose the color above the player when in combat, write 'none' to disable, you can also 
+# write a prefix but make sure it's under 16 characters. Example - '&c[Tagged] '
 # Stop Commands - Should commands be blocked in combat(Example - To prevent teleports)
 # -> Allowed Commands - All commands will be blocked except the ones here
 # Punishments - When player logs out in combat (PvP log), should he be punished?
@@ -36,6 +38,7 @@ In Combat:
   Enabled: true
   Silent: false
   Time(seconds): 10
+  Name Tag Color: '&c'
   Only Tag Attacker: false
   Block EnderPearl: true
   Stop Commands:

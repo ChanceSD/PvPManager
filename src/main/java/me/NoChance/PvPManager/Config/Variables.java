@@ -58,6 +58,7 @@ public class Variables {
 	public static boolean inCombatSilent;
 	public static boolean configUpdated;
 	public static boolean stopBorderHopping;
+	public static String nameTagColor;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -112,6 +113,7 @@ public class Variables {
 		soupHealth = configManager.getConfig().getDouble("Auto Soup.Health Gain", 6);
 		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
 		stopBorderHopping = configManager.getConfig().getBoolean("Disable Border Hopping", true);
+		nameTagColor = configManager.getConfig().getString("In Combat.Name Tag Color", "&c");
 	}
 
 	public static void helpMenu(Player player) {

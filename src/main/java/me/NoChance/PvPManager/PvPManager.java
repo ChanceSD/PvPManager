@@ -54,7 +54,6 @@ public final class PvPManager extends JavaPlugin {
 	private void loadFiles() {
 		new Messages(this);
 		this.configM = new ConfigManager(this);
-		this.configM.load();
 	}
 
 	private void startListeners() {

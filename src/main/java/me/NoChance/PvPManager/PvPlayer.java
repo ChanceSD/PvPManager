@@ -36,7 +36,8 @@ public class PvPlayer {
 			message("§6[§8PvPManager§6] §6Your PvP Status is §2" + pvpState + " §6do /pvp to change it");
 		if (player.hasPermission("pvpmanager.nopvp"))
 			this.pvpState = false;
-		getPlayer().setScoreboard(ph.getMainScoreboard());
+		if (!Variables.nameTagColor.equalsIgnoreCase("none"))
+			getPlayer().setScoreboard(ph.getMainScoreboard());
 	}
 
 	public String getName() {
@@ -61,7 +62,7 @@ public class PvPlayer {
 
 	public void togglePvP() {
 		if (!CombatUtils.checkToggleCooldown(toggleTime)) {
-			message("§6[§8PvPManager§6] §cYou can't toggle it yet!");
+			message(Messages.Error_PvP_Cooldown);
 			return;
 		} else {
 			toggleTime = System.currentTimeMillis();
@@ -120,12 +121,14 @@ public class PvPlayer {
 			if (getPlayer().hasPermission("pvpmanager.nocombat"))
 				return;
 			tagTask = ph.scheduleTagTask(this);
-			ph.getTeam().addPlayer(p);
+			if (ph.getTeam() != null)
+				ph.getTeam().addPlayer(p);
 			if (!Variables.inCombatSilent)
 				message(Messages.You_Are_InCombat);
 		} else {
 			if (Utils.isOnline(name)) {
-				ph.getTeam().removePlayer(p);
+				if (ph.getTeam() != null)
+					ph.getTeam().removePlayer(p);
 				if (!Variables.inCombatSilent)
 					message(Messages.Out_Of_Combat);
 			}

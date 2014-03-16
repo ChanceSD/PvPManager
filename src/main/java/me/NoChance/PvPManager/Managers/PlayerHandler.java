@@ -2,6 +2,8 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
 import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -44,13 +46,16 @@ public class PlayerHandler {
 			}
 		}
 		mainScoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
-		if (mainScoreboard.getTeam("InCombat") == null) {
-			team = mainScoreboard.registerNewTeam("InCombat");
-			team.setPrefix("§c");
-		} else
-			team = mainScoreboard.getTeam("InCombat");
-		addOnlinePlayers();
+		if (!Variables.nameTagColor.equalsIgnoreCase("none")) {
+			if (mainScoreboard.getTeam("InCombat") == null)
+				team = mainScoreboard.registerNewTeam("InCombat");
+			else
+				team = mainScoreboard.getTeam("InCombat");
+			team.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.nameTagColor));
+		}else
+			team = null;
 		PvPlayer.ph = this;
+		addOnlinePlayers();
 	}
 
 	private void addOnlinePlayers() {
