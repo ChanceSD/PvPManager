@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Commands;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPTimer;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import org.bukkit.ChatColor;
@@ -35,7 +36,7 @@ public class PM implements CommandExecutor {
 					reload(player);
 					return true;
 				} else if (args[0].equalsIgnoreCase("reload")) {
-					player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");
+					player.sendMessage(Messages.Error_Permission);
 					return false;
 				}
 				if (args[0].equalsIgnoreCase("update") && player.hasPermission("pvpmanager.admin")) {
@@ -153,7 +154,7 @@ public class PM implements CommandExecutor {
 					sender.sendMessage(ChatColor.DARK_RED + "World not found!");
 			return false;
 		}
-		sender.sendMessage(ChatColor.DARK_RED + "You don't have permission or command doesn't exist!");
+		sender.sendMessage(Messages.Error_Command);
 		return false;
 	}
 
@@ -164,7 +165,7 @@ public class PM implements CommandExecutor {
 		plugin.getServer().getPluginManager().enablePlugin(plugin);
 		if (Variables.pvpTimerEnabled)
 			wtm.reloadPvpTimers();
-		player.sendMessage("PvPManager Reloaded!");
+		player.sendMessage("§2PvPManager Reloaded!");
 	}
 
 }

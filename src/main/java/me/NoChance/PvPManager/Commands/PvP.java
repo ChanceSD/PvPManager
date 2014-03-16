@@ -31,7 +31,7 @@ public class PvP implements CommandExecutor {
 					pvpPlayer.togglePvP();
 					return true;
 				} else if (Variables.toggleSignsEnabled && Variables.disableToggleCommand) {
-					player.sendMessage(ChatColor.DARK_RED + "This command is disabled! You have to use a Sign!");
+					player.sendMessage(Messages.Error_PvPCommand_Disabled);
 					return false;
 				}
 			}
@@ -91,7 +91,7 @@ public class PvP implements CommandExecutor {
 						}
 					}
 				} else if (Variables.toggleSignsEnabled && Variables.disableToggleCommand) {
-					player.sendMessage(ChatColor.DARK_RED + "This command is disabled! You have to use a Sign!");
+					player.sendMessage(Messages.Error_PvPCommand_Disabled);
 					return false;
 				}
 			}
@@ -160,7 +160,7 @@ public class PvP implements CommandExecutor {
 				}
 			}
 		}
-		sender.sendMessage(ChatColor.DARK_RED + "You don't have permission or command doesn't exist!");
+		sender.sendMessage(Messages.Error_Command);
 		return false;
 	}
 

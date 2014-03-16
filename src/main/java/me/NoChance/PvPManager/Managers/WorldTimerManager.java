@@ -21,7 +21,7 @@ public class WorldTimerManager {
 	}
 
 	public PvPTimer getPvpTimer(World w) {
-		return schedulers.get(w.getName().toLowerCase());
+		return getPvpTimer(w.getName());
 	}
 
 	public PvPTimer getPvpTimer(String worldName) {

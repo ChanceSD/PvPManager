@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Listeners;
 
+import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.Utils;
 
@@ -52,7 +53,7 @@ public class SignListener implements Listener {
 							ph.get(player).togglePvP();
 							return;
 						} else
-							player.sendMessage(ChatColor.DARK_RED + "You don't have permission!");
+							player.sendMessage(Messages.Error_Permission);
 					}
 				}
 			}

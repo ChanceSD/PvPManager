@@ -18,6 +18,9 @@ public class Messages {
 	private PvPManager plugin;
 	private Properties lang = new Properties();
 	private final File messagesFile;
+	public static String Error_PvPCommand_Disabled;
+	public static String Error_Permission;
+	public static String Error_PvP_Cooldown;
 	public static String Already_Disabled;
 	public static String Already_Enabled;
 	public static String Other_Status_Enabled;
@@ -41,6 +44,7 @@ public class Messages {
 	public static String PvPToggle_On_Broadcast;
 	public static String PvPToggle_Off_Broadcast;
 	public static String EnderPearl_Blocked_InCombat;
+	public static String Error_Command;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
@@ -100,6 +104,10 @@ public class Messages {
 		PvPToggle_On_Broadcast = getString("PvPToggle_On_Broadcast");
 		PvPToggle_Off_Broadcast = getString("PvPToggle_Off_Broadcast");
 		EnderPearl_Blocked_InCombat = getString("EnderPearl_Blocked_InCombat");
+		Error_Command = getString("Error_Command");
+		Error_PvP_Cooldown = getString("Error_PvP_Cooldown");
+		Error_Permission = getString("Error_Permission");
+		Error_PvPCommand_Disabled = getString("Error_PvPCommand_Disabled");
 	}
 
 	public void checkChanges() {
