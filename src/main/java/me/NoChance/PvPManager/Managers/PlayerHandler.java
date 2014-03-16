@@ -52,7 +52,7 @@ public class PlayerHandler {
 			else
 				team = mainScoreboard.getTeam("InCombat");
 			team.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.nameTagColor));
-		}else
+		} else
 			team = null;
 		PvPlayer.ph = this;
 		addOnlinePlayers();

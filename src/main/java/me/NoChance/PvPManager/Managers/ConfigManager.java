@@ -24,6 +24,7 @@ public class ConfigManager {
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		pvpTimer = new Config(plugin, "PvPTimer.yml");
+		plugin.reloadConfig();
 		configVersion = plugin.getConfig().getInt("Config Version", 0);
 		if (configVersion < 16) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
