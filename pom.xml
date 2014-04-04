@@ -4,7 +4,7 @@
 	<groupId>PvPManager</groupId>
 	<artifactId>PvPManager</artifactId>
 	<packaging>jar</packaging>
-	<version>1.9.0</version>
+	<version>1.9.1</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<powermock.version>1.5.4</powermock.version>
@@ -85,7 +85,7 @@
 			<artifactId>bukkit</artifactId>
 			<groupId>org.bukkit</groupId>
 			<scope>provided</scope>
-			<version>1.7.2-R0.3-SNAPSHOT</version>
+			<version>1.7.5-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
