@@ -3,13 +3,13 @@ package me.NoChance.PvPManager;
 import java.util.HashMap;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Tasks.NewbieTask;
+import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Team;
 
 public class PvPlayer {
 
@@ -19,31 +19,35 @@ public class PvPlayer {
 	private boolean pvpState;
 	private boolean pvpLogged;
 	private long toggleTime;
-	private BukkitTask newbieTask;
-	private BukkitTask tagTask;
+	private NewbieTask newbieTask;
+	private TagTask tagTask;
 	private HashMap<String, Integer> victim = new HashMap<String, Integer>();
-	public static PlayerHandler ph;
+	private PvPManager plugin;
+	private Team previousTeam;
+	public static Team inCombatTeam;
 
-	public PvPlayer(Player player, YamlConfiguration userData) {
+	public PvPlayer(Player player, PvPManager plugin) {
 		this.name = player.getName();
+		this.plugin = plugin;
+		this.newbieTask = new NewbieTask(this);
+		this.tagTask = new TagTask(this);
 		if (!player.hasPlayedBefore()) {
 			this.pvpState = Variables.defaultPvp;
 			if (Variables.newbieProtectionEnabled)
 				setNewbie(true);
-		} else if (!userData.getStringList("players").contains(name))
+		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(name))
 			this.pvpState = true;
 		if (pvpState != Variables.defaultPvp)
 			message("§6[§8PvPManager§6] §6Your PvP Status is §2" + pvpState + " §6do /pvp to change it");
 		if (player.hasPermission("pvpmanager.nopvp"))
 			this.pvpState = false;
-		if (!Variables.nameTagColor.equalsIgnoreCase("none"))
-			getPlayer().setScoreboard(ph.getMainScoreboard());
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Player getPlayer() {
 		return Bukkit.getPlayerExact(name);
 	}
@@ -57,7 +61,8 @@ public class PvPlayer {
 	}
 
 	public void message(String message) {
-		getPlayer().sendMessage(message);
+		if (Utils.isOnline(name))
+			getPlayer().sendMessage(message);
 	}
 
 	public void togglePvP() {
@@ -99,13 +104,12 @@ public class PvPlayer {
 	public void setNewbie(boolean newbie) {
 		if (newbie) {
 			message(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
-			newbieTask = ph.scheduleNewbieTask(this);
+			newbieTask.runTaskLater(plugin, Variables.newbieProtectionTime * 1200);
 		} else {
 			if (Bukkit.getServer().getScheduler().isQueued(newbieTask.getTaskId())) {
 				newbieTask.cancel();
-				if (Utils.isOnline(name))
-					message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
-			} else if (Utils.isOnline(name))
+				message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
+			} else
 				message(Messages.Newbie_Protection_End);
 		}
 		this.newbie = newbie;
@@ -114,21 +118,26 @@ public class PvPlayer {
 	public void setTagged(boolean tag) {
 		Player p = getPlayer();
 		if (tag) {
+			if (getPlayer().hasPermission("pvpmanager.nocombat"))
+				return;
 			if (tagged) {
 				renewTag();
 				return;
 			}
-			if (getPlayer().hasPermission("pvpmanager.nocombat"))
-				return;
-			tagTask = ph.scheduleTagTask(this);
-			if (ph.getTeam() != null)
-				ph.getTeam().addPlayer(p);
+			tagTask.runTaskLater(plugin, Variables.timeInCombat * 20);
+			if (inCombatTeam != null){
+				previousTeam = p.getScoreboard().getPlayerTeam(p);
+				inCombatTeam.addPlayer(p);
+			}
 			if (!Variables.inCombatSilent)
 				message(Messages.You_Are_InCombat);
 		} else {
 			if (Utils.isOnline(name)) {
-				if (ph.getTeam() != null)
-					ph.getTeam().removePlayer(p);
+				if (inCombatTeam != null){
+					inCombatTeam.removePlayer(p);
+					if(previousTeam != null)
+						previousTeam.addPlayer(p);
+				}
 				if (!Variables.inCombatSilent)
 					message(Messages.Out_Of_Combat);
 			}
@@ -138,7 +147,7 @@ public class PvPlayer {
 
 	public void renewTag() {
 		tagTask.cancel();
-		tagTask = ph.scheduleTagTask(this);
+		tagTask.runTaskLater(plugin, Variables.timeInCombat * 20);
 	}
 
 	public void setPvP(boolean pvpState) {
@@ -146,11 +155,11 @@ public class PvPlayer {
 		if (!pvpState) {
 			message(Messages.PvP_Disabled);
 			if (Variables.toggleBroadcast)
-				Bukkit.getServer().broadcastMessage(Messages.PvPToggle_Off_Broadcast.replace("%p", name));
+				Bukkit.broadcastMessage(Messages.PvPToggle_Off_Broadcast.replace("%p", name));
 		} else {
 			message(Messages.PvP_Enabled);
 			if (Variables.toggleBroadcast)
-				Bukkit.getServer().broadcastMessage(Messages.PvPToggle_On_Broadcast.replace("%p", name));
+				Bukkit.broadcastMessage(Messages.PvPToggle_On_Broadcast.replace("%p", name));
 		}
 	}
 
