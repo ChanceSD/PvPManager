@@ -2,7 +2,6 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,12 +11,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Utils.Utils;
 
 public class PlayerHandler {
@@ -26,14 +25,13 @@ public class PlayerHandler {
 	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
-	private Team team;
 	private Scoreboard mainScoreboard;
 
 	public PlayerHandler(PvPManager plugin) {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		if (Variables.killAbuseEnabled)
-			cleanKillersTask();
+			new CleanKillersTask(plugin);
 		if (Variables.fineEnabled) {
 			if (Utils.isVaultEnabled()) {
 				if (setupEconomy()) {
@@ -45,16 +43,7 @@ public class PlayerHandler {
 				Variables.fineEnabled = false;
 			}
 		}
-		mainScoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
-		if (!Variables.nameTagColor.equalsIgnoreCase("none")) {
-			if (mainScoreboard.getTeam("InCombat") == null)
-				team = mainScoreboard.registerNewTeam("InCombat");
-			else
-				team = mainScoreboard.getTeam("InCombat");
-			team.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.nameTagColor));
-		} else
-			team = null;
-		PvPlayer.ph = this;
+		setupScoreboardTeam();
 		addOnlinePlayers();
 	}
 
@@ -62,6 +51,19 @@ public class PlayerHandler {
 		for (Player p : plugin.getServer().getOnlinePlayers()) {
 			add(p);
 		}
+	}
+
+	private void setupScoreboardTeam() {
+		Team team = null;
+		if (!Variables.nameTagColor.equalsIgnoreCase("none")) {
+			mainScoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
+			if (mainScoreboard.getTeam("InCombat") == null)
+				team = mainScoreboard.registerNewTeam("InCombat");
+			else
+				team = mainScoreboard.getTeam("InCombat");
+			team.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.nameTagColor));
+		}
+		PvPlayer.inCombatTeam = team;
 	}
 
 	public PvPlayer get(Player player) {
@@ -73,7 +75,9 @@ public class PlayerHandler {
 	}
 
 	private PvPlayer add(Player player) {
-		PvPlayer pvPlayer = new PvPlayer(player, configManager.getUserFile());
+		PvPlayer pvPlayer = new PvPlayer(player, plugin);
+		if (mainScoreboard != null)
+			player.setScoreboard(mainScoreboard);
 		players.put(player.getName(), pvPlayer);
 		return pvPlayer;
 	}
@@ -90,36 +94,7 @@ public class PlayerHandler {
 	}
 
 	public void savePvPState(String name, boolean pvpState) {
-		if (!pvpState)
-			configManager.saveUser(name, true);
-		else
-			configManager.saveUser(name, false);
-	}
-
-	private void cleanKillersTask() {
-		new BukkitRunnable() {
-			public void run() {
-				for (PvPlayer p : players.values()) {
-					p.clearVictims();
-				}
-			}
-		}.runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);
-	}
-
-	public BukkitTask scheduleNewbieTask(final PvPlayer player) {
-		return new BukkitRunnable() {
-			public void run() {
-				player.setNewbie(false);
-			}
-		}.runTaskLater(plugin, Variables.newbieProtectionTime * 1200);
-	}
-
-	public BukkitTask scheduleTagTask(final PvPlayer player) {
-		return new BukkitRunnable() {
-			public void run() {
-				player.setTagged(false);
-			}
-		}.runTaskLater(plugin, Variables.timeInCombat * 20);
+		configManager.saveUser(name, !pvpState);
 	}
 
 	public void applyFine(Player p) {
@@ -178,10 +153,6 @@ public class PlayerHandler {
 
 	public HashMap<String, PvPlayer> getPlayers() {
 		return players;
-	}
-
-	public Team getTeam() {
-		return team;
 	}
 
 	public Scoreboard getMainScoreboard() {
