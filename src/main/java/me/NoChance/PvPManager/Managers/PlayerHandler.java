@@ -31,7 +31,7 @@ public class PlayerHandler {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		if (Variables.killAbuseEnabled)
-			new CleanKillersTask(plugin);
+			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);;
 		if (Variables.fineEnabled) {
 			if (Utils.isVaultEnabled()) {
 				if (setupEconomy()) {
