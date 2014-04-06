@@ -11,17 +11,12 @@ import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 @SuppressWarnings("deprecation")
 public class Utils {
 
-	
 	public static Player getPlayer(String name) {
-		return Bukkit.getServer().getPlayerExact(name);
-	}
-
-	public static boolean isOnline(Player player) {
-		return isOnline(player.getName());
+		return Bukkit.getPlayer(name);
 	}
 
 	public static boolean isOnline(String player) {
-		return Bukkit.getPlayerExact(player) != null;
+		return getPlayer(player) != null;
 	}
 
 	public static void register(Listener l, JavaPlugin jp) {
