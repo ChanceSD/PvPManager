@@ -6,9 +6,9 @@ import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Team;
 
 public class PvPlayer {
@@ -20,7 +20,7 @@ public class PvPlayer {
 	private boolean pvpLogged;
 	private long toggleTime;
 	private NewbieTask newbieTask;
-	private TagTask tagTask;
+	private BukkitTask tagTask;
 	private HashMap<String, Integer> victim = new HashMap<String, Integer>();
 	private PvPManager plugin;
 	private Team previousTeam;
@@ -30,7 +30,6 @@ public class PvPlayer {
 		this.name = player.getName();
 		this.plugin = plugin;
 		this.newbieTask = new NewbieTask(this);
-		this.tagTask = new TagTask(this);
 		if (!player.hasPlayedBefore()) {
 			this.pvpState = Variables.defaultPvp;
 			if (Variables.newbieProtectionEnabled)
@@ -61,7 +60,7 @@ public class PvPlayer {
 	}
 
 	public void message(String message) {
-		if (Utils.isOnline(name))
+		if (isOnline())
 			getPlayer().sendMessage(message);
 	}
 
@@ -77,6 +76,10 @@ public class PvPlayer {
 
 	public boolean isNewbie() {
 		return this.newbie;
+	}
+	
+	public boolean isOnline() {
+		return getPlayer() != null;
 	}
 
 	public boolean isInCombat() {
@@ -124,7 +127,7 @@ public class PvPlayer {
 				renewTag();
 				return;
 			}
-			tagTask.runTaskLater(plugin, Variables.timeInCombat * 20);
+			tagTask = new TagTask(this).runTaskLater(plugin, Variables.timeInCombat * 20);
 			if (inCombatTeam != null){
 				previousTeam = p.getScoreboard().getPlayerTeam(p);
 				inCombatTeam.addPlayer(p);
@@ -132,7 +135,7 @@ public class PvPlayer {
 			if (!Variables.inCombatSilent)
 				message(Messages.You_Are_InCombat);
 		} else {
-			if (Utils.isOnline(name)) {
+			if (isOnline()) {
 				if (inCombatTeam != null){
 					inCombatTeam.removePlayer(p);
 					if(previousTeam != null)
@@ -147,7 +150,7 @@ public class PvPlayer {
 
 	public void renewTag() {
 		tagTask.cancel();
-		tagTask.runTaskLater(plugin, Variables.timeInCombat * 20);
+		tagTask = new TagTask(this).runTaskLater(plugin, Variables.timeInCombat * 20);
 	}
 
 	public void setPvP(boolean pvpState) {
