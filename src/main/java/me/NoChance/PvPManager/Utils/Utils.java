@@ -5,8 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
-import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 
 @SuppressWarnings("deprecation")
 public class Utils {
@@ -30,22 +28,16 @@ public class Utils {
 	public static boolean isVaultEnabled() {
 		return Bukkit.getServer().getPluginManager().getPlugin("Vault") != null;
 	}
-	
+
 	public static boolean isTownyEnabled() {
 		return Bukkit.getServer().getPluginManager().getPlugin("Towny") != null;
 	}
 
-	public static DisguiseCraftAPI getDisguiseCraft() {
-		if (Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft") == null) {
-			Variables.disableDisguise = false;
-			return null;
-		} else
-			return DisguiseCraft.getAPI();
+	public static boolean isDisguiseCraftEnabled() {
+		return Bukkit.getServer().getPluginManager().getPlugin("DisguiseCraft") != null;
 	}
 
 	public static boolean isLibsDisguisesEnabled() {
-		if (Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") == null)
-			Variables.disableDisguise = false;
 		return Bukkit.getServer().getPluginManager().getPlugin("LibsDisguises") != null;
 	}
 

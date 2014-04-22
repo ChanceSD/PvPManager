@@ -19,6 +19,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
+
 public class DamageListener implements Listener {
 
 	private PlayerHandler ph;
@@ -74,8 +76,8 @@ public class DamageListener implements Listener {
 			if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL))
 				attacker.setGameMode(GameMode.SURVIVAL);
 			if (Variables.disableDisguise) {
-				if (Utils.getDisguiseCraft() != null && Utils.getDisguiseCraft().isDisguised(attacker))
-					Utils.getDisguiseCraft().undisguisePlayer(attacker);
+				if (Utils.isDisguiseCraftEnabled() && DisguiseCraft.getAPI().isDisguised(attacker))
+					DisguiseCraft.getAPI().undisguisePlayer(attacker);
 				if (Utils.isLibsDisguisesEnabled() && DisguiseAPI.isDisguised(attacker))
 					DisguiseAPI.undisguiseToAll(attacker);
 			}
