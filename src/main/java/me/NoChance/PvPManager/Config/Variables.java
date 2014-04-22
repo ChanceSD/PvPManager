@@ -59,6 +59,7 @@ public class Variables {
 	public static boolean configUpdated;
 	public static boolean stopBorderHopping;
 	public static String nameTagColor;
+	public static String locale;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -114,6 +115,7 @@ public class Variables {
 		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
 		stopBorderHopping = configManager.getConfig().getBoolean("Disable Border Hopping", true);
 		nameTagColor = configManager.getConfig().getString("In Combat.Name Tag Color", "&c");
+		locale = configManager.getConfig().getString("Locale", "en").toUpperCase();
 	}
 
 	public static void helpMenu(Player player) {

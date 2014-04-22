@@ -2,8 +2,11 @@ package me.NoChance.PvPManager.Config;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
@@ -17,7 +20,7 @@ public class Messages {
 
 	private PvPManager plugin;
 	private Properties lang = new Properties();
-	private final File messagesFile;
+	private File messagesFile;
 	public static String Error_PvPCommand_Disabled;
 	public static String Error_Permission;
 	public static String Error_PvP_Cooldown;
@@ -45,17 +48,41 @@ public class Messages {
 	public static String PvPToggle_Off_Broadcast;
 	public static String EnderPearl_Blocked_InCombat;
 	public static String Error_Command;
+	private Locale locale;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
-		this.messagesFile = new File(plugin.getDataFolder(), "messages.properties");
+		try {
+			this.locale = Locale.valueOf(Variables.locale);
+		} catch (IllegalArgumentException e) {
+			plugin.getLogger().warning("Error! Locale '" + Variables.locale + "' does not exist! Using default messages");
+			locale = Locale.EN;
+		}
 		load();
 	}
 
 	public void load() {
+		this.messagesFile = new File(plugin.getDataFolder(), locale.toString());
 		if (!messagesFile.exists()) {
-			plugin.saveResource("messages.properties", false);
+			InputStream input = plugin.getResource("locale" + File.separator + locale.toString());
+			OutputStream resStreamOut;
+			int readBytes;
+			byte[] buffer = new byte[4096];
+			try {
+				resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()));
+				while ((readBytes = input.read(buffer)) != -1) {
+					resStreamOut.write(buffer, 0, readBytes);
+				}
+				resStreamOut.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			plugin.getLogger().info("New Messages File Created Successfully!");
+		}
+		for (File file : plugin.getDataFolder().listFiles()) {
+			String fileName = file.getName();
+			if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.toString()))
+				file.delete();
 		}
 		try {
 			if (messagesFile.exists()) {
@@ -113,12 +140,12 @@ public class Messages {
 	public void checkChanges() {
 		Properties original = new Properties();
 		try {
-			original.load(plugin.getResource("messages.properties"));
+			original.load(plugin.getResource("locale" + File.separator + locale.toString()));
 			Enumeration<Object> originalKeys = original.keys();
 			while (originalKeys.hasMoreElements()) {
 				String a = (String) originalKeys.nextElement();
 				if (!lang.containsKey(a)) {
-					addMessage(a + " = " + original.getProperty(a));
+					addMessage(a + " = " + new String(original.getProperty(a).getBytes("ISO-8859-1"), "UTF-8"));
 					lang.setProperty(a, original.getProperty(a));
 				}
 			}
@@ -128,11 +155,9 @@ public class Messages {
 
 	public void addMessage(String a) {
 		try {
-			FileWriter fw = new FileWriter(messagesFile, true);
-			PrintWriter pw = new PrintWriter(fw);
+			PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), "UTF-8"));
 			pw.println(a);
 			pw.close();
-			fw.close();
 		} catch (IOException e) {
 		}
 	}
@@ -144,9 +169,9 @@ public class Messages {
 		player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 		player.sendMessage("§2Use §e/pm update §2to update automatically");
 	}
-	
-	public static void configUpdated(Player player){
-		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file has been updated to version: §e" + ConfigManager.configVersion);
-		player.sendMessage("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust them to your liking");
+
+	public static void configUpdated(Player player) {
+		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + ConfigManager.configVersion);
+		player.sendMessage("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust the file to your liking");
 	}
 }

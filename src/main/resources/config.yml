@@ -6,7 +6,10 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 16
+Config Version: 17
+# This changes the plugin's messages to the specified language.
+# Currently there is - en ru ch
+Locale: en
 
 # Should blood animation on PvP be enabled
 PvP Blood: true
