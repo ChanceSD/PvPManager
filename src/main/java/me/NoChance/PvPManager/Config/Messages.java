@@ -64,7 +64,7 @@ public class Messages {
 	public void load() {
 		this.messagesFile = new File(plugin.getDataFolder(), locale.toString());
 		if (!messagesFile.exists()) {
-			InputStream input = plugin.getResource("locale" + File.separator + locale.toString());
+			InputStream input = plugin.getResource("locale/" + locale.toString());
 			OutputStream resStreamOut;
 			int readBytes;
 			byte[] buffer = new byte[4096];
@@ -140,7 +140,7 @@ public class Messages {
 	public void checkChanges() {
 		Properties original = new Properties();
 		try {
-			original.load(plugin.getResource("locale" + File.separator + locale.toString()));
+			original.load(plugin.getResource("locale/" + locale.toString()));
 			Enumeration<Object> originalKeys = original.keys();
 			while (originalKeys.hasMoreElements()) {
 				String a = (String) originalKeys.nextElement();
