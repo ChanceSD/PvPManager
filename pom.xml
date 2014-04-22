@@ -125,10 +125,6 @@
 					<artifactId>jchronic</artifactId>
 					<groupId>com.sk89q</groupId>
 				</exclusion>
-				<exclusion>
-					<artifactId>worldedit</artifactId>
-					<groupId>com.sk89q</groupId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
