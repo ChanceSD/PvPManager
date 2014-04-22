@@ -4,7 +4,7 @@
 	<groupId>PvPManager</groupId>
 	<artifactId>PvPManager</artifactId>
 	<packaging>jar</packaging>
-	<version>1.9.1</version>
+	<version>1.9.6</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<powermock.version>1.5.4</powermock.version>
@@ -79,13 +79,17 @@
 					<artifactId>spigot-api</artifactId>
 					<groupId>org.spigotmc</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>craftbukkit</artifactId>
+					<groupId>org.bukkit</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
 			<artifactId>bukkit</artifactId>
 			<groupId>org.bukkit</groupId>
 			<scope>provided</scope>
-			<version>1.7.5-R0.1-SNAPSHOT</version>
+			<version>1.7.9-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
@@ -109,14 +113,6 @@
 					<artifactId>opencsv</artifactId>
 					<groupId>net.sf.opencsv</groupId>
 				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>worldedit</artifactId>
-			<version>5.5.8</version>
-			<scope>provided</scope>
-			<exclusions>
 				<exclusion>
 					<artifactId>junit</artifactId>
 					<groupId>junit</groupId>
@@ -130,8 +126,8 @@
 					<groupId>com.sk89q</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>truezip</artifactId>
-					<groupId>de.schlichtherle</groupId>
+					<artifactId>worldedit</artifactId>
+					<groupId>com.sk89q</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
