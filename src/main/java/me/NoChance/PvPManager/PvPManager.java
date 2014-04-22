@@ -38,7 +38,7 @@ public final class PvPManager extends JavaPlugin {
 				public void run() {
 					checkForUpdates();
 				}
-			}.runTaskLaterAsynchronously(this, 40);
+			}.runTaskAsynchronously(this);
 		}
 	}
 
@@ -52,8 +52,8 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void loadFiles() {
-		new Messages(this);
 		this.configM = new ConfigManager(this);
+		new Messages(this);
 	}
 
 	private void startListeners() {
