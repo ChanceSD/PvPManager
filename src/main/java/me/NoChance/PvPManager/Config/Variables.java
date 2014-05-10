@@ -19,7 +19,6 @@ public class Variables {
 	public static boolean killOnLogout;
 	public static List<String> worldsExcluded = Arrays.asList(new String[] { "Example", "Example2" });
 	public static boolean disableFly;
-	public static boolean pvpTimerEnabled;
 	public static boolean toggleSignsEnabled;
 	public static boolean disableToggleCommand;
 	public static boolean onlyTagAttacker;
@@ -27,10 +26,6 @@ public class Variables {
 	public static boolean autoUpdate;
 	public static boolean newbieProtectionEnabled;
 	public static int newbieProtectionTime;
-	public static String pvpOffSound;
-	public static String pvpOnSound;
-	public static boolean enableSound;
-	public static boolean announcePvpOnWorldChange;
 	public static boolean broadcastPvpLog;
 	public static boolean fineEnabled;
 	public static double fineAmount;
@@ -40,8 +35,6 @@ public class Variables {
 	public static String newVersion;
 	public static String currentVersion;
 	public static List<String> commandsAllowed = Arrays.asList(new String[] { "tell", "money" });
-	public static float pvpOffSoundPitch;
-	public static float pvpOnSoundPitch;
 	public static int toggleCooldown;
 	public static boolean defaultPvp;
 	public static boolean disableDisguise;
@@ -79,7 +72,6 @@ public class Variables {
 		killOnLogout = configManager.getConfig().getBoolean("In Combat.Punishments.Kill on Logout", true);
 		worldsExcluded = (List<String>) configManager.getConfig().getList("World Exclusions", worldsExcluded);
 		disableFly = configManager.getConfig().getBoolean("Disable Fly", true);
-		pvpTimerEnabled = configManager.getPvpTimer().getBoolean("PvP Timer.Enabled", true);
 		toggleSignsEnabled = configManager.getConfig().getBoolean("Toggle Signs.Enabled", true);
 		disableToggleCommand = configManager.getConfig().getBoolean("Toggle Signs.Disable Toggle Command", false);
 		onlyTagAttacker = configManager.getConfig().getBoolean("In Combat.Only Tag Attacker", false);
@@ -87,12 +79,6 @@ public class Variables {
 		autoUpdate = configManager.getConfig().getBoolean("Update Check.Auto Update", true);
 		newbieProtectionEnabled = configManager.getConfig().getBoolean("Newbie Protection.Enabled", true);
 		newbieProtectionTime = configManager.getConfig().getInt("Newbie Protection.Time(minutes)", 5);
-		pvpOffSound = configManager.getPvpTimer().getString("PvP Timer.Sound.PvP Off Sound");
-		pvpOnSound = configManager.getPvpTimer().getString("PvP Timer.Sound.PvP On Sound");
-		pvpOffSoundPitch = (float) configManager.getPvpTimer().getDouble("PvP Timer.Sound.PvP Off Pitch", 1);
-		pvpOnSoundPitch = (float) configManager.getPvpTimer().getDouble("PvP Timer.Sound.PvP On Pitch", 1);
-		enableSound = configManager.getPvpTimer().getBoolean("PvP Timer.Sound.Enabled");
-		announcePvpOnWorldChange = configManager.getPvpTimer().getBoolean("PvP Timer.Announce On World Change");
 		broadcastPvpLog = configManager.getConfig().getBoolean("In Combat.Punishments.Broadcast PvPLog", true);
 		fineEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Fine.Enabled", false);
 		fineAmount = configManager.getConfig().getDouble("In Combat.Punishments.Fine.Amount", 10.00);

@@ -37,8 +37,6 @@ public class Messages {
 	public static String Attack_Denied_Other;
 	public static String You_Are_InCombat;
 	public static String Out_Of_Combat;
-	public static String PvP_On;
-	public static String PvP_Off;
 	public static String Newbie_Protection;
 	public static String Newbie_Protection_End;
 	public static String PvPLog_Broadcast;
@@ -121,8 +119,6 @@ public class Messages {
 		Attack_Denied_Other = getString("Attack_Denied_Other");
 		You_Are_InCombat = getString("You_Are_InCombat");
 		Out_Of_Combat = getString("Out_Of_Combat");
-		PvP_On = getString("PvP_On");
-		PvP_Off = getString("PvP_Off");
 		Newbie_Protection = getString("Newbie_Protection");
 		Newbie_Protection_End = getString("Newbie_Protection_End");
 		PvPLog_Broadcast = getString("PvPLog_Broadcast");

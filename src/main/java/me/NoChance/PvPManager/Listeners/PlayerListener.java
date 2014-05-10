@@ -6,7 +6,6 @@ import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.Utils;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +13,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -125,16 +123,6 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
-		if (Variables.announcePvpOnWorldChange && Variables.pvpTimerEnabled) {
-			Player p = event.getPlayer();
-			if (plugin.getWtm().isPvpTimerWorld(p.getWorld())) {
-				plugin.getWtm().getPvpTimer(p.getWorld()).sendWorldChangeMessage(p);
-			}
-		}
-	}
-
-	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		PvPlayer pvPlayer = ph.get(event.getPlayer());
 		if (pvPlayer.isInCombat())
@@ -162,12 +150,5 @@ public class PlayerListener implements Listener {
 				}
 			}
 		}
-		// Checking if PvPTimer is right every time a command is executed
-		// Using this instead of a repeating task, seems less resource intensive
-		if (Variables.pvpTimerEnabled) {
-			if (plugin.getWtm().isPvpTimerWorld(event.getPlayer().getWorld()))
-				plugin.getWtm().getPvpTimer(event.getPlayer().getWorld()).checkTime();
-		}
-
 	}
 }

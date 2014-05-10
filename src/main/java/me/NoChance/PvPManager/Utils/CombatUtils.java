@@ -11,23 +11,20 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Listeners.WGDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Managers.WorldTimerManager;
 
 public class CombatUtils {
 
 	public enum CancelResult {
-		NEWBIE, NEWBIE_OTHER, PVPDISABLED, PVPDISABLED_OTHER, PVPTIMER, FAIL, FAIL_OVERRIDE
+		NEWBIE, NEWBIE_OTHER, PVPDISABLED, PVPDISABLED_OTHER, FAIL, FAIL_OVERRIDE
 	}
 	public static boolean useWG;
 	public static boolean useTowny;
 	private static WGDependency wg;
-	private static WorldTimerManager wm;
 	private static Towny towny;
 	private static PlayerHandler ph;
 
 	public CombatUtils(PvPManager pvpManager) {
 		ph = pvpManager.getPlayerHandler();
-		wm = pvpManager.getWtm();
 		if (Utils.isWGEnabled()) {
 			Utils.register(wg = new WGDependency(), pvpManager);
 			pvpManager.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
@@ -79,11 +76,6 @@ public class CombatUtils {
 		if (useTowny && Variables.townySupport)
 			if (!CombatUtil.preventDamageCall(towny, attacker.getPlayer(), attacked.getPlayer()))
 				return CancelResult.FAIL;
-
-		if (Variables.pvpTimerEnabled)
-			if (wm.isPvpTimerWorld(attacker.getWorldName()))
-				if (!wm.isTimeForPvp(attacker.getWorldName()))
-					return CancelResult.PVPTIMER;
 
 		if (attacked.isNewbie())
 			return CancelResult.NEWBIE_OTHER;

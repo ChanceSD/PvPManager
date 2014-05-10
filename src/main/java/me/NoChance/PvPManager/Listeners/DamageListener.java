@@ -60,8 +60,6 @@ public class DamageListener implements Listener {
 		case PVPDISABLED_OTHER:
 			attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
 			break;
-		case PVPTIMER:
-			break;
 		}
 	}
 

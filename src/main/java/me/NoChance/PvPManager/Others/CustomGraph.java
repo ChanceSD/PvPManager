@@ -18,7 +18,6 @@ public class CustomGraph {
 		try {
 			Metrics metrics = new Metrics(plugin);
 			Graph keepItemsExp = metrics.createGraph("Percentage of Keep and Drop");
-			Graph pvpTimerUsage = metrics.createGraph("PvPTimer Usage");
 			Graph inCombatTime = metrics.createGraph("Time in Combat");
 			Graph toggleSigns = metrics.createGraph("Toggle Signs Usage");
 			Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
@@ -146,27 +145,6 @@ public class CustomGraph {
 				public int getValue() {
 					int i = 0;
 					if (Variables.inCombatEnabled)
-						i++;
-
-					return i;
-				}
-			});
-
-			pvpTimerUsage.addPlotter(new Metrics.Plotter("Enabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.pvpTimerEnabled)
-						i++;
-
-					return i;
-				}
-			});
-			pvpTimerUsage.addPlotter(new Metrics.Plotter("Disabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Variables.pvpTimerEnabled)
 						i++;
 
 					return i;

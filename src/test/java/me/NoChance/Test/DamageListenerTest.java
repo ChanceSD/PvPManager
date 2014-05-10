@@ -75,16 +75,6 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public void cancelPvPTimer() {
-		CancelResult cr = CancelResult.PVPTIMER;
-		createAttack(cr);
-
-		verify(attacker, never()).sendMessage(anyString());
-		verify(mockEvent).setCancelled(true);
-		assertEquals(cr, CombatUtils.tryCancel(attacker, defender));
-	}
-
-	@Test
 	public void cancelPvPDisabled() {
 		CancelResult cr = CancelResult.PVPDISABLED;
 		createAttack(cr);

@@ -6,7 +6,6 @@ import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Listeners.*;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import me.NoChance.PvPManager.Others.CustomGraph;
 import me.NoChance.PvPManager.Others.Updater;
 import me.NoChance.PvPManager.Others.Updater.UpdateResult;
@@ -18,16 +17,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 public final class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
-	private WorldTimerManager worldTimerManager;
 	private PlayerHandler playerHandler;
 
 	@Override
 	public void onEnable() {
 		loadFiles();
 		playerHandler = new PlayerHandler(this);
-		if (Variables.pvpTimerEnabled) {
-			this.worldTimerManager = new WorldTimerManager(this);
-		}
 		startListeners();
 		new CombatUtils(this);
 		getCommand("pvp").setExecutor(new PvP(playerHandler));
@@ -87,10 +82,6 @@ public final class PvPManager extends JavaPlugin {
 	public boolean downloadUpdate() {
 		Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, false);
 		return updater.getResult() == UpdateResult.SUCCESS;
-	}
-
-	public WorldTimerManager getWtm() {
-		return worldTimerManager;
 	}
 
 	public ConfigManager getConfigM() {
