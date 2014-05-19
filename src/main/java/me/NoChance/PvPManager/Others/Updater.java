@@ -341,18 +341,21 @@ public class Updater {
             final String version = this.plugin.getDescription().getVersion();
             if (title.split(" v").length == 2) {
                 final String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
-                int remVer = -1, curVer = 0;
-                try {
-                    remVer = this.calVer(remoteVersion);
-                    curVer = this.calVer(version);
-                } catch (final NumberFormatException nfe) {
-                    remVer = -1;
-                }
-                if (this.hasTag(version) || version.equalsIgnoreCase(remoteVersion) || (curVer >= remVer)) {
-                    // We already have the latest version, or this build is tagged for no-update
-                    this.result = Updater.UpdateResult.NO_UPDATE;
-                    return false;
-                }
+                String[] remote = remoteVersion.split("\\.");
+        		String[] local = version.split("\\.");
+
+                int length = Math.max(local.length, remote.length);
+        		for (int i = 0; i < length; i++) {
+        			int localNumber = i < local.length ? Integer.parseInt(local[i]) : 0;
+        			int remoteNumber = i < remote.length ? Integer.parseInt(remote[i]) : 0;
+        			if (remoteNumber > localNumber)
+        				return true;
+        			if (remoteNumber < localNumber || remoteVersion.equalsIgnoreCase(version) || hasTag(version)){
+        				this.result = Updater.UpdateResult.NO_UPDATE;
+        				return false;
+        			}
+        				
+        		}
             } else {
                 // The file's name did not contain the string 'vVersion'
                 final String authorInfo = this.plugin.getDescription().getAuthors().size() == 0 ? "" : " (" + this.plugin.getDescription().getAuthors().get(0) + ")";
@@ -364,23 +367,6 @@ public class Updater {
             }
         }
         return true;
-    }
-
-    /**
-     * Used to calculate the version string as an Integer
-     */
-    private Integer calVer(String s) throws NumberFormatException {
-        if (s.contains(".")) {
-            final StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < s.length(); i++) {
-                final Character c = s.charAt(i);
-                if (Character.isLetterOrDigit(c)) {
-                    sb.append(c);
-                }
-            }
-            return Integer.parseInt(sb.toString());
-        }
-        return Integer.parseInt(s);
     }
 
     /**
