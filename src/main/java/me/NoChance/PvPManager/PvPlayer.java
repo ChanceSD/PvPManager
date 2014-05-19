@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager;
 
 import java.util.HashMap;
+import java.util.UUID;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
@@ -14,6 +15,7 @@ import org.bukkit.scoreboard.Team;
 public class PvPlayer {
 
 	private String name;
+	private UUID id;
 	private boolean newbie;
 	private boolean tagged;
 	private boolean pvpState;
@@ -28,13 +30,14 @@ public class PvPlayer {
 
 	public PvPlayer(Player player, PvPManager plugin) {
 		this.name = player.getName();
+		this.id = player.getUniqueId();
 		this.plugin = plugin;
 		this.newbieTask = new NewbieTask(this);
 		if (!player.hasPlayedBefore()) {
 			this.pvpState = Variables.defaultPvp;
 			if (Variables.newbieProtectionEnabled)
 				setNewbie(true);
-		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(name))
+		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(id))
 			this.pvpState = true;
 		if (player.hasPermission("pvpmanager.nopvp"))
 			this.pvpState = false;
@@ -44,9 +47,12 @@ public class PvPlayer {
 		return this.name;
 	}
 
-	@SuppressWarnings("deprecation")
+	public UUID getUUID() {
+		return this.id;
+	}
+
 	public Player getPlayer() {
-		return Bukkit.getPlayerExact(name);
+		return Bukkit.getPlayer(id);
 	}
 
 	public String getWorldName() {
@@ -75,7 +81,7 @@ public class PvPlayer {
 	public boolean isNewbie() {
 		return this.newbie;
 	}
-	
+
 	public boolean isOnline() {
 		return getPlayer() != null;
 	}
@@ -126,7 +132,7 @@ public class PvPlayer {
 				return;
 			}
 			tagTask = new TagTask(this).runTaskLater(plugin, Variables.timeInCombat * 20);
-			if (inCombatTeam != null){
+			if (inCombatTeam != null) {
 				previousTeam = p.getScoreboard().getPlayerTeam(p);
 				inCombatTeam.addPlayer(p);
 			}
@@ -134,14 +140,15 @@ public class PvPlayer {
 				message(Messages.You_Are_InCombat);
 		} else {
 			if (isOnline()) {
-				if (inCombatTeam != null){
+				if (inCombatTeam != null) {
 					inCombatTeam.removePlayer(p);
-					if(previousTeam != null)
+					if (previousTeam != null)
 						previousTeam.addPlayer(p);
 				}
 				if (!Variables.inCombatSilent)
 					message(Messages.Out_Of_Combat);
 			}
+			tagTask.cancel();
 		}
 		this.tagged = tag;
 	}
