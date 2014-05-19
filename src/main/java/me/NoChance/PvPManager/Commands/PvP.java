@@ -6,7 +6,6 @@ import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Utils;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -48,6 +47,16 @@ public class PvP implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("list") && player.hasPermission("pvpmanager.list")) {
 					player.sendMessage(ChatColor.GOLD + "**** Players With PvP Enabled ****");
 					player.sendMessage(ChatColor.DARK_GRAY + pvpList());
+					return true;
+				}
+				if (args[0].equalsIgnoreCase("info") && player.hasPermission("pvpmanager.debug")) {
+					player.sendMessage(ChatColor.YELLOW + "§lPvPManager Info");
+					player.sendMessage(ChatColor.GREEN + "- Name: §f" + pvpPlayer.getName());
+					player.sendMessage(ChatColor.GREEN + "- PvP Status: §f" + pvpPlayer.hasPvPEnabled());
+					player.sendMessage(ChatColor.GREEN + "- Tagged: §f" + pvpPlayer.isInCombat());
+					player.sendMessage(ChatColor.GREEN + "- Newbie: §f" + pvpPlayer.isNewbie());
+					player.sendMessage(ChatColor.GREEN + "- World: §f" + pvpPlayer.getWorldName());
+					player.sendMessage(ChatColor.GREEN + "- Override: §f" + pvpPlayer.hasOverride());
 					return true;
 				}
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
