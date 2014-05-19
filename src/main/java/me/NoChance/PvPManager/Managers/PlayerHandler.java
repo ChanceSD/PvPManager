@@ -1,6 +1,8 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
+import java.util.UUID;
+
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,7 +33,8 @@ public class PlayerHandler {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		if (Variables.killAbuseEnabled)
-			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);;
+			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);
+		;
 		if (Variables.fineEnabled) {
 			if (Utils.isVaultEnabled()) {
 				if (setupEconomy()) {
@@ -90,14 +93,14 @@ public class PlayerHandler {
 				}
 			}
 		}, 1800);
-		savePvPState(player.getName(), player.hasPvPEnabled());
+		savePvPState(player.getUUID(), player.hasPvPEnabled());
 	}
 
-	public void savePvPState(String name, boolean pvpState) {
-		configManager.saveUser(name, !pvpState);
+	public void savePvPState(UUID id, boolean pvpState) {
+		configManager.saveUser(id, !pvpState);
 	}
 
-	public void applyFine(Player p) {
+	private void applyFine(Player p) {
 		if (economy != null) {
 			economy.withdrawPlayer(p.getName(), Variables.fineAmount);
 		} else {
@@ -106,7 +109,45 @@ public class PlayerHandler {
 		}
 	}
 
-	public void fakeInventoryDrop(Player player, ItemStack[] inventory) {
+	public void applyPunishments(Player player) {
+		PvPlayer pvPlayer = get(player);
+		if (Variables.killOnLogout) {
+			pvPlayer.setPvpLogged(true);
+			ItemStack[] inventory = null;
+			ItemStack[] armor = null;
+			if (!Variables.dropInventory || !Variables.dropArmor) {
+				if (!Variables.dropInventory) {
+					inventory = player.getInventory().getContents();
+					player.getInventory().clear();
+				}
+				if (!Variables.dropArmor) {
+					armor = player.getInventory().getArmorContents();
+					player.getInventory().setArmorContents(null);
+				}
+			}
+			player.setHealth(0);
+			player.setHealth(20);
+			if (inventory != null)
+				player.getInventory().setContents(inventory);
+			if (armor != null)
+				player.getInventory().setArmorContents(armor);
+		} else if (!Variables.killOnLogout) {
+			if (Variables.dropInventory) {
+				fakeInventoryDrop(player, player.getInventory().getContents());
+				player.getInventory().clear();
+			}
+			if (Variables.dropArmor) {
+				fakeInventoryDrop(player, player.getInventory().getArmorContents());
+				player.getInventory().setArmorContents(null);
+			}
+			if (Variables.dropExp)
+				fakeExpDrop(player);
+		}
+		if (Variables.fineEnabled)
+			applyFine(player);
+	}
+
+	private void fakeInventoryDrop(Player player, ItemStack[] inventory) {
 		Location playerLocation = player.getLocation();
 		World playerWorld = player.getWorld();
 		for (ItemStack itemstack : inventory) {
@@ -115,7 +156,7 @@ public class PlayerHandler {
 		}
 	}
 
-	public void fakeExpDrop(Player player) {
+	private void fakeExpDrop(Player player) {
 		int expdropped = player.getLevel() * 7;
 		if (expdropped < 100)
 			player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(expdropped);
@@ -123,23 +164,6 @@ public class PlayerHandler {
 			player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(100);
 		player.setLevel(0);
 		player.setExp(0);
-	}
-
-	public void noDropKill(Player player) {
-		ItemStack[] inventory = new ItemStack[36];
-		ItemStack[] armor = null;
-		if (!Variables.dropInventory) {
-			inventory = player.getInventory().getContents();
-			player.getInventory().clear();
-		}
-		if (!Variables.dropArmor) {
-			armor = player.getInventory().getArmorContents();
-			player.getInventory().setArmorContents(null);
-		}
-		player.setHealth(0);
-		player.setHealth(20);
-		player.getInventory().setContents(inventory);
-		player.getInventory().setArmorContents(armor);
 	}
 
 	private boolean setupEconomy() {

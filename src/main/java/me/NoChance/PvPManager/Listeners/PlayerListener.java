@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -38,35 +37,9 @@ public class PlayerListener implements Listener {
 		if (pvPlayer.isInCombat()) {
 			if (Variables.broadcastPvpLog)
 				plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
-			if (Variables.punishmentsEnabled) {
-				boolean dead = false;
-				if (Variables.killOnLogout) {
-					pvPlayer.setPvpLogged(true);
-					if (!Variables.dropInventory || !Variables.dropArmor) {
-						ph.noDropKill(player);
-						dead = true;
-					}
-					if (Variables.dropExp) {
-						ph.fakeExpDrop(player);
-						if (!dead)
-							player.setHealth(0);
-					} else if (Variables.dropInventory && Variables.dropArmor && !Variables.dropExp)
-						player.setHealth(0);
-				} else if (!Variables.killOnLogout) {
-					if (Variables.dropInventory) {
-						ph.fakeInventoryDrop(player, player.getInventory().getContents());
-						player.getInventory().clear();
-					}
-					if (Variables.dropArmor) {
-						ph.fakeInventoryDrop(player, player.getInventory().getArmorContents());
-						player.getInventory().setArmorContents(null);
-					}
-					if (Variables.dropExp)
-						ph.fakeExpDrop(player);
-				}
-				if (Variables.fineEnabled)
-					ph.applyFine(player);
-			}
+			if (Variables.punishmentsEnabled)
+				ph.applyPunishments(player);
+
 			pvPlayer.setTagged(false);
 		}
 		ph.remove(pvPlayer);
@@ -76,11 +49,9 @@ public class PlayerListener implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
 		PvPlayer pvPlayer = ph.get(player);
-		if (pvPlayer.hasPvPLogged()) {
-			if (!Variables.dropExp) {
-				event.setKeepLevel(true);
-				event.setDroppedExp(0);
-			}
+		if (pvPlayer.hasPvPLogged() && !Variables.dropExp) {
+			event.setKeepLevel(true);
+			event.setDroppedExp(0);
 		}
 		if (pvPlayer.isInCombat())
 			pvPlayer.setTagged(false);
@@ -100,12 +71,10 @@ public class PlayerListener implements Listener {
 			if (player.getHealth() == player.getMaxHealth())
 				return;
 			if (player.getItemInHand().getType() == Material.MUSHROOM_SOUP) {
-				if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-					player.setHealth(player.getHealth() + Variables.soupHealth > player.getMaxHealth() ? player.getMaxHealth() : player
-							.getHealth() + Variables.soupHealth);
-					player.getItemInHand().setType(Material.BOWL);
-					return;
-				}
+				player.setHealth(player.getHealth() + Variables.soupHealth > player.getMaxHealth() ? player.getMaxHealth() : player
+						.getHealth() + Variables.soupHealth);
+				player.getItemInHand().setType(Material.BOWL);
+				return;
 			}
 		}
 	}
