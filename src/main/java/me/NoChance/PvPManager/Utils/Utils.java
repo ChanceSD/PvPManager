@@ -21,16 +21,8 @@ public class Utils {
 		Bukkit.getPluginManager().registerEvents(l, jp);
 	}
 
-	public static boolean isWGEnabled() {
-		return Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null;
-	}
-
 	public static boolean isVaultEnabled() {
 		return Bukkit.getServer().getPluginManager().getPlugin("Vault") != null;
-	}
-
-	public static boolean isTownyEnabled() {
-		return Bukkit.getServer().getPluginManager().getPlugin("Towny") != null;
 	}
 
 	public static boolean isDisguiseCraftEnabled() {
