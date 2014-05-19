@@ -42,7 +42,7 @@ public final class PvPManager extends JavaPlugin {
 		for (PvPlayer p : playerHandler.getPlayers().values()) {
 			if (p.isInCombat())
 				p.setTagged(false);
-			playerHandler.savePvPState(p.getName(), p.hasPvPEnabled());
+			playerHandler.savePvPState(p.getUUID(), p.hasPvPEnabled());
 		}
 	}
 

@@ -3,7 +3,7 @@ package me.NoChance.PvPManager.Managers;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
+import java.util.UUID;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
@@ -24,7 +24,7 @@ public class ConfigManager {
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		plugin.reloadConfig();
 		configVersion = plugin.getConfig().getInt("Config Version", 0);
-		if (configVersion < 17) {
+		if (configVersion < 18) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -54,14 +54,14 @@ public class ConfigManager {
 
 	private void updateDefaultConfig() {
 		this.config.set("Default PvP", Variables.defaultPvp);
-		this.config.set("Towny Support", Variables.townySupport);
 		this.config.set("PvP Blood", Variables.pvpBlood);
 		this.config.set("Auto Soup.Enabled", Variables.autoSoupEnabled);
 		this.config.set("Auto Soup.Health Gain", Variables.soupHealth);
 		this.config.set("Disable Fly", Variables.disableFly);
 		this.config.set("Disable GameMode", Variables.disableGamemode);
 		this.config.set("Disable Disguise", Variables.disableDisguise);
-		this.config.set("Disable Border Hopping", Variables.stopBorderHopping);
+		this.config.set("Ignore Zones For Tagged", Variables.stopBorderHopping);
+		this.config.set("Ignore No Damage Hits", Variables.ignoreNoDamageHits);
 
 		this.config.set("In Combat.Enabled", Variables.inCombatEnabled);
 		this.config.set("In Combat.Silent", Variables.inCombatSilent);
@@ -114,14 +114,15 @@ public class ConfigManager {
 		}
 	}
 
-	public void saveUser(String name, boolean save) {
+	public void saveUser(UUID uuid, boolean save) {
+		String id = uuid.toString();
 		List<String> userList = users.getStringList("players");
-		if (save && userList.contains(name) || !save && !userList.contains(name))
+		if (save && userList.contains(id) || !save && !userList.contains(id))
 			return;
-		if (!save && userList.contains(name))
-			userList.remove(name);
-		if (save && !userList.contains(name))
-			userList.add(name);
+		if (!save && userList.contains(id))
+			userList.remove(id);
+		if (save && !userList.contains(id))
+			userList.add(id);
 
 		users.set("players", userList);
 		try {
