@@ -45,12 +45,12 @@ public class Variables {
 	public static boolean toggleBroadcast;
 	public static boolean toggleOffOnDeath;
 	public static boolean blockEnderPearl;
-	public static boolean townySupport;
 	public static boolean autoSoupEnabled;
 	public static double soupHealth;
 	public static boolean inCombatSilent;
 	public static boolean configUpdated;
 	public static boolean stopBorderHopping;
+	public static boolean ignoreNoDamageHits;
 	public static String nameTagColor;
 	public static String locale;
 
@@ -95,13 +95,13 @@ public class Variables {
 		killAbuseTime = configManager.getConfig().getInt("Kill Abuse.Time Limit", 60);
 		killAbuseCommands = (List<String>) configManager.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
 		killAbuseEnabled = configManager.getConfig().getBoolean("Kill Abuse.Enabled", true);
-		townySupport = configManager.getConfig().getBoolean("Towny Support", true);
 		autoSoupEnabled = configManager.getConfig().getBoolean("Auto Soup.Enabled", false);
 		soupHealth = configManager.getConfig().getDouble("Auto Soup.Health Gain", 6);
 		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
-		stopBorderHopping = configManager.getConfig().getBoolean("Disable Border Hopping", true);
+		stopBorderHopping = configManager.getConfig().getBoolean("Ignore Zones For Tagged", true);
 		nameTagColor = configManager.getConfig().getString("In Combat.Name Tag Color", "&c");
 		locale = configManager.getConfig().getString("Locale", "en").toUpperCase();
+		ignoreNoDamageHits = configManager.getConfig().getBoolean("Ignore No Damage Hits", false);
 	}
 
 	public static void helpMenu(Player player) {
@@ -109,12 +109,10 @@ public class Variables {
 		player.sendMessage(ChatColor.GOLD + "/pvp " + ChatColor.WHITE + "| Set PvP Enabled or Disabled.");
 		player.sendMessage(ChatColor.GOLD + "/pvp status " + ChatColor.WHITE + "| Check What is your PvP Status.");
 		player.sendMessage(ChatColor.GOLD + "/pvp status <player> " + ChatColor.WHITE + "| Check Another Player PvP Status.");
-		player.sendMessage(ChatColor.GOLD + "/pvp disable protection " + ChatColor.WHITE + "| Disable Newbie Protection Before Expiration");
+		player.sendMessage(ChatColor.GOLD + "/pvp disable protection " + ChatColor.WHITE + "| Disable Newbie Protection");
 		player.sendMessage(ChatColor.GOLD + "/pm " + ChatColor.WHITE + "| Show This Help Page");
 		player.sendMessage(ChatColor.GOLD + "/pm update " + ChatColor.WHITE + "| Update to Latest Version");
 		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");
-		player.sendMessage(ChatColor.GOLD + "/pm pvpstart <time> [world] " + ChatColor.WHITE + "| Change the time PvP Starts in a world");
-		player.sendMessage(ChatColor.GOLD + "/pm pvpend <time> [world] " + ChatColor.WHITE + "| Change the time PvP Ends in a world");
 		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
 	}
 }

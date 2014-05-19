@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 17
+Config Version: 18
 # This changes the plugin's messages to the specified language.
 # Currently there is - en ru ch
 Locale: en
@@ -21,11 +21,13 @@ Auto Soup:
 
 # What should be disabled on PvP
 # Disabling disguises support DisguiseCraft and LibsDisguises
-# Disable Border Hopping - Makes players able to be attacked in safe zones if they are in combat
+# Ignore Zones For Tagged - Players can be attacked in safe zones if in combat(They can't run away from fight)
+# Ignore No Damage Hits - Plugin will ignore hits from snowballs, eggs and fishing rod
 Disable Fly: true
 Disable GameMode: true
 Disable Disguise: true
-Disable Border Hopping: true
+Ignore Zones For Tagged: true
+Ignore No Damage Hits: false
 
 # This section defines everything that will happen when a player is tagged in combat
 # Silent - Should messages be sent when players are in/out combat
@@ -94,9 +96,7 @@ Newbie Protection:
   Time(minutes): 5
 
 # Default PvP - All players should start with PvP ON(=true) or OFF(=false) by default(Only works for new players)
-# Towny Support - Let Towny override PvPManager(if using PvPTimer feature, change Towny PvP world flag to noPvP)
 Default PvP: true
-Towny Support: true
 
 # Should PvPManager be allowed to check for updates and tell you about them
 # Auto Update - After checking should we download it automatically for you?
