@@ -3,14 +3,14 @@ package me.NoChance.PvPManager;
 import me.NoChance.PvPManager.Commands.*;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Lib.CustomMetrics;
+import me.NoChance.PvPManager.Lib.Updater;
+import me.NoChance.PvPManager.Lib.Updater.UpdateResult;
 import me.NoChance.PvPManager.Listeners.*;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Others.CustomGraph;
-import me.NoChance.PvPManager.Others.Updater;
-import me.NoChance.PvPManager.Others.Updater.UpdateResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Utils;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -52,15 +52,14 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void startListeners() {
-		Utils.register(new DamageListener(this), this);
-		Utils.register(new PlayerListener(this), this);
+		registerListener(new PlayerListener(this));
 		if (Variables.toggleSignsEnabled) {
-			Utils.register(new SignListener(playerHandler), this);
+			registerListener(new SignListener(playerHandler));
 		}
 	}
 
 	private void startMetrics() {
-		new CustomGraph(this);
+		new CustomMetrics(this);
 	}
 
 	private void checkForUpdates() {
@@ -82,6 +81,10 @@ public final class PvPManager extends JavaPlugin {
 	public boolean downloadUpdate() {
 		Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, false);
 		return updater.getResult() == UpdateResult.SUCCESS;
+	}
+
+	public void registerListener(Listener listener) {
+		this.getServer().getPluginManager().registerEvents(listener, this);
 	}
 
 	public ConfigManager getConfigM() {

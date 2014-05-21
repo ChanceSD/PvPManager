@@ -21,11 +21,11 @@ public class CombatUtils {
 
 	private static PlayerHandler ph;
 
-	public CombatUtils(PvPManager pvpManager) {
-		ph = pvpManager.getPlayerHandler();
+	public CombatUtils(PvPManager plugin) {
+		ph = plugin.getPlayerHandler();
 		if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
-			Utils.register(new WGListener(), pvpManager);
-			pvpManager.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
+			plugin.registerListener(new WGListener());
+			plugin.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
 		}
 	}
 
@@ -72,5 +72,9 @@ public class CombatUtils {
 
 	public static CancelResult tryCancel(Player attacker, Player attacked) {
 		return tryCancel(ph.get(attacker), ph.get(attacked));
+	}
+	
+	public static boolean PMAllowed(String worldName) {
+		return !Variables.worldsExcluded.contains(worldName);
 	}
 }

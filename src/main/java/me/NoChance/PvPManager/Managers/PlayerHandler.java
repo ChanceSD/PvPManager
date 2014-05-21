@@ -2,7 +2,6 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
 import java.util.UUID;
-
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,7 +18,6 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
-import me.NoChance.PvPManager.Utils.Utils;
 
 public class PlayerHandler {
 
@@ -36,7 +34,7 @@ public class PlayerHandler {
 			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);
 		;
 		if (Variables.fineEnabled) {
-			if (Utils.isVaultEnabled()) {
+			if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
 				if (setupEconomy()) {
 					plugin.getLogger().info("Vault Found! Using it for fines punishment");
 				} else

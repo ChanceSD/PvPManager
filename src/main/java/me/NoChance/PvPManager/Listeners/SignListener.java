@@ -2,8 +2,7 @@ package me.NoChance.PvPManager.Listeners;
 
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Utils.Utils;
-
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,7 +24,7 @@ public class SignListener implements Listener {
 	@EventHandler
 	public void onSignPlace(SignChangeEvent e) {
 		Player p = e.getPlayer();
-		if (Utils.PMAllowed(p.getWorld().getName())) {
+		if (CombatUtils.PMAllowed(p.getWorld().getName())) {
 			if (p.hasPermission("pvpmanager.sign")) {
 				if (e.getLine(0).equalsIgnoreCase("[PvPManager]")) {
 					e.setLine(0, "§5[PvPManager]");
@@ -43,7 +42,7 @@ public class SignListener implements Listener {
 	@EventHandler
 	public void onSignInteract(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
-		if (Utils.PMAllowed(player.getWorld().getName())) {
+		if (CombatUtils.PMAllowed(player.getWorld().getName())) {
 			Block clicked = e.getClickedBlock();
 			if (clicked != null) {
 				if (clicked.getType().equals(Material.SIGN_POST) || clicked.getType().equals(Material.WALL_SIGN)) {
