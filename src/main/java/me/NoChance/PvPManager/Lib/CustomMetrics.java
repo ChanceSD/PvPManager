@@ -1,15 +1,15 @@
-package me.NoChance.PvPManager.Others;
+package me.NoChance.PvPManager.Lib;
 
 import java.io.IOException;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Others.Metrics.Graph;
+import me.NoChance.PvPManager.Lib.Metrics.Graph;
 
-public class CustomGraph {
+public class CustomMetrics {
 
 	private PvPManager plugin;
 
-	public CustomGraph(PvPManager plugin) {
+	public CustomMetrics(PvPManager plugin) {
 		this.plugin = plugin;
 		initMetrics();
 	}

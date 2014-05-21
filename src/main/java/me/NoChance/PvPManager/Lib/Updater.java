@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Others;
+package me.NoChance.PvPManager.Lib;
 
 import java.io.*;
 import java.net.MalformedURLException;

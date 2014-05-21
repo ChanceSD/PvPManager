@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Others;
+package me.NoChance.PvPManager.Lib;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
