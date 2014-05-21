@@ -45,6 +45,20 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>Factions</artifactId>
+			<version>2.4.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/repo/Factions.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>mcore</artifactId>
+			<version>7.2.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/repo/mcore.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
 			<version>1.2.30</version>
@@ -134,18 +148,44 @@
 			<version>4.11</version>
 			<type>jar</type>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>hamcrest-core</artifactId>
+					<groupId>org.hamcrest</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
 			<version>${powermock.version}</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>javassist</artifactId>
+					<groupId>org.javassist</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>powermock-reflect</artifactId>
+					<groupId>org.powermock</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito</artifactId>
 			<version>${powermock.version}</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>powermock-core</artifactId>
+					<groupId>org.powermock</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>powermock-reflect</artifactId>
+					<groupId>org.powermock</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>
