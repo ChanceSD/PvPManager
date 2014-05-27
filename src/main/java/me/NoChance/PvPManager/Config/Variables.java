@@ -52,6 +52,7 @@ public class Variables {
 	public static boolean stopBorderHopping;
 	public static boolean ignoreNoDamageHits;
 	public static String nameTagColor;
+	public static boolean useNameTag;
 	public static String locale;
 
 	public Variables(ConfigManager configM) {
@@ -100,6 +101,7 @@ public class Variables {
 		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
 		stopBorderHopping = configManager.getConfig().getBoolean("Ignore Zones For Tagged", true);
 		nameTagColor = configManager.getConfig().getString("In Combat.Name Tag Color", "&c");
+		useNameTag = nameTagColor.equalsIgnoreCase("none") ? false: true;
 		locale = configManager.getConfig().getString("Locale", "en").toUpperCase();
 		ignoreNoDamageHits = configManager.getConfig().getBoolean("Ignore No Damage Hits", false);
 	}

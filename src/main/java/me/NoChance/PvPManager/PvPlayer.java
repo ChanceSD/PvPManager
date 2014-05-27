@@ -10,7 +10,6 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.Team;
 
 public class PvPlayer {
 
@@ -25,14 +24,15 @@ public class PvPlayer {
 	private BukkitTask tagTask;
 	private HashMap<String, Integer> victim = new HashMap<String, Integer>();
 	private PvPManager plugin;
-	private Team previousTeam;
-	public static Team inCombatTeam;
+	private TeamProfile teamProfile;
 
 	public PvPlayer(Player player, PvPManager plugin) {
 		this.name = player.getName();
 		this.id = player.getUniqueId();
 		this.plugin = plugin;
 		this.newbieTask = new NewbieTask(this);
+		if (Variables.useNameTag)
+			teamProfile = new TeamProfile(this);
 		if (!player.hasPlayedBefore()) {
 			this.pvpState = Variables.defaultPvp;
 			if (Variables.newbieProtectionEnabled)
@@ -123,7 +123,6 @@ public class PvPlayer {
 	}
 
 	public void setTagged(boolean tag) {
-		Player p = getPlayer();
 		if (tag) {
 			if (getPlayer().hasPermission("pvpmanager.nocombat"))
 				return;
@@ -132,19 +131,16 @@ public class PvPlayer {
 				return;
 			}
 			tagTask = new TagTask(this).runTaskLater(plugin, Variables.timeInCombat * 20);
-			if (inCombatTeam != null) {
-				previousTeam = p.getScoreboard().getPlayerTeam(p);
-				inCombatTeam.addPlayer(p);
-			}
+			if (Variables.useNameTag)
+				teamProfile.setInCombat();
+
 			if (!Variables.inCombatSilent)
 				message(Messages.You_Are_InCombat);
 		} else {
 			if (isOnline()) {
-				if (inCombatTeam != null) {
-					inCombatTeam.removePlayer(p);
-					if (previousTeam != null)
-						previousTeam.addPlayer(p);
-				}
+				if (Variables.useNameTag)
+					teamProfile.restoreTeam();
+
 				if (!Variables.inCombatSilent)
 					message(Messages.Out_Of_Combat);
 			}

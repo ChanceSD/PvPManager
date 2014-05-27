@@ -3,7 +3,6 @@ package me.NoChance.PvPManager.Managers;
 import java.util.HashMap;
 import java.util.UUID;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -13,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
@@ -32,7 +30,6 @@ public class PlayerHandler {
 		this.configManager = plugin.getConfigM();
 		if (Variables.killAbuseEnabled)
 			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);
-		;
 		if (Variables.fineEnabled) {
 			if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
 				if (setupEconomy()) {
@@ -44,7 +41,8 @@ public class PlayerHandler {
 				Variables.fineEnabled = false;
 			}
 		}
-		setupScoreboardTeam();
+		if (Variables.useNameTag)
+			mainScoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
 		addOnlinePlayers();
 	}
 
@@ -54,30 +52,14 @@ public class PlayerHandler {
 		}
 	}
 
-	private void setupScoreboardTeam() {
-		Team team = null;
-		if (!Variables.nameTagColor.equalsIgnoreCase("none")) {
-			mainScoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
-			if (mainScoreboard.getTeam("InCombat") == null)
-				team = mainScoreboard.registerNewTeam("InCombat");
-			else
-				team = mainScoreboard.getTeam("InCombat");
-			team.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.nameTagColor));
-		}
-		PvPlayer.inCombatTeam = team;
-	}
-
 	public PvPlayer get(Player player) {
 		String name = player.getName();
-		if (players.containsKey(name))
-			return players.get(name);
-		else
-			return add(player);
+		return players.containsKey(name) ? players.get(name) : add(player);
 	}
 
 	private PvPlayer add(Player player) {
 		PvPlayer pvPlayer = new PvPlayer(player, plugin);
-		if (mainScoreboard != null)
+		if (Variables.useNameTag)
 			player.setScoreboard(mainScoreboard);
 		players.put(player.getName(), pvPlayer);
 		return pvPlayer;
@@ -175,10 +157,6 @@ public class PlayerHandler {
 
 	public HashMap<String, PvPlayer> getPlayers() {
 		return players;
-	}
-
-	public Scoreboard getMainScoreboard() {
-		return mainScoreboard;
 	}
 
 }
