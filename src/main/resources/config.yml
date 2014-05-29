@@ -63,6 +63,9 @@ In Combat:
       Enabled: false
       Amount: 10.0
 
+# After respawn, how many seconds should players be protected (0 to disable)
+Respawn Protection: 0
+
 # Section for PvP Toggle command(/pvp)
 # Broadcast - Broadcast a message when players toggle PvP
 # Cooldown(seconds) - How many seconds players have to wait until they can use /pvp again

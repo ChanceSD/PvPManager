@@ -80,6 +80,8 @@ public class ConfigManager {
 		this.config.set("In Combat.Punishments.Fine.Enabled", Variables.fineEnabled);
 		this.config.set("In Combat.Punishments.Fine.Amount", Variables.fineAmount);
 
+		this.config.set("Respawn Protection", Variables.respawnProtection);
+
 		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.toggleCooldown);
 		this.config.set("PvP Toggle.Broadcast", Variables.toggleBroadcast);
 		this.config.set("PvP Toggle.Toggle Off on Death", Variables.toggleOffOnDeath);

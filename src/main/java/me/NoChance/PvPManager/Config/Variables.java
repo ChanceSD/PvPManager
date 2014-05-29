@@ -54,6 +54,7 @@ public class Variables {
 	public static String nameTagColor;
 	public static boolean useNameTag;
 	public static String locale;
+	public static int respawnProtection;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -104,6 +105,7 @@ public class Variables {
 		useNameTag = nameTagColor.equalsIgnoreCase("none") ? false: true;
 		locale = configManager.getConfig().getString("Locale", "en").toUpperCase();
 		ignoreNoDamageHits = configManager.getConfig().getBoolean("Ignore No Damage Hits", false);
+		respawnProtection = configManager.getConfig().getInt("Respawn Protection");
 	}
 
 	public static void helpMenu(Player player) {
