@@ -17,7 +17,7 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 public class CombatUtils {
 
 	public enum CancelResult {
-		NEWBIE, NEWBIE_OTHER, PVPDISABLED, PVPDISABLED_OTHER, FAIL, FAIL_OVERRIDE
+		NEWBIE, NEWBIE_OTHER, PVPDISABLED, PVPDISABLED_OTHER, RESPAWN_PROTECTION, FAIL, FAIL_OVERRIDE
 	}
 
 	private static PlayerHandler ph;
@@ -30,8 +30,8 @@ public class CombatUtils {
 		}
 	}
 
-	public static boolean checkToggleCooldown(long toggleTime) {
-		return System.currentTimeMillis() - toggleTime < Variables.toggleCooldown * 1000 ? false : true;
+	public static boolean hasTimePassed(long toggleTime, int cooldown) {
+		return System.currentTimeMillis() - toggleTime < cooldown * 1000 ? false : true;
 	}
 
 	public static boolean isPvP(EntityDamageByEntityEvent event) {
@@ -59,6 +59,8 @@ public class CombatUtils {
 	public static CancelResult tryCancel(PvPlayer attacker, PvPlayer attacked) {
 		if (attacker.hasOverride() || Variables.stopBorderHopping && canAttack(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
+		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
+			return CancelResult.RESPAWN_PROTECTION;
 		if (attacked.isNewbie())
 			return CancelResult.NEWBIE_OTHER;
 		if (attacker.isNewbie())

@@ -63,7 +63,7 @@ public class PvP implements CommandExecutor {
 				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.toggleSignsEnabled)
 						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.toggleSignsEnabled && !Variables.disableToggleCommand))) {
 					if (args[0].equalsIgnoreCase("off")) {
-						if (CombatUtils.checkToggleCooldown(pvpPlayer.getToggleTime())) {
+						if (CombatUtils.hasTimePassed(pvpPlayer.getToggleTime(), Variables.toggleCooldown)) {
 							if (pvpPlayer.hasPvPEnabled()) {
 								pvpPlayer.setPvP(false);
 								return true;
@@ -74,7 +74,7 @@ public class PvP implements CommandExecutor {
 						}
 						return false;
 					} else if (args[0].equalsIgnoreCase("on")) {
-						if (CombatUtils.checkToggleCooldown(pvpPlayer.getToggleTime())) {
+						if (CombatUtils.hasTimePassed(pvpPlayer.getToggleTime(), Variables.toggleCooldown)) {
 							if (!pvpPlayer.hasPvPEnabled()) {
 								pvpPlayer.setPvP(true);
 								return true;
@@ -186,9 +186,9 @@ public class PvP implements CommandExecutor {
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	private boolean isOnline(String name){
+	private boolean isOnline(String name) {
 		return Bukkit.getPlayer(name) != null;
 	}
 }

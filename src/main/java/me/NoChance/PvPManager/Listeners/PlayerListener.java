@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
@@ -67,6 +68,8 @@ public class PlayerListener implements Listener {
 			break;
 		case PVPDISABLED_OTHER:
 			attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
+			break;
+		default:
 			break;
 		}
 	}
@@ -159,6 +162,13 @@ public class PlayerListener implements Listener {
 					event.getPlayer().sendMessage(Messages.Command_Denied_InCombat);
 				}
 			}
+		}
+	}
+
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		if (Variables.respawnProtection != 0) {
+			PvPlayer player = ph.get(event.getPlayer());
+			player.setRespawnTime(System.currentTimeMillis());
 		}
 	}
 

@@ -20,6 +20,7 @@ public class PvPlayer {
 	private boolean pvpState;
 	private boolean pvpLogged;
 	private long toggleTime;
+	private long respawnTime;
 	private NewbieTask newbieTask;
 	private BukkitTask tagTask;
 	private HashMap<String, Integer> victim = new HashMap<String, Integer>();
@@ -69,7 +70,7 @@ public class PvPlayer {
 	}
 
 	public void togglePvP() {
-		if (!CombatUtils.checkToggleCooldown(toggleTime)) {
+		if (!CombatUtils.hasTimePassed(toggleTime, Variables.toggleCooldown)) {
 			message(Messages.Error_PvP_Cooldown);
 			return;
 		} else {
@@ -195,5 +196,19 @@ public class PvPlayer {
 
 	public boolean isVictim(String victimName) {
 		return victim.containsKey(victimName);
+	}
+
+	public boolean hasRespawnProtection() {
+		if (respawnTime == 0)
+			return false;
+		if (CombatUtils.hasTimePassed(respawnTime, Variables.respawnProtection)) {
+			respawnTime = 0;
+			return false;
+		}
+		return true;
+	}
+
+	public void setRespawnTime(long respawnTime) {
+		this.respawnTime = respawnTime;
 	}
 }
