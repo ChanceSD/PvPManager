@@ -5,10 +5,23 @@
 	<artifactId>PvPManager</artifactId>
 	<packaging>jar</packaging>
 	<version>2.1.5</version>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<powermock.version>1.5.4</powermock.version>
 	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>maven.elmakers.com</id>
+			<url>http://maven.elmakers.com/repository/</url>
+		</repository>
+		<snapshotRepository>
+			<id>maven.elmakers.com</id>
+			<url>http://maven.elmakers.com/repository/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<repositories>
 		<repository>
 			<id>bukkit-repo</id>
@@ -31,6 +44,7 @@
 			<url>http://repo.md-5.net/content/groups/public/</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>pgDev</groupId>
