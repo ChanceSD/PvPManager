@@ -113,11 +113,12 @@ public class PvPlayer {
 			message(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
 			newbieTask.runTaskLater(plugin, Variables.newbieProtectionTime * 1200);
 		} else {
-			if (Bukkit.getServer().getScheduler().isQueued(newbieTask.getTaskId())) {
+			if (Bukkit.getServer().getScheduler().isCurrentlyRunning(newbieTask.getTaskId()))
+				message(Messages.Newbie_Protection_End);
+			else {
 				newbieTask.cancel();
 				message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
-			} else
-				message(Messages.Newbie_Protection_End);
+			}
 		}
 		this.newbie = newbie;
 	}
