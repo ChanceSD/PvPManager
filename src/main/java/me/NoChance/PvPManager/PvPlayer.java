@@ -38,7 +38,7 @@ public class PvPlayer {
 			this.pvpState = Variables.defaultPvp;
 			if (Variables.newbieProtectionEnabled)
 				setNewbie(true);
-		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(id))
+		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(id.toString()))
 			this.pvpState = true;
 		if (player.hasPermission("pvpmanager.nopvp"))
 			this.pvpState = false;
