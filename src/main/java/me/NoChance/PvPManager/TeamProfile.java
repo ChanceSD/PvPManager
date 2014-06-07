@@ -17,7 +17,10 @@ public class TeamProfile {
 		scoreboard = p.getPlayer().getScoreboard();
 		previousTeam = scoreboard.getPlayerTeam(p.getPlayer());
 		if (inCombat == null) {
-			inCombat = scoreboard.registerNewTeam("InCombat");
+			if (scoreboard.getTeam("InCombat") != null)
+				inCombat = scoreboard.getTeam("InCombat");
+			else
+				inCombat = scoreboard.registerNewTeam("InCombat");
 			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.nameTagColor));
 		}
 	}
