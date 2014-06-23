@@ -50,7 +50,7 @@ public class PvP implements CommandExecutor {
 					player.sendMessage(ChatColor.DARK_GRAY + pvpList());
 					return true;
 				}
-				if (args[0].equalsIgnoreCase("info") && player.hasPermission("pvpmanager.debug")) {
+				if (args[0].equalsIgnoreCase("info") && player.hasPermission("pvpmanager.info")) {
 					player.sendMessage(ChatColor.YELLOW + "§lPvPManager Info");
 					player.sendMessage(ChatColor.GREEN + "- Name: §f" + pvpPlayer.getName());
 					player.sendMessage(ChatColor.GREEN + "- PvP Status: §f" + pvpPlayer.hasPvPEnabled());

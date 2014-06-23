@@ -55,6 +55,10 @@ public class Variables {
 	public static boolean useNameTag;
 	public static String locale;
 	public static int respawnProtection;
+	public static boolean playerKillsEnabled;
+	public static int moneyReward;
+	public static boolean commandsOnKillEnabled;
+	public static List<String> commandsOnKill = Arrays.asList("heal <player>");
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -102,15 +106,20 @@ public class Variables {
 		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
 		stopBorderHopping = configManager.getConfig().getBoolean("Ignore Zones For Tagged", true);
 		nameTagColor = configManager.getConfig().getString("In Combat.Name Tag Color", "&c");
-		useNameTag = nameTagColor.equalsIgnoreCase("none") ? false: true;
+		useNameTag = nameTagColor.equalsIgnoreCase("none") ? false : true;
 		locale = configManager.getConfig().getString("Locale", "en").toUpperCase();
 		ignoreNoDamageHits = configManager.getConfig().getBoolean("Ignore No Damage Hits", false);
-		respawnProtection = configManager.getConfig().getInt("Respawn Protection");
+		respawnProtection = configManager.getConfig().getInt("Respawn Protection", 5);
+		playerKillsEnabled = configManager.getConfig().getBoolean("Player Kills.Enabled", true);
+		moneyReward = configManager.getConfig().getInt("Player Kills.Money Reward", 10);
+		commandsOnKillEnabled = configManager.getConfig().getBoolean("Player Kills.Commands On Kill.Enabled", false);
+		commandsOnKill = (List<String>) configManager.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
 	}
 
 	public static void helpMenu(Player player) {
 		player.sendMessage(ChatColor.GOLD + "-------------- PvPManager Help Page --------------");
 		player.sendMessage(ChatColor.GOLD + "/pvp " + ChatColor.WHITE + "| Set PvP Enabled or Disabled.");
+		player.sendMessage(ChatColor.GOLD + "/pvp info " + ChatColor.WHITE + "| Check Your Player Info");
 		player.sendMessage(ChatColor.GOLD + "/pvp status " + ChatColor.WHITE + "| Check What is your PvP Status.");
 		player.sendMessage(ChatColor.GOLD + "/pvp status <player> " + ChatColor.WHITE + "| Check Another Player PvP Status.");
 		player.sendMessage(ChatColor.GOLD + "/pvp disable protection " + ChatColor.WHITE + "| Disable Newbie Protection");
