@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 18
+Config Version: 19
 # This changes the plugin's messages to the specified language.
 # Currently there is - en ru ch
 Locale: en
@@ -63,8 +63,19 @@ In Combat:
       Enabled: false
       Amount: 10.0
 
+# Section with settings triggered when a player kills another player
+# Money Reward - Amount of money player gets as reward (0 to disable)
+# Commands On Kill - Commands to execute on kill (<player> is the killer)
+Player Kills:
+  Enabled: true
+  Money Reward: 10
+  Commands On Kill:
+    Enabled: false
+    Commands:
+      - heal <player>
+
 # After respawn, how many seconds should players be protected (0 to disable)
-Respawn Protection: 0
+Respawn Protection: 5
 
 # Section for PvP Toggle command(/pvp)
 # Broadcast - Broadcast a message when players toggle PvP
@@ -83,8 +94,8 @@ Toggle Signs:
   Disable Toggle Command: false
 
 # This feature prevents player abuse by killing the same player several times to rise in rank or get rewards
-# Example - If a player X kills player Y more than 5 times, it blocks the next damage and executes the commands 
-# defined(like kicking, jail, whatever you decide). In this case, it would check every 60 seconds for abusers
+# Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
+# In this case, it would check every 60 seconds for abusers
 Kill Abuse:
   Enabled: true
   Max Kills: 5

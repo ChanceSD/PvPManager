@@ -24,7 +24,7 @@ public class ConfigManager {
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		plugin.reloadConfig();
 		configVersion = plugin.getConfig().getInt("Config Version", 0);
-		if (configVersion < 18) {
+		if (configVersion < 19) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -80,6 +80,11 @@ public class ConfigManager {
 		this.config.set("In Combat.Punishments.Fine.Enabled", Variables.fineEnabled);
 		this.config.set("In Combat.Punishments.Fine.Amount", Variables.fineAmount);
 
+		this.config.set("Player Kills.Enabled", Variables.playerKillsEnabled);
+		this.config.set("Player Kills.Money Reward", Variables.moneyReward);
+		this.config.set("Player Kills.Commands On Kill.Enabled", Variables.commandsOnKillEnabled);
+		this.config.set("Player Kills.Commands On Kill.Commands", Variables.commandsOnKill);
+		
 		this.config.set("Respawn Protection", Variables.respawnProtection);
 
 		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.toggleCooldown);

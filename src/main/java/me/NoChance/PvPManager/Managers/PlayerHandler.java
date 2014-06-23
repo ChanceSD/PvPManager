@@ -89,6 +89,15 @@ public class PlayerHandler {
 		}
 	}
 
+	public void giveReward(Player p) {
+		if (economy != null) {
+			economy.depositPlayer(p.getName(), Variables.moneyReward);
+		} else {
+			plugin.getLogger().severe("Tried to give reward but no Economy plugin found!");
+			plugin.getLogger().severe("Disable money reward on kill or get an Economy plugin to fix this error");
+		}
+	}
+
 	public void applyPunishments(Player player) {
 		PvPlayer pvPlayer = get(player);
 		if (Variables.killOnLogout) {

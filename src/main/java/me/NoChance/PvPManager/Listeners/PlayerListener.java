@@ -8,6 +8,8 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils.CancelResult;
 import me.libraryaddict.disguise.DisguiseAPI;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -99,9 +101,19 @@ public class PlayerListener implements Listener {
 		}
 		if (pvPlayer.isInCombat())
 			pvPlayer.setTagged(false);
-		if (Variables.killAbuseEnabled && player.getKiller() != null && !player.getKiller().hasMetadata("NPC")) {
-			PvPlayer killer = ph.get(player.getKiller());
-			killer.addVictim(player.getName());
+		if (player.getKiller() != null && !player.getKiller().hasMetadata("NPC")) {
+			if (Variables.killAbuseEnabled) {
+				PvPlayer killer = ph.get(player.getKiller());
+				killer.addVictim(player.getName());
+			}
+			if (Variables.playerKillsEnabled) {
+				if (Variables.moneyReward > 0)
+					ph.giveReward(player);
+				if (Variables.commandsOnKillEnabled)
+					for (String command : Variables.commandsOnKill) {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", pvPlayer.getName()));
+					}
+			}
 		}
 		if (Variables.toggleOffOnDeath && player.hasPermission("pvpmanager.pvpstatus.change") && pvPlayer.hasPvPEnabled())
 			pvPlayer.setPvP(false);
@@ -123,7 +135,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		ph.get(player);

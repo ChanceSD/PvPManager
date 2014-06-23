@@ -24,6 +24,7 @@ public class Config extends YamlConfiguration {
 	private FileConfiguration config;
 	private PvPManager plugin;
 
+	@SuppressWarnings("deprecation")
 	public Config(PvPManager plugin, String name) {
 		this.plugin = plugin;
 		File file = new File(plugin.getDataFolder(), name);
