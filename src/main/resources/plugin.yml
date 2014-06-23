@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 2.1.5
+version: 2.2
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions]
@@ -29,6 +29,7 @@ permissions:
        pvpmanager.user: true
        pvpmanager.pvptimer: true
        pvpmanager.sign: true
+       pvpmanager.info: true
    pvpmanager.user:
      description: Gives access to PvPManager features that i think would be appropriate for a user
      default: false
@@ -73,4 +74,7 @@ permissions:
      default: false
    pvpmanager.menu:
      description: Allows access to PvPManager help menu
+     default: false
+   pvpmanager.info:
+     description: Allows access to PvPManager info command
      default: false
