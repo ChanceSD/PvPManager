@@ -30,14 +30,14 @@ public class PlayerHandler {
 		this.configManager = plugin.getConfigM();
 		if (Variables.killAbuseEnabled)
 			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);
-		if (Variables.fineEnabled) {
+		if (Variables.fineEnabled || Variables.playerKillsEnabled) {
 			if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
 				if (setupEconomy()) {
-					plugin.getLogger().info("Vault Found! Using it for fines punishment");
+					plugin.getLogger().info("Vault Found! Using it for currency related features");
 				} else
-					plugin.getLogger().severe("Error! No Economy plugin found for fines feature!");
+					plugin.getLogger().severe("Error! No Economy plugin found");
 			} else {
-				plugin.getLogger().severe("Vault not found! Disabling fines feature...");
+				plugin.getLogger().severe("Vault not found! Features requiring Vault won't work!");
 				Variables.fineEnabled = false;
 			}
 		}
