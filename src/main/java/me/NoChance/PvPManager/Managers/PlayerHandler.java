@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
@@ -23,7 +22,6 @@ public class PlayerHandler {
 	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
-	private Scoreboard mainScoreboard;
 
 	public PlayerHandler(PvPManager plugin) {
 		this.plugin = plugin;
@@ -41,8 +39,6 @@ public class PlayerHandler {
 				Variables.fineEnabled = false;
 			}
 		}
-		if (Variables.useNameTag)
-			mainScoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
 		addOnlinePlayers();
 	}
 
@@ -59,8 +55,6 @@ public class PlayerHandler {
 
 	private PvPlayer add(Player player) {
 		PvPlayer pvPlayer = new PvPlayer(player, plugin);
-		if (Variables.useNameTag)
-			player.setScoreboard(mainScoreboard);
 		players.put(player.getName(), pvPlayer);
 		return pvPlayer;
 	}
