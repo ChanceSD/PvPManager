@@ -140,8 +140,6 @@ public class ConfigManager {
 	}
 
 	public FileConfiguration getConfig() {
-		if (configVersion < 9)
-			return getPlugin().getConfig();
 		return config;
 	}
 
