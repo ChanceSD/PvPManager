@@ -102,16 +102,15 @@ public class PlayerListener implements Listener {
 		if (pvPlayer.isInCombat())
 			pvPlayer.setTagged(false);
 		if (player.getKiller() != null && !player.getKiller().hasMetadata("NPC")) {
-			if (Variables.killAbuseEnabled) {
-				PvPlayer killer = ph.get(player.getKiller());
+			PvPlayer killer = ph.get(player.getKiller());
+			if (Variables.killAbuseEnabled)
 				killer.addVictim(player.getName());
-			}
 			if (Variables.playerKillsEnabled) {
 				if (Variables.moneyReward > 0)
-					ph.giveReward(player);
+					ph.giveReward(killer.getName());
 				if (Variables.commandsOnKillEnabled)
 					for (String command : Variables.commandsOnKill) {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", pvPlayer.getName()));
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()));
 					}
 			}
 		}
