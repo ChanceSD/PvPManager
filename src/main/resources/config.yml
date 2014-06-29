@@ -68,7 +68,7 @@ In Combat:
 # Commands On Kill - Commands to execute on kill (<player> is the killer)
 Player Kills:
   Enabled: true
-  Money Reward: 10
+  Money Reward: 0
   Commands On Kill:
     Enabled: false
     Commands:
