@@ -1,12 +1,11 @@
 package me.NoChance.PvPManager.Utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.projectiles.ProjectileSource;
 import com.massivecraft.factions.entity.UPlayer;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
@@ -37,22 +36,20 @@ public class CombatUtils {
 	public static boolean isPvP(EntityDamageByEntityEvent event) {
 		Entity attacker = event.getDamager();
 		Entity defender = event.getEntity();
-		if (attacker instanceof Player && defender instanceof Player) {
-			if (attacker.hasMetadata("NPC") || defender.hasMetadata("NPC"))
-				return false;
-			return true;
-		}
-		if (defender instanceof Player && attacker instanceof Projectile) {
-			Projectile proj = (Projectile) attacker;
-			if (Variables.ignoreNoDamageHits && !(proj instanceof Arrow) && !(proj instanceof ThrownPotion))
-				return false;
-			if (proj.getShooter() instanceof Player && !proj.getShooter().equals(defender)) {
-				if (defender.hasMetadata("NPC"))
-					return false;
-				return true;
-			}
 
+		if (defender instanceof Player && !defender.hasMetadata("NPC")) {
+			if (attacker instanceof Player && !attacker.hasMetadata("NPC"))
+				return true;
+			if (attacker instanceof Projectile) {
+				ProjectileSource shooter = ((Projectile) attacker).getShooter();
+				if (shooter instanceof Player && !shooter.equals(defender) && !((Entity) shooter).hasMetadata("NPC")) {
+					if (Variables.ignoreNoDamageHits && event.getDamage() == 0)
+						return false;
+					return true;
+				}
+			}
 		}
+
 		return false;
 	}
 
