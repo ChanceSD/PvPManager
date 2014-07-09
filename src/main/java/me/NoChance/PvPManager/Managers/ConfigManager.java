@@ -22,23 +22,8 @@ public class ConfigManager {
 		this.plugin = plugin;
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
-		plugin.reloadConfig();
 		configVersion = plugin.getConfig().getInt("Config Version", 0);
-		if (configVersion < 19) {
-			File configFile = new File(plugin.getDataFolder(), "config.yml");
-			if (configFile.exists()) {
-				config = new Config(plugin, "config.yml");
-				new Variables(this);
-				configFile.delete();
-				config = new Config(plugin, "config.yml");
-				updateDefaultConfig();
-				Variables.configUpdated = true;
-				configVersion = getConfig().getInt("Config Version");
-			} else
-				plugin.getLogger().info("New Config File Created Successfully!");
-		}
-		config = new Config(plugin, "config.yml");
-		new Variables(this);
+		loadConfig();
 		loadUsers();
 	}
 
@@ -84,7 +69,7 @@ public class ConfigManager {
 		this.config.set("Player Kills.Money Reward", Variables.moneyReward);
 		this.config.set("Player Kills.Commands On Kill.Enabled", Variables.commandsOnKillEnabled);
 		this.config.set("Player Kills.Commands On Kill.Commands", Variables.commandsOnKill);
-		
+
 		this.config.set("Respawn Protection", Variables.respawnProtection);
 
 		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.toggleCooldown);
@@ -109,6 +94,25 @@ public class ConfigManager {
 		this.config.saveConfig();
 	}
 
+	private void loadConfig() {
+		if (configVersion < 19) {
+			File configFile = new File(plugin.getDataFolder(), "config.yml");
+			if (configFile.exists()) {
+				config = new Config(plugin, "config.yml");
+				new Variables(this);
+				configFile.delete();
+				config = new Config(plugin, "config.yml");
+				updateDefaultConfig();
+				Variables.configUpdated = true;
+				configVersion = config.getInt("Config Version");
+			} else
+				plugin.getLogger().info("New Config File Created Successfully!");
+		} else {
+			config = new Config(plugin, "config.yml");
+			new Variables(this);
+		}
+	}
+
 	private void loadUsers() {
 		try {
 			if (!usersFile.exists()) {
@@ -118,6 +122,8 @@ public class ConfigManager {
 			}
 			users.load(usersFile);
 		} catch (Exception e) {
+			plugin.getLogger().severe("Error loading users file! Error: ");
+			e.printStackTrace();
 		}
 	}
 
@@ -147,7 +153,4 @@ public class ConfigManager {
 		return users;
 	}
 
-	public PvPManager getPlugin() {
-		return plugin;
-	}
 }

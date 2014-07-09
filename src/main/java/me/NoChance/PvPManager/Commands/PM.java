@@ -38,11 +38,11 @@ public class PM implements CommandExecutor {
 					if (Variables.updateCheck) {
 						if (Variables.update) {
 							if (plugin.downloadUpdate())
-								player.sendMessage("§2Update Successful. On next restart you will have §e" + Variables.newVersion);
+								player.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.newVersion);
 							else
 								player.sendMessage("§4An error ocurred while updating, please report to the developer");
 						} else
-							player.sendMessage("§2You have the latest version: §ePvPManager v" + Variables.currentVersion);
+							player.sendMessage("§2You have the latest version: §ePvPManager v" + Messages.currentVersion);
 					} else
 						player.sendMessage("§4Update Checking is disabled, enable it in the Config file");
 					return true;

@@ -46,10 +46,13 @@ public class Messages {
 	public static String PvPToggle_Off_Broadcast;
 	public static String EnderPearl_Blocked_InCombat;
 	public static String Error_Command;
+	public static String currentVersion;
+	public static String newVersion;
 	private Locale locale;
 
 	public Messages(PvPManager plugin) {
 		this.plugin = plugin;
+		currentVersion = plugin.getDescription().getVersion();
 		try {
 			this.locale = Locale.valueOf(Variables.locale);
 		} catch (IllegalArgumentException e) {
@@ -159,8 +162,8 @@ public class Messages {
 	}
 
 	public static void updateMessage(Player player) {
-		player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + Variables.newVersion);
-		player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v" + Variables.currentVersion);
+		player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + newVersion);
+		player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v" + currentVersion);
 		player.sendMessage("§2Go to this page to download the latest version:");
 		player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 		player.sendMessage("§2Use §e/pm update §2to update automatically");

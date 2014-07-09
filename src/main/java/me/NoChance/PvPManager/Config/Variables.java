@@ -32,8 +32,6 @@ public class Variables {
 	public static boolean pvpBlood;
 	public static boolean disableGamemode;
 	public static boolean update = false;
-	public static String newVersion;
-	public static String currentVersion;
 	public static List<String> commandsAllowed = Arrays.asList(new String[] { "tell", "money" });
 	public static int toggleCooldown;
 	public static boolean defaultPvp;
@@ -91,7 +89,6 @@ public class Variables {
 		pvpBlood = configManager.getConfig().getBoolean("PvP Blood", true);
 		disableGamemode = configManager.getConfig().getBoolean("Disable GameMode", true);
 		commandsAllowed = (List<String>) configManager.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
-		currentVersion = configManager.getPlugin().getDescription().getVersion();
 		toggleCooldown = configManager.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
 		toggleBroadcast = configManager.getConfig().getBoolean("PvP Toggle.Broadcast", false);
 		toggleOffOnDeath = configManager.getConfig().getBoolean("PvP Toggle.Toggle Off on Death", false);

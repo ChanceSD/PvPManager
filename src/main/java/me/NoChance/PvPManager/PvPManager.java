@@ -66,8 +66,8 @@ public final class PvPManager extends JavaPlugin {
 		getLogger().info("Checking for updates...");
 		Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
-			Variables.newVersion = updater.getLatestName();
-			getLogger().info("Update Available: " + Variables.newVersion);
+			Messages.newVersion = updater.getLatestName();
+			getLogger().info("Update Available: " + Messages.newVersion);
 			if (Variables.autoUpdate) {
 				downloadUpdate();
 				return;
