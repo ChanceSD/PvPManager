@@ -10,6 +10,8 @@ public class WGListener implements Listener {
 
 	@EventHandler
 	public void onWGPvPCancel(DisallowedPVPEvent event) {
+		if (event.getAttacker().hasMetadata("NPC") || event.getDefender().hasMetadata("NPC"))
+			return;
 		if (CombatUtils.tryCancel(event.getAttacker(), event.getDefender()) == CancelResult.FAIL_OVERRIDE)
 			event.setCancelled(true);
 	}
