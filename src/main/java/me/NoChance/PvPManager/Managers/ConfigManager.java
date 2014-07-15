@@ -27,16 +27,6 @@ public class ConfigManager {
 		loadUsers();
 	}
 
-	// If PvPTimer.yml ever needs to be updated
-	// private void updatePvpTimerConfig() {
-	// pvpTimer.set("PvP Timer.Enabled", Variables.pvpTimerEnabled);
-	// pvpTimer.set("PvP Timer.Sound.PvP Off Sound", Variables.pvpOffSound);
-	// pvpTimer.set("PvP Timer.Sound.PvP On Sound", Variables.pvpOnSound);
-	// pvpTimer.set("PvP Timer.Sound.Enabled", Variables.enableSound);
-	// pvpTimer.set("PvP Timer.Announce On World Change",
-	// Variables.announcePvpOnWorldChange);
-	// }
-
 	private void updateDefaultConfig() {
 		this.config.set("Default PvP", Variables.defaultPvp);
 		this.config.set("PvP Blood", Variables.pvpBlood);
@@ -105,8 +95,11 @@ public class ConfigManager {
 				updateDefaultConfig();
 				Variables.configUpdated = true;
 				configVersion = config.getInt("Config Version");
-			} else
+			} else {
 				plugin.getLogger().info("New Config File Created Successfully!");
+				config = new Config(plugin, "config.yml");
+				new Variables(this);
+			}
 		} else {
 			config = new Config(plugin, "config.yml");
 			new Variables(this);
