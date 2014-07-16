@@ -26,6 +26,7 @@ Auto Soup:
 Disable Fly: true
 Disable GameMode: true
 Disable Disguise: true
+Disable Invisibility: false
 Ignore Zones For Tagged: true
 Ignore No Damage Hits: false
 

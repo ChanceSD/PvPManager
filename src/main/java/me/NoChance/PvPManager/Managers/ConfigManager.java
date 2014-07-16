@@ -35,6 +35,7 @@ public class ConfigManager {
 		this.config.set("Disable Fly", Variables.disableFly);
 		this.config.set("Disable GameMode", Variables.disableGamemode);
 		this.config.set("Disable Disguise", Variables.disableDisguise);
+		this.config.set("Disable Invisibility", Variables.disableInvisibility);
 		this.config.set("Ignore Zones For Tagged", Variables.stopBorderHopping);
 		this.config.set("Ignore No Damage Hits", Variables.ignoreNoDamageHits);
 

@@ -28,6 +28,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.potion.PotionEffectType;
+
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 
 public class PlayerListener implements Listener {
@@ -86,7 +88,7 @@ public class PlayerListener implements Listener {
 			if (Variables.punishmentsEnabled)
 				ph.applyPunishments(player);
 
-			pvPlayer.setTagged(false);
+			pvPlayer.unTag();
 		}
 		ph.remove(pvPlayer);
 	}
@@ -100,7 +102,7 @@ public class PlayerListener implements Listener {
 			event.setDroppedExp(0);
 		}
 		if (pvPlayer.isInCombat())
-			pvPlayer.setTagged(false);
+			pvPlayer.unTag();
 		if (player.getKiller() != null && !player.getKiller().hasMetadata("NPC")) {
 			PvPlayer killer = ph.get(player.getKiller());
 			if (Variables.killAbuseEnabled)
@@ -126,8 +128,8 @@ public class PlayerListener implements Listener {
 			if (player.getHealth() == player.getMaxHealth())
 				return;
 			if (player.getItemInHand().getType() == Material.MUSHROOM_SOUP) {
-				player.setHealth(player.getHealth() + Variables.soupHealth > player.getMaxHealth() ? player.getMaxHealth() : player
-						.getHealth() + Variables.soupHealth);
+				player.setHealth(player.getHealth() + Variables.soupHealth > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth()
+						+ Variables.soupHealth);
 				player.getItemInHand().setType(Material.BOWL);
 				return;
 			}
@@ -150,7 +152,7 @@ public class PlayerListener implements Listener {
 	public void onPlayerKick(PlayerKickEvent event) {
 		PvPlayer pvPlayer = ph.get(event.getPlayer());
 		if (pvPlayer.isInCombat())
-			pvPlayer.setTagged(false);
+			pvPlayer.unTag();
 	}
 
 	@EventHandler
@@ -185,7 +187,7 @@ public class PlayerListener implements Listener {
 
 	private void onDamageActions(Player attacker, Player attacked) {
 		PvPlayer pvpAttacker = ph.get(attacker);
-		PvPlayer pvpAttacked = ph.get(attacked);
+		PvPlayer pvpDefender = ph.get(attacked);
 		if (Variables.pvpBlood)
 			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
@@ -199,14 +201,16 @@ public class PlayerListener implements Listener {
 				if (plugin.getServer().getPluginManager().isPluginEnabled("LibsDisguises") && DisguiseAPI.isDisguised(attacker))
 					DisguiseAPI.undisguiseToAll(attacker);
 			}
+			if (Variables.disableInvisibility && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY))
+				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
 		}
 		if (Variables.inCombatEnabled) {
 			if (Variables.onlyTagAttacker) {
-				pvpAttacker.setTagged(true);
+				pvpAttacker.setTagged(true, pvpDefender.getName());
 				return;
 			} else {
-				pvpAttacker.setTagged(true);
-				pvpAttacked.setTagged(true);
+				pvpAttacker.setTagged(true, pvpDefender.getName());
+				pvpDefender.setTagged(true, pvpAttacker.getName());
 			}
 		}
 	}

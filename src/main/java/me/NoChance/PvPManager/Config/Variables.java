@@ -57,6 +57,7 @@ public class Variables {
 	public static int moneyReward;
 	public static boolean commandsOnKillEnabled;
 	public static List<String> commandsOnKill = Arrays.asList("heal <player>");
+	public static boolean disableInvisibility;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -111,6 +112,7 @@ public class Variables {
 		moneyReward = configManager.getConfig().getInt("Player Kills.Money Reward", 10);
 		commandsOnKillEnabled = configManager.getConfig().getBoolean("Player Kills.Commands On Kill.Enabled", false);
 		commandsOnKill = (List<String>) configManager.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
+		disableInvisibility = configManager.getConfig().getBoolean("Disable Invisibility", false);
 	}
 
 	public static void helpMenu(Player player) {
