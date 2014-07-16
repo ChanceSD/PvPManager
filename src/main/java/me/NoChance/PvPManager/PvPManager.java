@@ -41,7 +41,7 @@ public final class PvPManager extends JavaPlugin {
 	public void onDisable() {
 		for (PvPlayer p : playerHandler.getPlayers().values()) {
 			if (p.isInCombat())
-				p.setTagged(false);
+				p.unTag();
 			playerHandler.savePvPState(p.getUUID(), p.hasPvPEnabled());
 		}
 	}

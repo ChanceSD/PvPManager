@@ -52,7 +52,7 @@ public class PM implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("debug") && player.hasPermission("pvpmanager.debug")) {
 					PvPlayer p = plugin.getPlayerHandler().get(player);
 					if (args[1].equalsIgnoreCase("tag")) {
-						p.setTagged(true);
+						p.setTagged(true, "Debug");
 					} else if (args[1].equalsIgnoreCase("ct")) {
 						p.message("Tagged: " + p.isInCombat());
 					} else if (args[1].equalsIgnoreCase("newbie")) {

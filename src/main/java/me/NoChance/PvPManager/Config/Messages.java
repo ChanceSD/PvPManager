@@ -35,7 +35,8 @@ public class Messages {
 	public static String Command_Denied_InCombat;
 	public static String Attack_Denied_You;
 	public static String Attack_Denied_Other;
-	public static String You_Are_InCombat;
+	public static String Tagged_Attacker;
+	public static String Tagged_Defender;
 	public static String Out_Of_Combat;
 	public static String Newbie_Protection;
 	public static String Newbie_Protection_End;
@@ -120,7 +121,8 @@ public class Messages {
 		Command_Denied_InCombat = getString("Command_Denied_InCombat");
 		Attack_Denied_You = getString("Attack_Denied_You");
 		Attack_Denied_Other = getString("Attack_Denied_Other");
-		You_Are_InCombat = getString("You_Are_InCombat");
+		Tagged_Attacker = getString("Tagged_Attacker");
+		Tagged_Defender = getString("Tagged_Defender");
 		Out_Of_Combat = getString("Out_Of_Combat");
 		Newbie_Protection = getString("Newbie_Protection");
 		Newbie_Protection_End = getString("Newbie_Protection_End");

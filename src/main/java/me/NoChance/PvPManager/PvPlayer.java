@@ -124,31 +124,39 @@ public class PvPlayer {
 		this.newbie = newbie;
 	}
 
-	public void setTagged(boolean tag) {
-		if (tag) {
-			if (getPlayer().hasPermission("pvpmanager.nocombat"))
-				return;
-			if (tagged) {
-				renewTag();
-				return;
-			}
-			tagTask = new TagTask(this).runTaskLater(plugin, Variables.timeInCombat * 20);
+	public void setTagged(boolean attacker, String tagger) {
+		if (getPlayer().hasPermission("pvpmanager.nocombat"))
+			return;
+		if (tagged) {
+			renewTag();
+			return;
+		}
+
+		tagTask = new TagTask(this).runTaskLater(plugin, Variables.timeInCombat * 20);
+
+		if (Variables.useNameTag)
+			teamProfile.setInCombat();
+
+		if (!Variables.inCombatSilent)
+			if (attacker)
+				message(Messages.Tagged_Attacker.replace("%p", tagger));
+			else
+				message(Messages.Tagged_Defender.replace("%p", tagger));
+
+		this.tagged = true;
+	}
+
+	public void unTag() {
+		if (isOnline()) {
 			if (Variables.useNameTag)
-				teamProfile.setInCombat();
+				teamProfile.restoreTeam();
 
 			if (!Variables.inCombatSilent)
-				message(Messages.You_Are_InCombat);
-		} else {
-			if (isOnline()) {
-				if (Variables.useNameTag)
-					teamProfile.restoreTeam();
-
-				if (!Variables.inCombatSilent)
-					message(Messages.Out_Of_Combat);
-			}
-			tagTask.cancel();
+				message(Messages.Out_Of_Combat);
 		}
-		this.tagged = tag;
+
+		tagTask.cancel();
+		this.tagged = false;
 	}
 
 	public void renewTag() {

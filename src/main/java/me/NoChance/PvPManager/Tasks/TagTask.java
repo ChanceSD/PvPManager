@@ -13,6 +13,6 @@ public class TagTask extends BukkitRunnable{
 	}
 
 	public void run() {
-		player.setTagged(false);
+		player.unTag();
 	}
 }
