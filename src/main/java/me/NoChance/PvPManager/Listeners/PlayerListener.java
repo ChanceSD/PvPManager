@@ -179,7 +179,7 @@ public class PlayerListener implements Listener {
 	}
 
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (Variables.respawnProtection != 0) {
+		if (Variables.killAbuseEnabled && Variables.respawnProtection != 0) {
 			PvPlayer player = ph.get(event.getPlayer());
 			player.setRespawnTime(System.currentTimeMillis());
 		}
