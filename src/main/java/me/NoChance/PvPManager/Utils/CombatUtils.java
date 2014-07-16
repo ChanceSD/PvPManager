@@ -5,7 +5,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.projectiles.ProjectileSource;
 import com.massivecraft.factions.entity.UPlayer;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
@@ -41,8 +40,8 @@ public class CombatUtils {
 			if (attacker instanceof Player && !attacker.hasMetadata("NPC"))
 				return true;
 			if (attacker instanceof Projectile) {
-				ProjectileSource shooter = ((Projectile) attacker).getShooter();
-				if (shooter instanceof Player && !shooter.equals(defender) && !((Entity) shooter).hasMetadata("NPC")) {
+				Entity shooter = (Entity) ((Projectile) attacker).getShooter();
+				if (shooter instanceof Player && !shooter.equals(defender) && !shooter.hasMetadata("NPC")) {
 					if (Variables.ignoreNoDamageHits && event.getDamage() == 0)
 						return false;
 					return true;
