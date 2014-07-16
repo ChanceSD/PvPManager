@@ -32,7 +32,7 @@ public class PvPlayer {
 		this.id = player.getUniqueId();
 		this.plugin = plugin;
 		this.newbieTask = new NewbieTask(this);
-		if (Variables.useNameTag)
+		if (Variables.useNameTag || Variables.toggleNametagsEnabled)
 			teamProfile = new TeamProfile(this);
 		if (!player.hasPlayedBefore()) {
 			this.pvpState = Variables.defaultPvp;
@@ -166,6 +166,7 @@ public class PvPlayer {
 
 	public void setPvP(boolean pvpState) {
 		this.pvpState = pvpState;
+		teamProfile.setPvP(pvpState);
 		if (!pvpState) {
 			message(Messages.PvP_Disabled);
 			if (Variables.toggleBroadcast)

@@ -58,6 +58,9 @@ public class Variables {
 	public static boolean commandsOnKillEnabled;
 	public static List<String> commandsOnKill = Arrays.asList("heal <player>");
 	public static boolean disableInvisibility;
+	public static boolean toggleNametagsEnabled;
+	public static String toggleColorOn;
+	public static String toggleColorOff;
 
 	public Variables(ConfigManager configM) {
 		this.configManager = configM;
@@ -107,12 +110,15 @@ public class Variables {
 		useNameTag = nameTagColor.equalsIgnoreCase("none") ? false : true;
 		locale = configManager.getConfig().getString("Locale", "en").toUpperCase();
 		ignoreNoDamageHits = configManager.getConfig().getBoolean("Ignore No Damage Hits", false);
-		respawnProtection = configManager.getConfig().getInt("Respawn Protection", 5);
+		respawnProtection = configManager.getConfig().getInt("Kill Abuse.Respawn Protection", 5);
 		playerKillsEnabled = configManager.getConfig().getBoolean("Player Kills.Enabled", true);
 		moneyReward = configManager.getConfig().getInt("Player Kills.Money Reward", 10);
 		commandsOnKillEnabled = configManager.getConfig().getBoolean("Player Kills.Commands On Kill.Enabled", false);
 		commandsOnKill = (List<String>) configManager.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
 		disableInvisibility = configManager.getConfig().getBoolean("Disable Invisibility", false);
+		toggleNametagsEnabled = configManager.getConfig().getBoolean("PvP Toggle.NameTags.Enabled", false);
+		toggleColorOn = configManager.getConfig().getString("PvP Toggle.NameTags.Color On", "&1");
+		toggleColorOff = configManager.getConfig().getString("PvP Toggle.NameTags.Color Off", "&2");
 	}
 
 	public static void helpMenu(Player player) {

@@ -61,11 +61,12 @@ public class ConfigManager {
 		this.config.set("Player Kills.Commands On Kill.Enabled", Variables.commandsOnKillEnabled);
 		this.config.set("Player Kills.Commands On Kill.Commands", Variables.commandsOnKill);
 
-		this.config.set("Respawn Protection", Variables.respawnProtection);
-
 		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.toggleCooldown);
 		this.config.set("PvP Toggle.Broadcast", Variables.toggleBroadcast);
 		this.config.set("PvP Toggle.Toggle Off on Death", Variables.toggleOffOnDeath);
+		this.config.set("PvP Toggle.NameTags.Enabled", Variables.toggleNametagsEnabled);
+		this.config.set("PvP Toggle.NameTags.Color On", Variables.toggleColorOn);
+		this.config.set("PvP Toggle.NameTags.Color Off", Variables.toggleColorOff);
 
 		this.config.set("Toggle Signs.Enabled", Variables.toggleSignsEnabled);
 		this.config.set("Toggle Signs.Disable Toggle Command", Variables.disableToggleCommand);
@@ -74,6 +75,7 @@ public class ConfigManager {
 		this.config.set("Kill Abuse.Max Kills", Variables.killAbuseMaxKills);
 		this.config.set("Kill Abuse.Time Limit", Variables.killAbuseTime);
 		this.config.set("Kill Abuse.Commands on Abuse", Variables.killAbuseCommands);
+		this.config.set("Kill Abuse.Respawn Protection", Variables.respawnProtection);
 
 		this.config.set("Newbie Protection.Enabled", Variables.newbieProtectionEnabled);
 		this.config.set("Newbie Protection.Time(minutes)", Variables.newbieProtectionTime);
@@ -86,7 +88,7 @@ public class ConfigManager {
 	}
 
 	private void loadConfig() {
-		if (configVersion < 19) {
+		if (configVersion < 20) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");

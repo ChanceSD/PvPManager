@@ -8,6 +8,8 @@ import org.bukkit.scoreboard.Team;
 public class TeamProfile {
 
 	private static Team inCombat;
+	private static Team pvpOn;
+	private static Team pvpOff;
 	private Team previousTeam;
 	private PvPlayer pvPlayer;
 	private Scoreboard scoreboard;
@@ -23,6 +25,20 @@ public class TeamProfile {
 				inCombat = scoreboard.registerNewTeam("InCombat");
 			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.nameTagColor));
 		}
+		if (pvpOn == null) {
+			if (scoreboard.getTeam("PvPOn") != null)
+				pvpOn = scoreboard.getTeam("PvPOn");
+			else
+				pvpOn = scoreboard.registerNewTeam("PvPOn");
+			pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.toggleColorOn));
+		}
+		if (pvpOff == null) {
+			if (scoreboard.getTeam("PvPOff") != null)
+				pvpOff = scoreboard.getTeam("PvPOff");
+			else
+				pvpOff = scoreboard.registerNewTeam("PvPOff");
+			pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.toggleColorOff));
+		}
 	}
 
 	public void setInCombat() {
@@ -36,4 +52,10 @@ public class TeamProfile {
 			inCombat.removePlayer(pvPlayer.getPlayer());
 	}
 
+	public void setPvP(boolean state) {
+		if (state)
+			pvpOn.addPlayer(pvPlayer.getPlayer());
+		else
+			pvpOff.addPlayer(pvPlayer.getPlayer());
+	}
 }
