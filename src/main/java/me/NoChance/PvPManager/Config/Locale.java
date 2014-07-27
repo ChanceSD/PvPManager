@@ -9,6 +9,7 @@ public enum Locale {
 		this.fileName = fileName;
 	}
 
+	@Override
 	public String toString() {
 		return fileName;
 	}

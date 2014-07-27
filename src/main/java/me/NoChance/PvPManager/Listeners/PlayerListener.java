@@ -151,7 +151,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		PvPlayer pvPlayer = ph.get(event.getPlayer());
-		if (pvPlayer.isInCombat())
+		if (pvPlayer.isInCombat() && !event.getReason().equalsIgnoreCase("Illegal characters in chat"))
 			pvPlayer.unTag();
 	}
 
@@ -210,7 +210,7 @@ public class PlayerListener implements Listener {
 				return;
 			} else {
 				pvpAttacker.setTagged(true, pvpDefender.getName());
-				pvpDefender.setTagged(true, pvpAttacker.getName());
+				pvpDefender.setTagged(false, pvpAttacker.getName());
 			}
 		}
 	}
