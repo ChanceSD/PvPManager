@@ -96,6 +96,8 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
+		if (player.hasMetadata("NPC"))
+			return;
 		PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer.hasPvPLogged() && !Variables.dropExp) {
 			event.setKeepLevel(true);
