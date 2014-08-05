@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
@@ -83,11 +84,12 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer();
 		PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer.isInCombat()) {
+			if (Variables.logToFile)
+				plugin.getLog().log(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
 			if (Variables.broadcastPvpLog)
 				plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
 			if (Variables.punishmentsEnabled)
 				ph.applyPunishments(player);
-
 			pvPlayer.unTag();
 		}
 		ph.remove(pvPlayer);
@@ -109,13 +111,17 @@ public class PlayerListener implements Listener {
 			PvPlayer killer = ph.get(player.getKiller());
 			if (Variables.killAbuseEnabled)
 				killer.addVictim(player.getName());
-			if (Variables.playerKillsEnabled) {
-				if (Variables.moneyReward > 0)
-					ph.giveReward(killer.getName());
-				if (Variables.commandsOnKillEnabled)
-					for (String command : Variables.commandsOnKill) {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()));
-					}
+			if (Variables.moneyReward > 0)
+				ph.giveReward(killer.getName());
+			if (Variables.commandsOnKillEnabled)
+				for (String command : Variables.commandsOnKill) {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()));
+				}
+			if (Variables.transferDrops) {
+				for (ItemStack s : player.getKiller().getInventory().addItem((ItemStack[]) event.getDrops().toArray()).values()) {
+					player.getWorld().dropItem(player.getLocation(), s);
+				}
+				event.getDrops().clear();
 			}
 		}
 		if (Variables.toggleOffOnDeath && player.hasPermission("pvpmanager.pvpstatus.change") && pvPlayer.hasPvPEnabled())

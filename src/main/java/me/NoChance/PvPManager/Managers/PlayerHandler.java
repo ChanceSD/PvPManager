@@ -28,16 +28,14 @@ public class PlayerHandler {
 		this.configManager = plugin.getConfigM();
 		if (Variables.killAbuseEnabled)
 			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);
-		if (Variables.fineEnabled || Variables.playerKillsEnabled) {
-			if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
-				if (setupEconomy()) {
-					plugin.getLogger().info("Vault Found! Using it for currency related features");
-				} else
-					plugin.getLogger().severe("Error! No Economy plugin found");
-			} else {
-				plugin.getLogger().severe("Vault not found! Features requiring Vault won't work!");
-				Variables.fineEnabled = false;
-			}
+		if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
+			if (setupEconomy()) {
+				plugin.getLogger().info("Vault Found! Using it for currency related features");
+			} else
+				plugin.getLogger().severe("Error! No Economy plugin found");
+		} else {
+			plugin.getLogger().severe("Vault not found! Features requiring Vault won't work!");
+			Variables.fineEnabled = false;
 		}
 		addOnlinePlayers();
 	}
@@ -150,8 +148,7 @@ public class PlayerHandler {
 	}
 
 	private boolean setupEconomy() {
-		RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager()
-				.getRegistration(net.milkbowl.vault.economy.Economy.class);
+		RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
 		}
