@@ -74,16 +74,16 @@ public class PlayerHandler {
 
 	private void applyFine(Player p) {
 		if (economy != null) {
-			economy.withdrawPlayer(p.getName(), Variables.fineAmount);
+			economy.withdrawPlayer(p, Variables.fineAmount);
 		} else {
 			plugin.getLogger().severe("Tried to apply fine but no Economy plugin found!");
 			plugin.getLogger().severe("Disable fines feature or get an Economy plugin to fix this error");
 		}
 	}
 
-	public void giveReward(String name) {
+	public void giveReward(Player p) {
 		if (economy != null) {
-			economy.depositPlayer(name, Variables.moneyReward);
+			economy.depositPlayer(p, Variables.moneyReward);
 		} else {
 			plugin.getLogger().severe("Tried to give reward but no Economy plugin found!");
 			plugin.getLogger().severe("Disable money reward on kill or get an Economy plugin to fix this error");
