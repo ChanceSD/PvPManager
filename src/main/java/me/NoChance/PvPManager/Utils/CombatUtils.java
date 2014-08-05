@@ -5,7 +5,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.plugin.Plugin;
+
 import com.massivecraft.factions.entity.UPlayer;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
@@ -19,6 +22,7 @@ public class CombatUtils {
 	}
 
 	private static PlayerHandler ph;
+	private static boolean useFactions;
 
 	public CombatUtils(PvPManager plugin) {
 		ph = plugin.getPlayerHandler();
@@ -26,6 +30,8 @@ public class CombatUtils {
 			plugin.registerListener(new WGListener());
 			plugin.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
 		}
+		Plugin factions = Bukkit.getPluginManager().getPlugin("Factions");
+		useFactions = factions != null && Integer.valueOf(factions.getDescription().getVersion().replace(".", "")) > 182;
 	}
 
 	public static boolean hasTimePassed(long toggleTime, int cooldown) {
@@ -74,7 +80,7 @@ public class CombatUtils {
 	private static boolean canAttack(PvPlayer attacker, PvPlayer attacked) {
 		if (!(attacker.isInCombat() && attacked.isInCombat()))
 			return false;
-		else if (Bukkit.getPluginManager().isPluginEnabled("Factions")) {
+		else if (useFactions) {
 			UPlayer fAttacker = UPlayer.get(attacker.getPlayer());
 			UPlayer fAttacked = UPlayer.get(attacked.getPlayer());
 			return !fAttacker.getFactionId().equalsIgnoreCase(fAttacked.getFactionId());
