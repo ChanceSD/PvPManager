@@ -118,7 +118,7 @@ public class PlayerListener implements Listener {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()));
 				}
 			if (Variables.transferDrops) {
-				for (ItemStack s : player.getKiller().getInventory().addItem((ItemStack[]) event.getDrops().toArray()).values()) {
+				for (ItemStack s : player.getKiller().getInventory().addItem(event.getDrops().toArray(new ItemStack[event.getDrops().size()])).values()) {
 					player.getWorld().dropItem(player.getLocation(), s);
 				}
 				event.getDrops().clear();
