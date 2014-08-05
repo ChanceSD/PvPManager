@@ -1,6 +1,9 @@
 package me.NoChance.PvPManager;
 
+import java.io.File;
+
 import me.NoChance.PvPManager.Commands.*;
+import me.NoChance.PvPManager.Config.LogFile;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Lib.CustomMetrics;
@@ -10,6 +13,7 @@ import me.NoChance.PvPManager.Listeners.*;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -18,6 +22,7 @@ public final class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
 	private PlayerHandler playerHandler;
+	private LogFile log;
 
 	@Override
 	public void onEnable() {
@@ -49,6 +54,7 @@ public final class PvPManager extends JavaPlugin {
 	private void loadFiles() {
 		this.configM = new ConfigManager(this);
 		new Messages(this);
+		log = new LogFile(new File(getDataFolder(), "pvplog.log"));
 	}
 
 	private void startListeners() {
@@ -93,6 +99,10 @@ public final class PvPManager extends JavaPlugin {
 
 	public PlayerHandler getPlayerHandler() {
 		return playerHandler;
+	}
+
+	public LogFile getLog() {
+		return log;
 	}
 
 }

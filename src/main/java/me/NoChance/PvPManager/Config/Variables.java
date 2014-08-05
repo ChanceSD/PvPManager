@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 public class Variables {
 
-	private ConfigManager configManager;
+	private ConfigManager cm;
 	public static boolean inCombatEnabled;
 	public static int timeInCombat;
 	public static boolean stopCommands;
@@ -53,7 +53,6 @@ public class Variables {
 	public static boolean useNameTag;
 	public static String locale;
 	public static int respawnProtection;
-	public static boolean playerKillsEnabled;
 	public static int moneyReward;
 	public static boolean commandsOnKillEnabled;
 	public static List<String> commandsOnKill = Arrays.asList("heal <player>");
@@ -61,64 +60,67 @@ public class Variables {
 	public static boolean toggleNametagsEnabled;
 	public static String toggleColorOn;
 	public static String toggleColorOff;
+	public static boolean logToFile;
+	public static boolean transferDrops;
 
 	public Variables(ConfigManager configM) {
-		this.configManager = configM;
+		this.cm = configM;
 		InitialiseVariables();
 	}
 
 	@SuppressWarnings("unchecked")
 	private void InitialiseVariables() {
-		inCombatEnabled = configManager.getConfig().getBoolean("In Combat.Enabled", true);
-		timeInCombat = configManager.getConfig().getInt("In Combat.Time(seconds)", 10);
-		blockEnderPearl = configManager.getConfig().getBoolean("In Combat.Block EnderPearl", true);
-		stopCommands = configManager.getConfig().getBoolean("In Combat.Stop Commands.Enabled", true);
-		punishmentsEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Enabled", true);
-		dropInventory = configManager.getConfig().getBoolean("In Combat.Punishments.Drops.Inventory", true);
-		dropExp = configManager.getConfig().getBoolean("In Combat.Punishments.Drops.Experience", true);
-		dropArmor = configManager.getConfig().getBoolean("In Combat.Punishments.Drops.Armor", true);
-		killOnLogout = configManager.getConfig().getBoolean("In Combat.Punishments.Kill on Logout", true);
-		worldsExcluded = (List<String>) configManager.getConfig().getList("World Exclusions", worldsExcluded);
-		disableFly = configManager.getConfig().getBoolean("Disable Fly", true);
-		toggleSignsEnabled = configManager.getConfig().getBoolean("Toggle Signs.Enabled", true);
-		disableToggleCommand = configManager.getConfig().getBoolean("Toggle Signs.Disable Toggle Command", false);
-		onlyTagAttacker = configManager.getConfig().getBoolean("In Combat.Only Tag Attacker", false);
-		updateCheck = configManager.getConfig().getBoolean("Update Check.Enabled", true);
-		autoUpdate = configManager.getConfig().getBoolean("Update Check.Auto Update", true);
-		newbieProtectionEnabled = configManager.getConfig().getBoolean("Newbie Protection.Enabled", true);
-		newbieProtectionTime = configManager.getConfig().getInt("Newbie Protection.Time(minutes)", 5);
-		broadcastPvpLog = configManager.getConfig().getBoolean("In Combat.Punishments.Broadcast PvPLog", true);
-		fineEnabled = configManager.getConfig().getBoolean("In Combat.Punishments.Fine.Enabled", false);
-		fineAmount = configManager.getConfig().getDouble("In Combat.Punishments.Fine.Amount", 10.00);
-		pvpBlood = configManager.getConfig().getBoolean("PvP Blood", true);
-		disableGamemode = configManager.getConfig().getBoolean("Disable GameMode", true);
-		commandsAllowed = (List<String>) configManager.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
-		toggleCooldown = configManager.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
-		toggleBroadcast = configManager.getConfig().getBoolean("PvP Toggle.Broadcast", false);
-		toggleOffOnDeath = configManager.getConfig().getBoolean("PvP Toggle.Toggle Off on Death", false);
-		defaultPvp = configManager.getConfig().getBoolean("Default PvP", true);
-		disableDisguise = configManager.getConfig().getBoolean("Disable Disguise", true);
-		killAbuseMaxKills = configManager.getConfig().getInt("Kill Abuse.Max Kills", 5);
-		killAbuseTime = configManager.getConfig().getInt("Kill Abuse.Time Limit", 60);
-		killAbuseCommands = (List<String>) configManager.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
-		killAbuseEnabled = configManager.getConfig().getBoolean("Kill Abuse.Enabled", true);
-		autoSoupEnabled = configManager.getConfig().getBoolean("Auto Soup.Enabled", false);
-		soupHealth = configManager.getConfig().getDouble("Auto Soup.Health Gain", 6);
-		inCombatSilent = configManager.getConfig().getBoolean("In Combat.Silent", false);
-		stopBorderHopping = configManager.getConfig().getBoolean("Ignore Zones For Tagged", true);
-		nameTagColor = configManager.getConfig().getString("In Combat.Name Tag Color", "&c");
+		inCombatEnabled = cm.getConfig().getBoolean("In Combat.Enabled", true);
+		timeInCombat = cm.getConfig().getInt("In Combat.Time(seconds)", 10);
+		blockEnderPearl = cm.getConfig().getBoolean("In Combat.Block EnderPearl", true);
+		stopCommands = cm.getConfig().getBoolean("In Combat.Stop Commands.Enabled", true);
+		punishmentsEnabled = cm.getConfig().getBoolean("In Combat.Punishments.Enabled", true);
+		dropInventory = cm.getConfig().getBoolean("In Combat.Punishments.Drops.Inventory", true);
+		dropExp = cm.getConfig().getBoolean("In Combat.Punishments.Drops.Experience", true);
+		dropArmor = cm.getConfig().getBoolean("In Combat.Punishments.Drops.Armor", true);
+		killOnLogout = cm.getConfig().getBoolean("In Combat.Punishments.Kill on Logout", true);
+		worldsExcluded = (List<String>) cm.getConfig().getList("World Exclusions", worldsExcluded);
+		disableFly = cm.getConfig().getBoolean("Disable Fly", true);
+		toggleSignsEnabled = cm.getConfig().getBoolean("Toggle Signs.Enabled", true);
+		disableToggleCommand = cm.getConfig().getBoolean("Toggle Signs.Disable Toggle Command", false);
+		onlyTagAttacker = cm.getConfig().getBoolean("In Combat.Only Tag Attacker", false);
+		updateCheck = cm.getConfig().getBoolean("Update Check.Enabled", true);
+		autoUpdate = cm.getConfig().getBoolean("Update Check.Auto Update", true);
+		newbieProtectionEnabled = cm.getConfig().getBoolean("Newbie Protection.Enabled", true);
+		newbieProtectionTime = cm.getConfig().getInt("Newbie Protection.Time(minutes)", 5);
+		broadcastPvpLog = cm.getConfig().getBoolean("In Combat.Punishments.Broadcast PvPLog", true);
+		fineEnabled = cm.getConfig().getBoolean("In Combat.Punishments.Fine.Enabled", false);
+		fineAmount = cm.getConfig().getDouble("In Combat.Punishments.Fine.Amount", 10.00);
+		pvpBlood = cm.getConfig().getBoolean("PvP Blood", true);
+		disableGamemode = cm.getConfig().getBoolean("Disable GameMode", true);
+		commandsAllowed = (List<String>) cm.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
+		toggleCooldown = cm.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
+		toggleBroadcast = cm.getConfig().getBoolean("PvP Toggle.Broadcast", false);
+		toggleOffOnDeath = cm.getConfig().getBoolean("PvP Toggle.Toggle Off on Death", false);
+		defaultPvp = cm.getConfig().getBoolean("Default PvP", true);
+		disableDisguise = cm.getConfig().getBoolean("Disable Disguise", true);
+		killAbuseMaxKills = cm.getConfig().getInt("Kill Abuse.Max Kills", 5);
+		killAbuseTime = cm.getConfig().getInt("Kill Abuse.Time Limit", 60);
+		killAbuseCommands = (List<String>) cm.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
+		killAbuseEnabled = cm.getConfig().getBoolean("Kill Abuse.Enabled", true);
+		autoSoupEnabled = cm.getConfig().getBoolean("Auto Soup.Enabled", false);
+		soupHealth = cm.getConfig().getDouble("Auto Soup.Health Gain", 6);
+		inCombatSilent = cm.getConfig().getBoolean("In Combat.Silent", false);
+		stopBorderHopping = cm.getConfig().getBoolean("Ignore Zones For Tagged", true);
+		nameTagColor = cm.getConfig().getString("In Combat.Name Tag Color", "&c");
 		useNameTag = nameTagColor.equalsIgnoreCase("none") ? false : true;
-		locale = configManager.getConfig().getString("Locale", "en").toUpperCase();
-		ignoreNoDamageHits = configManager.getConfig().getBoolean("Ignore No Damage Hits", false);
-		respawnProtection = configManager.getConfig().getInt("Kill Abuse.Respawn Protection", 5);
-		playerKillsEnabled = configManager.getConfig().getBoolean("Player Kills.Enabled", true);
-		moneyReward = configManager.getConfig().getInt("Player Kills.Money Reward", 10);
-		commandsOnKillEnabled = configManager.getConfig().getBoolean("Player Kills.Commands On Kill.Enabled", false);
-		commandsOnKill = (List<String>) configManager.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
-		disableInvisibility = configManager.getConfig().getBoolean("Disable Invisibility", false);
-		toggleNametagsEnabled = configManager.getConfig().getBoolean("PvP Toggle.NameTags.Enabled", false);
-		toggleColorOn = configManager.getConfig().getString("PvP Toggle.NameTags.Color On", "&1");
-		toggleColorOff = configManager.getConfig().getString("PvP Toggle.NameTags.Color Off", "&2");
+		locale = cm.getConfig().getString("Locale", "en").toUpperCase();
+		ignoreNoDamageHits = cm.getConfig().getBoolean("Ignore No Damage Hits", false);
+		respawnProtection = cm.getConfig().getInt("Kill Abuse.Respawn Protection", 5);
+		moneyReward = cm.getConfig().getInt("Player Kills.Money Reward", 10);
+		commandsOnKillEnabled = cm.getConfig().getBoolean("Player Kills.Commands On Kill.Enabled", false);
+		commandsOnKill = (List<String>) cm.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
+		disableInvisibility = cm.getConfig().getBoolean("Disable Invisibility", false);
+		toggleNametagsEnabled = cm.getConfig().getBoolean("PvP Toggle.NameTags.Enabled", false);
+		toggleColorOn = cm.getConfig().getString("PvP Toggle.NameTags.Color On", "&1");
+		toggleColorOff = cm.getConfig().getString("PvP Toggle.NameTags.Color Off", "&2");
+		logToFile = cm.getConfig().getBoolean("In Combat.Punishments.Log To File", true);
+		transferDrops = cm.getConfig().getBoolean("Player Kills.Transfer Drops", false);
 	}
 
 	public static void helpMenu(Player player) {

@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -49,6 +51,7 @@ public class ConfigManager {
 		this.config.set("In Combat.Stop Commands.Allowed Commands", Variables.commandsAllowed);
 		this.config.set("In Combat.Punishments.Enabled", Variables.punishmentsEnabled);
 		this.config.set("In Combat.Punishments.Broadcast PvPLog", Variables.broadcastPvpLog);
+		this.config.set("In Combat.Punishments.Log To File", Variables.logToFile);
 		this.config.set("In Combat.Punishments.Kill on Logout", Variables.killOnLogout);
 		this.config.set("In Combat.Punishments.Drops.Inventory", Variables.dropInventory);
 		this.config.set("In Combat.Punishments.Drops.Experience", Variables.dropExp);
@@ -56,7 +59,7 @@ public class ConfigManager {
 		this.config.set("In Combat.Punishments.Fine.Enabled", Variables.fineEnabled);
 		this.config.set("In Combat.Punishments.Fine.Amount", Variables.fineAmount);
 
-		this.config.set("Player Kills.Enabled", Variables.playerKillsEnabled);
+		this.config.set("Player Kills.Transfer Drops", Variables.transferDrops);
 		this.config.set("Player Kills.Money Reward", Variables.moneyReward);
 		this.config.set("Player Kills.Commands On Kill.Enabled", Variables.commandsOnKillEnabled);
 		this.config.set("Player Kills.Commands On Kill.Commands", Variables.commandsOnKill);
