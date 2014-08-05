@@ -10,15 +10,16 @@ public class LogFile {
 	private File file;
 
 	public LogFile(File file) {
+		this.file = file;
+		
 		if (!file.exists())
 			try {
 				file.createNewFile();
 				log("This file logs all players that disconnected during combat");
+				log("You can disable the logging in the config\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-		this.file = file;
 	}
 
 	public void log(String line) {
