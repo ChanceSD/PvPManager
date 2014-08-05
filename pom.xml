@@ -4,7 +4,7 @@
 	<groupId>PvPManager</groupId>
 	<artifactId>PvPManager</artifactId>
 	<packaging>jar</packaging>
-	<version>2.3.4</version>
+	<version>2.3.5</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,16 +61,16 @@
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>Factions</artifactId>
-			<version>2.4.0</version>
+			<version>2.5.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/repo/Factions.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
-			<artifactId>mcore</artifactId>
-			<version>7.2.0</version>
+			<artifactId>MassiveCore</artifactId>
+			<version>7.3.0</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/repo/mcore.jar</systemPath>
+			<systemPath>${project.basedir}/repo/MassiveCore.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
