@@ -2,7 +2,9 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
 import java.util.UUID;
+
 import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -11,8 +13,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 
@@ -81,9 +85,19 @@ public class PlayerHandler {
 		}
 	}
 
-	public void giveReward(Player p) {
+	public void applyPenalty(Player p) {
 		if (economy != null) {
-			economy.depositPlayer(p, Variables.moneyReward);
+			economy.withdrawPlayer(p, Variables.moneyPenalty);
+		} else {
+			plugin.getLogger().severe("Tried to apply penalty but no Economy plugin found!");
+			plugin.getLogger().severe("Disable money penalty on kill or get an Economy plugin to fix this error");
+		}
+	}
+
+	public void giveReward(Player killer, Player victim) {
+		if (economy != null) {
+			economy.depositPlayer(killer, Variables.moneyReward);
+			killer.sendMessage(Messages.Money_Reward.replace("%m", Integer.toString(Variables.moneyReward)).replace("%p", victim.getName()));
 		} else {
 			plugin.getLogger().severe("Tried to give reward but no Economy plugin found!");
 			plugin.getLogger().severe("Disable money reward on kill or get an Economy plugin to fix this error");

@@ -62,6 +62,7 @@ public class Variables {
 	public static String toggleColorOff;
 	public static boolean logToFile;
 	public static boolean transferDrops;
+	public static int moneyPenalty;
 
 	public Variables(ConfigManager configM) {
 		this.cm = configM;
@@ -121,6 +122,7 @@ public class Variables {
 		toggleColorOff = cm.getConfig().getString("PvP Toggle.NameTags.Color Off", "&2");
 		logToFile = cm.getConfig().getBoolean("In Combat.Punishments.Log To File", true);
 		transferDrops = cm.getConfig().getBoolean("Player Kills.Transfer Drops", false);
+		moneyPenalty = cm.getConfig().getInt("Player Kills.Money Penalty", 10);
 	}
 
 	public static void helpMenu(Player player) {

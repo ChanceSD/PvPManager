@@ -61,6 +61,7 @@ public class ConfigManager {
 
 		this.config.set("Player Kills.Transfer Drops", Variables.transferDrops);
 		this.config.set("Player Kills.Money Reward", Variables.moneyReward);
+		this.config.set("Player Kills.Money Penalty", Variables.moneyPenalty);
 		this.config.set("Player Kills.Commands On Kill.Enabled", Variables.commandsOnKillEnabled);
 		this.config.set("Player Kills.Commands On Kill.Commands", Variables.commandsOnKill);
 

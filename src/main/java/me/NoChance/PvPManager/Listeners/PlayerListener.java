@@ -112,11 +112,13 @@ public class PlayerListener implements Listener {
 			if (Variables.killAbuseEnabled)
 				ph.get(killer).addVictim(player.getName());
 			if (Variables.moneyReward > 0)
-				ph.giveReward(killer);
+				ph.giveReward(killer, player);
 			if (Variables.commandsOnKillEnabled)
 				for (String command : Variables.commandsOnKill) {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()));
 				}
+			if(Variables.moneyPenalty > 0)
+				ph.applyPenalty(player);
 			if (Variables.transferDrops) {
 				for (ItemStack s : killer.getInventory().addItem(event.getDrops().toArray(new ItemStack[event.getDrops().size()])).values()) {
 					player.getWorld().dropItem(player.getLocation(), s);

@@ -49,6 +49,7 @@ public class Messages {
 	public static String Error_Command;
 	public static String currentVersion;
 	public static String newVersion;
+	public static String Money_Reward;
 	private Locale locale;
 
 	public Messages(PvPManager plugin) {
@@ -136,6 +137,7 @@ public class Messages {
 		Error_PvP_Cooldown = getString("Error_PvP_Cooldown");
 		Error_Permission = getString("Error_Permission");
 		Error_PvPCommand_Disabled = getString("Error_PvPCommand_Disabled");
+		Money_Reward = getString("Money_Reward");
 	}
 
 	public void checkChanges() {

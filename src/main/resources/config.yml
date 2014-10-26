@@ -69,10 +69,12 @@ In Combat:
 # Section with settings triggered when a player kills another player
 # Transfer Drops - Transfer drops directly to killer instead of dropping on the ground
 # Money Reward - Amount of money player gets as reward (0 to disable)
+# Money Penalty - Amount of money player loses for dying in PvP (0 to disable)
 # Commands On Kill - Commands to execute on kill (<player> is the killer)
 Player Kills:
   Transfer Drops: false
   Money Reward: 0
+  Money Penalty: 0
   Commands On Kill:
     Enabled: false
     Commands:
