@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 21
+Config Version: 22
 # This changes the plugin's messages to the specified language.
 # Currently there is - en ru ch es
 Locale: en
