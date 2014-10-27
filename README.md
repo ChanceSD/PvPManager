@@ -22,7 +22,6 @@ Commands and Permissions
 
 Special Permissions:
 -----------
-pvpmanager.override - Players/ranks can PvP even when PvPTimer disabled PvP
 
 pvpmanager.nodrop - Players/ranks don't drop items if killed in PvP
 

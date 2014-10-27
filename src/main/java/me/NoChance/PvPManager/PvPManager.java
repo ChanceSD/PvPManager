@@ -32,6 +32,7 @@ public final class PvPManager extends JavaPlugin {
 		new CombatUtils(this);
 		getCommand("pvp").setExecutor(new PvP(playerHandler));
 		getCommand("pvpmanager").setExecutor(new PM(this));
+		getCommand("pvpoverride").setExecutor(new PvPOverride(playerHandler));
 		startMetrics();
 		if (Variables.updateCheck) {
 			new BukkitRunnable() {

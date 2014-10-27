@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 2.3.8
+version: 2.3.9
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions]
@@ -12,13 +12,15 @@ commands:
    pvp:
       description: Change your PvP Status.
       aliases: [toggle, pvptoggle]
+   pvpoverride:
+      description: Allows the player to attack everyone everywhere
+      aliases: [pvpo, povd]
 
 permissions:
    pvpmanager.*:
      description: Gives access to all PvPManager features
      children:
        pvpmanager.admin: true
-       pvpmanager.override: true
        pvpmanager.nocombat: true
        pvpmanager.nodisable: true
    pvpmanager.admin:
@@ -27,7 +29,7 @@ permissions:
      children:
        pvpmanager.reload: true
        pvpmanager.user: true
-       pvpmanager.pvptimer: true
+       pvpmanager.override: true
        pvpmanager.sign: true
        pvpmanager.info: true
    pvpmanager.user:
@@ -51,21 +53,18 @@ permissions:
    pvpmanager.reload:
      description: Allows you to reload PvPManager
      default: false
-   pvpmanager.pvptimer:
-     description: Allows setting PvP start and end times on worlds
-     default: false  
    pvpmanager.sign:
      description: Allows creating PvPManager signs
      default: false
-   pvpmanager.override:
-     description: Enables a player to override PvP being off in a world
-     default: op
    pvpmanager.nocombat:
      description: Exempts a player from being tagged in combat
      default: op
    pvpmanager.nopvp:
      description: Players with this permission always have PvP disabled
      default: false
+   pvpmanager.override:
+     description: Players with this permission can use the PvPOverride command
+     default: op
    pvpmanager.nodisable:
      description: Players with this permission don't get fly and gamemode disabled
      default: op
