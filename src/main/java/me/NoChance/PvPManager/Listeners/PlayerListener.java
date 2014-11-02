@@ -18,6 +18,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -117,7 +118,7 @@ public class PlayerListener implements Listener {
 				for (String command : Variables.commandsOnKill) {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()));
 				}
-			if(Variables.moneyPenalty > 0)
+			if (Variables.moneyPenalty > 0)
 				ph.applyPenalty(player);
 			if (Variables.transferDrops) {
 				for (ItemStack s : killer.getInventory().addItem(event.getDrops().toArray(new ItemStack[event.getDrops().size()])).values()) {
@@ -188,6 +189,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
+	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		if (Variables.killAbuseEnabled && Variables.respawnProtection != 0) {
 			PvPlayer player = ph.get(event.getPlayer());
@@ -195,14 +197,29 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	private void onDamageActions(Player attacker, Player attacked) {
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		PvPlayer player = ph.get(e.getPlayer());
+		if (CombatUtils.PMAllowed(player.getWorldName()) && !player.hasPvPEnabled() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			ItemStack i = e.getPlayer().getItemInHand();
+			if (i.getType().equals(Material.FLINT_AND_STEEL) || i.getType().equals(Material.LAVA_BUCKET)) {
+				e.setCancelled(true);
+				player.message("§cYou need to have PvP enabled to do that!");
+			}
+		}
+	}
+
+	private void onDamageActions(Player attacker, Player defender) {
 		PvPlayer pvpAttacker = ph.get(attacker);
-		PvPlayer pvpDefender = ph.get(attacked);
+		PvPlayer pvpDefender = ph.get(defender);
 		if (Variables.pvpBlood)
-			attacked.getWorld().playEffect(attacked.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
+			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
-			if (Variables.disableFly && (attacker.isFlying() || attacker.getAllowFlight()))
+			if (Variables.disableFly && (attacker.isFlying() || attacker.getAllowFlight())) {
 				pvpAttacker.disableFly();
+				if (defender.isFlying() || defender.getAllowFlight())
+					pvpDefender.disableFly();
+			}
 			if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL))
 				attacker.setGameMode(GameMode.SURVIVAL);
 			if (Variables.disableDisguise) {
