@@ -31,7 +31,13 @@ public class CombatUtils {
 			plugin.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
 		}
 		Plugin factions = Bukkit.getPluginManager().getPlugin("Factions");
-		useFactions = factions != null && Integer.valueOf(factions.getDescription().getVersion().replace(".", "")) > 182;
+
+		try {
+			useFactions = factions != null && Integer.valueOf(factions.getDescription().getVersion().replace(".", "")) > 182;
+		} catch (NumberFormatException e) {
+			plugin.getLogger().warning("Couldn't read Factions version, maybe it's a fork?");
+			useFactions = false;
+		}
 	}
 
 	public static boolean hasTimePassed(long toggleTime, int cooldown) {
