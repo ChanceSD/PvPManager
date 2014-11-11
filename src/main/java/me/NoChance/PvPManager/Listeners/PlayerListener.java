@@ -21,6 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -44,7 +45,7 @@ public class PlayerListener implements Listener {
 		this.ph = plugin.getPlayerHandler();
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDamage(EntityDamageByEntityEvent event) {
 		if (!CombatUtils.isPvP(event) || !CombatUtils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
@@ -135,14 +136,36 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		Player player = e.getPlayer();
-		if (CombatUtils.PMAllowed(player.getWorld().getName()) && Variables.autoSoupEnabled) {
-			if (player.getHealth() == player.getMaxHealth())
-				return;
-			if (player.getItemInHand().getType() == Material.MUSHROOM_SOUP) {
+		if (CombatUtils.PMAllowed(player.getWorld().getName())) {
+			ItemStack i = player.getItemInHand();
+			if (Variables.autoSoupEnabled && i.getType() == Material.MUSHROOM_SOUP) {
+				if (player.getHealth() == player.getMaxHealth())
+					return;
 				player.setHealth(player.getHealth() + Variables.soupHealth > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth()
 						+ Variables.soupHealth);
-				player.getItemInHand().setType(Material.BOWL);
+				i.setType(Material.BOWL);
 				return;
+			}
+			PvPlayer pvplayer = ph.get(player);
+			if (i.getType().equals(Material.FLINT_AND_STEEL) && !pvplayer.hasPvPEnabled() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				e.setCancelled(true);
+				pvplayer.message("§cYou need to have PvP enabled to do that!");
+			}
+		}
+	}
+
+	@EventHandler
+	public void onBucketEmpty(PlayerBucketEmptyEvent e) {
+		PvPlayer player = ph.get(e.getPlayer());
+		if (CombatUtils.PMAllowed(player.getWorldName()) && e.getBucket().equals(Material.LAVA_BUCKET)) {
+			for (Player p : e.getPlayer().getWorld().getPlayers()) {
+				if (player.equals(p))
+					continue;
+				if ((!ph.get(p).hasPvPEnabled() || !player.hasPvPEnabled()) && e.getPlayer().getLocation().distanceSquared(p.getLocation()) < 9) {
+					player.message("§cNope! PvP Disabled!");
+					e.setCancelled(true);
+					return;
+				}
 			}
 		}
 	}
@@ -194,18 +217,6 @@ public class PlayerListener implements Listener {
 		if (Variables.killAbuseEnabled && Variables.respawnProtection != 0) {
 			PvPlayer player = ph.get(event.getPlayer());
 			player.setRespawnTime(System.currentTimeMillis());
-		}
-	}
-
-	@EventHandler
-	public void onInteract(PlayerInteractEvent e) {
-		PvPlayer player = ph.get(e.getPlayer());
-		if (CombatUtils.PMAllowed(player.getWorldName()) && !player.hasPvPEnabled() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-			ItemStack i = e.getPlayer().getItemInHand();
-			if (i.getType().equals(Material.FLINT_AND_STEEL) || i.getType().equals(Material.LAVA_BUCKET)) {
-				e.setCancelled(true);
-				player.message("§cYou need to have PvP enabled to do that!");
-			}
 		}
 	}
 
