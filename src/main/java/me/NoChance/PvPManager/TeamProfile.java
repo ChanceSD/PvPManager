@@ -46,10 +46,15 @@ public class TeamProfile {
 	}
 
 	public void restoreTeam() {
-		if (previousTeam != null && scoreboard.getTeam(previousTeam.getName()) != null)
-			previousTeam.addPlayer(pvPlayer.getPlayer());
-		else
+		try {
+			if (previousTeam != null && scoreboard.getTeam(previousTeam.getName()) != null)
+				previousTeam.addPlayer(pvPlayer.getPlayer());
+			else
+				inCombat.removePlayer(pvPlayer.getPlayer());
+		} catch (IllegalStateException e) {
+			System.out.println("[PvPManager] Error restoring nametag for: " + pvPlayer.getName());
 			inCombat.removePlayer(pvPlayer.getPlayer());
+		}
 	}
 
 	public void setPvP(boolean state) {
