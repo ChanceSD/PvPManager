@@ -158,10 +158,10 @@ public class PlayerListener implements Listener {
 	public void onBucketEmpty(PlayerBucketEmptyEvent e) {
 		PvPlayer player = ph.get(e.getPlayer());
 		if (CombatUtils.PMAllowed(player.getWorldName()) && e.getBucket().equals(Material.LAVA_BUCKET)) {
-			for (Player p : e.getPlayer().getWorld().getPlayers()) {
-				if (player.equals(p))
+			for (Player p : e.getBlockClicked().getWorld().getPlayers()) {
+				if (e.getPlayer().equals(p))
 					continue;
-				if ((!ph.get(p).hasPvPEnabled() || !player.hasPvPEnabled()) && e.getPlayer().getLocation().distanceSquared(p.getLocation()) < 9) {
+				if ((!ph.get(p).hasPvPEnabled() || !player.hasPvPEnabled()) && e.getBlockClicked().getLocation().distanceSquared(p.getLocation()) < 9) {
 					player.message("§cNope! PvP Disabled!");
 					e.setCancelled(true);
 					return;
