@@ -3,8 +3,14 @@ package me.NoChance.PvPManager.Managers;
 import java.util.HashMap;
 import java.util.UUID;
 
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -13,12 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Tasks.CleanKillersTask;
+import org.bukkit.scoreboard.Scoreboard;
 
 public class PlayerHandler {
 
@@ -56,6 +57,8 @@ public class PlayerHandler {
 	}
 
 	private PvPlayer add(Player player) {
+		if (plugin.getServer().getPlayer(player.getUniqueId()) == null)
+			return null;
 		PvPlayer pvPlayer = new PvPlayer(player, plugin);
 		players.put(player.getName(), pvPlayer);
 		return pvPlayer;
@@ -70,6 +73,18 @@ public class PlayerHandler {
 			}
 		}, 1800);
 		savePvPState(player.getUUID(), player.hasPvPEnabled());
+	}
+
+	public void removeTeams() {
+		Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+		if (scoreboard.getTeam("InCombat") != null)
+			scoreboard.getTeam("InCombat").unregister();
+
+		if (scoreboard.getTeam("PvPOn") != null)
+			scoreboard.getTeam("PvPOn").unregister();
+
+		if (scoreboard.getTeam("PvPOff") != null)
+			scoreboard.getTeam("PvPOff").unregister();
 	}
 
 	public void savePvPState(UUID id, boolean pvpState) {
