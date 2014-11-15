@@ -85,6 +85,8 @@ public class PlayerListener implements Listener {
 	public void onPlayerLogout(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		PvPlayer pvPlayer = ph.get(player);
+		if (pvPlayer == null)
+			return;
 		if (pvPlayer.isInCombat()) {
 			if (Variables.logToFile)
 				plugin.getLog().log(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
@@ -103,6 +105,8 @@ public class PlayerListener implements Listener {
 		if (player.hasMetadata("NPC"))
 			return;
 		PvPlayer pvPlayer = ph.get(player);
+		if (pvPlayer == null)
+			return;
 		if (pvPlayer.hasPvPLogged() && !Variables.dropExp) {
 			event.setKeepLevel(true);
 			event.setDroppedExp(0);
@@ -147,6 +151,8 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			PvPlayer pvplayer = ph.get(player);
+			if (pvplayer == null)
+				return;
 			if (i.getType().equals(Material.FLINT_AND_STEEL) && !pvplayer.hasPvPEnabled() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				e.setCancelled(true);
 				pvplayer.message("§cYou need to have PvP enabled to do that!");
@@ -157,6 +163,8 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onBucketEmpty(PlayerBucketEmptyEvent e) {
 		PvPlayer player = ph.get(e.getPlayer());
+		if (player == null)
+			return;
 		if (CombatUtils.PMAllowed(player.getWorldName()) && e.getBucket().equals(Material.LAVA_BUCKET)) {
 			for (Player p : e.getBlockClicked().getWorld().getPlayers()) {
 				if (e.getPlayer().equals(p))
@@ -185,6 +193,8 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		PvPlayer pvPlayer = ph.get(event.getPlayer());
+		if (pvPlayer == null)
+			return;
 		if (pvPlayer.isInCombat() && !event.getReason().equalsIgnoreCase("Illegal characters in chat"))
 			pvPlayer.unTag();
 	}
@@ -193,6 +203,8 @@ public class PlayerListener implements Listener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
 			PvPlayer player = ph.get(event.getPlayer());
+			if (player == null)
+				return;
 			if (Variables.inCombatEnabled && Variables.blockEnderPearl && player.isInCombat()) {
 				player.message(Messages.EnderPearl_Blocked_InCombat);
 				event.setCancelled(true);
@@ -216,6 +228,8 @@ public class PlayerListener implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		if (Variables.killAbuseEnabled && Variables.respawnProtection != 0) {
 			PvPlayer player = ph.get(event.getPlayer());
+			if (player == null)
+				return;
 			player.setRespawnTime(System.currentTimeMillis());
 		}
 	}
@@ -223,6 +237,8 @@ public class PlayerListener implements Listener {
 	private void onDamageActions(Player attacker, Player defender) {
 		PvPlayer pvpAttacker = ph.get(attacker);
 		PvPlayer pvpDefender = ph.get(defender);
+		if (pvpAttacker == null || pvpDefender == null)
+			return;
 		if (Variables.pvpBlood)
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
