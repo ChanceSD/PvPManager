@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -153,9 +154,16 @@ public class PlayerListener implements Listener {
 			PvPlayer pvplayer = ph.get(player);
 			if (pvplayer == null)
 				return;
-			if (i.getType().equals(Material.FLINT_AND_STEEL) && !pvplayer.hasPvPEnabled() && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				e.setCancelled(true);
-				pvplayer.message("§cYou need to have PvP enabled to do that!");
+			if (i.getType().equals(Material.FLINT_AND_STEEL) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				for (Player p : e.getClickedBlock().getWorld().getPlayers()) {
+					if (e.getPlayer().equals(p))
+						continue;
+					if ((!ph.get(p).hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
+						pvplayer.message("§cNope! PvP Disabled!");
+						e.setCancelled(true);
+						return;
+					}
+				}
 			}
 		}
 	}
@@ -175,6 +183,15 @@ public class PlayerListener implements Listener {
 					return;
 				}
 			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerPickup(PlayerPickupItemEvent e) {
+		if (Variables.blockPickNewbies) {
+			PvPlayer player = ph.get(e.getPlayer());
+			if (player.isNewbie())
+				e.setCancelled(true);
 		}
 	}
 
