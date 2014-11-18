@@ -63,6 +63,7 @@ public class Variables {
 	public static boolean logToFile;
 	public static boolean transferDrops;
 	public static int moneyPenalty;
+	public static boolean blockPickNewbies;
 
 	public Variables(ConfigManager configM) {
 		this.cm = configM;
@@ -123,6 +124,7 @@ public class Variables {
 		logToFile = cm.getConfig().getBoolean("In Combat.Punishments.Log To File", true);
 		transferDrops = cm.getConfig().getBoolean("Player Kills.Transfer Drops", false);
 		moneyPenalty = cm.getConfig().getInt("Player Kills.Money Penalty", 10);
+		blockPickNewbies = cm.getConfig().getBoolean("Newbie Protection.Block Pick Items", false);
 	}
 
 	public static void helpMenu(Player player) {
