@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 22
+Config Version: 23
 # This changes the plugin's messages to the specified language.
 # Currently there is - en ru ch es
 Locale: en
@@ -84,7 +84,8 @@ Player Kills:
 # Broadcast - Broadcast a message when players toggle PvP
 # Cooldown(seconds) - How many seconds players have to wait until they can use /pvp again
 # Toggle Off on Death - Toggle automatically PvP off for a player on death(if player has toggle permission)
-# NameTags - Control if the nametag of the player should have colors when pvp if on/off
+# NameTags - Control if the nametag of the player should have colors when pvp is turned on/off.
+# You can write 'none' to disable one of the nametags, use "Enabled: false" to disable both
 PvP Toggle:
   Broadcast: false
   Cooldown(seconds): 15
@@ -115,9 +116,11 @@ Kill Abuse:
 
 # Should new players on your server be protected from PvP (If they want to PvP just use /pvp disable protection)
 # Time(minutes) - If so, for how many minutes should protection last
+# Block Pick Items - Block players from picking up items while they have protection
 Newbie Protection:
   Enabled: true
   Time(minutes): 5
+  Block Pick Items: false
 
 # Default PvP - All players should start with PvP ON(=true) or OFF(=false) by default(Only works for new players)
 Default PvP: true
