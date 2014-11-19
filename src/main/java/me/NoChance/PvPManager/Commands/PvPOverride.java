@@ -20,6 +20,7 @@ public class PvPOverride implements CommandExecutor {
 		if (sender instanceof Player) {
 			if (sender.hasPermission("pvpmanager.override")) {
 				ph.get((Player) sender).toggleOverride();
+				sender.sendMessage("§2PvP Override Toggled");
 			} else
 				sender.sendMessage(Messages.Error_Permission);
 		}
