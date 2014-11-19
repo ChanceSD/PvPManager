@@ -85,7 +85,7 @@ Player Kills:
 # Cooldown(seconds) - How many seconds players have to wait until they can use /pvp again
 # Toggle Off on Death - Toggle automatically PvP off for a player on death(if player has toggle permission)
 # NameTags - Control if the nametag of the player should have colors when pvp is turned on/off.
-# You can write 'none' to disable one of the nametags, use "Enabled: false" to disable both
+# You can write 'none' to disable one of the nametags, use "Enabled - false" to disable both
 PvP Toggle:
   Broadcast: false
   Cooldown(seconds): 15
