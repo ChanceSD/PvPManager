@@ -71,7 +71,7 @@ public class PlayerHandler {
 					players.remove(player.getName());
 				}
 			}
-		}, 1800);
+		}, Variables.toggleCooldown * 1000);
 		savePvPState(player.getUUID(), player.hasPvPEnabled());
 	}
 
