@@ -112,7 +112,7 @@ public class PlayerHandler {
 	public void giveReward(Player killer, Player victim) {
 		if (economy != null) {
 			economy.depositPlayer(killer, Variables.moneyReward);
-			killer.sendMessage(Messages.Money_Reward.replace("%m", Integer.toString(Variables.moneyReward)).replace("%p", victim.getName()));
+			killer.sendMessage(Messages.Money_Reward.replace("%m", Double.toString(Variables.moneyReward)).replace("%p", victim.getName()));
 		} else {
 			plugin.getLogger().severe("Tried to give reward but no Economy plugin found!");
 			plugin.getLogger().severe("Disable money reward on kill or get an Economy plugin to fix this error");
