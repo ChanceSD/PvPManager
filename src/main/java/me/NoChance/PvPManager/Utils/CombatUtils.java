@@ -1,5 +1,11 @@
 package me.NoChance.PvPManager.Utils;
 
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Listeners.WGListener;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -7,13 +13,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.Plugin;
 
-import com.massivecraft.factions.entity.UPlayer;
-
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Listeners.WGListener;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
+import com.massivecraft.factions.entity.MPlayer;
 
 public class CombatUtils {
 
@@ -87,8 +87,8 @@ public class CombatUtils {
 		if (!(attacker.isInCombat() && attacked.isInCombat()))
 			return false;
 		else if (useFactions) {
-			UPlayer fAttacker = UPlayer.get(attacker.getPlayer());
-			UPlayer fAttacked = UPlayer.get(attacked.getPlayer());
+			MPlayer fAttacker = MPlayer.get(attacker.getPlayer());
+			MPlayer fAttacked = MPlayer.get(attacked.getPlayer());
 			return !fAttacker.getFactionId().equalsIgnoreCase(fAttacked.getFactionId());
 		} else
 			return true;
