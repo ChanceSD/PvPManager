@@ -33,9 +33,18 @@ public class CombatUtils {
 		Plugin factions = Bukkit.getPluginManager().getPlugin("Factions");
 
 		try {
-			useFactions = factions != null && Integer.valueOf(factions.getDescription().getVersion().replace(".", "")) > 182;
+			if (factions != null) {
+				if (Integer.valueOf(factions.getDescription().getVersion().replace(".", "")) >= 270) {
+					useFactions = true;
+					Class.forName("com.massivecraft.factions.entity.MPlayer");
+					plugin.getLogger().info("Factions Found! Hooked successfully");
+				} else
+					plugin.getLogger().info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
+			}
 		} catch (NumberFormatException e) {
 			plugin.getLogger().warning("Couldn't read Factions version, maybe it's a fork?");
+		} catch (ClassNotFoundException e) {
+			plugin.getLogger().warning("Factions broke their API again, an updated version of PvPManager should fix this soon");
 			useFactions = false;
 		}
 	}
