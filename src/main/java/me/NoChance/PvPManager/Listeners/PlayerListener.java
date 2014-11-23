@@ -188,7 +188,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerPickup(PlayerPickupItemEvent e) {
-		if (Variables.blockPickNewbies) {
+		if (Variables.newbieProtectionEnabled && Variables.blockPickNewbies) {
 			PvPlayer player = ph.get(e.getPlayer());
 			if (player.isNewbie())
 				e.setCancelled(true);
