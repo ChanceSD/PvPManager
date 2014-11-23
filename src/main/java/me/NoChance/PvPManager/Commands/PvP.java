@@ -20,7 +20,6 @@ public class PvP implements CommandExecutor {
 		this.ph = playerHandler;
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
@@ -187,7 +186,6 @@ public class PvP implements CommandExecutor {
 		return list.toString();
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean isOnline(String name) {
 		return Bukkit.getPlayer(name) != null;
 	}

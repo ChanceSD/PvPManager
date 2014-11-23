@@ -98,9 +98,11 @@ public class CombatUtils {
 		else if (useFactions) {
 			MPlayer fAttacker = MPlayer.get(attacker.getPlayer());
 			MPlayer fAttacked = MPlayer.get(attacked.getPlayer());
+			if (!fAttacker.hasFaction() || !fAttacked.hasFaction())
+				return true;
 			return !fAttacker.getFactionId().equalsIgnoreCase(fAttacked.getFactionId());
-		} else
-			return true;
+		}
+		return true;
 	}
 
 	public static CancelResult tryCancel(Player attacker, Player attacked) {
