@@ -1,22 +1,31 @@
 package me.NoChance.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.lang.reflect.Field;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils.CancelResult;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ PvPManager.class, CombatUtils.class })
@@ -85,9 +94,9 @@ public class DamageListenerTest {
 	@Test
 	public void failCancel() {
 		CancelResult cr = CancelResult.FAIL;
-		createAttack(cr);
+		when(CombatUtils.tryCancel(attacker, defender)).thenReturn(cr);
+		damageListener.onPlayerDamageMonitor(mockEvent);
 
-		verify(attacker, never()).sendMessage(anyString());
 		verify(mockEvent, never()).setCancelled(true);
 		assertEquals(cr, CombatUtils.tryCancel(attacker, defender));
 	}
@@ -95,9 +104,10 @@ public class DamageListenerTest {
 	@Test
 	public void overrideCancel() {
 		CancelResult cr = CancelResult.FAIL_OVERRIDE;
-		createAttack(cr);
+		when(CombatUtils.tryCancel(attacker, defender)).thenReturn(cr);
+		damageListener.onPlayerDamageOverride(mockEvent);
 
-		verify(mockEvent, never()).setCancelled(anyBoolean());
+		verify(mockEvent, never()).setCancelled(false);
 		verify(attacker, never()).sendMessage(anyString());
 		assertEquals(cr, CombatUtils.tryCancel(attacker, defender));
 	}
@@ -106,7 +116,8 @@ public class DamageListenerTest {
 	public void overrideCancelled() {
 		CancelResult cr = CancelResult.FAIL_OVERRIDE;
 		when(mockEvent.isCancelled()).thenReturn(true);
-		createAttack(cr);
+		when(CombatUtils.tryCancel(attacker, defender)).thenReturn(cr);
+		damageListener.onPlayerDamageOverride(mockEvent);
 
 		verify(mockEvent).setCancelled(false);
 		verify(attacker, never()).sendMessage(anyString());
