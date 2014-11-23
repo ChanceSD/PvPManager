@@ -46,7 +46,7 @@ public class PlayerListener implements Listener {
 		this.ph = plugin.getPlayerHandler();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerDamage(EntityDamageByEntityEvent event) {
 		if (!CombatUtils.isPvP(event) || !CombatUtils.PMAllowed(event.getEntity().getWorld().getName()))
 			return;
@@ -80,6 +80,26 @@ public class PlayerListener implements Listener {
 		default:
 			break;
 		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerDamageOverride(EntityDamageByEntityEvent event) {
+		if (!CombatUtils.isPvP(event) || !CombatUtils.PMAllowed(event.getEntity().getWorld().getName()) || !event.isCancelled())
+			return;
+
+		if (CombatUtils.tryCancel(getAttacker(event), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE))
+			event.setCancelled(false);
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerDamageMonitor(EntityDamageByEntityEvent event) {
+		if (!CombatUtils.isPvP(event) || !CombatUtils.PMAllowed(event.getEntity().getWorld().getName()))
+			return;
+		Player attacker = getAttacker(event);
+		Player attacked = (Player) event.getEntity();
+
+		if (CombatUtils.tryCancel(attacker, attacked).equals(CancelResult.FAIL))
+			onDamageActions(attacker, attacked);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
