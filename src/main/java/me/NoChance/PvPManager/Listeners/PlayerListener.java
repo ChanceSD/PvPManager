@@ -158,7 +158,10 @@ public class PlayerListener implements Listener {
 				for (Player p : e.getClickedBlock().getWorld().getPlayers()) {
 					if (e.getPlayer().equals(p))
 						continue;
-					if ((!ph.get(p).hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
+					PvPlayer target = ph.get(p);
+					if (target == null)
+						continue;
+					if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
 						pvplayer.message("§cNope! PvP Disabled!");
 						e.setCancelled(true);
 						return;
@@ -177,7 +180,10 @@ public class PlayerListener implements Listener {
 			for (Player p : e.getBlockClicked().getWorld().getPlayers()) {
 				if (e.getPlayer().equals(p))
 					continue;
-				if ((!ph.get(p).hasPvPEnabled() || !player.hasPvPEnabled()) && e.getBlockClicked().getLocation().distanceSquared(p.getLocation()) < 9) {
+				PvPlayer target = ph.get(p);
+				if (target == null)
+					continue;
+				if ((!target.hasPvPEnabled() || !player.hasPvPEnabled()) && e.getBlockClicked().getLocation().distanceSquared(p.getLocation()) < 9) {
 					player.message("§cNope! PvP Disabled!");
 					e.setCancelled(true);
 					return;
