@@ -59,11 +59,7 @@ public class PlayerListener implements Listener {
 
 		switch (result) {
 		case FAIL_OVERRIDE:
-			if (event.isCancelled())
-				event.setCancelled(false);
 		case FAIL:
-			if (!event.isCancelled())
-				onDamageActions(attacker, attacked);
 			break;
 		case NEWBIE:
 			attacker.sendMessage(Messages.Newbie_Protection_On_Hit);
