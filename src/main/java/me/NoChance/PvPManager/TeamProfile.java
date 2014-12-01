@@ -3,6 +3,7 @@ package me.NoChance.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -43,7 +44,10 @@ public class TeamProfile {
 	}
 
 	public void setInCombat() {
-		inCombat.addPlayer(pvPlayer.getPlayer());
+		Player player = pvPlayer.getPlayer();
+		if (pvpOn != null || pvpOff != null)
+			previousTeam = scoreboard.getPlayerTeam(player);
+		inCombat.addPlayer(player);
 	}
 
 	public void restoreTeam() {
