@@ -24,10 +24,6 @@
 
 	<repositories>
 		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public/</url>
-		</repository>
-		<repository>
 			<id>sk89q-repo</id>
 			<url>http://maven.sk89q.com/repo/</url>
 		</repository>
@@ -64,6 +60,13 @@
 			<version>2.5.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/repo/Factions.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>SpigotAPI</artifactId>
+			<version>1.8</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/repo/spigot-api-1.8-R0.1-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
@@ -109,12 +112,6 @@
 					<groupId>org.spigotmc</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<artifactId>bukkit</artifactId>
-			<groupId>org.bukkit</groupId>
-			<scope>provided</scope>
-			<version>1.7.9-R0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
@@ -165,6 +162,10 @@
 				<exclusion>
 					<artifactId>jsr305</artifactId>
 					<groupId>com.google.code.findbugs</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bukkit</artifactId>
+					<groupId>org.bukkit</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
