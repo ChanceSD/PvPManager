@@ -281,8 +281,9 @@ public class PlayerListener implements Listener {
 		if (Variables.pvpBlood)
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_WIRE);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
-			if (Variables.disableFly && (attacker.isFlying() || attacker.getAllowFlight())) {
-				pvpAttacker.disableFly();
+			if (Variables.disableFly) {
+				if (attacker.isFlying() || attacker.getAllowFlight())
+					pvpAttacker.disableFly();
 				if (defender.isFlying() || defender.getAllowFlight())
 					pvpDefender.disableFly();
 			}
