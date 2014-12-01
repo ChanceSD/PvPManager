@@ -223,7 +223,8 @@ public class PvPlayer {
 		this.respawnTime = respawnTime;
 	}
 
-	public void toggleOverride() {
+	public boolean toggleOverride() {
 		this.override = !override;
+		return this.override;
 	}
 }
