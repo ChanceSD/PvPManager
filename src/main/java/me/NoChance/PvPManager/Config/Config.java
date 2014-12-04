@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import me.NoChance.PvPManager.PvPManager;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,6 +25,7 @@ public class Config extends YamlConfiguration {
 	private FileConfiguration config;
 	private PvPManager plugin;
 
+	@SuppressWarnings("deprecation")
 	public Config(PvPManager plugin, String name) {
 		this.plugin = plugin;
 		File file = new File(plugin.getDataFolder(), name);

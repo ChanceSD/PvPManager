@@ -98,7 +98,7 @@ public class PlayerListener implements Listener {
 			onDamageActions(attacker, attacked);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	public void onPlayerLogout(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		PvPlayer pvPlayer = ph.get(player);
@@ -111,7 +111,7 @@ public class PlayerListener implements Listener {
 				plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
 			if (Variables.punishmentsEnabled)
 				ph.applyPunishments(player);
-			pvPlayer.unTag();
+			ph.untag(pvPlayer);
 		}
 		ph.remove(pvPlayer);
 	}
@@ -129,7 +129,7 @@ public class PlayerListener implements Listener {
 			event.setDroppedExp(0);
 		}
 		if (pvPlayer.isInCombat())
-			pvPlayer.unTag();
+			ph.untag(pvPlayer);
 		Player killer = player.getKiller();
 		if (killer != null && !killer.hasMetadata("NPC")) {
 			if (Variables.killAbuseEnabled)
@@ -235,7 +235,7 @@ public class PlayerListener implements Listener {
 		if (pvPlayer == null)
 			return;
 		if (pvPlayer.isInCombat() && !event.getReason().equalsIgnoreCase("Illegal characters in chat"))
-			pvPlayer.unTag();
+			ph.untag(pvPlayer);
 	}
 
 	@EventHandler
