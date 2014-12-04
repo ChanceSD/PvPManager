@@ -8,6 +8,7 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
+import me.NoChance.PvPManager.Tasks.TagTask;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ public class PlayerHandler {
 	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
+	private TagTask task;
 
 	public PlayerHandler(PvPManager plugin) {
 		this.plugin = plugin;
@@ -43,6 +45,7 @@ public class PlayerHandler {
 			Variables.fineEnabled = false;
 		}
 		addOnlinePlayers();
+		task = (TagTask) new TagTask().runTaskTimerAsynchronously(plugin, 20, 20);
 	}
 
 	private void addOnlinePlayers() {
@@ -64,14 +67,19 @@ public class PlayerHandler {
 		return pvPlayer;
 	}
 
+	public void untag(PvPlayer p) {
+		task.getTagged().remove(p);
+		p.unTag();
+	}
+
 	public void remove(final PvPlayer player) {
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new BukkitRunnable() {
+		new BukkitRunnable() {
 			public void run() {
 				if (player.getPlayer() == null) {
 					players.remove(player.getName());
 				}
 			}
-		}, Variables.toggleCooldown * 20);
+		}.runTaskLater(plugin, Variables.toggleCooldown * 20);
 		savePvPState(player.getUUID(), player.hasPvPEnabled());
 	}
 
@@ -186,6 +194,10 @@ public class PlayerHandler {
 
 	public HashMap<String, PvPlayer> getPlayers() {
 		return players;
+	}
+
+	public TagTask getTagTask() {
+		return task;
 	}
 
 }
