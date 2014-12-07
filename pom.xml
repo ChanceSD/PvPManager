@@ -4,7 +4,7 @@
 	<groupId>PvPManager</groupId>
 	<artifactId>PvPManager</artifactId>
 	<packaging>jar</packaging>
-	<version>2.4.6</version>
+	<version>2.4.6.1</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +39,10 @@
 			<id>libsdisguises-repo</id>
 			<url>http://repo.md-5.net/content/groups/public/</url>
 		</repository>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -63,10 +67,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
-			<artifactId>SpigotAPI</artifactId>
-			<version>1.8</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/repo/spigot-api-1.8-R0.1-SNAPSHOT.jar</systemPath>
+			<artifactId>spigot-api</artifactId>
+			<version>1.8-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
