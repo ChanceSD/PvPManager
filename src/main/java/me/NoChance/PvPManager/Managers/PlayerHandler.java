@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.TeamProfile;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
@@ -28,7 +29,7 @@ public class PlayerHandler {
 	private ConfigManager configManager;
 	private PvPManager plugin;
 	private Economy economy;
-	private TagTask task;
+	private TagTask tagTask = new TagTask();
 
 	public PlayerHandler(PvPManager plugin) {
 		this.plugin = plugin;
@@ -45,7 +46,7 @@ public class PlayerHandler {
 			Variables.fineEnabled = false;
 		}
 		addOnlinePlayers();
-		task = (TagTask) new TagTask().runTaskTimerAsynchronously(plugin, 20, 20);
+		tagTask.runTaskTimerAsynchronously(plugin, 20, 20);
 	}
 
 	private void addOnlinePlayers() {
@@ -64,11 +65,13 @@ public class PlayerHandler {
 			return null;
 		PvPlayer pvPlayer = new PvPlayer(player, plugin);
 		players.put(player.getName(), pvPlayer);
+		if (players.size() == 1)
+			TeamProfile.setupTeams();
 		return pvPlayer;
 	}
 
 	public void untag(PvPlayer p) {
-		task.getTagged().remove(p);
+		tagTask.getTagged().remove(p);
 		p.unTag();
 	}
 
@@ -197,7 +200,7 @@ public class PlayerHandler {
 	}
 
 	public TagTask getTagTask() {
-		return task;
+		return tagTask;
 	}
 
 }
