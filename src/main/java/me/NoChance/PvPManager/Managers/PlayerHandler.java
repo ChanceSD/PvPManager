@@ -74,6 +74,10 @@ public class PlayerHandler {
 		tagTask.getTagged().remove(p);
 		p.unTag();
 	}
+	
+	public void tag(PvPlayer p) {
+		tagTask.getTagged().add(p);
+	}
 
 	public void remove(final PvPlayer player) {
 		new BukkitRunnable() {
