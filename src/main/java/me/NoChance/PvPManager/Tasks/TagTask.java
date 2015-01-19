@@ -15,7 +15,7 @@ public class TagTask extends BukkitRunnable {
 	private final HashSet<PvPlayer> tagged = new HashSet<PvPlayer>();
 
 	public void run() {
-		Iterator<PvPlayer> iterator = tagged.iterator();
+		Iterator<PvPlayer> iterator = getTagged().iterator();
 		while (iterator.hasNext()) {
 			PvPlayer p = iterator.next();
 			if (CombatUtils.hasTimePassed(p.getTaggedTime(), time)) {
@@ -25,7 +25,7 @@ public class TagTask extends BukkitRunnable {
 		}
 	}
 
-	public HashSet<PvPlayer> getTagged() {
+	public synchronized HashSet<PvPlayer> getTagged() {
 		return tagged;
 	}
 	

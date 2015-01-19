@@ -17,10 +17,6 @@ import com.massivecraft.factions.entity.MPlayer;
 
 public class CombatUtils {
 
-	public enum CancelResult {
-		NEWBIE, NEWBIE_OTHER, PVPDISABLED, PVPDISABLED_OTHER, RESPAWN_PROTECTION, FAIL, FAIL_OVERRIDE
-	}
-
 	private static PlayerHandler ph;
 	private static boolean useFactions;
 
