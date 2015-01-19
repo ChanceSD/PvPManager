@@ -144,6 +144,7 @@ public class PvPlayer {
 				message(Messages.Tagged_Defender.replace("%p", tagger));
 
 		this.tagged = true;
+		plugin.getPlayerHandler().tag(this);
 	}
 
 	public void unTag() {
