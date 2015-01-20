@@ -65,7 +65,7 @@ public class PlayerHandler {
 			return null;
 		PvPlayer pvPlayer = new PvPlayer(player, plugin);
 		players.put(player.getName(), pvPlayer);
-		if (players.size() == 1)
+		if ((Variables.useNameTag || Variables.toggleNametagsEnabled) && players.size() == 1)
 			TeamProfile.setupTeams();
 		return pvPlayer;
 	}
@@ -74,7 +74,7 @@ public class PlayerHandler {
 		tagTask.getTagged().remove(p);
 		p.unTag();
 	}
-	
+
 	public void tag(PvPlayer p) {
 		tagTask.getTagged().add(p);
 	}
