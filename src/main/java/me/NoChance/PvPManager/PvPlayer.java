@@ -35,14 +35,6 @@ public class PvPlayer {
 		this.newbieTask = new NewbieTask(this);
 		if (Variables.useNameTag || Variables.toggleNametagsEnabled)
 			teamProfile = new TeamProfile(this);
-		if (!player.hasPlayedBefore()) {
-			this.pvpState = Variables.defaultPvp;
-			if (Variables.newbieProtectionEnabled)
-				setNewbie(true);
-		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(id.toString()))
-			this.pvpState = true;
-		if (player.hasPermission("pvpmanager.nopvp"))
-			this.pvpState = false;
 	}
 
 	public String getName() {
@@ -128,12 +120,12 @@ public class PvPlayer {
 	public void setTagged(boolean attacker, String tagger) {
 		if (getPlayer().hasPermission("pvpmanager.nocombat"))
 			return;
-		
+
 		taggedTime = System.currentTimeMillis();
-		
+
 		if (tagged)
-			return;	
-		
+			return;
+
 		if (Variables.useNameTag)
 			teamProfile.setInCombat();
 
@@ -224,5 +216,18 @@ public class PvPlayer {
 
 	public long getTaggedTime() {
 		return taggedTime;
+	}
+
+	public void loadPvPState() {
+		if (getPlayer().hasPermission("pvpmanager.nopvp"))
+			this.pvpState = false;
+		else if (!getPlayer().hasPlayedBefore()) {
+			this.pvpState = Variables.defaultPvp;
+			if (Variables.newbieProtectionEnabled)
+				setNewbie(true);
+		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(id.toString()))
+			this.pvpState = true;
+		if (Variables.toggleNametagsEnabled)
+			teamProfile.setPvP(this.pvpState);
 	}
 }
