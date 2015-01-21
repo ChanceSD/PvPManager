@@ -67,6 +67,7 @@ public class PlayerHandler {
 		players.put(player.getName(), pvPlayer);
 		if ((Variables.useNameTag || Variables.toggleNametagsEnabled) && players.size() == 1)
 			TeamProfile.setupTeams();
+		pvPlayer.loadPvPState();
 		return pvPlayer;
 	}
 
