@@ -64,7 +64,8 @@ public class PvPlayer {
 
 	public void togglePvP() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Variables.toggleCooldown)) {
-			message(Messages.Error_PvP_Cooldown);
+			long secondsLeft = (System.currentTimeMillis() - toggleTime) / 1000;
+			message(Messages.Error_PvP_Cooldown.replace("%m", Long.toString(secondsLeft)));
 			return;
 		} else {
 			toggleTime = System.currentTimeMillis();
