@@ -84,6 +84,7 @@ public class ConfigManager {
 		this.config.set("Newbie Protection.Enabled", Variables.newbieProtectionEnabled);
 		this.config.set("Newbie Protection.Time(minutes)", Variables.newbieProtectionTime);
 		this.config.set("Newbie Protection.Block Pick Items", Variables.blockPickNewbies);
+		this.config.set("Newbie Protection.Protect From Everything", Variables.newbieGodMode);
 
 		this.config.set("Update Check.Enabled", Variables.updateCheck);
 		this.config.set("Update Check.Auto Update", Variables.autoUpdate);
@@ -93,7 +94,7 @@ public class ConfigManager {
 	}
 
 	private void loadConfig() {
-		if (configVersion < 24) {
+		if (configVersion < 25) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
