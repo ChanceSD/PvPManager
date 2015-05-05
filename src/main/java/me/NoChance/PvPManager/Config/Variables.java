@@ -66,6 +66,7 @@ public class Variables {
 	public static boolean transferDrops;
 	public static double moneyPenalty;
 	public static boolean blockPickNewbies;
+	public static boolean newbieGodMode;
 
 	public Variables(ConfigManager configM) {
 		this.cm = configM;
@@ -125,8 +126,9 @@ public class Variables {
 		toggleColorOff = cm.getConfig().getString("PvP Toggle.NameTags.Color Off", "&2");
 		logToFile = cm.getConfig().getBoolean("In Combat.Punishments.Log To File", true);
 		transferDrops = cm.getConfig().getBoolean("Player Kills.Transfer Drops", false);
-		moneyPenalty = cm.getConfig().getDouble("Player Kills.Money Penalty", 10);
+		moneyPenalty = cm.getConfig().getDouble("Player Kills.Money Penalty", 10);		
 		blockPickNewbies = cm.getConfig().getBoolean("Newbie Protection.Block Pick Items", false);
+		newbieGodMode = cm.getConfig().getBoolean("Newbie Protection.Protect From Everything", false);
 	}
 
 	public static void helpMenu(Player player) {

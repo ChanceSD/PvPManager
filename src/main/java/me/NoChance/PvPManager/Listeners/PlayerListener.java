@@ -48,7 +48,13 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerDamage(EntityDamageByEntityEvent event) {
-		if (!CombatUtils.isPvP(event) || !CombatUtils.PMAllowed(event.getEntity().getWorld().getName()))
+		if (!CombatUtils.PMAllowed(event.getEntity().getWorld().getName()))
+			return;
+		if (Variables.newbieGodMode && event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie()) {
+			event.setCancelled(true);
+			return;
+		}
+		if (!CombatUtils.isPvP(event))
 			return;
 		Player attacker = getAttacker(event);
 		Player attacked = (Player) event.getEntity();
@@ -95,7 +101,7 @@ public class PlayerListener implements Listener {
 		Player attacked = (Player) event.getEntity();
 
 		CancelResult result = CombatUtils.tryCancel(attacker, attacked);
-		
+
 		if (result == CancelResult.FAIL || result == CancelResult.FAIL_OVERRIDE)
 			onDamageActions(attacker, attacked);
 	}
