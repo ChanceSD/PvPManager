@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 25
+Config Version: 26
 # This changes the plugin's messages to the specified language.
 # Currently there is - en ru ch es
 Locale: en
@@ -36,7 +36,7 @@ Ignore No Damage Hits: false
 # Name Tag Color - Choose the color above the player when in combat, write 'none' to disable, you can also 
 # write a prefix but make sure it's under 16 characters. Example - '&c[Tagged] '
 # Stop Commands - Should commands be blocked in combat(Example - To prevent teleports)
-# -> Allowed Commands - All commands will be blocked except the ones here
+# -> Commands - Commands allowed if whitelist mode is true or blocked if not
 # Punishments - When player logs out in combat (PvP log), should he be punished?
 # -> Broadcast PvPLog - Broadcast to all the players when someone PvP logs
 # -> Log To File - Log all pvp loggers to a file
@@ -50,7 +50,8 @@ In Combat:
   Block EnderPearl: true
   Stop Commands:
     Enabled: true
-    Allowed Commands:
+    Whitelist: true
+    Commands:
       - tell
       - money
   Punishments:

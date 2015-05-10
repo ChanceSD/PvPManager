@@ -48,7 +48,8 @@ public class ConfigManager {
 		this.config.set("In Combat.Only Tag Attacker", Variables.onlyTagAttacker);
 		this.config.set("In Combat.Block EnderPearl", Variables.blockEnderPearl);
 		this.config.set("In Combat.Stop Commands.Enabled", Variables.stopCommands);
-		this.config.set("In Combat.Stop Commands.Allowed Commands", Variables.commandsAllowed);
+		this.config.set("In Combat.Stop Commands.Whitelist", Variables.commandsWhitelist);
+		this.config.set("In Combat.Stop Commands.Commands", Variables.commandsAllowed);
 		this.config.set("In Combat.Punishments.Enabled", Variables.punishmentsEnabled);
 		this.config.set("In Combat.Punishments.Broadcast PvPLog", Variables.broadcastPvpLog);
 		this.config.set("In Combat.Punishments.Log To File", Variables.logToFile);
@@ -94,7 +95,7 @@ public class ConfigManager {
 	}
 
 	private void loadConfig() {
-		if (configVersion < 25) {
+		if (configVersion < 26) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
