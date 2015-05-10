@@ -265,7 +265,8 @@ public class PlayerListener implements Listener {
 	public void onCommand(PlayerCommandPreprocessEvent event) {
 		if (Variables.stopCommands && Variables.inCombatEnabled) {
 			if (plugin.getPlayerHandler().get(event.getPlayer()).isInCombat()) {
-				if (!Variables.commandsAllowed.contains(event.getMessage().substring(1).split(" ")[0])) {
+				boolean contains = Variables.commandsAllowed.contains(event.getMessage().substring(1).split(" ")[0]);
+				if (Variables.commandsWhitelist ? !contains : contains) {
 					event.setCancelled(true);
 					event.getPlayer().sendMessage(Messages.Command_Denied_InCombat);
 				}

@@ -67,6 +67,7 @@ public class Variables {
 	public static double moneyPenalty;
 	public static boolean blockPickNewbies;
 	public static boolean newbieGodMode;
+	public static boolean commandsWhitelist;
 
 	public Variables(ConfigManager configM) {
 		this.cm = configM;
@@ -98,7 +99,7 @@ public class Variables {
 		fineAmount = cm.getConfig().getDouble("In Combat.Punishments.Fine.Amount", 10.00);
 		pvpBlood = cm.getConfig().getBoolean("PvP Blood", true);
 		disableGamemode = cm.getConfig().getBoolean("Disable GameMode", true);
-		commandsAllowed = (List<String>) cm.getConfig().getList("In Combat.Stop Commands.Allowed Commands", commandsAllowed);
+		commandsAllowed = (List<String>) cm.getConfig().getList("In Combat.Stop Commands.Commands", commandsAllowed);
 		toggleCooldown = cm.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
 		toggleBroadcast = cm.getConfig().getBoolean("PvP Toggle.Broadcast", false);
 		toggleOffOnDeath = cm.getConfig().getBoolean("PvP Toggle.Toggle Off on Death", false);
@@ -129,6 +130,7 @@ public class Variables {
 		moneyPenalty = cm.getConfig().getDouble("Player Kills.Money Penalty", 10);		
 		blockPickNewbies = cm.getConfig().getBoolean("Newbie Protection.Block Pick Items", false);
 		newbieGodMode = cm.getConfig().getBoolean("Newbie Protection.Protect From Everything", false);
+		commandsWhitelist = cm.getConfig().getBoolean("In Combat.Stop Commands.Whitelist", true);
 	}
 
 	public static void helpMenu(Player player) {
