@@ -118,7 +118,7 @@ public class PlayerListener implements Listener {
 			return;
 
 		for (PotionEffect effect : potion.getEffects()) {
-			if (effect.getType() == PotionEffectType.POISON) {
+			if (effect.getType().equals(PotionEffectType.POISON)) {
 				for (LivingEntity e : event.getAffectedEntities()) {
 					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled()) {
 						event.setIntensity(e, 0);
