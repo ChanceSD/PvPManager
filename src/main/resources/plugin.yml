@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 2.4.8.3
+version: 2.4.9
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, EZRanksLite]
@@ -12,9 +12,25 @@ commands:
    pvp:
       description: Change your PvP Status.
       aliases: [toggle, pvptoggle]
+      usage: "Usage: /<command> [player|on|off]"
    pvpoverride:
       description: Allows the player to attack everyone everywhere
       aliases: [pvpo, povd]
+      permission: pvpmanager.override
+   pvpinfo:
+      description: Allows the player to see his or others information
+      aliases: [pvpi, pi]
+      permission: pvpmanager.info
+      usage: "Usage: /<command> [player]"
+   pvpstatus:
+      description: Allows the player to see his or others pvp status
+      aliases: [pvps, ps, pstatus, status]
+      permission: pvpmanager.pvpstatus
+      usage: "Usage: /<command> [player]"
+   pvplist:
+      description: List all players with pvp enabled
+      aliases: [plist, pvpl]
+      permission: pvpmanager.list
 
 permissions:
    pvpmanager.*:
@@ -31,7 +47,7 @@ permissions:
        pvpmanager.user: true
        pvpmanager.override: true
        pvpmanager.sign: true
-       pvpmanager.info: true
+       pvpmanager.info.others: true
    pvpmanager.user:
      description: Gives access to PvPManager features that i think would be appropriate for a user
      default: false
@@ -44,11 +60,8 @@ permissions:
    pvpmanager.pvpstatus.change:
      description: Allows you to change your PvP status between <on> and <off>
      default: false
-   pvpmanager.pvpstatus.self:
-     description: Allows you to check your current PvP status
-     default: false
-   pvpmanager.pvpstatus.others:
-     description: Allows you to check other players PvP status
+   pvpmanager.pvpstatus:
+     description: Allows you to check your or others current PvP status
      default: false
    pvpmanager.reload:
      description: Allows you to reload PvPManager
@@ -74,6 +87,6 @@ permissions:
    pvpmanager.menu:
      description: Allows access to PvPManager help menu
      default: false
-   pvpmanager.info:
+   pvpmanager.info.others:
      description: Allows access to PvPManager info command
      default: false

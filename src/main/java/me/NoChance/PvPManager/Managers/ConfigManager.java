@@ -47,6 +47,7 @@ public class ConfigManager {
 		this.config.set("In Combat.Name Tag Color", Variables.nameTagColor);
 		this.config.set("In Combat.Only Tag Attacker", Variables.onlyTagAttacker);
 		this.config.set("In Combat.Block EnderPearl", Variables.blockEnderPearl);
+		this.config.set("In Combat.Block Place Blocks", Variables.blockPlaceBlocks);
 		this.config.set("In Combat.Stop Commands.Enabled", Variables.stopCommands);
 		this.config.set("In Combat.Stop Commands.Whitelist", Variables.commandsWhitelist);
 		this.config.set("In Combat.Stop Commands.Commands", Variables.commandsAllowed);
@@ -95,7 +96,7 @@ public class ConfigManager {
 	}
 
 	private void loadConfig() {
-		if (configVersion < 26) {
+		if (configVersion < 27) {
 			File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
