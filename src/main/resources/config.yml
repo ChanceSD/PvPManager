@@ -6,7 +6,7 @@
 # +--------------------------------------------------------------------------+ #
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: 26
+Config Version: 27
 # This changes the plugin's messages to the specified language.
 # Currently there is - en ru ch es
 Locale: en
@@ -48,6 +48,7 @@ In Combat:
   Name Tag Color: '&c'
   Only Tag Attacker: false
   Block EnderPearl: true
+  Block Place Blocks: false
   Stop Commands:
     Enabled: true
     Whitelist: true

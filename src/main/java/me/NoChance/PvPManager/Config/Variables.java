@@ -68,6 +68,7 @@ public class Variables {
 	public static boolean blockPickNewbies;
 	public static boolean newbieGodMode;
 	public static boolean commandsWhitelist;
+	public static boolean blockPlaceBlocks;
 
 	public Variables(ConfigManager configM) {
 		this.cm = configM;
@@ -127,20 +128,21 @@ public class Variables {
 		toggleColorOff = cm.getConfig().getString("PvP Toggle.NameTags.Color Off", "&2");
 		logToFile = cm.getConfig().getBoolean("In Combat.Punishments.Log To File", true);
 		transferDrops = cm.getConfig().getBoolean("Player Kills.Transfer Drops", false);
-		moneyPenalty = cm.getConfig().getDouble("Player Kills.Money Penalty", 10);		
+		moneyPenalty = cm.getConfig().getDouble("Player Kills.Money Penalty", 10);
 		blockPickNewbies = cm.getConfig().getBoolean("Newbie Protection.Block Pick Items", false);
 		newbieGodMode = cm.getConfig().getBoolean("Newbie Protection.Protect From Everything", false);
 		commandsWhitelist = cm.getConfig().getBoolean("In Combat.Stop Commands.Whitelist", true);
+		blockPlaceBlocks = cm.getConfig().getBoolean("In Combat.Block Place Blocks", false);
 	}
 
 	public static void helpMenu(Player player) {
 		player.sendMessage(ChatColor.GOLD + "-------------- PvPManager Help Page --------------");
-		player.sendMessage(ChatColor.GOLD + "/pvp " + ChatColor.WHITE + "| Set PvP Enabled or Disabled.");
-		player.sendMessage(ChatColor.GOLD + "/pvp info " + ChatColor.WHITE + "| Check Your Player Info");
-		player.sendMessage(ChatColor.GOLD + "/pvp status " + ChatColor.WHITE + "| Check What is your PvP Status.");
-		player.sendMessage(ChatColor.GOLD + "/pvp status <player> " + ChatColor.WHITE + "| Check Another Player PvP Status.");
+		player.sendMessage(ChatColor.GOLD + "/pvp [player] " + ChatColor.WHITE + "| Set PvP Enabled or Disabled");
+		player.sendMessage(ChatColor.GOLD + "/pvpinfo [player] " + ChatColor.WHITE + "| Check your or other player info");
+		player.sendMessage(ChatColor.GOLD + "/pvplist " + ChatColor.WHITE + "| List all players with PvP enabled");
 		player.sendMessage(ChatColor.GOLD + "/pvpo " + ChatColor.WHITE + "| Override all PvP protections");
-		player.sendMessage(ChatColor.GOLD + "/pvp disable protection " + ChatColor.WHITE + "| Disable Newbie Protection");
+		player.sendMessage(ChatColor.GOLD + "/pvpstatus [player] " + ChatColor.WHITE + "| Check yours or other player PvP status");
+		player.sendMessage(ChatColor.GOLD + "/pvp disable " + ChatColor.WHITE + "| Disable Newbie Protection");
 		player.sendMessage(ChatColor.GOLD + "/pm " + ChatColor.WHITE + "| Show This Help Page");
 		player.sendMessage(ChatColor.GOLD + "/pm update " + ChatColor.WHITE + "| Update to Latest Version");
 		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");

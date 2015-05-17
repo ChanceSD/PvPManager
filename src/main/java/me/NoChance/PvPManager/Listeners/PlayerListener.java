@@ -13,14 +13,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -32,6 +36,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
@@ -104,6 +109,30 @@ public class PlayerListener implements Listener {
 
 		if (result == CancelResult.FAIL || result == CancelResult.FAIL_OVERRIDE)
 			onDamageActions(attacker, attacked);
+	}
+
+	@EventHandler
+	public void onPotionSplash(PotionSplashEvent event) {
+		ThrownPotion potion = event.getPotion();
+		if (event.getAffectedEntities().isEmpty() || !(potion.getShooter() instanceof Player))
+			return;
+
+		for (PotionEffect effect : potion.getEffects()) {
+			if (effect.getType() == PotionEffectType.POISON) {
+				for (LivingEntity e : event.getAffectedEntities()) {
+					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled()) {
+						event.setIntensity(e, 0);
+					}
+				}
+				return;
+			}
+		}
+	}
+
+	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent event) {
+		if (Variables.blockPlaceBlocks && ph.get(event.getPlayer()).isInCombat())
+			event.setCancelled(true);
 	}
 
 	@EventHandler
@@ -210,7 +239,7 @@ public class PlayerListener implements Listener {
 				if (target == null)
 					continue;
 				if ((!target.hasPvPEnabled() || !player.hasPvPEnabled()) && e.getBlockClicked().getLocation().distanceSquared(p.getLocation()) < 9) {
-					player.message("§cNope! PvP Disabled!");
+					player.message(Messages.Attack_Denied_Other.replace("%p", target.getName()));
 					e.setCancelled(true);
 					return;
 				}
