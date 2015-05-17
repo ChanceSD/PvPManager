@@ -108,6 +108,10 @@ public class CombatUtils {
 	public static CancelResult tryCancel(Player attacker, Player attacked) {
 		return tryCancel(ph.get(attacker), ph.get(attacked));
 	}
+	
+	public static boolean isOnline(String name) {
+		return Bukkit.getPlayer(name) != null;
+	}
 
 	public static boolean PMAllowed(String worldName) {
 		return !Variables.worldsExcluded.contains(worldName);

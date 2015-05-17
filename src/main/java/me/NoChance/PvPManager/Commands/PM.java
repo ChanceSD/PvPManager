@@ -67,14 +67,6 @@ public class PM implements CommandExecutor {
 				}
 			}
 		} else {
-			if (args.length == 0) {
-				sender.sendMessage("[PvPManager] You are not a player, available commands:");
-				sender.sendMessage("pm reload");
-				sender.sendMessage("pm pvpstart <time> <world>");
-				sender.sendMessage("pm pvpend <time> <world>");
-				sender.sendMessage("pvp status <player>");
-				return true;
-			}
 			if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("reload")) {
 					reload(sender);
