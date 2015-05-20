@@ -6,13 +6,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class NewbieTask extends BukkitRunnable {
 
-	private PvPlayer player;
+	private final PvPlayer player;
 
-	public NewbieTask(PvPlayer player) {
+	public NewbieTask(final PvPlayer player) {
 		this.player = player;
 	}
 
-	public void run() {
+	public final void run() {
 		player.setNewbie(false);
 	}
 

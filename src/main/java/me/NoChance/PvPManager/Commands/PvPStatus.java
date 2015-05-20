@@ -14,31 +14,31 @@ import org.bukkit.entity.Player;
 
 public class PvPStatus implements CommandExecutor {
 
-	private PlayerHandler ph;
+	private final PlayerHandler ph;
 
-	public PvPStatus(PlayerHandler ph) {
+	public PvPStatus(final PlayerHandler ph) {
 		this.ph = ph;
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		PvPlayer target;
 		if (args.length == 0 && sender instanceof Player) {
-			Player player = (Player) sender;
+			final Player player = (Player) sender;
 			if (!ph.get(player).hasPvPEnabled()) {
-				player.sendMessage(Messages.Self_Status_Disabled);
+				player.sendMessage(Messages.getSelfStatusDisabled());
 				return true;
 			} else {
-				player.sendMessage(Messages.Self_Status_Enabled);
+				player.sendMessage(Messages.getSelfStatusEnabled());
 				return true;
 			}
 		} else if (args.length == 1) {
 			if (CombatUtils.isOnline(args[0])) {
 				target = ph.get(Bukkit.getPlayer(args[0]));
 				if (!target.hasPvPEnabled()) {
-					sender.sendMessage(Messages.Others_Status_Disabled.replace("%p", args[0]));
+					sender.sendMessage(Messages.getOthersStatusDisabled().replace("%p", args[0]));
 					return true;
 				} else {
-					sender.sendMessage(Messages.Other_Status_Enabled.replace("%p", args[0]));
+					sender.sendMessage(Messages.getOtherStatusEnabled().replace("%p", args[0]));
 					return true;
 				}
 			} else {

@@ -1,35 +1,36 @@
 package me.NoChance.PvPManager.Lib;
 
 import java.io.IOException;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Lib.Metrics.Graph;
 
 public class CustomMetrics {
 
-	private PvPManager plugin;
+	private final PvPManager plugin;
 
-	public CustomMetrics(PvPManager plugin) {
+	public CustomMetrics(final PvPManager plugin) {
 		this.plugin = plugin;
 		initMetrics();
 	}
 
-	public void initMetrics() {
+	public final void initMetrics() {
 		try {
-			Metrics metrics = new Metrics(plugin);
-			Graph keepItemsExp = metrics.createGraph("Percentage of Keep and Drop");
-			Graph inCombatTime = metrics.createGraph("Time in Combat");
-			Graph toggleSigns = metrics.createGraph("Toggle Signs Usage");
-			Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
-			Graph updateCheck = metrics.createGraph("Update Check Usage");
-			Graph killAbuse = metrics.createGraph("Kill Abuse Usage");
-			Graph autoSoup = metrics.createGraph("Auto Soup Usage");
-			
+			final Metrics metrics = new Metrics(plugin);
+			final Graph keepItemsExp = metrics.createGraph("Percentage of Keep and Drop");
+			final Graph inCombatTime = metrics.createGraph("Time in Combat");
+			final Graph toggleSigns = metrics.createGraph("Toggle Signs Usage");
+			final Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
+			final Graph updateCheck = metrics.createGraph("Update Check Usage");
+			final Graph killAbuse = metrics.createGraph("Kill Abuse Usage");
+			final Graph autoSoup = metrics.createGraph("Auto Soup Usage");
+
 			autoSoup.addPlotter(new Metrics.Plotter("Enabled") {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.autoSoupEnabled)
+					if (Variables.isAutoSoupEnabled())
 						i++;
 
 					return i;
@@ -39,18 +40,18 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.autoSoupEnabled)
+					if (!Variables.isAutoSoupEnabled())
 						i++;
 
 					return i;
 				}
 			});
-			
+
 			killAbuse.addPlotter(new Metrics.Plotter("Enabled") {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.killAbuseEnabled)
+					if (Variables.isKillAbuseEnabled())
 						i++;
 
 					return i;
@@ -60,7 +61,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.killAbuseEnabled)
+					if (!Variables.isKillAbuseEnabled())
 						i++;
 
 					return i;
@@ -71,7 +72,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.updateCheck && Variables.autoUpdate)
+					if (Variables.isUpdateCheck() && Variables.isAutoUpdate())
 						i++;
 
 					return i;
@@ -81,7 +82,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.updateCheck)
+					if (!Variables.isUpdateCheck())
 						i++;
 
 					return i;
@@ -91,18 +92,18 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.updateCheck && !Variables.autoUpdate)
+					if (Variables.isUpdateCheck() && !Variables.isAutoUpdate())
 						i++;
 
 					return i;
 				}
 			});
-			
+
 			newbieProtection.addPlotter(new Metrics.Plotter("Enabled") {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.newbieProtectionEnabled)
+					if (Variables.isNewbieProtectionEnabled())
 						i++;
 
 					return i;
@@ -112,7 +113,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.newbieProtectionEnabled)
+					if (!Variables.isNewbieProtectionEnabled())
 						i++;
 
 					return i;
@@ -123,7 +124,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.toggleSignsEnabled)
+					if (Variables.isToggleSignsEnabled())
 						i++;
 
 					return i;
@@ -133,30 +134,30 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.toggleSignsEnabled)
+					if (!Variables.isToggleSignsEnabled())
 						i++;
 
 					return i;
 				}
 			});
 
-			inCombatTime.addPlotter(new Metrics.Plotter(Variables.timeInCombat + " seconds") {
+			inCombatTime.addPlotter(new Metrics.Plotter(Variables.getTimeInCombat() + " seconds") {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.inCombatEnabled)
+					if (Variables.isInCombatEnabled())
 						i++;
 
 					return i;
 				}
 			});
-			
-			if (Variables.punishmentsEnabled && Variables.inCombatEnabled) {
+
+			if (Variables.isPunishmentsEnabled() && Variables.isInCombatEnabled()) {
 				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Everything") {
 					@Override
 					public int getValue() {
 						int i = 0;
-						if (!Variables.dropInventory && !Variables.dropExp && !Variables.dropArmor)
+						if (!Variables.isDropInventory() && !Variables.isDropExp() && !Variables.isDropArmor())
 							i++;
 
 						return i;
@@ -166,7 +167,7 @@ public class CustomMetrics {
 					@Override
 					public int getValue() {
 						int i = 0;
-						if (Variables.dropInventory && Variables.dropExp && Variables.dropArmor)
+						if (Variables.isDropInventory() && Variables.isDropExp() && Variables.isDropArmor())
 							i++;
 
 						return i;
@@ -176,7 +177,7 @@ public class CustomMetrics {
 					@Override
 					public int getValue() {
 						int i = 0;
-						if (!Variables.dropInventory && !Variables.dropArmor && Variables.dropExp)
+						if (!Variables.isDropInventory() && !Variables.isDropArmor() && Variables.isDropExp())
 							i++;
 
 						return i;
@@ -186,7 +187,7 @@ public class CustomMetrics {
 					@Override
 					public int getValue() {
 						int i = 0;
-						if (!Variables.dropInventory && !Variables.dropExp && Variables.dropArmor)
+						if (!Variables.isDropInventory() && !Variables.isDropExp() && Variables.isDropArmor())
 							i++;
 
 						return i;
@@ -196,7 +197,7 @@ public class CustomMetrics {
 					@Override
 					public int getValue() {
 						int i = 0;
-						if (Variables.dropInventory && !Variables.dropExp && !Variables.dropArmor)
+						if (Variables.isDropInventory() && !Variables.isDropExp() && !Variables.isDropArmor())
 							i++;
 
 						return i;
@@ -206,7 +207,7 @@ public class CustomMetrics {
 					@Override
 					public int getValue() {
 						int i = 0;
-						if (!Variables.dropInventory && Variables.dropExp && Variables.dropArmor)
+						if (!Variables.isDropInventory() && Variables.isDropExp() && Variables.isDropArmor())
 							i++;
 
 						return i;
@@ -216,7 +217,7 @@ public class CustomMetrics {
 					@Override
 					public int getValue() {
 						int i = 0;
-						if (Variables.dropInventory && Variables.dropExp && !Variables.dropArmor)
+						if (Variables.isDropInventory() && Variables.isDropExp() && !Variables.isDropArmor())
 							i++;
 
 						return i;
@@ -226,7 +227,7 @@ public class CustomMetrics {
 					@Override
 					public int getValue() {
 						int i = 0;
-						if (Variables.dropInventory && !Variables.dropExp && Variables.dropArmor)
+						if (Variables.isDropInventory() && !Variables.isDropExp() && Variables.isDropArmor())
 							i++;
 
 						return i;
@@ -234,7 +235,7 @@ public class CustomMetrics {
 				});
 			}
 			metrics.start();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 		}
 	}
 }

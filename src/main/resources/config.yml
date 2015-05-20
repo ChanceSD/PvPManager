@@ -72,7 +72,7 @@ In Combat:
 # Transfer Drops - Transfer drops directly to killer instead of dropping on the ground
 # Money Reward - Amount of money player gets as reward (0 to disable)
 # Money Penalty - Amount of money player loses for dying in PvP (0 to disable)
-# Commands On Kill - Commands to execute on kill (<player> is the killer)
+# Commands On Kill - Commands to execute on kill (<player> is the killer, <victim> is the victim)
 Player Kills:
   Transfer Drops: false
   Money Reward: 0

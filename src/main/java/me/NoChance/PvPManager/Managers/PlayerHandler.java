@@ -8,8 +8,10 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.TeamProfile;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Listeners.WGListener;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
+import me.NoChance.PvPManager.Utils.CancelResult;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -19,23 +21,27 @@ import org.bukkit.World;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.massivecraft.factions.entity.MPlayer;
+
 public class PlayerHandler {
 
-	private HashMap<String, PvPlayer> players = new HashMap<String, PvPlayer>();
-	private ConfigManager configManager;
-	private PvPManager plugin;
+	private final HashMap<String, PvPlayer> players = new HashMap<String, PvPlayer>();
+	private final ConfigManager configManager;
+	private final PvPManager plugin;
 	private Economy economy;
-	private TagTask tagTask = new TagTask();
+	private final TagTask tagTask = new TagTask();
+	private boolean useFactions;
 
-	public PlayerHandler(PvPManager plugin) {
+	public PlayerHandler(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
-		if (Variables.killAbuseEnabled)
-			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.killAbuseTime * 20);
+		if (Variables.isKillAbuseEnabled())
+			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.getKillAbuseTime() * 20);
 		if (plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
 			if (setupEconomy()) {
 				plugin.getLogger().info("Vault Found! Using it for currency related features");
@@ -43,56 +49,114 @@ public class PlayerHandler {
 				plugin.getLogger().severe("Error! No Economy plugin found");
 		} else {
 			plugin.getLogger().severe("Vault not found! Features requiring Vault won't work!");
-			Variables.fineEnabled = false;
+			Variables.setFineEnabled(false);
 		}
 		addOnlinePlayers();
 		tagTask.runTaskTimerAsynchronously(plugin, 20, 20);
+
+
+
+		if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
+			plugin.registerListener(new WGListener(this));
+			plugin.getLogger().info("WorldGuard Found! Enabling WorldGuard Support");
+		}
+		final Plugin factions = Bukkit.getPluginManager().getPlugin("Factions");
+
+		try {
+			if (factions != null) {
+				if (Integer.valueOf(factions.getDescription().getVersion().replace(".", "")) >= 270) {
+					useFactions = true;
+					Class.forName("com.massivecraft.factions.entity.MPlayer");
+					plugin.getLogger().info("Factions Found! Hooked successfully");
+				} else
+					plugin.getLogger().info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
+			}
+		} catch (final NumberFormatException e) {
+			plugin.getLogger().warning("Couldn't read Factions version, maybe it's a fork?");
+		} catch (final ClassNotFoundException e) {
+			plugin.getLogger().warning("Factions broke their API again, an updated version of PvPManager should fix this soon");
+			useFactions = false;
+		}
+	}
+
+	public final CancelResult tryCancel(final Player damager, final Player defender) {
+		final PvPlayer attacker = get(damager);
+		final PvPlayer attacked = get(defender);
+		if (attacker.hasOverride() || Variables.isStopBorderHopping() && canAttack(attacker, attacked))
+			return CancelResult.FAIL_OVERRIDE;
+		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
+			return CancelResult.RESPAWN_PROTECTION;
+		if (attacked.isNewbie())
+			return CancelResult.NEWBIE_OTHER;
+		if (attacker.isNewbie())
+			return CancelResult.NEWBIE;
+		if (!attacked.hasPvPEnabled())
+			return CancelResult.PVPDISABLED_OTHER;
+		if (!attacker.hasPvPEnabled())
+			return CancelResult.PVPDISABLED;
+
+		return CancelResult.FAIL;
+	}
+
+	// When stopping border hopping let's check if players are from different
+	// Factions
+	private boolean canAttack(final PvPlayer attacker, final PvPlayer attacked) {
+		if (!(attacker.isInCombat() && attacked.isInCombat()))
+			return false;
+		else if (useFactions) {
+			final MPlayer fAttacker = MPlayer.get(attacker.getPlayer());
+			final MPlayer fAttacked = MPlayer.get(attacked.getPlayer());
+			if (!fAttacker.hasFaction() || !fAttacked.hasFaction())
+				return true;
+			return !fAttacker.getFactionId().equalsIgnoreCase(fAttacked.getFactionId());
+		}
+		return true;
 	}
 
 	private void addOnlinePlayers() {
-		for (Player p : plugin.getServer().getOnlinePlayers()) {
+		for (final Player p : plugin.getServer().getOnlinePlayers()) {
 			add(p);
 		}
 	}
 
-	public PvPlayer get(Player player) {
-		String name = player.getName();
+	public final PvPlayer get(final Player player) {
+		final String name = player.getName();
 		return players.containsKey(name) ? players.get(name) : add(player);
 	}
 
-	private PvPlayer add(Player player) {
+	private PvPlayer add(final Player player) {
 		if (plugin.getServer().getPlayer(player.getUniqueId()) == null)
 			return null;
-		PvPlayer pvPlayer = new PvPlayer(player, plugin);
+		final PvPlayer pvPlayer = new PvPlayer(player, plugin);
 		players.put(player.getName(), pvPlayer);
-		if ((Variables.useNameTag || Variables.toggleNametagsEnabled) && players.size() == 1)
+		if ((Variables.isUseNameTag() || Variables.isToggleNametagsEnabled()) && players.size() == 1)
 			TeamProfile.setupTeams();
 		pvPlayer.loadPvPState();
 		return pvPlayer;
 	}
 
-	public void untag(PvPlayer p) {
+	public final void untag(final PvPlayer p) {
 		tagTask.getTagged().remove(p);
 		p.unTag();
 	}
 
-	public void tag(PvPlayer p) {
+	public final void tag(final PvPlayer p) {
 		tagTask.getTagged().add(p);
 	}
 
-	public void remove(final PvPlayer player) {
+	public final void remove(final PvPlayer player) {
 		new BukkitRunnable() {
 			public void run() {
 				if (player.getPlayer() == null) {
 					players.remove(player.getName());
 				}
 			}
-		}.runTaskLater(plugin, Variables.toggleCooldown * 20);
+		}.runTaskLater(plugin, Variables.getToggleCooldown() * 20);
 		savePvPState(player.getUUID(), player.hasPvPEnabled());
 	}
 
-	public void removeTeams() {
-		Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+	public final void removeTeams() {
+		final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 		if (scoreboard.getTeam("InCombat") != null)
 			scoreboard.getTeam("InCombat").unregister();
 
@@ -103,50 +167,50 @@ public class PlayerHandler {
 			scoreboard.getTeam("PvPOff").unregister();
 	}
 
-	public void savePvPState(UUID id, boolean pvpState) {
+	public final void savePvPState(final UUID id, final boolean pvpState) {
 		configManager.saveUser(id, !pvpState);
 	}
 
-	private void applyFine(Player p) {
+	private void applyFine(final Player p) {
 		if (economy != null) {
-			economy.withdrawPlayer(p, Variables.fineAmount);
+			economy.withdrawPlayer(p, Variables.getFineAmount());
 		} else {
 			plugin.getLogger().severe("Tried to apply fine but no Economy plugin found!");
 			plugin.getLogger().severe("Disable fines feature or get an Economy plugin to fix this error");
 		}
 	}
 
-	public void applyPenalty(Player p) {
+	public final void applyPenalty(final Player p) {
 		if (economy != null) {
-			economy.withdrawPlayer(p, Variables.moneyPenalty);
+			economy.withdrawPlayer(p, Variables.getMoneyPenalty());
 		} else {
 			plugin.getLogger().severe("Tried to apply penalty but no Economy plugin found!");
 			plugin.getLogger().severe("Disable money penalty on kill or get an Economy plugin to fix this error");
 		}
 	}
 
-	public void giveReward(Player killer, Player victim) {
+	public final void giveReward(final Player killer, final Player victim) {
 		if (economy != null) {
-			economy.depositPlayer(killer, Variables.moneyReward);
-			killer.sendMessage(Messages.Money_Reward.replace("%m", Double.toString(Variables.moneyReward)).replace("%p", victim.getName()));
+			economy.depositPlayer(killer, Variables.getMoneyReward());
+			killer.sendMessage(Messages.getMoneyReward().replace("%m", Double.toString(Variables.getMoneyReward())).replace("%p", victim.getName()));
 		} else {
 			plugin.getLogger().severe("Tried to give reward but no Economy plugin found!");
 			plugin.getLogger().severe("Disable money reward on kill or get an Economy plugin to fix this error");
 		}
 	}
 
-	public void applyPunishments(Player player) {
-		PvPlayer pvPlayer = get(player);
-		if (Variables.killOnLogout) {
+	public final void applyPunishments(final Player player) {
+		final PvPlayer pvPlayer = get(player);
+		if (Variables.isKillOnLogout()) {
 			pvPlayer.setPvpLogged(true);
 			ItemStack[] inventory = null;
 			ItemStack[] armor = null;
-			if (!Variables.dropInventory || !Variables.dropArmor) {
-				if (!Variables.dropInventory) {
+			if (!Variables.isDropInventory() || !Variables.isDropArmor()) {
+				if (!Variables.isDropInventory()) {
 					inventory = player.getInventory().getContents();
 					player.getInventory().clear();
 				}
-				if (!Variables.dropArmor) {
+				if (!Variables.isDropArmor()) {
 					armor = player.getInventory().getArmorContents();
 					player.getInventory().setArmorContents(null);
 				}
@@ -157,33 +221,33 @@ public class PlayerHandler {
 				player.getInventory().setContents(inventory);
 			if (armor != null)
 				player.getInventory().setArmorContents(armor);
-		} else if (!Variables.killOnLogout) {
-			if (Variables.dropInventory) {
+		} else if (!Variables.isKillOnLogout()) {
+			if (Variables.isDropInventory()) {
 				fakeInventoryDrop(player, player.getInventory().getContents());
 				player.getInventory().clear();
 			}
-			if (Variables.dropArmor) {
+			if (Variables.isDropArmor()) {
 				fakeInventoryDrop(player, player.getInventory().getArmorContents());
 				player.getInventory().setArmorContents(null);
 			}
-			if (Variables.dropExp)
+			if (Variables.isDropExp())
 				fakeExpDrop(player);
 		}
-		if (Variables.fineEnabled)
+		if (Variables.isFineEnabled())
 			applyFine(player);
 	}
 
-	private void fakeInventoryDrop(Player player, ItemStack[] inventory) {
-		Location playerLocation = player.getLocation();
-		World playerWorld = player.getWorld();
-		for (ItemStack itemstack : inventory) {
+	private void fakeInventoryDrop(final Player player, final ItemStack[] inventory) {
+		final Location playerLocation = player.getLocation();
+		final World playerWorld = player.getWorld();
+		for (final ItemStack itemstack : inventory) {
 			if (itemstack != null && !itemstack.getType().equals(Material.AIR))
 				playerWorld.dropItemNaturally(playerLocation, itemstack);
 		}
 	}
 
-	private void fakeExpDrop(Player player) {
-		int expdropped = player.getLevel() * 7;
+	private void fakeExpDrop(final Player player) {
+		final int expdropped = player.getLevel() * 7;
 		if (expdropped < 100)
 			player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(expdropped);
 		else
@@ -193,18 +257,18 @@ public class PlayerHandler {
 	}
 
 	private boolean setupEconomy() {
-		RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+		final RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null) {
 			economy = economyProvider.getProvider();
 		}
 		return (economy != null);
 	}
 
-	public HashMap<String, PvPlayer> getPlayers() {
+	public final HashMap<String, PvPlayer> getPlayers() {
 		return players;
 	}
 
-	public TagTask getTagTask() {
+	public final TagTask getTagTask() {
 		return tagTask;
 	}
 

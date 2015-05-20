@@ -13,10 +13,10 @@ public class TeamProfile {
 	private static Team pvpOn;
 	private static Team pvpOff;
 	private Team previousTeam;
-	private PvPlayer pvPlayer;
+	private final PvPlayer pvPlayer;
 	private static Scoreboard scoreboard;
 
-	public TeamProfile(PvPlayer p) {
+	public TeamProfile(final PvPlayer p) {
 		this.pvPlayer = p;
 		if (scoreboard == null)
 			scoreboard = p.getPlayer().getScoreboard();
@@ -28,43 +28,43 @@ public class TeamProfile {
 			inCombat = scoreboard.getTeam("InCombat");
 		else
 			inCombat = scoreboard.registerNewTeam("InCombat");
-		inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.nameTagColor));
-		if (!Variables.toggleColorOn.equalsIgnoreCase("none")) {
+		inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()));
+		if (!Variables.getToggleColorOn().equalsIgnoreCase("none")) {
 			if (scoreboard.getTeam("PvPOn") != null)
 				pvpOn = scoreboard.getTeam("PvPOn");
 			else
 				pvpOn = scoreboard.registerNewTeam("PvPOn");
-			pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.toggleColorOn));
+			pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOn()));
 		}
-		if (!Variables.toggleColorOff.equalsIgnoreCase("none")) {
+		if (!Variables.getToggleColorOff().equalsIgnoreCase("none")) {
 			if (scoreboard.getTeam("PvPOff") != null)
 				pvpOff = scoreboard.getTeam("PvPOff");
 			else
 				pvpOff = scoreboard.registerNewTeam("PvPOff");
-			pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.toggleColorOff));
+			pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
 		}
 	}
 
-	public void setInCombat() {
-		Player player = pvPlayer.getPlayer();
+	public final void setInCombat() {
+		final Player player = pvPlayer.getPlayer();
 		if (pvpOn != null || pvpOff != null)
 			previousTeam = scoreboard.getPlayerTeam(player);
 		inCombat.addPlayer(player);
 	}
 
-	public void restoreTeam() {
+	public final void restoreTeam() {
 		try {
 			if (previousTeam != null && scoreboard.getTeam(previousTeam.getName()) != null)
 				previousTeam.addPlayer(pvPlayer.getPlayer());
 			else
 				inCombat.removePlayer(pvPlayer.getPlayer());
-		} catch (IllegalStateException e) {
+		} catch (final IllegalStateException e) {
 			System.out.println("[PvPManager] Error restoring nametag for: " + pvPlayer.getName());
 			inCombat.removePlayer(pvPlayer.getPlayer());
 		}
 	}
 
-	public void setPvP(boolean state) {
+	public final void setPvP(final boolean state) {
 		if (state) {
 			if (pvpOn == null)
 				restoreTeam();

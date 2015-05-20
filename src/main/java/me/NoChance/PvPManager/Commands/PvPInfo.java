@@ -13,13 +13,13 @@ import org.bukkit.entity.Player;
 
 public class PvPInfo implements CommandExecutor {
 
-	private PlayerHandler ph;
+	private final PlayerHandler ph;
 
-	public PvPInfo(PlayerHandler ph) {
+	public PvPInfo(final PlayerHandler ph) {
 		this.ph = ph;
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if (args.length == 0 && sender instanceof Player) {
 			sendInfo(sender, ph.get((Player) sender));
 			return true;
@@ -35,7 +35,7 @@ public class PvPInfo implements CommandExecutor {
 		return false;
 	}
 
-	private void sendInfo(CommandSender sender, PvPlayer target) {
+	private void sendInfo(final CommandSender sender, final PvPlayer target) {
 		sender.sendMessage(ChatColor.YELLOW + "§lPvPManager Info");
 		sender.sendMessage(ChatColor.GREEN + "- Name: §f" + target.getName());
 		sender.sendMessage(ChatColor.GREEN + "- PvP Status: §f" + target.hasPvPEnabled());

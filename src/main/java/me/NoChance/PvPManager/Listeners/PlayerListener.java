@@ -43,27 +43,27 @@ import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 
 public class PlayerListener implements Listener {
 
-	private PvPManager plugin;
-	private PlayerHandler ph;
+	private final PvPManager plugin;
+	private final PlayerHandler ph;
 
-	public PlayerListener(PvPManager plugin) {
+	public PlayerListener(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.ph = plugin.getPlayerHandler();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void onPlayerDamage(EntityDamageByEntityEvent event) {
-		if (!CombatUtils.PMAllowed(event.getEntity().getWorld().getName()))
+	public final void onPlayerDamage(final EntityDamageByEntityEvent event) { // NO_UCD
+		if (!CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
 			return;
-		if (Variables.newbieGodMode && event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie()) {
+		if (Variables.isNewbieGodMode() && event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie()) {
 			event.setCancelled(true);
 			return;
 		}
 		if (!CombatUtils.isPvP(event))
 			return;
-		Player attacker = getAttacker(event);
-		Player attacked = (Player) event.getEntity();
-		CancelResult result = CombatUtils.tryCancel(attacker, attacked);
+		final Player attacker = getAttacker(event);
+		final Player attacked = (Player) event.getEntity();
+		final CancelResult result = ph.tryCancel(attacker, attacked);
 
 		if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE)
 			event.setCancelled(true);
@@ -73,16 +73,16 @@ public class PlayerListener implements Listener {
 		case FAIL:
 			break;
 		case NEWBIE:
-			attacker.sendMessage(Messages.Newbie_Protection_On_Hit);
+			attacker.sendMessage(Messages.getNewbieProtectionOnHit());
 			break;
 		case NEWBIE_OTHER:
-			attacker.sendMessage(Messages.Newbie_Protection_Atacker.replace("%p", attacked.getName()));
+			attacker.sendMessage(Messages.getNewbieProtectionAtacker().replace("%p", attacked.getName()));
 			break;
 		case PVPDISABLED:
-			attacker.sendMessage(Messages.Attack_Denied_You);
+			attacker.sendMessage(Messages.getAttackDeniedYou());
 			break;
 		case PVPDISABLED_OTHER:
-			attacker.sendMessage(Messages.Attack_Denied_Other.replace("%p", attacked.getName()));
+			attacker.sendMessage(Messages.getAttackDeniedOther().replace("%p", attacked.getName()));
 			break;
 		default:
 			break;
@@ -90,36 +90,36 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerDamageOverride(EntityDamageByEntityEvent event) {
-		if (!CombatUtils.isPvP(event) || !CombatUtils.PMAllowed(event.getEntity().getWorld().getName()) || !event.isCancelled())
+	public final void onPlayerDamageOverride(final EntityDamageByEntityEvent event) { // NO_UCD
+		if (!CombatUtils.isPvP(event) || !CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (CombatUtils.tryCancel(getAttacker(event), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE))
+		if (ph.tryCancel(getAttacker(event), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE))
 			event.setCancelled(false);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerDamageMonitor(EntityDamageByEntityEvent event) {
-		if (!CombatUtils.isPvP(event) || !CombatUtils.PMAllowed(event.getEntity().getWorld().getName()))
+	public final void onPlayerDamageMonitor(final EntityDamageByEntityEvent event) { // NO_UCD
+		if (!CombatUtils.isPvP(event) || !CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
 			return;
-		Player attacker = getAttacker(event);
-		Player attacked = (Player) event.getEntity();
+		final Player attacker = getAttacker(event);
+		final Player attacked = (Player) event.getEntity();
 
-		CancelResult result = CombatUtils.tryCancel(attacker, attacked);
+		final CancelResult result = ph.tryCancel(attacker, attacked);
 
 		if (result == CancelResult.FAIL || result == CancelResult.FAIL_OVERRIDE)
 			onDamageActions(attacker, attacked);
 	}
 
 	@EventHandler
-	public void onPotionSplash(PotionSplashEvent event) {
-		ThrownPotion potion = event.getPotion();
+	public final void onPotionSplash(final PotionSplashEvent event) { // NO_UCD (unused code)
+		final ThrownPotion potion = event.getPotion();
 		if (event.getAffectedEntities().isEmpty() || !(potion.getShooter() instanceof Player))
 			return;
 
-		for (PotionEffect effect : potion.getEffects()) {
+		for (final PotionEffect effect : potion.getEffects()) {
 			if (effect.getType().equals(PotionEffectType.POISON)) {
-				for (LivingEntity e : event.getAffectedEntities()) {
+				for (final LivingEntity e : event.getAffectedEntities()) {
 					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled()) {
 						event.setIntensity(e, 0);
 					}
@@ -130,23 +130,23 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onBlockPlace(BlockPlaceEvent event) {
-		if (Variables.blockPlaceBlocks && ph.get(event.getPlayer()).isInCombat())
+	public final void onBlockPlace(final BlockPlaceEvent event) { // NO_UCD
+		if (Variables.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat())
 			event.setCancelled(true);
 	}
 
 	@EventHandler
-	public void onPlayerLogout(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		PvPlayer pvPlayer = ph.get(player);
+	public final void onPlayerLogout(final PlayerQuitEvent event) { // NO_UCD
+		final Player player = event.getPlayer();
+		final PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer == null)
 			return;
 		if (pvPlayer.isInCombat()) {
-			if (Variables.logToFile)
-				plugin.getLog().log(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
-			if (Variables.broadcastPvpLog)
-				plugin.getServer().broadcastMessage(Messages.PvPLog_Broadcast.replace("%p", player.getName()));
-			if (Variables.punishmentsEnabled)
+			if (Variables.isLogToFile())
+				plugin.getLog().log(Messages.getPvplogBroadcast().replace("%p", player.getName()));
+			if (Variables.isBroadcastPvpLog())
+				plugin.getServer().broadcastMessage(Messages.getPvplogBroadcast().replace("%p", player.getName()));
+			if (Variables.isPunishmentsEnabled())
 				ph.applyPunishments(player);
 			ph.untag(pvPlayer);
 		}
@@ -154,66 +154,66 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event) {
-		Player player = event.getEntity();
+	public final void onPlayerDeath(final PlayerDeathEvent event) { // NO_UCD (unused code)
+		final Player player = event.getEntity();
 
 		if (player.hasMetadata("NPC"))
 			return;
-		PvPlayer pvPlayer = ph.get(player);
+		final PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer == null)
 			return;
-		if (pvPlayer.hasPvPLogged() && !Variables.dropExp) {
+		if (pvPlayer.hasPvPLogged() && !Variables.isDropExp()) {
 			event.setKeepLevel(true);
 			event.setDroppedExp(0);
 		}
 		if (pvPlayer.isInCombat())
 			ph.untag(pvPlayer);
-		Player killer = player.getKiller();
-		if (CombatUtils.PMAllowed(player.getWorld().getName())) {
+		final Player killer = player.getKiller();
+		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			if (killer != null && !killer.equals(player) && !killer.hasMetadata("NPC")) {
-				if (Variables.killAbuseEnabled)
+				if (Variables.isKillAbuseEnabled())
 					ph.get(killer).addVictim(player.getName());
-				if (Variables.moneyReward > 0)
+				if (Variables.getMoneyReward() > 0)
 					ph.giveReward(killer, player);
-				if (Variables.commandsOnKillEnabled)
-					for (String command : Variables.commandsOnKill) {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()));
+				if (Variables.isCommandsOnKillEnabled())
+					for (final String command : Variables.getCommandsOnKill()) {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
 					}
-				if (Variables.moneyPenalty > 0)
+				if (Variables.getMoneyPenalty() > 0)
 					ph.applyPenalty(player);
-				if (Variables.transferDrops) {
-					for (ItemStack s : killer.getInventory().addItem(event.getDrops().toArray(new ItemStack[event.getDrops().size()])).values()) {
+				if (Variables.isTransferDrops()) {
+					for (final ItemStack s : killer.getInventory().addItem(event.getDrops().toArray(new ItemStack[event.getDrops().size()])).values()) {
 						player.getWorld().dropItem(player.getLocation(), s);
 					}
 					event.getDrops().clear();
 				}
 			}
-			if (Variables.toggleOffOnDeath && player.hasPermission("pvpmanager.pvpstatus.change") && pvPlayer.hasPvPEnabled())
+			if (Variables.isToggleOffOnDeath() && player.hasPermission("pvpmanager.pvpstatus.change") && pvPlayer.hasPvPEnabled())
 				pvPlayer.setPvP(false);
 		}
 	}
 
 	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent e) {
-		Player player = e.getPlayer();
-		if (CombatUtils.PMAllowed(player.getWorld().getName())) {
-			ItemStack i = player.getItemInHand();
-			if (Variables.autoSoupEnabled && i.getType() == Material.MUSHROOM_SOUP) {
+	public final void onPlayerInteract(final PlayerInteractEvent e) { // NO_UCD
+		final Player player = e.getPlayer();
+		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
+			final ItemStack i = player.getItemInHand();
+			if (Variables.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
 				if (player.getHealth() == player.getMaxHealth())
 					return;
-				player.setHealth(player.getHealth() + Variables.soupHealth > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth()
-						+ Variables.soupHealth);
+				player.setHealth(player.getHealth() + Variables.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth()
+						+ Variables.getSoupHealth());
 				i.setType(Material.BOWL);
 				return;
 			}
-			PvPlayer pvplayer = ph.get(player);
+			final PvPlayer pvplayer = ph.get(player);
 			if (pvplayer == null)
 				return;
 			if (i.getType().equals(Material.FLINT_AND_STEEL) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				for (Player p : e.getClickedBlock().getWorld().getPlayers()) {
+				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
 					if (e.getPlayer().equals(p))
 						continue;
-					PvPlayer target = ph.get(p);
+					final PvPlayer target = ph.get(p);
 					if (target == null)
 						continue;
 					if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
@@ -227,19 +227,19 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onBucketEmpty(PlayerBucketEmptyEvent e) {
-		PvPlayer player = ph.get(e.getPlayer());
+	public final void onBucketEmpty(final PlayerBucketEmptyEvent e) { // NO_UCD
+		final PvPlayer player = ph.get(e.getPlayer());
 		if (player == null)
 			return;
-		if (CombatUtils.PMAllowed(player.getWorldName()) && e.getBucket().equals(Material.LAVA_BUCKET)) {
-			for (Player p : e.getBlockClicked().getWorld().getPlayers()) {
+		if (CombatUtils.isWorldAllowed(player.getWorldName()) && e.getBucket().equals(Material.LAVA_BUCKET)) {
+			for (final Player p : e.getBlockClicked().getWorld().getPlayers()) {
 				if (e.getPlayer().equals(p))
 					continue;
-				PvPlayer target = ph.get(p);
+				final PvPlayer target = ph.get(p);
 				if (target == null)
 					continue;
 				if ((!target.hasPvPEnabled() || !player.hasPvPEnabled()) && e.getBlockClicked().getLocation().distanceSquared(p.getLocation()) < 9) {
-					player.message(Messages.Attack_Denied_Other.replace("%p", target.getName()));
+					player.message(Messages.getAttackDeniedOther().replace("%p", target.getName()));
 					e.setCancelled(true);
 					return;
 				}
@@ -248,29 +248,29 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerPickup(PlayerPickupItemEvent e) {
-		if (Variables.newbieProtectionEnabled && Variables.blockPickNewbies) {
-			PvPlayer player = ph.get(e.getPlayer());
+	public final void onPlayerPickup(final PlayerPickupItemEvent e) { // NO_UCD
+		if (Variables.isNewbieProtectionEnabled() && Variables.isBlockPickNewbies()) {
+			final PvPlayer player = ph.get(e.getPlayer());
 			if (player.isNewbie())
 				e.setCancelled(true);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+	public final void onPlayerJoin(final PlayerJoinEvent event) { // NO_UCD (unused code)
+		final Player player = event.getPlayer();
 		ph.get(player);
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
-			if (Variables.update)
+			if (Variables.isUpdate())
 				Messages.updateMessage(player);
-			if (Variables.configUpdated)
+			if (Variables.isConfigUpdated())
 				Messages.configUpdated(player);
 		}
 	}
 
 	@EventHandler
-	public void onPlayerKick(PlayerKickEvent event) {
-		PvPlayer pvPlayer = ph.get(event.getPlayer());
+	public final void onPlayerKick(final PlayerKickEvent event) { // NO_UCD
+		final PvPlayer pvPlayer = ph.get(event.getPlayer());
 		if (pvPlayer == null)
 			return;
 		if (pvPlayer.isInCombat() && !event.getReason().equalsIgnoreCase("Illegal characters in chat"))
@@ -278,36 +278,36 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerTeleport(PlayerTeleportEvent event) {
+	public final void onPlayerTeleport(final PlayerTeleportEvent event) { // NO_UCD
 		if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
-			PvPlayer player = ph.get(event.getPlayer());
+			final PvPlayer player = ph.get(event.getPlayer());
 			if (player == null)
 				return;
-			if (Variables.inCombatEnabled && Variables.blockEnderPearl && player.isInCombat()) {
-				player.message(Messages.EnderPearl_Blocked_InCombat);
+			if (Variables.isInCombatEnabled() && Variables.isBlockEnderPearl() && player.isInCombat()) {
+				player.message(Messages.getEnderpearlBlockedIncombat());
 				event.setCancelled(true);
 			}
 		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onCommand(PlayerCommandPreprocessEvent event) {
-		if (Variables.stopCommands && Variables.inCombatEnabled) {
+	public final void onCommand(final PlayerCommandPreprocessEvent event) { // NO_UCD
+		if (Variables.isStopCommands() && Variables.isInCombatEnabled()) {
 			if (plugin.getPlayerHandler().get(event.getPlayer()).isInCombat()) {
-				boolean contains = Variables.commandsAllowed.contains(event.getMessage().substring(1).split(" ")[0]);
-				if (Variables.commandsWhitelist ? !contains : contains) {
+				final boolean contains = Variables.getCommandsAllowed().contains(event.getMessage().substring(1).split(" ")[0]);
+				if (Variables.isCommandsWhitelist() ? !contains : contains) {
 					event.setCancelled(true);
-					event.getPlayer().sendMessage(Messages.Command_Denied_InCombat);
+					event.getPlayer().sendMessage(Messages.getCommandDeniedIncombat());
 				}
 			}
 		}
 	}
 
 	@EventHandler
-	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (CombatUtils.PMAllowed(event.getPlayer().getWorld().getName())) {
-			if (Variables.killAbuseEnabled && Variables.respawnProtection != 0) {
-				PvPlayer player = ph.get(event.getPlayer());
+	public final void onPlayerRespawn(final PlayerRespawnEvent event) { // NO_UCD
+		if (CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName())) {
+			if (Variables.isKillAbuseEnabled() && Variables.getRespawnProtection() != 0) {
+				final PvPlayer player = ph.get(event.getPlayer());
 				if (player == null)
 					return;
 				player.setRespawnTime(System.currentTimeMillis());
@@ -315,33 +315,33 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	private void onDamageActions(Player attacker, Player defender) {
-		PvPlayer pvpAttacker = ph.get(attacker);
-		PvPlayer pvpDefender = ph.get(defender);
+	private void onDamageActions(final Player attacker, final Player defender) {
+		final PvPlayer pvpAttacker = ph.get(attacker);
+		final PvPlayer pvpDefender = ph.get(defender);
 		if (pvpAttacker == null || pvpDefender == null)
 			return;
-		if (Variables.pvpBlood)
+		if (Variables.isPvpBlood())
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
-			if (Variables.disableFly) {
+			if (Variables.isDisableFly()) {
 				if (attacker.isFlying() || attacker.getAllowFlight())
 					pvpAttacker.disableFly();
 				if (defender.isFlying() || defender.getAllowFlight())
 					pvpDefender.disableFly();
 			}
-			if (Variables.disableGamemode && !attacker.getGameMode().equals(GameMode.SURVIVAL))
+			if (Variables.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL))
 				attacker.setGameMode(GameMode.SURVIVAL);
-			if (Variables.disableDisguise) {
+			if (Variables.isDisableDisguise()) {
 				if (plugin.getServer().getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker))
 					DisguiseCraft.getAPI().undisguisePlayer(attacker);
 				if (plugin.getServer().getPluginManager().isPluginEnabled("LibsDisguises") && DisguiseAPI.isDisguised(attacker))
 					DisguiseAPI.undisguiseToAll(attacker);
 			}
-			if (Variables.disableInvisibility && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY))
+			if (Variables.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY))
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
 		}
-		if (Variables.inCombatEnabled) {
-			if (Variables.onlyTagAttacker) {
+		if (Variables.isInCombatEnabled()) {
+			if (Variables.isOnlyTagAttacker()) {
 				pvpAttacker.setTagged(true, pvpDefender.getName());
 				return;
 			} else {
@@ -351,7 +351,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	private Player getAttacker(EntityDamageByEntityEvent event) {
+	private Player getAttacker(final EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Projectile)
 			return (Player) ((Projectile) event.getDamager()).getShooter();
 		else
