@@ -9,15 +9,15 @@ import org.bukkit.entity.Player;
 
 public class PvPOverride implements CommandExecutor {
 
-	private PlayerHandler ph;
+	private final PlayerHandler ph;
 
-	public PvPOverride(PlayerHandler ph) {
+	public PvPOverride(final PlayerHandler ph) {
 		this.ph = ph;
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if (sender instanceof Player) {
-			boolean override = ph.get((Player) sender).toggleOverride();
+			final boolean override = ph.get((Player) sender).toggleOverride();
 			sender.sendMessage("§2PvP Override Set To: " + override);
 		}
 		return true;

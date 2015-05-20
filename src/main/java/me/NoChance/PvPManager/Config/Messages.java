@@ -11,170 +11,303 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Properties;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Managers.ConfigManager;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Messages {
 
-	private PvPManager plugin;
-	private Properties lang = new Properties();
+	private final PvPManager plugin;
+	private final Properties lang = new Properties();
 	private File messagesFile;
-	public static String Error_PvPCommand_Disabled;
-	public static String Error_Permission;
-	public static String Error_PvP_Cooldown;
-	public static String Already_Disabled;
-	public static String Already_Enabled;
-	public static String Other_Status_Enabled;
-	public static String Others_Status_Disabled;
-	public static String PvP_Disabled;
-	public static String PvP_Enabled;
-	public static String Self_Status_Disabled;
-	public static String Self_Status_Enabled;
-	public static String Command_Denied_InCombat;
-	public static String Attack_Denied_You;
-	public static String Attack_Denied_Other;
-	public static String Tagged_Attacker;
-	public static String Tagged_Defender;
-	public static String Out_Of_Combat;
-	public static String Newbie_Protection;
-	public static String Newbie_Protection_End;
-	public static String PvPLog_Broadcast;
-	public static String Newbie_Protection_On_Hit;
-	public static String Newbie_Protection_Atacker;
-	public static String PvPToggle_On_Broadcast;
-	public static String PvPToggle_Off_Broadcast;
-	public static String EnderPearl_Blocked_InCombat;
-	public static String Error_Command;
-	public static String currentVersion;
-	public static String newVersion;
-	public static String Money_Reward;
+	private static String errorPvpcommandDisabled;
+	private static String errorPermission;
+	private static String errorPvpCooldown;
+	private static String alreadyDisabled;
+	private static String alreadyEnabled;
+	private static String otherStatusEnabled;
+	private static String othersStatusDisabled;
+	private static String pvpDisabled;
+	private static String pvpEnabled;
+	private static String selfStatusDisabled;
+	private static String selfStatusEnabled;
+	private static String commandDeniedIncombat;
+	private static String attackDeniedYou;
+	private static String attackDeniedOther;
+	private static String taggedAttacker;
+	private static String taggedDefender;
+	private static String outOfCombat;
+	private static String newbieProtection;
+	private static String newbieProtectionEnd;
+	private static String pvplogBroadcast;
+	private static String newbieProtectionOnHit;
+	private static String newbieProtectionAtacker;
+	private static String pvptoggleOnBroadcast;
+	private static String pvptoggleOffBroadcast;
+	private static String enderpearlBlockedIncombat;
+	private static String errorCommand;
+	private static String currentVersion;
+	private static String newVersion;
+	private static String moneyReward;
 	private Locale locale;
 
-	public Messages(PvPManager plugin) {
+	public Messages(final PvPManager plugin) {
 		this.plugin = plugin;
 		currentVersion = plugin.getDescription().getVersion();
 		try {
-			this.locale = Locale.valueOf(Variables.locale);
-		} catch (IllegalArgumentException e) {
-			plugin.getLogger().warning("Error! Locale '" + Variables.locale + "' does not exist! Using default messages");
+			this.locale = Locale.valueOf(Variables.getLocale());
+		} catch (final IllegalArgumentException e) {
+			plugin.getLogger().warning("Error! Locale '" + Variables.getLocale() + "' does not exist! Using default messages");
 			locale = Locale.EN;
 		}
 		load();
 	}
 
-	public void load() {
+	public final void load() {
 		this.messagesFile = new File(plugin.getDataFolder(), locale.toString());
 		if (!messagesFile.exists()) {
-			InputStream input = plugin.getResource("locale/" + locale.toString());
+			final InputStream input = plugin.getResource("locale/" + locale.toString());
 			OutputStream resStreamOut;
 			int readBytes;
-			byte[] buffer = new byte[4096];
+			final byte[] buffer = new byte[4096];
 			try {
 				resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()));
 				while ((readBytes = input.read(buffer)) != -1) {
 					resStreamOut.write(buffer, 0, readBytes);
 				}
 				resStreamOut.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 			plugin.getLogger().info("New Messages File Created Successfully!");
 		}
-		for (File file : plugin.getDataFolder().listFiles()) {
-			String fileName = file.getName();
+		for (final File file : plugin.getDataFolder().listFiles()) {
+			final String fileName = file.getName();
 			if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.toString()))
 				file.delete();
 		}
 		try {
 			if (messagesFile.exists()) {
-				FileInputStream in = new FileInputStream(messagesFile);
+				final FileInputStream in = new FileInputStream(messagesFile);
 				lang.load(in);
 				checkChanges();
 				getMessages();
 				in.close();
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 		}
 	}
 
-	public String getString(String key) {
+	public final String getString(final String key) {
 		String message = null;
 		try {
 			message = new String(lang.getProperty(key).getBytes("ISO-8859-1"), "UTF-8");
-		} catch (UnsupportedEncodingException e1) {
+		} catch (final UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 			return "Encoding error! Please report to the developer";
 		}
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
-	public void getMessages() {
-		Already_Disabled = getString("Already_Disabled");
-		Already_Enabled = getString("Already_Enabled");
-		Other_Status_Enabled = getString("Other_Status_Enabled");
-		Others_Status_Disabled = getString("Others_Status_Disabled");
-		PvP_Disabled = getString("PvP_Disabled");
-		PvP_Enabled = getString("PvP_Enabled");
-		Self_Status_Disabled = getString("Self_Status_Disabled");
-		Self_Status_Enabled = getString("Self_Status_Enabled");
-		Command_Denied_InCombat = getString("Command_Denied_InCombat");
-		Attack_Denied_You = getString("Attack_Denied_You");
-		Attack_Denied_Other = getString("Attack_Denied_Other");
-		Tagged_Attacker = getString("Tagged_Attacker");
-		Tagged_Defender = getString("Tagged_Defender");
-		Out_Of_Combat = getString("Out_Of_Combat");
-		Newbie_Protection = getString("Newbie_Protection");
-		Newbie_Protection_End = getString("Newbie_Protection_End");
-		PvPLog_Broadcast = getString("PvPLog_Broadcast");
-		Newbie_Protection_On_Hit = getString("Newbie_Protection_On_Hit");
-		Newbie_Protection_Atacker = getString("Newbie_Protection_Atacker");
-		PvPToggle_On_Broadcast = getString("PvPToggle_On_Broadcast");
-		PvPToggle_Off_Broadcast = getString("PvPToggle_Off_Broadcast");
-		EnderPearl_Blocked_InCombat = getString("EnderPearl_Blocked_InCombat");
-		Error_Command = getString("Error_Command");
-		Error_PvP_Cooldown = getString("Error_PvP_Cooldown");
-		Error_Permission = getString("Error_Permission");
-		Error_PvPCommand_Disabled = getString("Error_PvPCommand_Disabled");
-		Money_Reward = getString("Money_Reward");
+	public final void getMessages() {
+		alreadyDisabled = getString("Already_Disabled");
+		alreadyEnabled = getString("Already_Enabled");
+		otherStatusEnabled = getString("Other_Status_Enabled");
+		othersStatusDisabled = getString("Others_Status_Disabled");
+		pvpDisabled = getString("PvP_Disabled");
+		pvpEnabled = getString("PvP_Enabled");
+		selfStatusDisabled = getString("Self_Status_Disabled");
+		selfStatusEnabled = getString("Self_Status_Enabled");
+		commandDeniedIncombat = getString("Command_Denied_InCombat");
+		attackDeniedYou = getString("Attack_Denied_You");
+		attackDeniedOther = getString("Attack_Denied_Other");
+		taggedAttacker = getString("Tagged_Attacker");
+		taggedDefender = getString("Tagged_Defender");
+		outOfCombat = getString("Out_Of_Combat");
+		newbieProtection = getString("Newbie_Protection");
+		newbieProtectionEnd = getString("Newbie_Protection_End");
+		pvplogBroadcast = getString("PvPLog_Broadcast");
+		newbieProtectionOnHit = getString("Newbie_Protection_On_Hit");
+		newbieProtectionAtacker = getString("Newbie_Protection_Atacker");
+		pvptoggleOnBroadcast = getString("PvPToggle_On_Broadcast");
+		pvptoggleOffBroadcast = getString("PvPToggle_Off_Broadcast");
+		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
+		errorCommand = getString("Error_Command");
+		errorPvpCooldown = getString("Error_PvP_Cooldown");
+		errorPermission = getString("Error_Permission");
+		errorPvpcommandDisabled = getString("Error_PvPCommand_Disabled");
+		moneyReward = getString("Money_Reward");
 	}
 
-	public void checkChanges() {
-		Properties original = new Properties();
+	public final void checkChanges() {
+		final Properties original = new Properties();
 		try {
 			original.load(plugin.getResource("locale/" + locale.toString()));
-			Enumeration<Object> originalKeys = original.keys();
+			final Enumeration<Object> originalKeys = original.keys();
 			while (originalKeys.hasMoreElements()) {
-				String a = (String) originalKeys.nextElement();
+				final String a = (String) originalKeys.nextElement();
 				if (!lang.containsKey(a)) {
 					addMessage(a + " = " + new String(original.getProperty(a).getBytes("ISO-8859-1"), "UTF-8"));
 					lang.setProperty(a, original.getProperty(a));
 				}
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 		}
 	}
 
-	public void addMessage(String a) {
+	public final void addMessage(final String a) {
 		try {
-			PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), "UTF-8"));
+			final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), "UTF-8"));
 			pw.println(a);
 			pw.close();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 		}
 	}
 
-	public static void updateMessage(Player player) {
-		player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + newVersion);
+	public static void updateMessage(final Player player) {
+		player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + getNewVersion());
 		player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v" + currentVersion);
 		player.sendMessage("§2Go to this page to download the latest version:");
 		player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 		player.sendMessage("§2Use §e/pm update §2to update automatically");
 	}
 
-	public static void configUpdated(Player player) {
-		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + ConfigManager.configVersion);
+	public static void configUpdated(final Player player) {
+		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + ConfigManager.getConfigVersion());
 		player.sendMessage("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust the file to your liking");
+	}
+
+
+
+
+	public static String getErrorPvpcommandDisabled() {
+		return errorPvpcommandDisabled;
+	}
+
+	public static String getErrorPermission() {
+		return errorPermission;
+	}
+
+	public static String getErrorPvpCooldown() {
+		return errorPvpCooldown;
+	}
+
+	public static String getAlreadyDisabled() {
+		return alreadyDisabled;
+	}
+
+	public static String getAlreadyEnabled() {
+		return alreadyEnabled;
+	}
+
+	public static String getOtherStatusEnabled() {
+		return otherStatusEnabled;
+	}
+
+	public static String getOthersStatusDisabled() {
+		return othersStatusDisabled;
+	}
+
+	public static String getPvpDisabled() {
+		return pvpDisabled;
+	}
+
+	public static String getPvpEnabled() {
+		return pvpEnabled;
+	}
+
+	public static String getSelfStatusDisabled() {
+		return selfStatusDisabled;
+	}
+
+	public static String getSelfStatusEnabled() {
+		return selfStatusEnabled;
+	}
+
+	public static String getCommandDeniedIncombat() {
+		return commandDeniedIncombat;
+	}
+
+	public static String getAttackDeniedYou() {
+		return attackDeniedYou;
+	}
+
+	public static String getAttackDeniedOther() {
+		return attackDeniedOther;
+	}
+
+	public static String getTaggedAttacker() {
+		return taggedAttacker;
+	}
+
+	public static String getTaggedDefender() {
+		return taggedDefender;
+	}
+
+	public static String getOutOfCombat() {
+		return outOfCombat;
+	}
+
+	public static String getNewbieProtection() {
+		return newbieProtection;
+	}
+
+	public static String getNewbieProtectionEnd() {
+		return newbieProtectionEnd;
+	}
+
+	public static String getPvplogBroadcast() {
+		return pvplogBroadcast;
+	}
+
+	public static String getNewbieProtectionOnHit() {
+		return newbieProtectionOnHit;
+	}
+
+	public static String getNewbieProtectionAtacker() {
+		return newbieProtectionAtacker;
+	}
+
+	public static String getPvptoggleOnBroadcast() {
+		return pvptoggleOnBroadcast;
+	}
+
+	public static String getPvptoggleOffBroadcast() {
+		return pvptoggleOffBroadcast;
+	}
+
+	public static String getEnderpearlBlockedIncombat() {
+		return enderpearlBlockedIncombat;
+	}
+
+	public static String getErrorCommand() {
+		return errorCommand;
+	}
+
+	public static String getCurrentversion() {
+		return currentVersion;
+	}
+
+	public static String getNewversion() {
+		return getNewVersion();
+	}
+
+	public static String getMoneyReward() {
+		return moneyReward;
+	}
+
+	public final Locale getLocale() {
+		return locale;
+	}
+
+	public static String getNewVersion() {
+		return newVersion;
+	}
+
+	public static void setNewVersion(final String newVersion) {
+		Messages.newVersion = newVersion;
 	}
 }

@@ -10,21 +10,21 @@ import org.bukkit.command.CommandSender;
 
 public class PvPList implements CommandExecutor {
 
-	private PlayerHandler ph;
+	private final PlayerHandler ph;
 
-	public PvPList(PlayerHandler ph) {
+	public PvPList(final PlayerHandler ph) {
 		this.ph = ph;
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		sender.sendMessage(ChatColor.GOLD + "**** Players With PvP Enabled ****");
 		sender.sendMessage(ChatColor.DARK_GRAY + pvpList());
 		return true;
 	}
 
 	private String pvpList() {
-		StringBuilder list = new StringBuilder();
-		for (PvPlayer p : ph.getPlayers().values()) {
+		final StringBuilder list = new StringBuilder();
+		for (final PvPlayer p : ph.getPlayers().values()) {
 			if (p.hasPvPEnabled()) {
 				list.append(p.getName() + ", ");
 			}

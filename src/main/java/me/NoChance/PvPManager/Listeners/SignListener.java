@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Listeners;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,16 +16,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
 
-	private PlayerHandler ph;
+	private final PlayerHandler ph;
 
-	public SignListener(PlayerHandler playerHandler) {
+	public SignListener(final PlayerHandler playerHandler) {
 		this.ph = playerHandler;
 	}
 
 	@EventHandler
-	public void onSignPlace(SignChangeEvent e) {
-		Player p = e.getPlayer();
-		if (CombatUtils.PMAllowed(p.getWorld().getName())) {
+	public final void onSignPlace(final SignChangeEvent e) { // NO_UCD (unused code)
+		final Player p = e.getPlayer();
+		if (CombatUtils.isWorldAllowed(p.getWorld().getName())) {
 			if (p.hasPermission("pvpmanager.sign")) {
 				if (e.getLine(0).equalsIgnoreCase("[PvPManager]")) {
 					e.setLine(0, "§5[PvPManager]");
@@ -40,19 +41,19 @@ public class SignListener implements Listener {
 	}
 
 	@EventHandler
-	public void onSignInteract(PlayerInteractEvent e) {
-		Player player = e.getPlayer();
-		if (CombatUtils.PMAllowed(player.getWorld().getName())) {
-			Block clicked = e.getClickedBlock();
+	public final void onSignInteract(final PlayerInteractEvent e) { // NO_UCD (unused code)
+		final Player player = e.getPlayer();
+		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
+			final Block clicked = e.getClickedBlock();
 			if (clicked != null) {
 				if (clicked.getType().equals(Material.SIGN_POST) || clicked.getType().equals(Material.WALL_SIGN)) {
-					Sign sign = (Sign) clicked.getState();
+					final Sign sign = (Sign) clicked.getState();
 					if (sign.getLine(0).equalsIgnoreCase("§5[PvPManager]")) {
 						if (player.hasPermission("pvpmanager.pvpstatus.change")) {
 							ph.get(player).togglePvP();
 							return;
 						} else
-							player.sendMessage(Messages.Error_Permission);
+							player.sendMessage(Messages.getErrorPermission());
 					}
 				}
 			}

@@ -31,16 +31,17 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest({ PvPManager.class, CombatUtils.class })
 public class DamageListenerTest {
 
-	PlayerListener damageListener;
-	EntityDamageByEntityEvent mockEvent;
-	Player attacker;
-	Player defender;
+	private PlayerListener damageListener;
+	private EntityDamageByEntityEvent mockEvent;
+	private PlayerHandler ph;
+	private Player attacker;
+	private Player defender;
 
 	@Before
-	public void setup() throws Exception {
-		PvPManager plugin = mock(PvPManager.class);
+	public final void setup() throws Exception {
+		final PvPManager plugin = mock(PvPManager.class);
 		PowerMockito.mockStatic(CombatUtils.class);
-		PlayerHandler ph = mock(PlayerHandler.class);
+		ph = mock(PlayerHandler.class);
 
 		mockEvent = PowerMockito.mock(EntityDamageByEntityEvent.class);
 
@@ -48,7 +49,7 @@ public class DamageListenerTest {
 		defender = mock(Player.class, RETURNS_DEEP_STUBS);
 
 		when(defender.getWorld().getName()).thenReturn("world");
-		when(CombatUtils.PMAllowed(anyString())).thenReturn(true);
+		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
 		when(mockEvent.getDamager()).thenReturn(attacker);
 		when(mockEvent.getEntity()).thenReturn(defender);
 		when(mockEvent.isCancelled()).thenReturn(false);
@@ -56,72 +57,72 @@ public class DamageListenerTest {
 
 		damageListener = new PlayerListener(plugin);
 
-		Field playerHandlerfield = PlayerListener.class.getDeclaredField("ph");
+		final Field playerHandlerfield = PlayerListener.class.getDeclaredField("ph");
 		playerHandlerfield.setAccessible(true);
 		playerHandlerfield.set(damageListener, ph);
 	}
 
-	public void createAttack(CancelResult cr) {
-		when(CombatUtils.tryCancel(attacker, defender)).thenReturn(cr);
+	public final void createAttack(final CancelResult cr) {
+		when(ph.tryCancel(attacker, defender)).thenReturn(cr);
 		damageListener.onPlayerDamage(mockEvent);
 	}
 
 	@Test
-	public void pvpCheck() {
+	public final void pvpCheck() {
 		assertTrue(CombatUtils.isPvP(mockEvent));
 	}
 
 	@Test
-	public void cancelNewbie() {
-		CancelResult cr = CancelResult.NEWBIE;
+	public final void cancelNewbie() {
+		final CancelResult cr = CancelResult.NEWBIE;
 		createAttack(cr);
 
-		verify(attacker).sendMessage(Messages.Newbie_Protection_On_Hit);
+		verify(attacker).sendMessage(Messages.getNewbieProtectionOnHit());
 		verify(mockEvent).setCancelled(true);
-		assertEquals(cr, CombatUtils.tryCancel(attacker, defender));
+		assertEquals(cr, ph.tryCancel(attacker, defender));
 	}
 
 	@Test
-	public void cancelPvPDisabled() {
-		CancelResult cr = CancelResult.PVPDISABLED;
+	public final void cancelPvPDisabled() {
+		final CancelResult cr = CancelResult.PVPDISABLED;
 		createAttack(cr);
 
-		verify(attacker).sendMessage(Messages.Attack_Denied_You);
+		verify(attacker).sendMessage(Messages.getAttackDeniedYou());
 		verify(mockEvent).setCancelled(true);
-		assertEquals(cr, CombatUtils.tryCancel(attacker, defender));
+		assertEquals(cr, ph.tryCancel(attacker, defender));
 	}
 
 	@Test
-	public void failCancel() {
-		CancelResult cr = CancelResult.FAIL;
-		when(CombatUtils.tryCancel(attacker, defender)).thenReturn(cr);
+	public final void failCancel() {
+		final CancelResult cr = CancelResult.FAIL;
+		when(ph.tryCancel(attacker, defender)).thenReturn(cr);
 		damageListener.onPlayerDamageMonitor(mockEvent);
 
 		verify(mockEvent, never()).setCancelled(true);
-		assertEquals(cr, CombatUtils.tryCancel(attacker, defender));
+		assertEquals(cr, ph.tryCancel(attacker, defender));
 	}
 
 	@Test
-	public void overrideCancel() {
-		CancelResult cr = CancelResult.FAIL_OVERRIDE;
-		when(CombatUtils.tryCancel(attacker, defender)).thenReturn(cr);
+	public final void overrideCancel() {
+		final CancelResult cr = CancelResult.FAIL_OVERRIDE;
+		when(ph.tryCancel(attacker, defender)).thenReturn(cr);
 		damageListener.onPlayerDamageOverride(mockEvent);
 
 		verify(mockEvent, never()).setCancelled(false);
 		verify(attacker, never()).sendMessage(anyString());
-		assertEquals(cr, CombatUtils.tryCancel(attacker, defender));
+		assertEquals(cr, ph.tryCancel(attacker, defender));
 	}
 
 	@Test
-	public void overrideCancelled() {
-		CancelResult cr = CancelResult.FAIL_OVERRIDE;
+	public final void overrideCancelled() {
+		final CancelResult cr = CancelResult.FAIL_OVERRIDE;
 		when(mockEvent.isCancelled()).thenReturn(true);
-		when(CombatUtils.tryCancel(attacker, defender)).thenReturn(cr);
+		when(ph.tryCancel(attacker, defender)).thenReturn(cr);
 		damageListener.onPlayerDamageOverride(mockEvent);
 
 		verify(mockEvent).setCancelled(false);
 		verify(attacker, never()).sendMessage(anyString());
-		assertEquals(cr, CombatUtils.tryCancel(attacker, defender));
+		assertEquals(cr, ph.tryCancel(attacker, defender));
 	}
 
 }

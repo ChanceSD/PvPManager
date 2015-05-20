@@ -13,8 +13,7 @@ import org.bukkit.entity.Player;
 
 public class PvPlayer {
 
-	private String name;
-	private UUID id;
+	private final Player player;
 	private boolean newbie;
 	private boolean tagged;
 	private boolean pvpState;
@@ -23,49 +22,48 @@ public class PvPlayer {
 	private long toggleTime;
 	private long respawnTime;
 	private long taggedTime;
-	private NewbieTask newbieTask;
-	private HashMap<String, Integer> victim = new HashMap<String, Integer>();
-	private PvPManager plugin;
+	private final NewbieTask newbieTask;
+	private final HashMap<String, Integer> victim = new HashMap<String, Integer>();
+	private final PvPManager plugin;
 	private TeamProfile teamProfile;
 
-	public PvPlayer(Player player, PvPManager plugin) {
-		this.name = player.getName();
-		this.id = player.getUniqueId();
+	public PvPlayer(final Player player, final PvPManager plugin) {
+		this.player = player;
 		this.plugin = plugin;
 		this.newbieTask = new NewbieTask(this);
-		if (Variables.useNameTag || Variables.toggleNametagsEnabled)
+		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled())
 			teamProfile = new TeamProfile(this);
 	}
 
-	public String getName() {
-		return this.name;
+	public final String getName() {
+		return player.getName();
 	}
 
-	public UUID getUUID() {
-		return this.id;
+	public final UUID getUUID() {
+		return player.getUniqueId();
 	}
 
-	public Player getPlayer() {
-		return Bukkit.getPlayer(id);
+	public final Player getPlayer() {
+		return player;
 	}
 
-	public String getWorldName() {
+	public final String getWorldName() {
 		return getPlayer().getWorld().getName();
 	}
 
-	public long getToggleTime() {
+	public final long getToggleTime() {
 		return this.toggleTime;
 	}
 
-	public void message(String message) {
+	public final void message(final String message) {
 		if (isOnline())
 			getPlayer().sendMessage(message);
 	}
 
-	public void togglePvP() {
-		if (!CombatUtils.hasTimePassed(toggleTime, Variables.toggleCooldown)) {
-			long secondsLeft = ((toggleTime + Variables.toggleCooldown * 1000) - System.currentTimeMillis()) / 1000;
-			message(Messages.Error_PvP_Cooldown.replace("%m", Long.toString(secondsLeft)));
+	public final void togglePvP() {
+		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown())) {
+			final long secondsLeft = ((toggleTime + Variables.getToggleCooldown() * 1000) - System.currentTimeMillis()) / 1000;
+			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft)));
 			return;
 		} else {
 			toggleTime = System.currentTimeMillis();
@@ -73,43 +71,43 @@ public class PvPlayer {
 		}
 	}
 
-	public boolean isNewbie() {
+	public final boolean isNewbie() {
 		return this.newbie;
 	}
 
-	public boolean isOnline() {
+	public final boolean isOnline() {
 		return getPlayer() != null;
 	}
 
-	public boolean isInCombat() {
+	public final boolean isInCombat() {
 		return this.tagged;
 	}
 
-	public boolean hasPvPEnabled() {
+	public final boolean hasPvPEnabled() {
 		return this.pvpState;
 	}
 
-	public boolean hasPvPLogged() {
+	public final boolean hasPvPLogged() {
 		return this.pvpLogged;
 	}
 
-	public boolean hasOverride() {
+	public final boolean hasOverride() {
 		return this.override;
 	}
 
-	public void disableFly() {
-		Player player = getPlayer();
+	public final void disableFly() {
+		final Player player = getPlayer();
 		player.setFlying(false);
 		player.setAllowFlight(false);
 	}
 
-	public void setNewbie(boolean newbie) {
+	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
-			message(Messages.Newbie_Protection.replace("%", Integer.toString(Variables.newbieProtectionTime)));
-			newbieTask.runTaskLater(plugin, Variables.newbieProtectionTime * 1200);
+			message(Messages.getNewbieProtection().replace("%", Integer.toString(Variables.getNewbieProtectionTime())));
+			newbieTask.runTaskLater(plugin, Variables.getNewbieProtectionTime() * 1200);
 		} else {
 			if (Bukkit.getServer().getScheduler().isCurrentlyRunning(newbieTask.getTaskId()))
-				message(Messages.Newbie_Protection_End);
+				message(Messages.getNewbieProtectionEnd());
 			else {
 				newbieTask.cancel();
 				message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
@@ -118,7 +116,7 @@ public class PvPlayer {
 		this.newbie = newbie;
 	}
 
-	public void setTagged(boolean attacker, String tagger) {
+	public final void setTagged(final boolean attacker, final String tagger) {
 		if (getPlayer().hasPermission("pvpmanager.nocombat"))
 			return;
 
@@ -127,108 +125,104 @@ public class PvPlayer {
 		if (tagged)
 			return;
 
-		if (Variables.useNameTag)
+		if (Variables.isUseNameTag())
 			teamProfile.setInCombat();
 
-		if (!Variables.inCombatSilent)
+		if (!Variables.isInCombatSilent())
 			if (attacker)
-				message(Messages.Tagged_Attacker.replace("%p", tagger));
+				message(Messages.getTaggedAttacker().replace("%p", tagger));
 			else
-				message(Messages.Tagged_Defender.replace("%p", tagger));
+				message(Messages.getTaggedDefender().replace("%p", tagger));
 
 		this.tagged = true;
 		plugin.getPlayerHandler().tag(this);
 	}
 
-	public void unTag() {
+	public final void unTag() {
 		if (isOnline()) {
-			if (Variables.useNameTag)
+			if (Variables.isUseNameTag())
 				teamProfile.restoreTeam();
 
-			if (!Variables.inCombatSilent)
-				message(Messages.Out_Of_Combat);
+			if (!Variables.isInCombatSilent())
+				message(Messages.getOutOfCombat());
 		}
 
 		this.tagged = false;
 	}
 
-	public void setPvP(boolean pvpState) {
+	public final void setPvP(final boolean pvpState) {
 		this.pvpState = pvpState;
-		if (Variables.toggleNametagsEnabled)
+		if (Variables.isToggleNametagsEnabled())
 			teamProfile.setPvP(pvpState);
 		if (!pvpState) {
-			message(Messages.PvP_Disabled);
-			if (Variables.toggleBroadcast)
-				Bukkit.broadcastMessage(Messages.PvPToggle_Off_Broadcast.replace("%p", name));
+			message(Messages.getPvpDisabled());
+			if (Variables.isToggleBroadcast())
+				Bukkit.broadcastMessage(Messages.getPvptoggleOffBroadcast().replace("%p", player.getName()));
 		} else {
-			message(Messages.PvP_Enabled);
-			if (Variables.toggleBroadcast)
-				Bukkit.broadcastMessage(Messages.PvPToggle_On_Broadcast.replace("%p", name));
+			message(Messages.getPvpEnabled());
+			if (Variables.isToggleBroadcast())
+				Bukkit.broadcastMessage(Messages.getPvptoggleOnBroadcast().replace("%p", player.getName()));
 		}
 	}
 
-	public void addVictim(String victimName) {
+	public final void addVictim(final String victimName) {
 		if (!victim.containsKey(victimName)) {
 			victim.put(victimName, 1);
 		} else if (victim.containsKey(victimName)) {
 			int totalKills = victim.get(victimName);
-			if (totalKills < Variables.killAbuseMaxKills) {
+			if (totalKills < Variables.getKillAbuseMaxKills()) {
 				totalKills++;
 				victim.put(victimName, totalKills);
 			}
-			if (totalKills >= Variables.killAbuseMaxKills) {
-				for (String command : Variables.killAbuseCommands) {
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", name));
+			if (totalKills >= Variables.getKillAbuseMaxKills()) {
+				for (final String command : Variables.getKillAbuseCommands()) {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", player.getName()));
 				}
 			}
 		}
 	}
 
-	public void clearVictims() {
+	public final void clearVictims() {
 		victim.clear();
 	}
 
-	public void setPvpLogged(boolean pvpLogged) {
+	public final void setPvpLogged(final boolean pvpLogged) {
 		this.pvpLogged = pvpLogged;
 	}
 
-	public boolean isVictim(String victimName) {
-		return victim.containsKey(victimName);
-	}
-
-	public boolean hasRespawnProtection() {
+	public final boolean hasRespawnProtection() {
 		if (respawnTime == 0)
 			return false;
-		if (CombatUtils.hasTimePassed(respawnTime, Variables.respawnProtection)) {
+		if (CombatUtils.hasTimePassed(respawnTime, Variables.getRespawnProtection())) {
 			respawnTime = 0;
 			return false;
 		}
 		return true;
 	}
 
-	public void setRespawnTime(long respawnTime) {
+	public final void setRespawnTime(final long respawnTime) {
 		this.respawnTime = respawnTime;
 	}
 
-	public boolean toggleOverride() {
+	public final boolean toggleOverride() {
 		this.override = !override;
 		return this.override;
 	}
 
-	public long getTaggedTime() {
+	public final long getTaggedTime() {
 		return taggedTime;
 	}
 
-	public void loadPvPState() {
+	public final void loadPvPState() {
 		if (getPlayer().hasPermission("pvpmanager.nopvp"))
 			this.pvpState = false;
 		else if (!getPlayer().hasPlayedBefore()) {
-			this.pvpState = Variables.defaultPvp;
-			if (Variables.newbieProtectionEnabled)
+			this.pvpState = Variables.isDefaultPvp();
+			if (Variables.isNewbieProtectionEnabled())
 				setNewbie(true);
-		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(id.toString()))
+		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(player.getUniqueId().toString()))
 			this.pvpState = true;
-		if (Variables.toggleNametagsEnabled)
+		if (Variables.isToggleNametagsEnabled())
 			teamProfile.setPvP(this.pvpState);
 	}
 }

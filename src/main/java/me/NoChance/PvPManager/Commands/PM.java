@@ -14,16 +14,16 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class PM implements CommandExecutor {
 
-	private PvPManager plugin;
+	private final PvPManager plugin;
 
-	public PM(PvPManager plugin) {
+	public PM(final PvPManager plugin) {
 		this.plugin = plugin;
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if (sender instanceof Player) {
-			Player player = (Player) sender;
+			final Player player = (Player) sender;
 			if (args.length == 0 && player.hasPermission("pvpmanager.menu")) {
 				Variables.helpMenu(player);
 				return true;
@@ -33,18 +33,18 @@ public class PM implements CommandExecutor {
 					reload(player);
 					return true;
 				} else if (args[0].equalsIgnoreCase("reload")) {
-					player.sendMessage(Messages.Error_Permission);
+					player.sendMessage(Messages.getErrorPermission());
 					return false;
 				}
 				if (args[0].equalsIgnoreCase("update") && player.hasPermission("pvpmanager.admin")) {
-					if (Variables.updateCheck) {
-						if (Variables.update) {
+					if (Variables.isUpdateCheck()) {
+						if (Variables.isUpdate()) {
 							if (plugin.downloadUpdate())
-								player.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.newVersion);
+								player.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewversion());
 							else
 								player.sendMessage("§4An error ocurred while updating, please report to the developer");
 						} else
-							player.sendMessage("§2You have the latest version: §ePvPManager v" + Messages.currentVersion);
+							player.sendMessage("§2You have the latest version: §ePvPManager v" + Messages.getCurrentversion());
 					} else
 						player.sendMessage("§4Update Checking is disabled, enable it in the Config file");
 					return true;
@@ -52,7 +52,7 @@ public class PM implements CommandExecutor {
 			}
 			if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("debug") && player.hasPermission("pvpmanager.debug")) {
-					PvPlayer p = plugin.getPlayerHandler().get(player);
+					final PvPlayer p = plugin.getPlayerHandler().get(player);
 					if (args[1].equalsIgnoreCase("tag")) {
 						p.setTagged(true, "Debug");
 					} else if (args[1].equalsIgnoreCase("ct")) {
@@ -75,12 +75,12 @@ public class PM implements CommandExecutor {
 			}
 			return false;
 		}
-		sender.sendMessage(Messages.Error_Command);
+		sender.sendMessage(Messages.getErrorCommand());
 		return false;
 	}
 
-	public void reload(CommandSender player) {
-		Variables.update = false;
+	public final void reload(final CommandSender player) {
+		Variables.setUpdate(false);
 		plugin.getServer().getScheduler().cancelTasks(plugin);
 		plugin.getServer().getPluginManager().disablePlugin(plugin);
 		plugin.getServer().getPluginManager().enablePlugin(plugin);
