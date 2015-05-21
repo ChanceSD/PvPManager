@@ -20,7 +20,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config extends YamlConfiguration {
-	private int comments;
+
 	private final File file;
 	private final FileConfiguration config;
 	private final PvPManager plugin;
@@ -32,30 +32,11 @@ public class Config extends YamlConfiguration {
 		if (!file.exists())
 			this.prepareFile(file, name);
 		this.file = file;
-		this.comments = this.getCommentsNum(file);
 		this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file));
 	}
 
 	@Override
 	public final void set(final String path, final Object value) {
-		this.config.set(path, value);
-	}
-
-	public final void set(final String path, final Object value, final String comment) {
-		if (!this.config.contains(path)) {
-			this.config.set(getPluginName() + "_COMMENT_" + comments, " " + comment);
-			comments++;
-		}
-		this.config.set(path, value);
-	}
-
-	public final void set(final String path, final Object value, final String[] comment) {
-		for (final String comm : comment) {
-			if (!this.config.contains(path)) {
-				this.config.set(getPluginName() + "_COMMENT_" + comments, " " + comm);
-				comments++;
-			}
-		}
 		this.config.set(path, value);
 	}
 
@@ -112,28 +93,6 @@ public class Config extends YamlConfiguration {
 	@Override
 	public final List<?> getList(final String path, final List<?> def) {
 		return this.config.getList(path, def);
-	}
-
-	private int getCommentsNum(final File file) {
-		if (!file.exists()) {
-			return 0;
-		}
-		try {
-			int comments = 0;
-			String currentLine;
-			final BufferedReader reader = new BufferedReader(new FileReader(file));
-			while ((currentLine = reader.readLine()) != null) {
-
-				if (currentLine.startsWith("#")) {
-					comments++;
-				}
-			}
-			reader.close();
-			return comments;
-		} catch (final IOException e) {
-			e.printStackTrace();
-			return 0;
-		}
 	}
 
 	public final InputStream getConfigContent(final File file) {

@@ -79,7 +79,7 @@ public class PlayerHandler {
 		}
 	}
 
-	public final CancelResult tryCancel(final Player damager, final Player defender) {
+	public  CancelResult tryCancel(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
 		if (attacker.hasOverride() || Variables.isStopBorderHopping() && canAttack(attacker, attacked))
@@ -119,7 +119,7 @@ public class PlayerHandler {
 		}
 	}
 
-	public final PvPlayer get(final Player player) {
+	public  PvPlayer get(final Player player) {
 		final String name = player.getName();
 		return players.containsKey(name) ? players.get(name) : add(player);
 	}
