@@ -100,6 +100,13 @@
 			<systemPath>${project.basedir}/repo/MassiveCore.jar</systemPath>
 		</dependency>
 		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>FactionsUUID</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/repo/FactionsUUID.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
 			<version>LATEST</version>

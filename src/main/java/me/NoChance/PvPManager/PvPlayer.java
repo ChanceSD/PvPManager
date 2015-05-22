@@ -11,7 +11,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class PvPlayer {
+public class PvPlayer extends EcoPlayer {
 
 	private final Player player;
 	private boolean newbie;
@@ -25,14 +25,17 @@ public class PvPlayer {
 	private final NewbieTask newbieTask;
 	private final HashMap<String, Integer> victim = new HashMap<String, Integer>();
 	private final PvPManager plugin;
-	private TeamProfile teamProfile;
+	private final TeamProfile teamProfile;
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
+		super(plugin.getDependencyManager().getEconomy());
 		this.player = player;
 		this.plugin = plugin;
 		this.newbieTask = new NewbieTask(this);
 		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled())
 			teamProfile = new TeamProfile(this);
+		else
+			teamProfile = null;
 	}
 
 	public final String getName() {
@@ -43,6 +46,7 @@ public class PvPlayer {
 		return player.getUniqueId();
 	}
 
+	@Override
 	public final Player getPlayer() {
 		return player;
 	}
@@ -53,11 +57,6 @@ public class PvPlayer {
 
 	public final long getToggleTime() {
 		return this.toggleTime;
-	}
-
-	public final void message(final String message) {
-		if (isOnline())
-			getPlayer().sendMessage(message);
 	}
 
 	public final void togglePvP() {
@@ -73,10 +72,6 @@ public class PvPlayer {
 
 	public final boolean isNewbie() {
 		return this.newbie;
-	}
-
-	public final boolean isOnline() {
-		return getPlayer() != null;
 	}
 
 	public final boolean isInCombat() {

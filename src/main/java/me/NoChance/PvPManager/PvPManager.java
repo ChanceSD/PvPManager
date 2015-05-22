@@ -17,7 +17,9 @@ import me.NoChance.PvPManager.Lib.Updater.UpdateResult;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Listeners.SignListener;
 import me.NoChance.PvPManager.Managers.ConfigManager;
+import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Utils.Log;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,10 +30,13 @@ public final class PvPManager extends JavaPlugin {
 	private ConfigManager configM;
 	private PlayerHandler playerHandler;
 	private LogFile log;
+	private DependencyManager dependencyManager;
 
 	@Override
 	public void onEnable() {
 		loadFiles();
+		Log.setup(getLogger());
+		dependencyManager = new DependencyManager(this);
 		playerHandler = new PlayerHandler(this);
 		startListeners();
 		getCommand("pvp").setExecutor(new PvP(playerHandler));
@@ -80,19 +85,19 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void checkForUpdates() {
-		getLogger().info("Checking for updates...");
+		Log.info("Checking for updates...");
 		final Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
-			getLogger().info("Update Available: " + Messages.getNewversion());
+			Log.info("Update Available: " + Messages.getNewversion());
 			if (Variables.isAutoUpdate()) {
 				downloadUpdate();
 				return;
 			}
 			Variables.setUpdate(true);
-			getLogger().info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+			Log.info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 		} else
-			getLogger().info("No update found");
+			Log.info("No update found");
 	}
 
 	public boolean downloadUpdate() {
@@ -116,5 +121,8 @@ public final class PvPManager extends JavaPlugin {
 		return log;
 	}
 
-}
+	public DependencyManager getDependencyManager() {
+		return dependencyManager;
+	}
 
+}

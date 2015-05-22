@@ -116,7 +116,7 @@ public final class Variables {
 		locale = cm.getConfig().getString("Locale", "en").toUpperCase();
 		ignoreNoDamageHits = cm.getConfig().getBoolean("Ignore No Damage Hits", false);
 		respawnProtection = cm.getConfig().getInt("Kill Abuse.Respawn Protection", 5);
-		moneyReward = cm.getConfig().getDouble("Player Kills.Money Reward", 10);
+		setMoneyReward(cm.getConfig().getDouble("Player Kills.Money Reward", 10));
 		commandsOnKillEnabled = cm.getConfig().getBoolean("Player Kills.Commands On Kill.Enabled", false);
 		commandsOnKill = (List<String>) cm.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
 		disableInvisibility = cm.getConfig().getBoolean("Disable Invisibility", false);
@@ -125,7 +125,7 @@ public final class Variables {
 		toggleColorOff = cm.getConfig().getString("PvP Toggle.NameTags.Color Off", "&2");
 		logToFile = cm.getConfig().getBoolean("In Combat.Punishments.Log To File", true);
 		transferDrops = cm.getConfig().getBoolean("Player Kills.Transfer Drops", false);
-		moneyPenalty = cm.getConfig().getDouble("Player Kills.Money Penalty", 10);
+		setMoneyPenalty(cm.getConfig().getDouble("Player Kills.Money Penalty", 10));
 		blockPickNewbies = cm.getConfig().getBoolean("Newbie Protection.Block Pick Items", false);
 		newbieGodMode = cm.getConfig().getBoolean("Newbie Protection.Protect From Everything", false);
 		commandsWhitelist = cm.getConfig().getBoolean("In Combat.Stop Commands.Whitelist", true);
@@ -388,5 +388,13 @@ public final class Variables {
 
 	public static void setFineEnabled(final boolean fineEnabled) {
 		Variables.fineEnabled = fineEnabled;
+	}
+
+	public static void setMoneyReward(final double moneyReward) {
+		Variables.moneyReward = moneyReward;
+	}
+
+	public static void setMoneyPenalty(final double moneyPenalty) {
+		Variables.moneyPenalty = moneyPenalty;
 	}
 }

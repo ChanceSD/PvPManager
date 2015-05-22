@@ -81,6 +81,4 @@ public class PvP implements CommandExecutor {
 		return false;
 	}
 
-
-
 }
