@@ -42,10 +42,9 @@ public class PvP implements CommandExecutor {
 				if (pvpPlayer.isNewbie()) {
 					pvpPlayer.setNewbie(false);
 					return true;
-				} else {
-					sender.sendMessage(ChatColor.DARK_RED + "You are not protected!");
-					return false;
 				}
+				sender.sendMessage(ChatColor.DARK_RED + "You are not protected!");
+				return false;
 			} else if ((sender.hasPermission("pvpmanager.pvpstatus.change") && !Variables.isToggleSignsEnabled())
 					|| ((sender.hasPermission("pvpmanager.pvpstatus.change") && Variables.isToggleSignsEnabled() && !Variables.isDisableToggleCommand()))) {
 				if ((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && sender instanceof Player) {
@@ -55,10 +54,9 @@ public class PvP implements CommandExecutor {
 						if (!enable && pvpPlayer.hasPvPEnabled() || enable && !pvpPlayer.hasPvPEnabled()) {
 							pvpPlayer.setPvP(enable);
 							return true;
-						} else {
-							sender.sendMessage(enable ? Messages.getAlreadyEnabled() : Messages.getAlreadyDisabled());
-							return true;
 						}
+						sender.sendMessage(enable ? Messages.getAlreadyEnabled() : Messages.getAlreadyDisabled());
+						return true;
 					}
 					return false;
 				} else if (sender.hasPermission("pvpmanager.admin")) {

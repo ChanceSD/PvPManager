@@ -112,17 +112,18 @@ public class Updater {
 		}
 	}
 
-	private void saveFile(final File folder, final String file, final String u) {
+	@SuppressWarnings("resource")
+	private void saveFile(final File folder, final String file1, final String u) {
 		if (!folder.exists()) {
 			folder.mkdir();
 		}
 		BufferedInputStream in = null;
 		FileOutputStream fout = null;
 		try {
-			final URL url = new URL(u);
-			final int fileLength = url.openConnection().getContentLength();
-			in = new BufferedInputStream(url.openStream());
-			fout = new FileOutputStream(folder.getAbsolutePath() + "/" + file);
+			final URL url1 = new URL(u);
+			final int fileLength = url1.openConnection().getContentLength();
+			in = new BufferedInputStream(url1.openStream());
+			fout = new FileOutputStream(folder.getAbsolutePath() + "/" + file1);
 
 			final byte[] data = new byte[Updater.BYTE_SIZE];
 			int count;
@@ -138,19 +139,23 @@ public class Updater {
 					Log.info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
 				}
 			}
-			for (final File xFile : new File(this.plugin.getDataFolder().getParent(), this.updateFolder).listFiles()) {
-				if (xFile.getName().endsWith(".zip")) {
-					xFile.delete();
+			File[] listFiles = new File(this.plugin.getDataFolder().getParent(), this.updateFolder).listFiles();
+			if (listFiles != null)
+				for (final File xFile : listFiles) {
+					if (xFile.getName().endsWith(".zip")) {
+						xFile.delete();
+					}
 				}
-			}
-			final File dFile = new File(folder.getAbsolutePath() + "/" + file);
+			final File dFile = new File(folder.getAbsolutePath() + "/" + file1);
 			if (dFile.getName().endsWith(".zip")) {
 				this.unzip(dFile.getCanonicalPath());
 			}
 			if (this.announce) {
 				Log.info("Finished updating.");
 			}
-		} catch (final Exception ex) {
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
 			Log.warning("The auto-updater tried to download a new update, but was unsuccessful.");
 			this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
 		} finally {
@@ -166,10 +171,10 @@ public class Updater {
 		}
 	}
 
-	private void unzip(final String file) {
+	private void unzip(final String file1) {
 		try {
-			final File fSourceZip = new File(file);
-			final String zipPath = file.substring(0, file.length() - 4);
+			final File fSourceZip = new File(file1);
+			final String zipPath = file1.substring(0, file1.length() - 4);
 			ZipFile zipFile = new ZipFile(fSourceZip);
 			Enumeration<? extends ZipEntry> e = zipFile.entries();
 			while (e.hasMoreElements()) {
@@ -178,22 +183,21 @@ public class Updater {
 				destinationFilePath.getParentFile().mkdirs();
 				if (entry.isDirectory()) {
 					continue;
-				} else {
-					final BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
-					int b;
-					final byte[] buffer = new byte[Updater.BYTE_SIZE];
-					final FileOutputStream fos = new FileOutputStream(destinationFilePath);
-					final BufferedOutputStream bos = new BufferedOutputStream(fos, Updater.BYTE_SIZE);
-					while ((b = bis.read(buffer, 0, Updater.BYTE_SIZE)) != -1) {
-						bos.write(buffer, 0, b);
-					}
-					bos.flush();
-					bos.close();
-					bis.close();
-					final String name = destinationFilePath.getName();
-					if (name.endsWith(".jar") && this.pluginFile(name)) {
-						destinationFilePath.renameTo(new File(this.plugin.getDataFolder().getParent(), this.updateFolder + "/" + name));
-					}
+				}
+				final BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
+				int b;
+				final byte[] buffer = new byte[Updater.BYTE_SIZE];
+				final FileOutputStream fos = new FileOutputStream(destinationFilePath);
+				final BufferedOutputStream bos = new BufferedOutputStream(fos, Updater.BYTE_SIZE);
+				while ((b = bis.read(buffer, 0, Updater.BYTE_SIZE)) != -1) {
+					bos.write(buffer, 0, b);
+				}
+				bos.flush();
+				bos.close();
+				bis.close();
+				final String name = destinationFilePath.getName();
+				if (name.endsWith(".jar") && this.pluginFile(name)) {
+					destinationFilePath.renameTo(new File(this.plugin.getDataFolder().getParent(), this.updateFolder + "/" + name));
 				}
 				entry = null;
 				destinationFilePath = null;
@@ -202,29 +206,33 @@ public class Updater {
 			zipFile.close();
 			zipFile = null;
 
-			for (final File dFile : new File(zipPath).listFiles()) {
-				if (dFile.isDirectory()) {
-					if (this.pluginFile(dFile.getName())) {
-						final File oFile = new File(this.plugin.getDataFolder().getParent(), dFile.getName());
-						final File[] contents = oFile.listFiles();
-						for (final File cFile : dFile.listFiles()) {
-							boolean found = false;
-							for (final File xFile : contents) {
-								if (xFile.getName().equals(cFile.getName())) {
-									found = true;
-									break;
+			File[] listFiles = new File(zipPath).listFiles();
+			if (listFiles != null)
+				for (final File dFile : listFiles) {
+					if (dFile.isDirectory()) {
+						if (this.pluginFile(dFile.getName())) {
+							final File oFile = new File(this.plugin.getDataFolder().getParent(), dFile.getName());
+							final File[] contents = oFile.listFiles();
+							File[] listFiles2 = dFile.listFiles();
+							if (listFiles2 != null)
+								for (final File cFile : listFiles2) {
+									boolean found = false;
+									for (final File xFile : contents) {
+										if (xFile.getName().equals(cFile.getName())) {
+											found = true;
+											break;
+										}
+									}
+									if (!found) {
+										cFile.renameTo(new File(oFile.getCanonicalFile() + "/" + cFile.getName()));
+									} else {
+										cFile.delete();
+									}
 								}
-							}
-							if (!found) {
-								cFile.renameTo(new File(oFile.getCanonicalFile() + "/" + cFile.getName()));
-							} else {
-								cFile.delete();
-							}
 						}
 					}
+					dFile.delete();
 				}
-				dFile.delete();
-			}
 			new File(zipPath).delete();
 			fSourceZip.delete();
 		} catch (final IOException ex) {
@@ -232,15 +240,17 @@ public class Updater {
 			this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
 			ex.printStackTrace();
 		}
-		new File(file).delete();
+		new File(file1).delete();
 	}
 
 	private boolean pluginFile(final String name) {
-		for (final File file : new File("plugins").listFiles()) {
-			if (file.getName().equals(name)) {
-				return true;
+		File[] listFiles = new File("plugins").listFiles();
+		if (listFiles != null)
+			for (final File file1 : listFiles) {
+				if (file1.getName().equals(name)) {
+					return true;
+				}
 			}
-		}
 		return false;
 	}
 
@@ -291,6 +301,7 @@ public class Updater {
 	}
 
 	private boolean read() {
+		BufferedReader reader = null;
 		try {
 			final URLConnection conn = this.url.openConnection();
 			conn.setConnectTimeout(5000);
@@ -299,7 +310,7 @@ public class Updater {
 
 			conn.setDoOutput(true);
 
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			final String response = reader.readLine();
 
 			final JSONArray array = (JSONArray) JSONValue.parse(response);
@@ -328,6 +339,13 @@ public class Updater {
 			}
 			e.printStackTrace();
 			return false;
+		} finally {
+			try {
+				if (reader != null)
+					reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -345,17 +345,15 @@ public class PlayerListener implements Listener {
 			if (Variables.isOnlyTagAttacker()) {
 				pvpAttacker.setTagged(true, pvpDefender.getName());
 				return;
-			} else {
-				pvpAttacker.setTagged(true, pvpDefender.getName());
-				pvpDefender.setTagged(false, pvpAttacker.getName());
 			}
+			pvpAttacker.setTagged(true, pvpDefender.getName());
+			pvpDefender.setTagged(false, pvpAttacker.getName());
 		}
 	}
 
 	private Player getAttacker(final EntityDamageByEntityEvent event) {
 		if (event.getDamager() instanceof Projectile)
 			return (Player) ((Projectile) event.getDamager()).getShooter();
-		else
-			return (Player) event.getDamager();
+		return (Player) event.getDamager();
 	}
 }

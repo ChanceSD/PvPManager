@@ -19,13 +19,13 @@ public class ConfigManager {
 	private final File usersFile;
 	private final YamlConfiguration users;
 	private Config config;
-	private static int configVersion;
+	private int configVersion;
 
 	public ConfigManager(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
-		ConfigManager.configVersion = plugin.getConfig().getInt("Config Version", 0);
+		configVersion = plugin.getConfig().getInt("Config Version", 0);
 		loadConfig();
 		loadUsers();
 	}
@@ -106,7 +106,7 @@ public class ConfigManager {
 				config = new Config(plugin, "config.yml");
 				updateDefaultConfig();
 				Variables.setConfigUpdated(true);
-				ConfigManager.configVersion = config.getInt("Config Version");
+				configVersion = config.getInt("Config Version");
 			} else {
 				Log.info("New Config File Created Successfully!");
 				config = new Config(plugin, "config.yml");
@@ -158,7 +158,7 @@ public class ConfigManager {
 		return users;
 	}
 
-	public static final int getConfigVersion() {
+	public  final int getConfigVersion() {
 		return configVersion;
 	}
 

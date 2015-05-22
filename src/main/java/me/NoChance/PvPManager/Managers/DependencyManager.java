@@ -63,7 +63,7 @@ public class DependencyManager {
 				if (fVersion.contains("U")) {
 					dependencies.add(new FactionsUUID());
 					Log.info("FactionsUUID Found! Hooked successfully");
-				} else if (Integer.valueOf(fVersion.replace(".", "")) >= 270) {
+				} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
 					dependencies.add(new Factions());
 					Log.info("Factions Found! Hooked successfully");
 				} else

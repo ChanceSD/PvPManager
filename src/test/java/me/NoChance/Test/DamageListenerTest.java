@@ -40,8 +40,8 @@ public class DamageListenerTest {
 	private static PluginTest pt;
 	private static PvPManager plugin;
 	private static PlayerListener damageListener;
-	private static EntityDamageByEntityEvent mockEvent;
-	private static EntityDamageByEntityEvent projMockEvent;
+	private EntityDamageByEntityEvent mockEvent;
+	private EntityDamageByEntityEvent projMockEvent;
 	private static PlayerHandler ph;
 	@Mock
 	private Player attacker;
