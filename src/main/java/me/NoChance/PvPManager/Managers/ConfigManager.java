@@ -8,6 +8,7 @@ import java.util.UUID;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Utils.Log;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -107,7 +108,7 @@ public class ConfigManager {
 				Variables.setConfigUpdated(true);
 				ConfigManager.configVersion = config.getInt("Config Version");
 			} else {
-				plugin.getLogger().info("New Config File Created Successfully!");
+				Log.info("New Config File Created Successfully!");
 				config = new Config(plugin, "config.yml");
 				Variables.initizalizeVariables(this);
 			}
@@ -121,12 +122,12 @@ public class ConfigManager {
 		try {
 			if (!usersFile.exists()) {
 				plugin.saveResource("users.yml", false);
-				plugin.getLogger().info("New Users File Created Successfully!");
+				Log.info("New Users File Created Successfully!");
 				return;
 			}
 			users.load(usersFile);
 		} catch (final Exception e) {
-			plugin.getLogger().severe("Error loading users file! Error: ");
+			Log.severe("Error loading users file! Error: ");
 			e.printStackTrace();
 		}
 	}

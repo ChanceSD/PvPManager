@@ -14,6 +14,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import me.NoChance.PvPManager.Utils.Log;
+
 import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -30,11 +32,11 @@ public class Updater {
 
 	private final boolean announce;
 
-	private URL url;
+	private URL url; // NO_UCD (use final)
 	private final File file;
 	private final Thread thread;
 
-	private int id = -1;
+	private final int id;
 	private static final String TITLE_VALUE = "name";
 	private static final String LINK_VALUE = "downloadUrl";
 	private static final String TYPE_VALUE = "releaseType";
@@ -66,7 +68,7 @@ public class Updater {
 		try {
 			this.url = new URL(Updater.HOST + Updater.QUERY + id);
 		} catch (final MalformedURLException e) {
-			plugin.getLogger().severe("The project ID provided for updating, " + id + " is invalid.");
+			Log.severe("The project ID provided for updating, " + id + " is invalid.");
 			this.result = UpdateResult.FAIL_BADID;
 			e.printStackTrace();
 		}
@@ -125,7 +127,7 @@ public class Updater {
 			final byte[] data = new byte[Updater.BYTE_SIZE];
 			int count;
 			if (this.announce) {
-				this.plugin.getLogger().info("About to download a new update: " + this.versionName);
+				Log.info("About to download a new update: " + this.versionName);
 			}
 			long downloaded = 0;
 			while ((count = in.read(data, 0, Updater.BYTE_SIZE)) != -1) {
@@ -133,7 +135,7 @@ public class Updater {
 				fout.write(data, 0, count);
 				final int percent = (int) ((downloaded * 100) / fileLength);
 				if (this.announce && ((percent % 10) == 0)) {
-					this.plugin.getLogger().info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
+					Log.info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
 				}
 			}
 			for (final File xFile : new File(this.plugin.getDataFolder().getParent(), this.updateFolder).listFiles()) {
@@ -146,10 +148,10 @@ public class Updater {
 				this.unzip(dFile.getCanonicalPath());
 			}
 			if (this.announce) {
-				this.plugin.getLogger().info("Finished updating.");
+				Log.info("Finished updating.");
 			}
 		} catch (final Exception ex) {
-			this.plugin.getLogger().warning("The auto-updater tried to download a new update, but was unsuccessful.");
+			Log.warning("The auto-updater tried to download a new update, but was unsuccessful.");
 			this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
 		} finally {
 			try {
@@ -226,7 +228,7 @@ public class Updater {
 			new File(zipPath).delete();
 			fSourceZip.delete();
 		} catch (final IOException ex) {
-			this.plugin.getLogger().warning("The auto-updater tried to unzip a new update file, but was unsuccessful.");
+			Log.warning("The auto-updater tried to unzip a new update file, but was unsuccessful.");
 			this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
 			ex.printStackTrace();
 		}
@@ -247,9 +249,9 @@ public class Updater {
 			final String version = this.plugin.getDescription().getVersion();
 			if (title.split(" v").length == 2) {
 				final String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest
-																					// file's
-																					// version
-																					// number
+				// file's
+				// version
+				// number
 				final String[] remote = remoteVersion.split("\\.");
 				final String[] local = version.split("\\.");
 
@@ -269,10 +271,9 @@ public class Updater {
 				// The file's name did not contain the string 'vVersion'
 				final String authorInfo = this.plugin.getDescription().getAuthors().size() == 0 ? "" : " (" + this.plugin.getDescription().getAuthors().get(0)
 						+ ")";
-				this.plugin.getLogger().warning("The author of this plugin" + authorInfo + " has misconfigured their Auto Update system");
-				this.plugin.getLogger().warning(
-						"Files uploaded to BukkitDev should contain the version number, seperated from the name by a 'v', such as PluginName v1.0");
-				this.plugin.getLogger().warning("Please notify the author of this error.");
+				Log.warning("The author of this plugin" + authorInfo + " has misconfigured their Auto Update system");
+				Log.warning("Files uploaded to BukkitDev should contain the version number, seperated from the name by a 'v', such as PluginName v1.0");
+				Log.warning("Please notify the author of this error.");
 				this.result = Updater.UpdateResult.FAIL_NOVERSION;
 				return false;
 			}
@@ -304,7 +305,7 @@ public class Updater {
 			final JSONArray array = (JSONArray) JSONValue.parse(response);
 
 			if (array.size() == 0) {
-				this.plugin.getLogger().warning("The updater could not find any files for the project id " + this.id);
+				Log.warning("The updater could not find any files for the project id " + this.id);
 				this.result = UpdateResult.FAIL_BADID;
 				return false;
 			}
@@ -317,15 +318,12 @@ public class Updater {
 			return true;
 		} catch (final IOException e) {
 			if (e.getMessage().contains("HTTP response code: 403")) {
-				this.plugin.getLogger().warning("dev.bukkit.org rejected the API key provided in plugins/Updater/config.yml");
-				this.plugin.getLogger().warning("Please double-check your configuration to ensure it is correct.");
+				Log.warning("dev.bukkit.org rejected the API key provided in plugins/Updater/config.yml");
+				Log.warning("Please double-check your configuration to ensure it is correct.");
 				this.result = UpdateResult.FAIL_APIKEY;
 			} else {
-				this.plugin.getLogger().warning("The updater could not contact dev.bukkit.org for updating.");
-				this.plugin
-						.getLogger()
-						.warning(
-								"If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
+				Log.warning("The updater could not contact dev.bukkit.org for updating.");
+				Log.warning("If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
 				this.result = UpdateResult.FAIL_DBO;
 			}
 			e.printStackTrace();

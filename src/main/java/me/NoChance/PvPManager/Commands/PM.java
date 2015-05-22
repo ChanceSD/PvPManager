@@ -60,8 +60,7 @@ public class PM implements CommandExecutor {
 					} else if (args[1].equalsIgnoreCase("newbie")) {
 						p.setNewbie(true);
 					} else if (args[1].equalsIgnoreCase("attack")) {
-						plugin.getServer().getPluginManager()
-								.callEvent(new EntityDamageByEntityEvent(player, player, DamageCause.ENTITY_ATTACK, 5.0));
+						plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(player, player, DamageCause.ENTITY_ATTACK, 5.0));
 					}
 					return true;
 				}

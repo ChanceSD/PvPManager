@@ -171,16 +171,17 @@ public class PlayerListener implements Listener {
 		final Player killer = player.getKiller();
 		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			if (killer != null && !killer.equals(player) && !killer.hasMetadata("NPC")) {
+				final PvPlayer pKiller = ph.get(killer);
 				if (Variables.isKillAbuseEnabled())
-					ph.get(killer).addVictim(player.getName());
+					pKiller.addVictim(player.getName());
 				if (Variables.getMoneyReward() > 0)
-					ph.giveReward(killer, player);
+					pKiller.giveReward(player);
 				if (Variables.isCommandsOnKillEnabled())
 					for (final String command : Variables.getCommandsOnKill()) {
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
 					}
 				if (Variables.getMoneyPenalty() > 0)
-					ph.applyPenalty(player);
+					pKiller.applyPenalty();
 				if (Variables.isTransferDrops()) {
 					for (final ItemStack s : killer.getInventory().addItem(event.getDrops().toArray(new ItemStack[event.getDrops().size()])).values()) {
 						player.getWorld().dropItem(player.getLocation(), s);

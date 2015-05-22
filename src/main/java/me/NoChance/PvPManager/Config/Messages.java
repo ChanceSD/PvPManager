@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Managers.ConfigManager;
+import me.NoChance.PvPManager.Utils.Log;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ public class Messages {
 	private static String currentVersion;
 	private static String newVersion;
 	private static String moneyReward;
-	private Locale locale;
+	private Locale locale; // NO_UCD (use final)
 
 	public Messages(final PvPManager plugin) {
 		this.plugin = plugin;
@@ -60,8 +61,8 @@ public class Messages {
 		try {
 			this.locale = Locale.valueOf(Variables.getLocale());
 		} catch (final IllegalArgumentException e) {
-			plugin.getLogger().warning("Error! Locale '" + Variables.getLocale() + "' does not exist! Using default messages");
-			locale = Locale.EN;
+			Log.warning("Error! Locale '" + Variables.getLocale() + "' does not exist! Using default messages");
+			this.locale = Locale.EN;
 		}
 		load();
 	}
@@ -82,7 +83,7 @@ public class Messages {
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
-			plugin.getLogger().info("New Messages File Created Successfully!");
+			Log.info("New Messages File Created Successfully!");
 		}
 		for (final File file : plugin.getDataFolder().listFiles()) {
 			final String fileName = file.getName();
@@ -179,9 +180,6 @@ public class Messages {
 		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + ConfigManager.getConfigVersion());
 		player.sendMessage("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust the file to your liking");
 	}
-
-
-
 
 	public static String getErrorPvpcommandDisabled() {
 		return errorPvpcommandDisabled;

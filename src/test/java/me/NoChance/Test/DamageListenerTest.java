@@ -26,8 +26,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -55,7 +55,7 @@ public class DamageListenerTest {
 		ph = pt.getPh();
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
-		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Mockito.anyObject())).thenCallRealMethod();
+		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Matchers.anyObject())).thenCallRealMethod();
 		damageListener = new PlayerListener(plugin);
 		final Field playerHandlerfield = PlayerListener.class.getDeclaredField("ph");
 		playerHandlerfield.setAccessible(true);
@@ -70,7 +70,7 @@ public class DamageListenerTest {
 		mockEvent = spy(new EntityDamageByEntityEvent(attacker, defender, DamageCause.ENTITY_ATTACK, 5));
 		when(mockEvent.isCancelled()).thenReturn(cancelled);
 
-		Projectile proj = mock(Projectile.class);
+		final Projectile proj = mock(Projectile.class);
 		when(proj.getShooter()).thenReturn(attacker);
 		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
 		when(projMockEvent.isCancelled()).thenReturn(cancelled);
