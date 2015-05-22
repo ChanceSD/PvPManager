@@ -52,8 +52,8 @@ public class SignListener implements Listener {
 						if (player.hasPermission("pvpmanager.pvpstatus.change")) {
 							ph.get(player).togglePvP();
 							return;
-						} else
-							player.sendMessage(Messages.getErrorPermission());
+						}
+						player.sendMessage(Messages.getErrorPermission());
 					}
 				}
 			}

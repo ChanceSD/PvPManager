@@ -62,8 +62,7 @@ public class PlayerHandler {
 	private boolean canAttack(final PvPlayer attacker, final PvPlayer defender) {
 		if (!(attacker.isInCombat() && defender.isInCombat()))
 			return false;
-		else
-			return dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
+		return dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
 	}
 
 	private void addOnlinePlayers() {

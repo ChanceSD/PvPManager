@@ -453,18 +453,17 @@ public class Metrics {
 			}
 
 			throw new IOException(response);
-		} else {
-			// Is this the first update this hour?
-			if (response.equals("1") || response.contains("This is your first update this hour")) {
-				synchronized (graphs) {
-					final Iterator<Graph> iter = graphs.iterator();
+		}
+		// Is this the first update this hour?
+		if (response.equals("1") || response.contains("This is your first update this hour")) {
+			synchronized (graphs) {
+				final Iterator<Graph> iter = graphs.iterator();
 
-					while (iter.hasNext()) {
-						final Graph graph = iter.next();
+				while (iter.hasNext()) {
+					final Graph graph = iter.next();
 
-						for (final Plotter plotter : graph.getPlotters()) {
-							plotter.reset();
-						}
+					for (final Plotter plotter : graph.getPlotters()) {
+						plotter.reset();
 					}
 				}
 			}
@@ -618,7 +617,7 @@ public class Metrics {
 		 */
 		private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
 
-		private Graph(final String name) {
+		Graph(final String name) {
 			this.name = name;
 		}
 

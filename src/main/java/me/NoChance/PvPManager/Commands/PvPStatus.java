@@ -27,24 +27,21 @@ public class PvPStatus implements CommandExecutor {
 			if (!ph.get(player).hasPvPEnabled()) {
 				player.sendMessage(Messages.getSelfStatusDisabled());
 				return true;
-			} else {
-				player.sendMessage(Messages.getSelfStatusEnabled());
-				return true;
 			}
+			player.sendMessage(Messages.getSelfStatusEnabled());
+			return true;
 		} else if (args.length == 1) {
 			if (CombatUtils.isOnline(args[0])) {
 				target = ph.get(Bukkit.getPlayer(args[0]));
 				if (!target.hasPvPEnabled()) {
 					sender.sendMessage(Messages.getOthersStatusDisabled().replace("%p", args[0]));
 					return true;
-				} else {
-					sender.sendMessage(Messages.getOtherStatusEnabled().replace("%p", args[0]));
-					return true;
 				}
-			} else {
-				sender.sendMessage(ChatColor.DARK_RED + args[0] + " Does Not Exist or is Offline");
+				sender.sendMessage(Messages.getOtherStatusEnabled().replace("%p", args[0]));
 				return true;
 			}
+			sender.sendMessage(ChatColor.DARK_RED + args[0] + " Does Not Exist or is Offline");
+			return true;
 		}
 		return false;
 	}

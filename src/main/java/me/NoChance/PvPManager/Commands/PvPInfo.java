@@ -27,10 +27,9 @@ public class PvPInfo implements CommandExecutor {
 			if (CombatUtils.isOnline(args[0])) {
 				sendInfo(sender, ph.get(Bukkit.getPlayer(args[0])));
 				return true;
-			} else {
-				sender.sendMessage(ChatColor.DARK_RED + args[0] + " Does Not Exist or is Offline");
-				return true;
 			}
+			sender.sendMessage(ChatColor.DARK_RED + args[0] + " Does Not Exist or is Offline");
+			return true;
 		}
 		return false;
 	}

@@ -64,10 +64,9 @@ public class PvPlayer extends EcoPlayer {
 			final long secondsLeft = ((toggleTime + Variables.getToggleCooldown() * 1000) - System.currentTimeMillis()) / 1000;
 			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft)));
 			return;
-		} else {
-			toggleTime = System.currentTimeMillis();
-			setPvP(!pvpState);
 		}
+		toggleTime = System.currentTimeMillis();
+		setPvP(!pvpState);
 	}
 
 	public final boolean isNewbie() {
@@ -91,7 +90,6 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void disableFly() {
-		final Player player = getPlayer();
 		player.setFlying(false);
 		player.setAllowFlight(false);
 	}

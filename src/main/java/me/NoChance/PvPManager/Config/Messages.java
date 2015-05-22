@@ -13,7 +13,6 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Utils.Log;
 
 import org.bukkit.ChatColor;
@@ -21,9 +20,9 @@ import org.bukkit.entity.Player;
 
 public class Messages {
 
-	private final PvPManager plugin;
-	private final Properties lang = new Properties();
-	private File messagesFile;
+	private static PvPManager plugin;
+	private static final Properties LANG = new Properties();
+	private static File messagesFile;
 	private static String errorPvpcommandDisabled;
 	private static String errorPermission;
 	private static String errorPvpCooldown;
@@ -53,47 +52,49 @@ public class Messages {
 	private static String currentVersion;
 	private static String newVersion;
 	private static String moneyReward;
-	private Locale locale; // NO_UCD (use final)
+	private static Locale locale; // NO_UCD (use final)
 
-	public Messages(final PvPManager plugin) {
-		this.plugin = plugin;
+	public static void setup(final PvPManager plugin) {
+		Messages.plugin = plugin;
 		currentVersion = plugin.getDescription().getVersion();
 		try {
-			this.locale = Locale.valueOf(Variables.getLocale());
+			locale = Locale.valueOf(Variables.getLocale());
 		} catch (final IllegalArgumentException e) {
 			Log.warning("Error! Locale '" + Variables.getLocale() + "' does not exist! Using default messages");
-			this.locale = Locale.EN;
+			locale = Locale.EN;
 		}
 		load();
 	}
 
-	public final void load() {
-		this.messagesFile = new File(plugin.getDataFolder(), locale.toString());
+	private static void load() {
+		messagesFile = new File(plugin.getDataFolder(), locale.toString());
 		if (!messagesFile.exists()) {
-			final InputStream input = plugin.getResource("locale/" + locale.toString());
-			OutputStream resStreamOut;
 			int readBytes;
 			final byte[] buffer = new byte[4096];
 			try {
-				resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()));
+				final InputStream input = plugin.getResource("locale/" + locale.toString());
+				OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()));
 				while ((readBytes = input.read(buffer)) != -1) {
 					resStreamOut.write(buffer, 0, readBytes);
 				}
 				resStreamOut.close();
+				input.close();
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 			Log.info("New Messages File Created Successfully!");
 		}
-		for (final File file : plugin.getDataFolder().listFiles()) {
-			final String fileName = file.getName();
-			if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.toString()))
-				file.delete();
-		}
+		File[] listFiles = plugin.getDataFolder().listFiles();
+		if (listFiles != null)
+			for (final File file : listFiles) {
+				final String fileName = file.getName();
+				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.toString()))
+					file.delete();
+			}
 		try {
 			if (messagesFile.exists()) {
 				final FileInputStream in = new FileInputStream(messagesFile);
-				lang.load(in);
+				LANG.load(in);
 				checkChanges();
 				getMessages();
 				in.close();
@@ -102,10 +103,10 @@ public class Messages {
 		}
 	}
 
-	public final String getString(final String key) {
+	private static String getString(final String key) {
 		String message = null;
 		try {
-			message = new String(lang.getProperty(key).getBytes("ISO-8859-1"), "UTF-8");
+			message = new String(LANG.getProperty(key).getBytes("ISO-8859-1"), "UTF-8");
 		} catch (final UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 			return "Encoding error! Please report to the developer";
@@ -113,7 +114,7 @@ public class Messages {
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
-	public final void getMessages() {
+	private static void getMessages() {
 		alreadyDisabled = getString("Already_Disabled");
 		alreadyEnabled = getString("Already_Enabled");
 		otherStatusEnabled = getString("Other_Status_Enabled");
@@ -143,23 +144,23 @@ public class Messages {
 		moneyReward = getString("Money_Reward");
 	}
 
-	public final void checkChanges() {
+	private static void checkChanges() {
 		final Properties original = new Properties();
 		try {
 			original.load(plugin.getResource("locale/" + locale.toString()));
 			final Enumeration<Object> originalKeys = original.keys();
 			while (originalKeys.hasMoreElements()) {
 				final String a = (String) originalKeys.nextElement();
-				if (!lang.containsKey(a)) {
+				if (!LANG.containsKey(a)) {
 					addMessage(a + " = " + new String(original.getProperty(a).getBytes("ISO-8859-1"), "UTF-8"));
-					lang.setProperty(a, original.getProperty(a));
+					LANG.setProperty(a, original.getProperty(a));
 				}
 			}
 		} catch (final IOException e) {
 		}
 	}
 
-	public final void addMessage(final String a) {
+	private static void addMessage(final String a) {
 		try {
 			final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), "UTF-8"));
 			pw.println(a);
@@ -177,7 +178,7 @@ public class Messages {
 	}
 
 	public static void configUpdated(final Player player) {
-		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + ConfigManager.getConfigVersion());
+		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + plugin.getConfigM().getConfigVersion());
 		player.sendMessage("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust the file to your liking");
 	}
 

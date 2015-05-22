@@ -28,11 +28,11 @@ public class Config extends YamlConfiguration {
 	@SuppressWarnings("deprecation")
 	public Config(final PvPManager plugin, final String name) {
 		this.plugin = plugin;
-		final File file = new File(plugin.getDataFolder(), name);
-		if (!file.exists())
-			this.prepareFile(file, name);
-		this.file = file;
-		this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file));
+		final File file1 = new File(plugin.getDataFolder(), name);
+		if (!file1.exists())
+			this.prepareFile(file1, name);
+		this.file = file1;
+		this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file1));
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class Config extends YamlConfiguration {
 		return this.config.getList(path, def);
 	}
 
-	public final InputStream getConfigContent(final File file) {
-		if (!file.exists()) {
+	public final InputStream getConfigContent(final File file1) {
+		if (!file1.exists()) {
 			return null;
 		}
 		try {
@@ -105,7 +105,7 @@ public class Config extends YamlConfiguration {
 			String currentLine;
 			final String pluginName = this.getPluginName();
 			final StringBuilder whole = new StringBuilder("");
-			final BufferedReader reader = new BufferedReader(new FileReader(file));
+			final BufferedReader reader = new BufferedReader(new FileReader(file1));
 			while ((currentLine = reader.readLine()) != null) {
 				if (currentLine.startsWith("#")) {
 					addLine = currentLine.replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
@@ -116,8 +116,7 @@ public class Config extends YamlConfiguration {
 					whole.append(currentLine + "\n");
 				}
 			}
-			final String config = whole.toString();
-			final InputStream configStream = new ByteArrayInputStream(config.getBytes(Charset.forName("UTF-8")));
+			final InputStream configStream = new ByteArrayInputStream(whole.toString().getBytes(Charset.forName("UTF-8")));
 			reader.close();
 			return configStream;
 		} catch (final IOException e) {
@@ -126,21 +125,21 @@ public class Config extends YamlConfiguration {
 		}
 	}
 
-	public final void prepareFile(final File file, final String resource) {
+	public final void prepareFile(final File file1, final String resource) {
 		try {
-			file.getParentFile().mkdirs();
-			file.createNewFile();
+			file1.getParentFile().mkdirs();
+			file1.createNewFile();
 			if (resource != null && !resource.isEmpty()) {
-				this.copyResource(plugin.getResource(resource), file);
+				this.copyResource(plugin.getResource(resource), file1);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void copyResource(final InputStream resource, final File file) {
+	private void copyResource(final InputStream resource, final File file1) {
 		try {
-			final OutputStream out = new FileOutputStream(file);
+			final OutputStream out = new FileOutputStream(file1);
 			int lenght;
 			final byte[] buf = new byte[1024];
 
@@ -155,14 +154,13 @@ public class Config extends YamlConfiguration {
 	}
 
 	public final void saveConfig() {
-		final String config = this.config.saveToString();
-		saveConfig(config, this.file);
+		saveConfig(this.config.saveToString(), this.file);
 	}
 
-	public final void saveConfig(final String configString, final File file) {
+	public final void saveConfig(final String configString, final File file1) {
 		final String configuration = this.prepareConfigString(configString);
 		try {
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(file1));
 			writer.write(configuration);
 			writer.flush();
 			writer.close();
@@ -175,17 +173,17 @@ public class Config extends YamlConfiguration {
 		int lastLine = 0;
 		int headerLine = 0;
 		final String[] lines = configString.split("\n");
-		final StringBuilder config = new StringBuilder("");
+		final StringBuilder config1 = new StringBuilder("");
 		for (final String line : lines) {
 			if (line.startsWith(this.getPluginName() + "_COMMENT")) {
 				final String comment = "#" + line.trim().substring(line.indexOf(":") + 1);
 				if (comment.startsWith("# +-")) {
 					if (headerLine == 0) {
-						config.append(comment + "\n");
+						config1.append(comment + "\n");
 						lastLine = 0;
 						headerLine = 1;
 					} else if (headerLine == 1) {
-						config.append(comment + "\n\n");
+						config1.append(comment + "\n\n");
 
 						lastLine = 0;
 						headerLine = 0;
@@ -198,18 +196,18 @@ public class Config extends YamlConfiguration {
 						normalComment = comment;
 					}
 					if (lastLine == 0) {
-						config.append(normalComment + "\n");
+						config1.append(normalComment + "\n");
 					} else if (lastLine == 1) {
-						config.append("\n" + normalComment + "\n");
+						config1.append("\n" + normalComment + "\n");
 					}
 					lastLine = 0;
 				}
 			} else {
-				config.append(line + "\n");
+				config1.append(line + "\n");
 				lastLine = 1;
 			}
 		}
-		return config.toString();
+		return config1.toString();
 	}
 
 	public final String getPluginName() {
