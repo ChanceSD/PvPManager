@@ -8,7 +8,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<powermock.version>1.5.4</powermock.version>
+		<powermock.version>LATEST</powermock.version>
 	</properties>
 
 	<distributionManagement>
@@ -75,20 +75,12 @@
 					<groupId>com.google.code.gson</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>commons-lang</artifactId>
-					<groupId>commons-lang</groupId>
-				</exclusion>
-				<exclusion>
 					<artifactId>bungeecord-chat</artifactId>
 					<groupId>net.md-5</groupId>
 				</exclusion>
 				<exclusion>
 					<artifactId>persistence-api</artifactId>
 					<groupId>javax.persistence</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>snakeyaml</artifactId>
-					<groupId>org.yaml</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -203,7 +195,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>LATEST</version>
 			<type>jar</type>
 			<scope>test</scope>
 			<exclusions>
@@ -224,16 +216,6 @@
 			<artifactId>powermock-api-mockito</artifactId>
 			<version>${powermock.version}</version>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>powermock-core</artifactId>
-					<groupId>org.powermock</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>powermock-reflect</artifactId>
-					<groupId>org.powermock</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 </project>

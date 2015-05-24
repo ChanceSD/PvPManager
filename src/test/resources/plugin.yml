@@ -1,0 +1,92 @@
+name: PvPManager
+main: me.NoChance.PvPManager.PvPManager
+version: 2.4.9
+author: NoChanceSD
+description: Allows Administrators To Change Their PvP Mechanics.
+softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, EZRanksLite]
+
+commands:
+   pvpmanager:
+      description: Shows Main PvPManager Page.
+      aliases: [pm, pvpm]
+   pvp:
+      description: Change your PvP Status.
+      aliases: [toggle, pvptoggle]
+      usage: "Usage: /<command> [player|on|off]"
+   pvpoverride:
+      description: Allows the player to attack everyone everywhere
+      aliases: [pvpo, povd]
+      permission: pvpmanager.override
+   pvpinfo:
+      description: Allows the player to see his or others information
+      aliases: [pvpi, pi]
+      permission: pvpmanager.info
+      usage: "Usage: /<command> [player]"
+   pvpstatus:
+      description: Allows the player to see his or others pvp status
+      aliases: [pvps, ps, pstatus, status]
+      permission: pvpmanager.pvpstatus
+      usage: "Usage: /<command> [player]"
+   pvplist:
+      description: List all players with pvp enabled
+      aliases: [plist, pvpl]
+      permission: pvpmanager.list
+
+permissions:
+   pvpmanager.*:
+     description: Gives access to all PvPManager features
+     children:
+       pvpmanager.admin: true
+       pvpmanager.nocombat: true
+       pvpmanager.nodisable: true
+   pvpmanager.admin:
+     description: Gives access to PvPManager features
+     default: op
+     children:
+       pvpmanager.reload: true
+       pvpmanager.user: true
+       pvpmanager.override: true
+       pvpmanager.sign: true
+       pvpmanager.info.others: true
+   pvpmanager.user:
+     description: Gives access to PvPManager features that i think would be appropriate for a user
+     default: false
+     children:
+       pvpmanager.pvpstatus.change: true
+       pvpmanager.pvpstatus.self: true
+       pvpmanager.pvpstatus.others: true
+       pvpmanager.list: true
+       pvpmanager.menu: true
+   pvpmanager.pvpstatus.change:
+     description: Allows you to change your PvP status between <on> and <off>
+     default: false
+   pvpmanager.pvpstatus:
+     description: Allows you to check your or others current PvP status
+     default: false
+   pvpmanager.reload:
+     description: Allows you to reload PvPManager
+     default: false
+   pvpmanager.sign:
+     description: Allows creating PvPManager signs
+     default: false
+   pvpmanager.nocombat:
+     description: Exempts a player from being tagged in combat
+     default: op
+   pvpmanager.nopvp:
+     description: Players with this permission always have PvP disabled
+     default: false
+   pvpmanager.override:
+     description: Players with this permission can use the PvPOverride command
+     default: op
+   pvpmanager.nodisable:
+     description: Players with this permission don't get fly and gamemode disabled
+     default: op
+   pvpmanager.list:
+     description: Allows access to the list of players with PvP enabled
+     default: false
+   pvpmanager.menu:
+     description: Allows access to PvPManager help menu
+     default: false
+   pvpmanager.info.others:
+     description: Allows access to PvPManager info command
+     default: false

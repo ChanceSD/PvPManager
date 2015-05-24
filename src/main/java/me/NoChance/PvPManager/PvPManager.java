@@ -34,8 +34,8 @@ public final class PvPManager extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		loadFiles();
 		Log.setup(getLogger());
+		loadFiles();
 		dependencyManager = new DependencyManager(this);
 		playerHandler = new PlayerHandler(this);
 		startListeners();
