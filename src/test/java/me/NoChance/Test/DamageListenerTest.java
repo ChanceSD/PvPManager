@@ -20,29 +20,21 @@ import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 import org.bukkit.GameMode;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ PvPManager.class, CombatUtils.class, PluginCommand.class })
 public class DamageListenerTest {
 
-	private static PluginTest pt;
 	private static PvPManager plugin;
 	private static PlayerListener damageListener;
 	private EntityDamageByEntityEvent mockEvent;
@@ -55,18 +47,13 @@ public class DamageListenerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		pt = PluginTest.getInstance();
+		PluginTest pt = AllTests.pt;
 		plugin = pt.getPlugin();
 		ph = plugin.getPlayerHandler();
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
 		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Matchers.anyObject())).thenCallRealMethod();
 		damageListener = new PlayerListener(plugin);
-	}
-
-	@AfterClass
-	public static void tearDownClass() {
-		pt.tearDown();
 	}
 
 	@Before
@@ -132,10 +119,14 @@ public class DamageListenerTest {
 		ph.get(defender).setPvP(true);
 		ph.get(attacker).setPvP(true);
 
+		when(attacker.isFlying()).thenReturn(true);
+		when(defender.isFlying()).thenReturn(true);
 		assertEquals(CancelResult.FAIL, ph.tryCancel(attacker, defender));
 		createAttack(false);
 		verify(attacker, times(1)).sendMessage(Messages.getTaggedAttacker().replace("%p", defender.getName()));
 		verify(defender, times(1)).sendMessage(Messages.getTaggedDefender().replace("%p", attacker.getName()));
+		verify(attacker, times(2)).setFlying(false);
+		verify(defender, times(2)).setFlying(false);
 
 		verify(mockEvent, never()).setCancelled(true);
 		verify(projMockEvent, never()).setCancelled(true);

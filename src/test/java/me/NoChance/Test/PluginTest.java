@@ -27,11 +27,6 @@ public class PluginTest {
 	private static PluginTest instance;
 
 	public PluginTest() {
-		try {
-			setup();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public final void setup() throws Exception {
@@ -51,7 +46,7 @@ public class PluginTest {
 	}
 
 	public final void tearDown() {
-		deleteDir(new File(filePath+"TestServer"));
+		deleteDir(new File(filePath + "TestServer"));
 	}
 
 	private boolean deleteDir(File file) {
@@ -68,8 +63,6 @@ public class PluginTest {
 	}
 
 	public static PluginTest getInstance() {
-		if (instance == null)
-			instance = new PluginTest();
 		return instance;
 	}
 
