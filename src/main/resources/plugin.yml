@@ -1,5 +1,5 @@
 name: PvPManager
-main: me.NoChance.PvPManager.PvPManager
+main: ${project.groupId}.PvPManager
 version: ${project.version}
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.

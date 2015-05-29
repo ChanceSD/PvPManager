@@ -4,7 +4,12 @@
 	<groupId>me.NoChance.PvPManager</groupId>
 	<artifactId>PvPManager</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0-SNAPSHOT</version>
+	<version>3.0-SNAPSHOT-${buildNumber}</version>
+	<developers>
+		<developer>
+			<id>NoChanceSD</id>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,6 +28,10 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
+			<resource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>
@@ -38,7 +47,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<doCheck>false</doCheck>
+					<scmBranchPropertyName>master</scmBranchPropertyName>
+					<doCheck>true</doCheck>
 					<doUpdate>false</doUpdate>
 				</configuration>
 			</plugin>
