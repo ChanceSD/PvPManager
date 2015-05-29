@@ -3,10 +3,14 @@ package me.NoChance.PvPManager.Utils;
 import me.NoChance.PvPManager.Config.Variables;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
 public final class CombatUtils {
@@ -39,6 +43,15 @@ public final class CombatUtils {
 		}
 
 		return false;
+	}
+
+	public static void fakeItemStackDrop(final Player player, final ItemStack[] inventory) {
+		final Location playerLocation = player.getLocation();
+		final World playerWorld = player.getWorld();
+		for (final ItemStack itemstack : inventory) {
+			if (itemstack != null && !itemstack.getType().equals(Material.AIR))
+				playerWorld.dropItemNaturally(playerLocation, itemstack);
+		}
 	}
 
 	public static boolean isOnline(final String name) {
