@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Version;
 import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Utils.Log;
@@ -55,14 +56,13 @@ public class ConfigManager {
 		this.config.set("In Combat.Punishments.Enabled", Variables.isPunishmentsEnabled());
 		this.config.set("In Combat.Punishments.Broadcast PvPLog", Variables.isBroadcastPvpLog());
 		this.config.set("In Combat.Punishments.Log To File", Variables.isLogToFile());
-		this.config.set("In Combat.Punishments.Kill on Logout", Variables.isKillOnLogout());
-		this.config.set("In Combat.Punishments.Drops.Inventory", Variables.isDropInventory());
-		this.config.set("In Combat.Punishments.Drops.Experience", Variables.isDropExp());
-		this.config.set("In Combat.Punishments.Drops.Armor", Variables.isDropArmor());
+		this.config.set("In Combat.Punishments.Kill on Logout.Enabled", Variables.isKillOnLogout());
+		this.config.set("In Combat.Punishments.Kill on Logout.Drops.Inventory", Variables.isDropInventory());
+		this.config.set("In Combat.Punishments.Kill on Logout.Drops.Experience", Variables.isDropExp());
+		this.config.set("In Combat.Punishments.Kill on Logout.Drops.Armor", Variables.isDropArmor());
 		this.config.set("In Combat.Punishments.Fine.Enabled", Variables.isFineEnabled());
 		this.config.set("In Combat.Punishments.Fine.Amount", Variables.getFineAmount());
 
-		this.config.set("Player Kills.Transfer Drops", Variables.isTransferDrops());
 		this.config.set("Player Kills.Money Reward", Variables.getMoneyReward());
 		this.config.set("Player Kills.Money Penalty", Variables.getMoneyPenalty());
 		this.config.set("Player Kills.Commands On Kill.Enabled", Variables.isCommandsOnKillEnabled());
@@ -70,7 +70,6 @@ public class ConfigManager {
 
 		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.getToggleCooldown());
 		this.config.set("PvP Toggle.Broadcast", Variables.isToggleBroadcast());
-		this.config.set("PvP Toggle.Toggle Off on Death", Variables.isToggleOffOnDeath());
 		this.config.set("PvP Toggle.NameTags.Enabled", Variables.isToggleNametagsEnabled());
 		this.config.set("PvP Toggle.NameTags.Color On", Variables.getToggleColorOn());
 		this.config.set("PvP Toggle.NameTags.Color Off", Variables.getToggleColorOff());
@@ -97,7 +96,7 @@ public class ConfigManager {
 	}
 
 	private void loadConfig() {
-		if (getConfigVersion() < 27) {
+		if (getConfigVersion() < Integer.parseInt(Version.getConfigVersion())) {
 			final File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
@@ -158,7 +157,7 @@ public class ConfigManager {
 		return users;
 	}
 
-	public  final int getConfigVersion() {
+	public final int getConfigVersion() {
 		return configVersion;
 	}
 
