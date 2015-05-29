@@ -1,9 +1,12 @@
 package me.NoChance.PvPManager.Listeners;
 
+import java.util.HashMap;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Variables.DropMode;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -25,7 +28,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -135,7 +137,7 @@ public class PlayerListener implements Listener {
 			event.setCancelled(true);
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public final void onPlayerLogout(final PlayerQuitEvent event) { // NO_UCD
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
@@ -145,52 +147,82 @@ public class PlayerListener implements Listener {
 			if (Variables.isLogToFile())
 				plugin.getLog().log(Messages.getPvplogBroadcast().replace("%p", player.getName()));
 			if (Variables.isBroadcastPvpLog())
-				plugin.getServer().broadcastMessage(Messages.getPvplogBroadcast().replace("%p", player.getName()));
+				Bukkit.broadcastMessage(Messages.getPvplogBroadcast().replace("%p", player.getName()));
 			if (Variables.isPunishmentsEnabled())
-				ph.applyPunishments(player);
-			ph.untag(pvPlayer);
+				ph.applyPunishments(pvPlayer);
 		}
 		ph.remove(pvPlayer);
 	}
 
-	@EventHandler
+	@SuppressWarnings("null")
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public final void onPlayerDeath(final PlayerDeathEvent event) { // NO_UCD (unused code)
 		final Player player = event.getEntity();
-
-		if (player.hasMetadata("NPC"))
+		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()))
 			return;
 		final PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer == null)
 			return;
-		if (pvPlayer.hasPvPLogged() && !Variables.isDropExp()) {
-			event.setKeepLevel(true);
-			event.setDroppedExp(0);
-		}
 		if (pvPlayer.isInCombat())
 			ph.untag(pvPlayer);
+
+		// Let's process player's inventory/exp according to config file
+		if (pvPlayer.hasPvPLogged()) {
+			if (!Variables.isDropExp()) {
+				event.setKeepLevel(true);
+				event.setDroppedExp(0);
+			}
+			if (!Variables.isDropInventory() && Variables.isDropArmor()) {
+				CombatUtils.fakeItemStackDrop(player, player.getInventory().getArmorContents());
+				player.getInventory().setArmorContents(null);
+			} else if (Variables.isDropInventory() && !Variables.isDropArmor()) {
+				CombatUtils.fakeItemStackDrop(player, player.getInventory().getContents());
+				player.getInventory().clear();
+			}
+			if (!Variables.isDropInventory() || !Variables.isDropArmor())
+				event.setKeepInventory(true);
+		}
+
 		final Player killer = player.getKiller();
-		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
-			if (killer != null && !killer.equals(player) && !killer.hasMetadata("NPC")) {
-				final PvPlayer pKiller = ph.get(killer);
-				if (Variables.isKillAbuseEnabled())
-					pKiller.addVictim(player.getName());
-				if (Variables.getMoneyReward() > 0)
-					pKiller.giveReward(player);
-				if (Variables.isCommandsOnKillEnabled())
-					for (final String command : Variables.getCommandsOnKill()) {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
-					}
-				if (Variables.getMoneyPenalty() > 0)
-					pKiller.applyPenalty();
-				if (Variables.isTransferDrops()) {
-					for (final ItemStack s : killer.getInventory().addItem(event.getDrops().toArray(new ItemStack[event.getDrops().size()])).values()) {
-						player.getWorld().dropItem(player.getLocation(), s);
-					}
+		boolean pvpDeath = killer != null ? true : false;
+		// Player died in combat, process that
+		if (pvpDeath && !killer.equals(player)) {
+			final PvPlayer pKiller = ph.get(killer);
+			if (pKiller == null)
+				return;
+			if (Variables.isKillAbuseEnabled())
+				pKiller.addVictim(player.getName());
+			if (Variables.getMoneyReward() > 0)
+				pKiller.giveReward(player);
+			if (Variables.getMoneyPenalty() > 0)
+				pvPlayer.applyPenalty();
+			if (Variables.isCommandsOnKillEnabled())
+				for (final String command : Variables.getCommandsOnKill()) {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
+				}
+		}
+		if (!pvPlayer.hasPvPLogged()) {
+			DropMode mode = Variables.getDropMode();
+			switch (mode) {
+			case DROP:
+				if (!pvpDeath)
+					event.setKeepInventory(true);
+				break;
+			case KEEP:
+				if (pvpDeath)
+					event.setKeepInventory(true);
+				break;
+			case TRANSFER:
+				if (pvpDeath) {
+					ItemStack[] drops = event.getDrops().toArray(new ItemStack[event.getDrops().size()]);
+					HashMap<Integer, ItemStack> returned = killer.getInventory().addItem(drops);
+					CombatUtils.fakeItemStackDrop(player, returned.values().toArray(new ItemStack[returned.values().size()]));
 					event.getDrops().clear();
 				}
+				break;
+			default:
+				break;
 			}
-			if (Variables.isToggleOffOnDeath() && player.hasPermission("pvpmanager.pvpstatus.change") && pvPlayer.hasPvPEnabled())
-				pvPlayer.setPvP(false);
 		}
 	}
 
@@ -210,7 +242,7 @@ public class PlayerListener implements Listener {
 			final PvPlayer pvplayer = ph.get(player);
 			if (pvplayer == null)
 				return;
-			if (i.getType().equals(Material.FLINT_AND_STEEL) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			if ((i.getType().equals(Material.FLINT_AND_STEEL) || i.getType().equals(Material.LAVA_BUCKET)) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
 					if (e.getPlayer().equals(p))
 						continue;
@@ -218,31 +250,10 @@ public class PlayerListener implements Listener {
 					if (target == null)
 						continue;
 					if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
-						pvplayer.message("§cNope! PvP Disabled!");
+						pvplayer.message(Messages.getAttackDeniedOther().replace("%p", target.getName()));
 						e.setCancelled(true);
 						return;
 					}
-				}
-			}
-		}
-	}
-
-	@EventHandler
-	public final void onBucketEmpty(final PlayerBucketEmptyEvent e) { // NO_UCD
-		final PvPlayer player = ph.get(e.getPlayer());
-		if (player == null)
-			return;
-		if (CombatUtils.isWorldAllowed(player.getWorldName()) && e.getBucket().equals(Material.LAVA_BUCKET)) {
-			for (final Player p : e.getBlockClicked().getWorld().getPlayers()) {
-				if (e.getPlayer().equals(p))
-					continue;
-				final PvPlayer target = ph.get(p);
-				if (target == null)
-					continue;
-				if ((!target.hasPvPEnabled() || !player.hasPvPEnabled()) && e.getBlockClicked().getLocation().distanceSquared(p.getLocation()) < 9) {
-					player.message(Messages.getAttackDeniedOther().replace("%p", target.getName()));
-					e.setCancelled(true);
-					return;
 				}
 			}
 		}
@@ -333,9 +344,9 @@ public class PlayerListener implements Listener {
 			if (Variables.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL))
 				attacker.setGameMode(GameMode.SURVIVAL);
 			if (Variables.isDisableDisguise()) {
-				if (plugin.getServer().getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker))
+				if (Bukkit.getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker))
 					DisguiseCraft.getAPI().undisguisePlayer(attacker);
-				if (plugin.getServer().getPluginManager().isPluginEnabled("LibsDisguises") && DisguiseAPI.isDisguised(attacker))
+				if (Bukkit.getPluginManager().isPluginEnabled("LibsDisguises") && DisguiseAPI.isDisguised(attacker))
 					DisguiseAPI.undisguiseToAll(attacker);
 			}
 			if (Variables.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY))

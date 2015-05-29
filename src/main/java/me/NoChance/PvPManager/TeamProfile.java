@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+@SuppressWarnings("deprecation")
 public class TeamProfile {
 
 	private static Team inCombat;

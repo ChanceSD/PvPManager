@@ -12,12 +12,7 @@ import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CancelResult;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -43,7 +38,7 @@ public class PlayerHandler {
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
-		if (attacker.hasOverride() || Variables.isStopBorderHopping() && canAttack(attacker, attacked))
+		if (attacker.hasOverride() || dependencyManager.hasWGFlag(defender) || Variables.isStopBorderHopping() && canAttack(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
 			return CancelResult.RESPAWN_PROTECTION;
@@ -60,9 +55,9 @@ public class PlayerHandler {
 	}
 
 	private boolean canAttack(final PvPlayer attacker, final PvPlayer defender) {
-		if (!(attacker.isInCombat() && defender.isInCombat()))
-			return false;
-		return dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
+		if (attacker.isInCombat() && defender.isInCombat())
+			return dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
+		return false;
 	}
 
 	private void addOnlinePlayers() {
@@ -104,6 +99,8 @@ public class PlayerHandler {
 				}
 			}
 		}.runTaskLater(plugin, Variables.getToggleCooldown() * 20);
+		if (player.hasPvPLogged())
+			player.setPvpLogged(false);
 		savePvPState(player.getUUID(), player.hasPvPEnabled());
 	}
 
@@ -123,61 +120,14 @@ public class PlayerHandler {
 		configManager.saveUser(id, !pvpState);
 	}
 
-	public final void applyPunishments(final Player player) {
-		final PvPlayer pvPlayer = get(player);
+	public final void applyPunishments(final PvPlayer player) {
+		Player p = player.getPlayer();
 		if (Variables.isKillOnLogout()) {
-			pvPlayer.setPvpLogged(true);
-			ItemStack[] inventory = null;
-			ItemStack[] armor = null;
-			if (!Variables.isDropInventory() || !Variables.isDropArmor()) {
-				if (!Variables.isDropInventory()) {
-					inventory = player.getInventory().getContents();
-					player.getInventory().clear();
-				}
-				if (!Variables.isDropArmor()) {
-					armor = player.getInventory().getArmorContents();
-					player.getInventory().setArmorContents(null);
-				}
-			}
-			player.setHealth(0);
-			player.setHealth(20);
-			if (inventory != null)
-				player.getInventory().setContents(inventory);
-			if (armor != null)
-				player.getInventory().setArmorContents(armor);
-		} else if (!Variables.isKillOnLogout()) {
-			if (Variables.isDropInventory()) {
-				fakeInventoryDrop(player, player.getInventory().getContents());
-				player.getInventory().clear();
-			}
-			if (Variables.isDropArmor()) {
-				fakeInventoryDrop(player, player.getInventory().getArmorContents());
-				player.getInventory().setArmorContents(null);
-			}
-			if (Variables.isDropExp())
-				fakeExpDrop(player);
+			player.setPvpLogged(true);
+			p.setHealth(0);
 		}
 		if (Variables.isFineEnabled())
-			pvPlayer.applyFine();
-	}
-
-	private void fakeInventoryDrop(final Player player, final ItemStack[] inventory) {
-		final Location playerLocation = player.getLocation();
-		final World playerWorld = player.getWorld();
-		for (final ItemStack itemstack : inventory) {
-			if (itemstack != null && !itemstack.getType().equals(Material.AIR))
-				playerWorld.dropItemNaturally(playerLocation, itemstack);
-		}
-	}
-
-	private void fakeExpDrop(final Player player) {
-		final int expdropped = player.getLevel() * 7;
-		if (expdropped < 100)
-			player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(expdropped);
-		else
-			player.getWorld().spawn(player.getLocation(), ExperienceOrb.class).setExperience(100);
-		player.setLevel(0);
-		player.setExp(0);
+			player.applyFine();
 	}
 
 	public final HashMap<String, PvPlayer> getPlayers() {
