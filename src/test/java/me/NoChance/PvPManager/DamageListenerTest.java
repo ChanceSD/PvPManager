@@ -1,4 +1,4 @@
-package me.NoChance.Test;
+package me.NoChance.PvPManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
-import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
@@ -47,7 +46,7 @@ public class DamageListenerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		PluginTest pt = AllTests.pt;
+		PluginTest pt = AllTests.getPt();
 		plugin = pt.getPlugin();
 		ph = plugin.getPlayerHandler();
 		PowerMockito.mockStatic(CombatUtils.class);
@@ -57,7 +56,7 @@ public class DamageListenerTest {
 	}
 
 	@Before
-	public void setup() {
+	public final void setup() {
 		MockitoAnnotations.initMocks(this);
 		when(attacker.hasPlayedBefore()).thenReturn(true);
 		when(defender.hasPlayedBefore()).thenReturn(true);

@@ -1,12 +1,10 @@
-package me.NoChance.Test;
+package me.NoChance.PvPManager;
 
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.logging.Logger;
-
-import me.NoChance.PvPManager.PvPManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -49,15 +47,16 @@ public class PluginTest {
 		deleteDir(new File(filePath + "TestServer"));
 	}
 
-	private boolean deleteDir(File file) {
+	private boolean deleteDir(final File file) {
 		if (file.isDirectory()) {
 			String[] children = file.list();
-			for (int i = 0; i < children.length; i++) {
-				boolean success = deleteDir(new File(file, children[i]));
-				if (!success) {
-					return false;
+			if (children != null)
+				for (int i = 0; i < children.length; i++) {
+					boolean success = deleteDir(new File(file, children[i]));
+					if (!success) {
+						return false;
+					}
 				}
-			}
 		}
 		return file.delete();
 	}
