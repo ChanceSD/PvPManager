@@ -49,7 +49,7 @@
 				</executions>
 				<configuration>
 					<useLastCommittedRevision>true</useLastCommittedRevision>
-					<doCheck>true</doCheck>
+					<doCheck>false</doCheck>
 					<doUpdate>false</doUpdate>
 				</configuration>
 			</plugin>
