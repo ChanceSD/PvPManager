@@ -60,7 +60,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void togglePvP() {
-		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown())) {
+		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown()) && !player.hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = ((toggleTime + Variables.getToggleCooldown() * 1000) - System.currentTimeMillis()) / 1000;
 			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft)));
 			return;
