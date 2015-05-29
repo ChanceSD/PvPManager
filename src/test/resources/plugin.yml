@@ -1,6 +1,6 @@
 name: PvPManager
 main: me.NoChance.PvPManager.PvPManager
-version: 2.4.9
+version: ${project.version}
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, EZRanksLite]
@@ -12,7 +12,7 @@ commands:
    pvp:
       description: Change your PvP Status.
       aliases: [toggle, pvptoggle]
-      usage: "Usage: /<command> [player|on|off]"
+      usage: "Usage: /<command> [on|off] or /<command> [player] [on|off]"
    pvpoverride:
       description: Allows the player to attack everyone everywhere
       aliases: [pvpo, povd]
@@ -48,6 +48,7 @@ permissions:
        pvpmanager.override: true
        pvpmanager.sign: true
        pvpmanager.info.others: true
+       pvpmanager.pvpstatus.nocooldown: true
    pvpmanager.user:
      description: Gives access to PvPManager features that i think would be appropriate for a user
      default: false
@@ -57,6 +58,9 @@ permissions:
        pvpmanager.pvpstatus.others: true
        pvpmanager.list: true
        pvpmanager.menu: true
+   pvpmanager.pvpstatus.nocooldown:
+     description: No cooldown for pvp command
+     default: false
    pvpmanager.pvpstatus.change:
      description: Allows you to change your PvP status between <on> and <off>
      default: false
