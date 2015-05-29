@@ -65,7 +65,17 @@ public class PvP implements CommandExecutor {
 						return false;
 					}
 					final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(args[0]));
-					final boolean enable = specifiedPlayer.hasPvPEnabled() ? false : true;
+					final boolean enable;
+					if (args.length == 1)
+						enable = specifiedPlayer.hasPvPEnabled() ? false : true;
+					else {
+						if (args[1].equalsIgnoreCase("off"))
+							enable = false;
+						else if (args[1].equalsIgnoreCase("on"))
+							enable = true;
+						else
+							return false;
+					}
 					specifiedPlayer.setPvP(enable);
 					sender.sendMessage("§6[§8PvPManager§6] §2PvP " + (enable ? "enabled" : "disabled") + " for " + args[0]);
 					return true;
@@ -76,7 +86,7 @@ public class PvP implements CommandExecutor {
 			}
 		}
 		sender.sendMessage(Messages.getErrorCommand());
-		return false;
+		return true;
 	}
 
 }
