@@ -1,8 +1,6 @@
-package me.NoChance.Test;
+package me.NoChance.PvPManager;
 
-import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-
 import org.bukkit.command.PluginCommand;
 import org.junit.ClassRule;
 import org.junit.rules.ExternalResource;
@@ -17,9 +15,17 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 @PrepareForTest({ PvPManager.class, CombatUtils.class, PluginCommand.class })
 @PowerMockRunnerDelegate(Suite.class)
 @SuiteClasses({ DamageListenerTest.class, OnDeathTest.class })
-public class AllTests {
+public final class AllTests {
 
-	public static PluginTest pt;
+	private static PluginTest pt;
+
+	private AllTests() {
+
+	}
+
+	public static PluginTest getPt() {
+		return pt;
+	}
 
 	@ClassRule
 	public static ExternalResource resource = new ExternalResource() {

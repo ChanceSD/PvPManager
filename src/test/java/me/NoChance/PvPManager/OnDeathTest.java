@@ -1,8 +1,7 @@
-package me.NoChance.Test;
+package me.NoChance.PvPManager;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
-import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
@@ -30,7 +29,7 @@ public class OnDeathTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		PluginTest pt = AllTests.pt;
+		PluginTest pt = AllTests.getPt();
 		plugin = pt.getPlugin();
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
