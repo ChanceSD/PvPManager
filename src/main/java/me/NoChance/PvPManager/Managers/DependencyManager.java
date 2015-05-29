@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Managers;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import me.NoChance.PvPManager.PvPManager;
@@ -7,7 +8,7 @@ import me.NoChance.PvPManager.PvPlugin;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Dependencies.Factions;
 import me.NoChance.PvPManager.Dependencies.FactionsUUID;
-import me.NoChance.PvPManager.Listeners.WGListener;
+import me.NoChance.PvPManager.Dependencies.WorldGuard;
 import me.NoChance.PvPManager.Utils.Log;
 import net.milkbowl.vault.economy.Economy;
 
@@ -19,8 +20,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class DependencyManager {
 
 	private final PvPManager plugin;
+	private boolean useWG;
 	private Economy economy;
-	private final HashSet<PvPlugin> dependencies = new HashSet<PvPlugin>();
+	private final HashMap<String, PvPlugin> dependencies = new HashMap<String, PvPlugin>();
+	private final HashSet<PvPlugin> attackChecks = new HashSet<PvPlugin>();
 
 	public DependencyManager(final PvPManager plugin) {
 		this.plugin = plugin;
@@ -50,21 +53,26 @@ public class DependencyManager {
 
 	private void checkForWorldguard() {
 		if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-			plugin.registerListener(new WGListener(plugin.getPlayerHandler()));
+			useWG = true;
+			dependencies.put("WorldGuard", new WorldGuard(Bukkit.getPluginManager().getPlugin("WorldGuard")));
 			Log.info("WorldGuard Found! Enabling WorldGuard Support");
 		}
 	}
 
 	private void checkForFactions() {
-		final Plugin factions = Bukkit.getPluginManager().getPlugin("Factions");
+		final Plugin factionsPlugin = Bukkit.getPluginManager().getPlugin("Factions");
 		try {
-			if (factions != null) {
-				final String fVersion = factions.getDescription().getVersion();
+			if (factionsPlugin != null) {
+				final String fVersion = factionsPlugin.getDescription().getVersion();
 				if (fVersion.contains("U")) {
-					dependencies.add(new FactionsUUID());
+					FactionsUUID factionsU = new FactionsUUID();
+					dependencies.put("Factions", factionsU);
+					attackChecks.add(factionsU);
 					Log.info("FactionsUUID Found! Hooked successfully");
 				} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
-					dependencies.add(new Factions());
+					Factions factions = new Factions();
+					dependencies.put("Factions", factions);
+					attackChecks.add(factions);
 					Log.info("Factions Found! Hooked successfully");
 				} else
 					Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
@@ -74,12 +82,20 @@ public class DependencyManager {
 		}
 	}
 
+	public final boolean hasWGFlag(final Player defender) {
+		return useWG ? dependencies.get("WorldGuard").canAttack(null, defender) : false;
+	}
+
 	public final boolean canAttack(final Player attacker, final Player defender) {
-		for (final PvPlugin pvPlugin : dependencies) {
+		for (final PvPlugin pvPlugin : attackChecks) {
 			if (!pvPlugin.canAttack(attacker, defender))
 				return false;
 		}
 		return true;
+	}
+
+	public final boolean useWG() {
+		return useWG;
 	}
 
 	public final Economy getEconomy() {
