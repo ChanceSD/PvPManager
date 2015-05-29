@@ -48,7 +48,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<useLastCommittedRevision>true</useLastCommittedRevision>
+					<scmBranchPropertyName>master</scmBranchPropertyName>
+					<shortRevisionLength>20</shortRevisionLength>
 					<doCheck>true</doCheck>
 					<doUpdate>false</doUpdate>
 				</configuration>
