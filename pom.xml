@@ -13,8 +13,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<build.number>unknown</build.number>
-		<plugin.version>${project.version}-${build.number}</plugin.version>
+		<pvpmanager.version>${project.version}-b${build.number}</pvpmanager.version>
 		<config.version>28</config.version>
 		<powermock.version>1.6.2</powermock.version>
 	</properties>
@@ -24,10 +23,6 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
-				<directory>src/test/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
@@ -243,6 +238,10 @@
 				<exclusion>
 					<artifactId>bukkit</artifactId>
 					<groupId>org.bukkit</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bukkit-classloader-check</artifactId>
+					<groupId>com.sk89q.spigot</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
