@@ -1,6 +1,6 @@
 name: ${project.artifactId}
 main: ${project.groupId}.PvPManager
-version: ${plugin.version}
+version: ${pvpmanager.version}
 author: ${project.developers[0]}
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, EZRanksLite]

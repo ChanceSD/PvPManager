@@ -41,6 +41,7 @@ public class PluginTest {
 		Mockito.doReturn(logger).when(plugin).getLogger();
 		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(Matchers.anyString());
 		plugin.onEnable();
+		System.out.println(pdf.getVersion());
 	}
 
 	public final void tearDown() {
