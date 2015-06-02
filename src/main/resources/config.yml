@@ -20,9 +20,9 @@ Auto Soup:
   Health Gain: 6
 
 # This defines what happens when a player dies in PvP (only PvP - Experimental!)
-# The options are 'ALWAYS' (PvPManager does nothing), 'DROP' (Players drop items when killed in PvP but not in PvE),
-# 'KEEP' (Players keep items when killed in PvP but not in PvE) and
-# 'TRANSFER' (Same as 'DROP' but transfer items directly to killer without drops)
+# The options are 'ALWAYS' - (PvPManager does nothing), 'DROP' - (Players drop items when killed in PvP but not in PvE),
+# mode 'KEEP' - (Players keep items when killed in PvP but not in PvE) and
+# mode 'TRANSFER' - (Same as 'DROP' but transfer items directly to killer without drops)
 Player Drops:
   Mode: ALWAYS
 
