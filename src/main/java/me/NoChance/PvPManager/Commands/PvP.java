@@ -2,7 +2,6 @@ package me.NoChance.PvPManager.Commands;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
@@ -45,7 +44,7 @@ public class PvP implements CommandExecutor {
 			} else if (sender.hasPermission("pvpmanager.pvpstatus.change")) {
 				if ((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && sender instanceof Player) {
 					final PvPlayer pvpPlayer = ph.get((Player) sender);
-					if (CombatUtils.hasTimePassed(pvpPlayer.getToggleTime(), Variables.getToggleCooldown())) {
+					if (pvpPlayer.hasToggleCooldownPassed()) {
 						final boolean enable = args[0].equalsIgnoreCase("on") ? true : false;
 						if (!enable && pvpPlayer.hasPvPEnabled() || enable && !pvpPlayer.hasPvPEnabled()) {
 							pvpPlayer.setPvP(enable);
@@ -54,7 +53,7 @@ public class PvP implements CommandExecutor {
 						sender.sendMessage(enable ? Messages.getAlreadyEnabled() : Messages.getAlreadyDisabled());
 						return true;
 					}
-					return false;
+					return true;
 				} else if (sender.hasPermission("pvpmanager.admin")) {
 					if (!CombatUtils.isOnline(args[0])) {
 						sender.sendMessage("§4Player not online!");

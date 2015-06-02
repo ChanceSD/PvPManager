@@ -25,7 +25,7 @@ commands:
    pvpstatus:
       description: Allows the player to see his or others pvp status
       aliases: [pvps, ps, pstatus, status]
-      permission: pvpmanager.pvpstatus
+      permission: pvpmanager.pvpstatus.self
       usage: "Usage: /<command> [player]"
    pvplist:
       description: List all players with pvp enabled
@@ -46,7 +46,7 @@ permissions:
        pvpmanager.reload: true
        pvpmanager.user: true
        pvpmanager.override: true
-       pvpmanager.sign: true
+       pvpmanager.info: true
        pvpmanager.info.others: true
        pvpmanager.pvpstatus.nocooldown: true
    pvpmanager.user:
@@ -64,14 +64,8 @@ permissions:
    pvpmanager.pvpstatus.change:
      description: Allows you to change your PvP status between <on> and <off>
      default: false
-   pvpmanager.pvpstatus:
-     description: Allows you to check your or others current PvP status
-     default: false
    pvpmanager.reload:
      description: Allows you to reload PvPManager
-     default: false
-   pvpmanager.sign:
-     description: Allows creating PvPManager signs
      default: false
    pvpmanager.nocombat:
      description: Exempts a player from being tagged in combat

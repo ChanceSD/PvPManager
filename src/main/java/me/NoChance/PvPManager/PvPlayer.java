@@ -60,13 +60,19 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void togglePvP() {
+		if (!hasToggleCooldownPassed())
+			return;
+
+		setPvP(!pvpState);
+	}
+
+	public boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown()) && !player.hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = ((toggleTime + Variables.getToggleCooldown() * 1000) - System.currentTimeMillis()) / 1000;
 			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft)));
-			return;
+			return false;
 		}
-		toggleTime = System.currentTimeMillis();
-		setPvP(!pvpState);
+		return true;
 	}
 
 	public final boolean isNewbie() {
@@ -145,6 +151,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void setPvP(final boolean pvpState) {
 		this.pvpState = pvpState;
+		this.toggleTime = System.currentTimeMillis();
 		if (Variables.isToggleNametagsEnabled())
 			teamProfile.setPvP(pvpState);
 		if (!pvpState) {
