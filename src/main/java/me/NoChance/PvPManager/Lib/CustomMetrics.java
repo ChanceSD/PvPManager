@@ -20,7 +20,6 @@ public class CustomMetrics {
 			final Metrics metrics = new Metrics(plugin);
 			final Graph keepItemsExp = metrics.createGraph("Percentage of Keep and Drop");
 			final Graph inCombatTime = metrics.createGraph("Time in Combat");
-			final Graph toggleSigns = metrics.createGraph("Toggle Signs Usage");
 			final Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
 			final Graph updateCheck = metrics.createGraph("Update Check Usage");
 			final Graph killAbuse = metrics.createGraph("Kill Abuse Usage");
@@ -114,27 +113,6 @@ public class CustomMetrics {
 				public int getValue() {
 					int i = 0;
 					if (!Variables.isNewbieProtectionEnabled())
-						i++;
-
-					return i;
-				}
-			});
-
-			toggleSigns.addPlotter(new Metrics.Plotter("Enabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Variables.isToggleSignsEnabled())
-						i++;
-
-					return i;
-				}
-			});
-			toggleSigns.addPlotter(new Metrics.Plotter("Disabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Variables.isToggleSignsEnabled())
 						i++;
 
 					return i;

@@ -15,7 +15,6 @@ import me.NoChance.PvPManager.Lib.CustomMetrics;
 import me.NoChance.PvPManager.Lib.Updater;
 import me.NoChance.PvPManager.Lib.Updater.UpdateResult;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
-import me.NoChance.PvPManager.Listeners.SignListener;
 import me.NoChance.PvPManager.Listeners.WGListener;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
@@ -79,9 +78,6 @@ public final class PvPManager extends JavaPlugin {
 		registerListener(new PlayerListener(this));
 		if (dependencyManager.useWG())
 			registerListener(new WGListener(playerHandler));
-		if (Variables.isToggleSignsEnabled()) {
-			registerListener(new SignListener(playerHandler));
-		}
 	}
 
 	private void startMetrics() {

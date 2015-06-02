@@ -27,13 +27,9 @@ public class PvP implements CommandExecutor {
 			final Player player = (Player) sender;
 			final PvPlayer pvpPlayer = ph.get(player);
 			if (args.length == 0) {
-				if ((player.hasPermission("pvpmanager.pvpstatus.change") && !Variables.isToggleSignsEnabled())
-						|| ((player.hasPermission("pvpmanager.pvpstatus.change") && Variables.isToggleSignsEnabled() && !Variables.isDisableToggleCommand()))) {
+				if (player.hasPermission("pvpmanager.pvpstatus.change")) {
 					pvpPlayer.togglePvP();
 					return true;
-				} else if (Variables.isToggleSignsEnabled() && Variables.isDisableToggleCommand()) {
-					player.sendMessage(Messages.getErrorPvpcommandDisabled());
-					return false;
 				}
 			}
 		}
@@ -45,9 +41,8 @@ public class PvP implements CommandExecutor {
 					return true;
 				}
 				sender.sendMessage(ChatColor.DARK_RED + "You are not protected!");
-				return false;
-			} else if ((sender.hasPermission("pvpmanager.pvpstatus.change") && !Variables.isToggleSignsEnabled())
-					|| ((sender.hasPermission("pvpmanager.pvpstatus.change") && Variables.isToggleSignsEnabled() && !Variables.isDisableToggleCommand()))) {
+				return true;
+			} else if (sender.hasPermission("pvpmanager.pvpstatus.change")) {
 				if ((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && sender instanceof Player) {
 					final PvPlayer pvpPlayer = ph.get((Player) sender);
 					if (CombatUtils.hasTimePassed(pvpPlayer.getToggleTime(), Variables.getToggleCooldown())) {
@@ -81,13 +76,9 @@ public class PvP implements CommandExecutor {
 					sender.sendMessage("§6[§8PvPManager§6] §2PvP " + (enable ? "enabled" : "disabled") + " for " + args[0]);
 					return true;
 				}
-			} else if (Variables.isToggleSignsEnabled() && Variables.isDisableToggleCommand()) {
-				sender.sendMessage(Messages.getErrorPvpcommandDisabled());
-				return false;
 			}
 		}
 		sender.sendMessage(Messages.getErrorCommand());
 		return true;
 	}
-
 }

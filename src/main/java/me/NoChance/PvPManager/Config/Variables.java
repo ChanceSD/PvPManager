@@ -24,8 +24,6 @@ public final class Variables {
 	private static boolean killOnLogout;
 	private static List<String> worldsExcluded = Arrays.asList(new String[] { "Example", "Example2" });
 	private static boolean disableFly;
-	private static boolean toggleSignsEnabled;
-	private static boolean disableToggleCommand;
 	private static boolean onlyTagAttacker;
 	private static boolean updateCheck;
 	private static boolean autoUpdate;
@@ -90,8 +88,6 @@ public final class Variables {
 		killOnLogout = getBoolean("In Combat.Punishments.Kill on Logout.Enabled", true);
 		worldsExcluded = (List<String>) cm.getConfig().getList("World Exclusions", worldsExcluded);
 		disableFly = getBoolean("Disable Fly", true);
-		toggleSignsEnabled = getBoolean("Toggle Signs.Enabled", true);
-		disableToggleCommand = getBoolean("Toggle Signs.Disable Toggle Command", false);
 		onlyTagAttacker = getBoolean("In Combat.Only Tag Attacker", false);
 		updateCheck = getBoolean("Update Check.Enabled", true);
 		autoUpdate = getBoolean("Update Check.Auto Update", true);
@@ -196,14 +192,6 @@ public final class Variables {
 
 	public static boolean isDisableFly() {
 		return disableFly;
-	}
-
-	public static boolean isToggleSignsEnabled() {
-		return toggleSignsEnabled;
-	}
-
-	public static boolean isDisableToggleCommand() {
-		return disableToggleCommand;
 	}
 
 	public static boolean isOnlyTagAttacker() {

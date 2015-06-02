@@ -5,16 +5,11 @@
 	<artifactId>PvPManager</artifactId>
 	<packaging>jar</packaging>
 	<version>3.0-SNAPSHOT</version>
-	<developers>
-		<developer>
-			<id>NoChanceSD</id>
-		</developer>
-	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<pvpmanager.version>${project.version}-b${build.number}</pvpmanager.version>
-		<config.version>28</config.version>
+		<config.version>29</config.version>
 		<powermock.version>1.6.2</powermock.version>
 	</properties>
 

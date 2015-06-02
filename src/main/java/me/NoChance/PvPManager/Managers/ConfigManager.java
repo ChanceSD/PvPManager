@@ -74,9 +74,6 @@ public class ConfigManager {
 		this.config.set("PvP Toggle.NameTags.Color On", Variables.getToggleColorOn());
 		this.config.set("PvP Toggle.NameTags.Color Off", Variables.getToggleColorOff());
 
-		this.config.set("Toggle Signs.Enabled", Variables.isToggleSignsEnabled());
-		this.config.set("Toggle Signs.Disable Toggle Command", Variables.isDisableToggleCommand());
-
 		this.config.set("Kill Abuse.Enabled", Variables.isKillAbuseEnabled());
 		this.config.set("Kill Abuse.Max Kills", Variables.getKillAbuseMaxKills());
 		this.config.set("Kill Abuse.Time Limit", Variables.getKillAbuseTime());
