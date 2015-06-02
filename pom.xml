@@ -106,6 +106,7 @@
 					<groupId>org.bukkit</groupId>
 				</exclusion>
 			</exclusions>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
@@ -113,6 +114,7 @@
 			<version>2.7.5</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/repo/Factions.jar</systemPath>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
@@ -139,6 +141,7 @@
 			<version>7.3.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/repo/MassiveCore.jar</systemPath>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
@@ -146,12 +149,14 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/repo/FactionsUUID.jar</systemPath>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
 			<version>1.5.4</version>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>LibsDisguises</groupId>
@@ -184,6 +189,7 @@
 					<groupId>org.spigotmc</groupId>
 				</exclusion>
 			</exclusions>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
@@ -244,6 +250,7 @@
 					<groupId>com.sk89q.spigot</groupId>
 				</exclusion>
 			</exclusions>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

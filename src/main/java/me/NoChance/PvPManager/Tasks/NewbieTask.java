@@ -12,6 +12,7 @@ public class NewbieTask extends BukkitRunnable {
 		this.player = player;
 	}
 
+	@Override
 	public final void run() {
 		player.setNewbie(false);
 	}

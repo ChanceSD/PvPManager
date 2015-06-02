@@ -23,7 +23,7 @@ public class PvPlayer extends EcoPlayer {
 	private long respawnTime;
 	private long taggedTime;
 	private final NewbieTask newbieTask;
-	private final HashMap<String, Integer> victim = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
 	private final TeamProfile teamProfile;
 

@@ -17,6 +17,7 @@ public class WorldGuard implements PvPlugin {
 		this.rq = ((WorldGuardPlugin) plugin).getRegionContainer().createQuery();
 	}
 
+	@Override
 	public final boolean canAttack(final Player attacker, final Player defender) {
 		boolean flag = rq.testState(defender.getLocation(), defender, DefaultFlag.PVP);
 		return flag;

@@ -23,11 +23,9 @@ public class LogFile {
 	}
 
 	public final void log(final String line) {
-		try {
-			final BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
 			bw.write(line);
 			bw.newLine();
-			bw.close();
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

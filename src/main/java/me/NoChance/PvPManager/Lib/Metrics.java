@@ -179,6 +179,7 @@ public class Metrics {
 
 				private boolean firstPost = true;
 
+				@Override
 				public void run() {
 					try {
 						// This has to be synchronized or it can collide with the disable method.
@@ -433,37 +434,35 @@ public class Metrics {
 		}
 
 		// Write the data
-		final OutputStream os = connection.getOutputStream();
-		os.write(compressed);
-		os.flush();
+		try (OutputStream os = connection.getOutputStream()) {
+			os.write(compressed);
+			os.flush();
+		}
 
 		// Now read the response
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		String response = reader.readLine();
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+			String response = reader.readLine();
 
-		// close resources
-		os.close();
-		reader.close();
+			if (response == null || response.startsWith("ERR") || response.startsWith("7")) {
+				if (response == null) {
+					response = "null";
+				} else if (response.startsWith("7")) {
+					response = response.substring(response.startsWith("7,") ? 2 : 1);
+				}
 
-		if (response == null || response.startsWith("ERR") || response.startsWith("7")) {
-			if (response == null) {
-				response = "null";
-			} else if (response.startsWith("7")) {
-				response = response.substring(response.startsWith("7,") ? 2 : 1);
+				throw new IOException(response);
 			}
+			// Is this the first update this hour?
+			if (response.equals("1") || response.contains("This is your first update this hour")) {
+				synchronized (graphs) {
+					final Iterator<Graph> iter = graphs.iterator();
 
-			throw new IOException(response);
-		}
-		// Is this the first update this hour?
-		if (response.equals("1") || response.contains("This is your first update this hour")) {
-			synchronized (graphs) {
-				final Iterator<Graph> iter = graphs.iterator();
+					while (iter.hasNext()) {
+						final Graph graph = iter.next();
 
-				while (iter.hasNext()) {
-					final Graph graph = iter.next();
-
-					for (final Plotter plotter : graph.getPlotters()) {
-						plotter.reset();
+						for (final Plotter plotter : graph.getPlotters()) {
+							plotter.reset();
+						}
 					}
 				}
 			}
@@ -615,7 +614,7 @@ public class Metrics {
 		/**
 		 * The set of plotters that are contained within this graph
 		 */
-		private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
+		private final Set<Plotter> plotters = new LinkedHashSet<>();
 
 		Graph(final String name) {
 			this.name = name;

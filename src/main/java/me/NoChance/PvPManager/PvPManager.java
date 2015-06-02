@@ -49,6 +49,7 @@ public final class PvPManager extends JavaPlugin {
 		startMetrics();
 		if (Variables.isUpdateCheck()) {
 			new BukkitRunnable() {
+				@Override
 				public void run() {
 					checkForUpdates();
 				}

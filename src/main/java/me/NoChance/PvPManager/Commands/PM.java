@@ -20,6 +20,7 @@ public class PM implements CommandExecutor {
 		this.plugin = plugin;
 	}
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if (sender instanceof Player) {

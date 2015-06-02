@@ -15,6 +15,7 @@ public class PvPOverride implements CommandExecutor {
 		this.ph = ph;
 	}
 
+	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if (sender instanceof Player) {
 			final boolean override = ph.get((Player) sender).toggleOverride();

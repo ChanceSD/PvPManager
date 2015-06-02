@@ -12,8 +12,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class TagTask extends BukkitRunnable {
 
 	private final int time = Variables.getTimeInCombat();
-	private final HashSet<PvPlayer> tagged = new HashSet<PvPlayer>();
+	private final HashSet<PvPlayer> tagged = new HashSet<>();
 
+	@Override
 	public final void run() {
 		final Iterator<PvPlayer> iterator = getTagged().iterator();
 		while (iterator.hasNext()) {
