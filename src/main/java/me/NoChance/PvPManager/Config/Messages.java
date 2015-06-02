@@ -23,7 +23,6 @@ public class Messages {
 	private static PvPManager plugin;
 	private static final Properties LANG = new Properties();
 	private static File messagesFile;
-	private static String errorPvpcommandDisabled;
 	private static String errorPermission;
 	private static String errorPvpCooldown;
 	private static String alreadyDisabled;
@@ -52,7 +51,7 @@ public class Messages {
 	private static String currentVersion;
 	private static String newVersion;
 	private static String moneyReward;
-	private static Locale locale; // NO_UCD (use final)
+	private static Locale locale;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -135,7 +134,6 @@ public class Messages {
 		errorCommand = getString("Error_Command");
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
 		errorPermission = getString("Error_Permission");
-		errorPvpcommandDisabled = getString("Error_PvPCommand_Disabled");
 		moneyReward = getString("Money_Reward");
 	}
 
@@ -173,10 +171,6 @@ public class Messages {
 	public static void configUpdated(final Player player) {
 		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + plugin.getConfigM().getConfigVersion());
 		player.sendMessage("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust the file to your liking");
-	}
-
-	public static String getErrorPvpcommandDisabled() {
-		return errorPvpcommandDisabled;
 	}
 
 	public static String getErrorPermission() {

@@ -31,7 +31,7 @@ public class PvPStatus implements CommandExecutor {
 			}
 			player.sendMessage(Messages.getSelfStatusEnabled());
 			return true;
-		} else if (args.length == 1) {
+		} else if (args.length == 1 && sender.hasPermission("pvpmanager.pvpstatus.others")) {
 			if (CombatUtils.isOnline(args[0])) {
 				target = ph.get(Bukkit.getPlayer(args[0]));
 				if (!target.hasPvPEnabled()) {
