@@ -103,13 +103,6 @@ PvP Toggle:
     Color On: '&1'
     Color Off: '&2'
 
-# Should toggle PvP signs be enabled? (Similar to /pvp command but by clicking signs)
-# To create a toggle sign write [pvpmanager] on the first line (remember you need the right permission)
-# Disable Toggle Command - Should /pvp command be disabled in order to force using of signs by players?
-Toggle Signs:
-  Enabled: true
-  Disable Toggle Command: false
-
 # This feature prevents player abuse by killing the same player several times to rise in rank or get rewards
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
 # In this case, it would check every 60 seconds for abusers
