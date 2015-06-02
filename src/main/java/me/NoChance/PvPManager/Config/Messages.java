@@ -71,14 +71,11 @@ public class Messages {
 		if (!messagesFile.exists()) {
 			int readBytes;
 			final byte[] buffer = new byte[4096];
-			try {
-				final InputStream input = plugin.getResource("locale/" + locale.toString());
-				OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()));
+			try (InputStream input = plugin.getResource("locale/" + locale.toString());
+					OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()))) {
 				while ((readBytes = input.read(buffer)) != -1) {
 					resStreamOut.write(buffer, 0, readBytes);
 				}
-				resStreamOut.close();
-				input.close();
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -91,13 +88,11 @@ public class Messages {
 				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.toString()))
 					file.delete();
 			}
-		try {
+		try (FileInputStream in = new FileInputStream(messagesFile)) {
 			if (messagesFile.exists()) {
-				final FileInputStream in = new FileInputStream(messagesFile);
 				LANG.load(in);
 				checkChanges();
 				getMessages();
-				in.close();
 			}
 		} catch (final IOException e) {
 		}
@@ -161,10 +156,8 @@ public class Messages {
 	}
 
 	private static void addMessage(final String a) {
-		try {
-			final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), "UTF-8"));
+		try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), "UTF-8"))) {
 			pw.println(a);
-			pw.close();
 		} catch (final IOException e) {
 		}
 	}

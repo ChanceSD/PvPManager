@@ -18,7 +18,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class PlayerHandler {
 
-	private final HashMap<String, PvPlayer> players = new HashMap<String, PvPlayer>();
+	private final HashMap<String, PvPlayer> players = new HashMap<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
@@ -93,6 +93,7 @@ public class PlayerHandler {
 
 	public final void remove(final PvPlayer player) {
 		new BukkitRunnable() {
+			@Override
 			public void run() {
 				if (player.getPlayer() == null) {
 					players.remove(player.getName());

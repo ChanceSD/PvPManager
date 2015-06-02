@@ -13,6 +13,7 @@ public class CleanKillersTask extends BukkitRunnable {
 		this.ph = ph;
 	}
 
+	@Override
 	public final void run() {
 		for (final PvPlayer p : ph.getPlayers().values()) {
 			p.clearVictims();

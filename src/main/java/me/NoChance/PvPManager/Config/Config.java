@@ -99,13 +99,12 @@ public class Config extends YamlConfiguration {
 		if (!file1.exists()) {
 			return null;
 		}
-		try {
+		try (BufferedReader reader = new BufferedReader(new FileReader(file1))){
 			int commentNum = 0;
 			String addLine;
 			String currentLine;
 			final String pluginName = this.getPluginName();
 			final StringBuilder whole = new StringBuilder("");
-			final BufferedReader reader = new BufferedReader(new FileReader(file1));
 			while ((currentLine = reader.readLine()) != null) {
 				if (currentLine.startsWith("#")) {
 					addLine = currentLine.replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
@@ -117,7 +116,6 @@ public class Config extends YamlConfiguration {
 				}
 			}
 			final InputStream configStream = new ByteArrayInputStream(whole.toString().getBytes(Charset.forName("UTF-8")));
-			reader.close();
 			return configStream;
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -138,15 +136,13 @@ public class Config extends YamlConfiguration {
 	}
 
 	private void copyResource(final InputStream resource, final File file1) {
-		try {
-			final OutputStream out = new FileOutputStream(file1);
+		try (OutputStream out = new FileOutputStream(file1)){
 			int lenght;
 			final byte[] buf = new byte[1024];
 
 			while ((lenght = resource.read(buf)) > 0) {
 				out.write(buf, 0, lenght);
 			}
-			out.close();
 			resource.close();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -159,11 +155,9 @@ public class Config extends YamlConfiguration {
 
 	public final void saveConfig(final String configString, final File file1) {
 		final String configuration = this.prepareConfigString(configString);
-		try {
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(file1));
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file1))) {
 			writer.write(configuration);
 			writer.flush();
-			writer.close();
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

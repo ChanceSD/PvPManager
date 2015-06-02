@@ -16,6 +16,7 @@ public class PvPList implements CommandExecutor {
 		this.ph = ph;
 	}
 
+	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		sender.sendMessage(ChatColor.GOLD + "**** Players With PvP Enabled ****");
 		sender.sendMessage(ChatColor.DARK_GRAY + pvpList());

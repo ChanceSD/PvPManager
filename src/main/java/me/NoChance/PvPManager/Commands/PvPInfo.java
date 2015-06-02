@@ -19,6 +19,7 @@ public class PvPInfo implements CommandExecutor {
 		this.ph = ph;
 	}
 
+	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if (args.length == 0 && sender instanceof Player) {
 			sendInfo(sender, ph.get((Player) sender));

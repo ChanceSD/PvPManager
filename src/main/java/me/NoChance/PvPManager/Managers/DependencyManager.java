@@ -22,8 +22,8 @@ public class DependencyManager {
 	private final PvPManager plugin;
 	private boolean useWG;
 	private Economy economy;
-	private final HashMap<String, PvPlugin> dependencies = new HashMap<String, PvPlugin>();
-	private final HashSet<PvPlugin> attackChecks = new HashSet<PvPlugin>();
+	private final HashMap<String, PvPlugin> dependencies = new HashMap<>();
+	private final HashSet<PvPlugin> attackChecks = new HashSet<>();
 
 	public DependencyManager(final PvPManager plugin) {
 		this.plugin = plugin;
