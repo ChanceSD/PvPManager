@@ -177,7 +177,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public final void onPlayerJoin(final PlayerJoinEvent event) { // NO_UCD (unused code)
 		final Player player = event.getPlayer();
-		ph.get(player);
+		ph.get(player).updatePlayer(player);
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
 			if (Variables.isUpdate())
 				Messages.updateMessage(player);
@@ -186,14 +186,15 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler
-	public final void onPlayerKick(final PlayerKickEvent event) { // NO_UCD
-		final PvPlayer pvPlayer = ph.get(event.getPlayer());
-		if (pvPlayer == null)
-			return;
-		if (pvPlayer.isInCombat() && !event.getReason().equalsIgnoreCase("Illegal characters in chat"))
-			ph.untag(pvPlayer);
-	}
+	// @EventHandler
+	// public final void onPlayerKick(final PlayerKickEvent event) { // NO_UCD
+	// final PvPlayer pvPlayer = ph.get(event.getPlayer());
+	// if (pvPlayer == null)
+	// return;
+	// if (pvPlayer.isInCombat() && Variables.isPunishmentsEnabled())
+	// ph.applyPunishments(pvPlayer);
+	// ph.remove(pvPlayer);
+	// }
 
 	@EventHandler
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) { // NO_UCD
