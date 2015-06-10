@@ -34,7 +34,7 @@ public class OnDeathTest {
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
 		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Matchers.anyObject())).thenCallRealMethod();
-		listener = new PlayerListener(plugin);
+		listener = new PlayerListener(plugin.getPlayerHandler());
 	}
 
 	@Before

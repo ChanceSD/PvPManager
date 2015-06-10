@@ -139,4 +139,8 @@ public class PlayerHandler {
 		return tagTask;
 	}
 
+	public final PvPManager getPlugin() {
+		return plugin;
+	}
+
 }
