@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ import org.bukkit.entity.Player;
 
 public class PvPlayer extends EcoPlayer {
 
-	private final Player player;
+	private WeakReference<Player> player;
 	private boolean newbie;
 	private boolean tagged;
 	private boolean pvpState;
@@ -29,7 +30,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
 		super(plugin.getDependencyManager().getEconomy());
-		this.player = player;
+		this.player = new WeakReference<>(player);
 		this.plugin = plugin;
 		this.newbieTask = new NewbieTask(this);
 		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled())
@@ -39,16 +40,16 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final String getName() {
-		return player.getName();
+		return getPlayer().getName();
 	}
 
 	public final UUID getUUID() {
-		return player.getUniqueId();
+		return getPlayer().getUniqueId();
 	}
 
 	@Override
 	public final Player getPlayer() {
-		return player;
+		return player.get();
 	}
 
 	public final String getWorldName() {
@@ -67,7 +68,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public boolean hasToggleCooldownPassed() {
-		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown()) && !player.hasPermission("pvpmanager.pvpstatus.nocooldown")) {
+		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = ((toggleTime + Variables.getToggleCooldown() * 1000) - System.currentTimeMillis()) / 1000;
 			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft)));
 			return false;
@@ -96,8 +97,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void disableFly() {
-		player.setFlying(false);
-		player.setAllowFlight(false);
+		getPlayer().setFlying(false);
+		getPlayer().setAllowFlight(false);
 	}
 
 	public final void setNewbie(final boolean newbie) {
@@ -157,11 +158,11 @@ public class PvPlayer extends EcoPlayer {
 		if (!pvpState) {
 			message(Messages.getPvpDisabled());
 			if (Variables.isToggleBroadcast())
-				Bukkit.broadcastMessage(Messages.getPvptoggleOffBroadcast().replace("%p", player.getName()));
+				Bukkit.broadcastMessage(Messages.getPvptoggleOffBroadcast().replace("%p", getName()));
 		} else {
 			message(Messages.getPvpEnabled());
 			if (Variables.isToggleBroadcast())
-				Bukkit.broadcastMessage(Messages.getPvptoggleOnBroadcast().replace("%p", player.getName()));
+				Bukkit.broadcastMessage(Messages.getPvptoggleOnBroadcast().replace("%p", getName()));
 		}
 	}
 
@@ -176,7 +177,7 @@ public class PvPlayer extends EcoPlayer {
 			}
 			if (totalKills >= Variables.getKillAbuseMaxKills()) {
 				for (final String command : Variables.getKillAbuseCommands()) {
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", player.getName()));
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", getName()));
 				}
 			}
 		}
@@ -220,9 +221,15 @@ public class PvPlayer extends EcoPlayer {
 			this.pvpState = Variables.isDefaultPvp();
 			if (Variables.isNewbieProtectionEnabled())
 				setNewbie(true);
-		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(player.getUniqueId().toString()))
+		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(getUUID().toString()))
 			this.pvpState = true;
 		if (Variables.isToggleNametagsEnabled())
 			teamProfile.setPvP(this.pvpState);
 	}
+
+	public void updatePlayer(Player p) {
+		if (!p.equals(getPlayer()))
+			player = new WeakReference<>(p);
+	}
+
 }
