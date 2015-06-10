@@ -95,13 +95,15 @@ public class PlayerHandler {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (player.getPlayer() == null) {
+				if (!player.isOnline()) {
 					players.remove(player.getName());
 				}
 			}
-		}.runTaskLater(plugin, Variables.getToggleCooldown() * 20);
-		if (player.hasPvPLogged())
+		}.runTaskLater(plugin, 1200);
+		if (player.hasPvPLogged()) {
 			player.setPvpLogged(false);
+			untag(player);
+		}
 		savePvPState(player.getUUID(), player.hasPvPEnabled());
 	}
 
