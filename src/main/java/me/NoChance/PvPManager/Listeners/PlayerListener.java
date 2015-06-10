@@ -212,7 +212,7 @@ public class PlayerListener implements Listener {
 	public final void onCommand(final PlayerCommandPreprocessEvent event) { // NO_UCD
 		if (Variables.isStopCommands() && Variables.isInCombatEnabled()) {
 			if (ph.get(event.getPlayer()).isInCombat()) {
-				final boolean contains = Variables.getCommandsAllowed().contains(event.getMessage().substring(1).split(" ")[0]);
+				final boolean contains = Variables.getCommandsAllowed().contains(event.getMessage().substring(1));
 				if (Variables.isCommandsWhitelist() ? !contains : contains) {
 					event.setCancelled(true);
 					event.getPlayer().sendMessage(Messages.getCommandDeniedIncombat());
