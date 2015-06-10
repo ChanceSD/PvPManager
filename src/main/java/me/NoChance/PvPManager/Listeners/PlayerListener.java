@@ -197,14 +197,14 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) { // NO_UCD
-		if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
-			final PvPlayer player = ph.get(event.getPlayer());
-			if (player == null)
-				return;
-			if (Variables.isInCombatEnabled() && Variables.isBlockEnderPearl() && player.isInCombat()) {
+		final PvPlayer player = ph.get(event.getPlayer());
+		if (player != null && Variables.isInCombatEnabled() && player.isInCombat()) {
+			if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
+				if (!Variables.isBlockEnderPearl())
+					return;
 				player.message(Messages.getEnderpearlBlockedIncombat());
-				event.setCancelled(true);
 			}
+			event.setCancelled(true);
 		}
 	}
 
