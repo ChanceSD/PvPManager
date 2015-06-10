@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+
 public class DependencyManager {
 
 	private final PvPManager plugin;
@@ -53,9 +55,14 @@ public class DependencyManager {
 
 	private void checkForWorldguard() {
 		if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-			useWG = true;
-			dependencies.put("WorldGuard", new WorldGuard(Bukkit.getPluginManager().getPlugin("WorldGuard")));
-			Log.info("WorldGuard Found! Enabling WorldGuard Support");
+			WorldGuardPlugin wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
+			if (wg.getDescription().getVersion().startsWith("6")) {
+				useWG = true;
+				dependencies.put("WorldGuard", new WorldGuard(wg));
+				Log.info("WorldGuard Found! Enabling WorldGuard Support");
+			} else {
+				Log.info("WorldGuard Found But Not Supported, Update Your WorldGuard Version!");
+			}
 		}
 	}
 
