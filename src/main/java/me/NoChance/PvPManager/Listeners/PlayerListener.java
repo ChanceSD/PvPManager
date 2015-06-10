@@ -2,32 +2,22 @@ package me.NoChance.PvPManager.Listeners;
 
 import java.util.HashMap;
 
-import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Config.Variables.DropMode;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.libraryaddict.disguise.DisguiseAPI;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -38,97 +28,13 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 
 public class PlayerListener implements Listener {
 
-	private final PvPManager plugin;
 	private final PlayerHandler ph;
 
-	public PlayerListener(final PvPManager plugin) {
-		this.plugin = plugin;
-		this.ph = plugin.getPlayerHandler();
-	}
-
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public final void onPlayerDamage(final EntityDamageByEntityEvent event) { // NO_UCD
-		if (!CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
-			return;
-		if (Variables.isNewbieGodMode() && event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie()) {
-			event.setCancelled(true);
-			return;
-		}
-		if (!CombatUtils.isPvP(event))
-			return;
-		final Player attacker = getAttacker(event);
-		final Player attacked = (Player) event.getEntity();
-		final CancelResult result = ph.tryCancel(attacker, attacked);
-
-		if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE)
-			event.setCancelled(true);
-
-		switch (result) {
-		case FAIL_OVERRIDE:
-		case FAIL:
-			break;
-		case NEWBIE:
-			attacker.sendMessage(Messages.getNewbieProtectionOnHit());
-			break;
-		case NEWBIE_OTHER:
-			attacker.sendMessage(Messages.getNewbieProtectionAtacker().replace("%p", attacked.getName()));
-			break;
-		case PVPDISABLED:
-			attacker.sendMessage(Messages.getAttackDeniedYou());
-			break;
-		case PVPDISABLED_OTHER:
-			attacker.sendMessage(Messages.getAttackDeniedOther().replace("%p", attacked.getName()));
-			break;
-		default:
-			break;
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public final void onPlayerDamageOverride(final EntityDamageByEntityEvent event) { // NO_UCD
-		if (!CombatUtils.isPvP(event) || !CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()) || !event.isCancelled())
-			return;
-
-		if (ph.tryCancel(getAttacker(event), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE))
-			event.setCancelled(false);
-	}
-
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public final void onPlayerDamageMonitor(final EntityDamageByEntityEvent event) { // NO_UCD
-		if (!CombatUtils.isPvP(event) || !CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
-			return;
-		final Player attacker = getAttacker(event);
-		final Player attacked = (Player) event.getEntity();
-
-		final CancelResult result = ph.tryCancel(attacker, attacked);
-
-		if (result == CancelResult.FAIL || result == CancelResult.FAIL_OVERRIDE)
-			onDamageActions(attacker, attacked);
-	}
-
-	@EventHandler
-	public final void onPotionSplash(final PotionSplashEvent event) { // NO_UCD (unused code)
-		final ThrownPotion potion = event.getPotion();
-		if (event.getAffectedEntities().isEmpty() || !(potion.getShooter() instanceof Player))
-			return;
-
-		for (final PotionEffect effect : potion.getEffects()) {
-			if (effect.getType().equals(PotionEffectType.POISON)) {
-				for (final LivingEntity e : event.getAffectedEntities()) {
-					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled()) {
-						event.setIntensity(e, 0);
-					}
-				}
-				return;
-			}
-		}
+	public PlayerListener(final PlayerHandler ph) {
+		this.ph = ph;
 	}
 
 	@EventHandler
@@ -145,7 +51,7 @@ public class PlayerListener implements Listener {
 			return;
 		if (pvPlayer.isInCombat()) {
 			if (Variables.isLogToFile())
-				plugin.getLog().log(Messages.getPvplogBroadcast().replace("%p", player.getName()));
+				ph.getPlugin().getLog().log(Messages.getPvplogBroadcast().replace("%p", player.getName()));
 			if (Variables.isBroadcastPvpLog())
 				Bukkit.broadcastMessage(Messages.getPvplogBroadcast().replace("%p", player.getName()));
 			if (Variables.isPunishmentsEnabled())
@@ -305,7 +211,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public final void onCommand(final PlayerCommandPreprocessEvent event) { // NO_UCD
 		if (Variables.isStopCommands() && Variables.isInCombatEnabled()) {
-			if (plugin.getPlayerHandler().get(event.getPlayer()).isInCombat()) {
+			if (ph.get(event.getPlayer()).isInCombat()) {
 				final boolean contains = Variables.getCommandsAllowed().contains(event.getMessage().substring(1).split(" ")[0]);
 				if (Variables.isCommandsWhitelist() ? !contains : contains) {
 					event.setCancelled(true);
@@ -327,44 +233,4 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	private void onDamageActions(final Player attacker, final Player defender) {
-		final PvPlayer pvpAttacker = ph.get(attacker);
-		final PvPlayer pvpDefender = ph.get(defender);
-		if (pvpAttacker == null || pvpDefender == null)
-			return;
-		if (Variables.isPvpBlood())
-			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
-		if (!attacker.hasPermission("pvpmanager.nodisable")) {
-			if (Variables.isDisableFly()) {
-				if (attacker.isFlying() || attacker.getAllowFlight())
-					pvpAttacker.disableFly();
-				if (defender.isFlying() || defender.getAllowFlight())
-					pvpDefender.disableFly();
-			}
-			if (Variables.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL))
-				attacker.setGameMode(GameMode.SURVIVAL);
-			if (Variables.isDisableDisguise()) {
-				if (Bukkit.getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker))
-					DisguiseCraft.getAPI().undisguisePlayer(attacker);
-				if (Bukkit.getPluginManager().isPluginEnabled("LibsDisguises") && DisguiseAPI.isDisguised(attacker))
-					DisguiseAPI.undisguiseToAll(attacker);
-			}
-			if (Variables.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY))
-				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
-		}
-		if (Variables.isInCombatEnabled()) {
-			if (Variables.isOnlyTagAttacker()) {
-				pvpAttacker.setTagged(true, pvpDefender.getName());
-				return;
-			}
-			pvpAttacker.setTagged(true, pvpDefender.getName());
-			pvpDefender.setTagged(false, pvpAttacker.getName());
-		}
-	}
-
-	private Player getAttacker(final EntityDamageByEntityEvent event) {
-		if (event.getDamager() instanceof Projectile)
-			return (Player) ((Projectile) event.getDamager()).getShooter();
-		return (Player) event.getDamager();
-	}
 }

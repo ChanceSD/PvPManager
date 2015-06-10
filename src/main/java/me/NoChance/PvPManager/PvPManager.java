@@ -14,6 +14,7 @@ import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Lib.CustomMetrics;
 import me.NoChance.PvPManager.Lib.Updater;
 import me.NoChance.PvPManager.Lib.Updater.UpdateResult;
+import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Listeners.WGListener;
 import me.NoChance.PvPManager.Managers.ConfigManager;
@@ -75,7 +76,8 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void startListeners() {
-		registerListener(new PlayerListener(this));
+		registerListener(new EntityListener(playerHandler));
+		registerListener(new PlayerListener(playerHandler));
 		if (dependencyManager.useWG())
 			registerListener(new WGListener(playerHandler));
 	}

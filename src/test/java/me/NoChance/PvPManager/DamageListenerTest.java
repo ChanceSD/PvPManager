@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 import java.util.UUID;
 
 import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Listeners.PlayerListener;
+import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -35,7 +35,7 @@ import org.powermock.api.mockito.PowerMockito;
 public class DamageListenerTest {
 
 	private static PvPManager plugin;
-	private static PlayerListener damageListener;
+	private static EntityListener damageListener;
 	private EntityDamageByEntityEvent mockEvent;
 	private EntityDamageByEntityEvent projMockEvent;
 	private static PlayerHandler ph;
@@ -52,7 +52,7 @@ public class DamageListenerTest {
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
 		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Matchers.anyObject())).thenCallRealMethod();
-		damageListener = new PlayerListener(plugin);
+		damageListener = new EntityListener(ph);
 	}
 
 	@Before
