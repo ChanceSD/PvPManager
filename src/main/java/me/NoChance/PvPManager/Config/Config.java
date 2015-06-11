@@ -99,7 +99,7 @@ public class Config extends YamlConfiguration {
 		if (!file1.exists()) {
 			return null;
 		}
-		try (BufferedReader reader = new BufferedReader(new FileReader(file1))){
+		try (BufferedReader reader = new BufferedReader(new FileReader(file1))) {
 			int commentNum = 0;
 			String addLine;
 			String currentLine;
@@ -136,7 +136,7 @@ public class Config extends YamlConfiguration {
 	}
 
 	private void copyResource(final InputStream resource, final File file1) {
-		try (OutputStream out = new FileOutputStream(file1)){
+		try (OutputStream out = new FileOutputStream(file1)) {
 			int lenght;
 			final byte[] buf = new byte[1024];
 
@@ -155,7 +155,7 @@ public class Config extends YamlConfiguration {
 
 	public final void saveConfig(final String configString, final File file1) {
 		final String configuration = this.prepareConfigString(configString);
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file1))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file1))) {
 			writer.write(configuration);
 			writer.flush();
 		} catch (final IOException e) {

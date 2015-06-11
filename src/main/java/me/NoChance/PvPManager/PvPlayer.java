@@ -67,7 +67,7 @@ public class PvPlayer extends EcoPlayer {
 		setPvP(!pvpState);
 	}
 
-	public boolean hasToggleCooldownPassed() {
+	public final boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = ((toggleTime + Variables.getToggleCooldown() * 1000) - System.currentTimeMillis()) / 1000;
 			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft)));
@@ -227,7 +227,7 @@ public class PvPlayer extends EcoPlayer {
 			teamProfile.setPvP(this.pvpState);
 	}
 
-	public void updatePlayer(Player p) {
+	public final void updatePlayer(final Player p) {
 		if (!p.equals(getPlayer()))
 			player = new WeakReference<>(p);
 	}
