@@ -51,7 +51,7 @@ public class PlayerHandler {
 	}
 
 	public boolean canAttack(final Player damager, final Player defender) {
-		CancelResult cr =tryCancel(damager, defender);
+		CancelResult cr = tryCancel(damager, defender);
 		return cr.equals(CancelResult.FAIL) || cr.equals(CancelResult.FAIL_OVERRIDE);
 	}
 
