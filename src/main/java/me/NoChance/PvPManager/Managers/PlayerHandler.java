@@ -50,6 +50,11 @@ public class PlayerHandler {
 		return CancelResult.FAIL;
 	}
 
+	public boolean canAttack(final Player damager, final Player defender) {
+		CancelResult cr =tryCancel(damager, defender);
+		return cr.equals(CancelResult.FAIL) || cr.equals(CancelResult.FAIL_OVERRIDE);
+	}
+
 	private boolean canAttack(final PvPlayer attacker, final PvPlayer defender) {
 		if (dependencyManager.hasWGFlag(attacker.getPlayer(), defender.getPlayer()) || Variables.isStopBorderHopping() && attacker.isInCombat() && defender.isInCombat())
 			return dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
