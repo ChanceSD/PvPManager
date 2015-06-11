@@ -85,7 +85,7 @@ public class DependencyManager {
 					Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
 			}
 		} catch (final NumberFormatException e) {
-			Log.warning("Couldn't read Factions version, maybe it's a fork?");
+			Log.warning("Couldn't read Factions version, maybe it's yet another fork?");
 		}
 	}
 

@@ -14,7 +14,7 @@ public class FactionsUUID implements PvPlugin {
 	public final boolean canAttack(final Player attacker, final Player defender) {
 		final FPlayer fAttacker = FPlayers.getInstance().getByPlayer(attacker);
 		final FPlayer fDefender = FPlayers.getInstance().getByPlayer(defender);
-		return !fAttacker.getRelationTo(fDefender).equals(Relation.MEMBER);
+		return !fAttacker.getRelationTo(fDefender).isAtLeast(Relation.ALLY);
 	}
 
 }
