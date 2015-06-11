@@ -14,7 +14,7 @@ public class Factions implements PvPlugin {
 	public final boolean canAttack(final Player attacker, final Player defender) {
 		final MPlayer fAttacker = MPlayer.get(attacker);
 		final MPlayer fDefender = MPlayer.get(defender);
-		return !fAttacker.getRelationTo(fDefender).equals(Rel.MEMBER);
+		return !fAttacker.getRelationTo(fDefender).isAtLeast(Rel.ALLY);
 	}
 
 }
