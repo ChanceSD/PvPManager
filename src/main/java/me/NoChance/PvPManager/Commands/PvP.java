@@ -57,7 +57,7 @@ public class PvP implements CommandExecutor {
 				} else if (sender.hasPermission("pvpmanager.admin")) {
 					if (!CombatUtils.isOnline(args[0])) {
 						sender.sendMessage("§4Player not online!");
-						return false;
+						return true;
 					}
 					final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(args[0]));
 					final boolean enable;

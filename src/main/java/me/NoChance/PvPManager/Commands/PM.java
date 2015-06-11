@@ -4,7 +4,9 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,51 +31,54 @@ public class PM implements CommandExecutor {
 				Variables.helpMenu(player);
 				return true;
 			}
-			if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("reload") && player.hasPermission("pvpmanager.reload")) {
-					reload(player);
-					return true;
-				} else if (args[0].equalsIgnoreCase("reload")) {
-					player.sendMessage(Messages.getErrorPermission());
-					return false;
-				}
-				if (args[0].equalsIgnoreCase("update") && player.hasPermission("pvpmanager.admin")) {
-					if (Variables.isUpdateCheck()) {
-						if (Variables.isUpdate()) {
-							if (plugin.downloadUpdate())
-								player.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewversion());
-							else
-								player.sendMessage("§4An error ocurred while updating, please report to the developer");
-						} else
-							player.sendMessage("§2You have the latest version: §ePvPManager v" + Messages.getCurrentversion());
-					} else
-						player.sendMessage("§4Update Checking is disabled, enable it in the Config file");
-					return true;
-				}
-			}
-			if (args.length == 2) {
-				if (args[0].equalsIgnoreCase("debug") && player.hasPermission("pvpmanager.debug")) {
-					final PvPlayer p = plugin.getPlayerHandler().get(player);
-					if (args[1].equalsIgnoreCase("tag")) {
-						p.setTagged(true, "Debug");
-					} else if (args[1].equalsIgnoreCase("ct")) {
-						p.message("Tagged: " + p.isInCombat());
-					} else if (args[1].equalsIgnoreCase("newbie")) {
-						p.setNewbie(true);
-					} else if (args[1].equalsIgnoreCase("attack")) {
-						plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(player, player, DamageCause.ENTITY_ATTACK, 5.0));
-					}
-					return true;
-				}
-			}
-		} else {
-			if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("reload")) {
+		}
+		if (args.length == 1) {
+			if (args[0].equalsIgnoreCase("reload")) {
+				if (sender.hasPermission("pvpmanager.reload")) {
 					reload(sender);
 					return true;
 				}
+				sender.sendMessage(Messages.getErrorPermission());
+				return true;
 			}
-			return false;
+			if (args[0].equalsIgnoreCase("update") && sender.hasPermission("pvpmanager.admin")) {
+				if (Variables.isUpdateCheck()) {
+					if (Variables.isUpdate()) {
+						if (plugin.downloadUpdate())
+							sender.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewversion());
+						else
+							sender.sendMessage("§4An error ocurred while updating, please report to the developer");
+					} else
+						sender.sendMessage("§2You have the latest version: §ePvPManager v" + Messages.getCurrentversion());
+				} else
+					sender.sendMessage("§4Update Checking is disabled, enable it in the Config file");
+				return true;
+			}
+			sender.sendMessage(Messages.getErrorPermission());
+			return true;
+		} else if (args[0].equalsIgnoreCase("debug") && sender.hasPermission("pvpmanager.debug")) {
+			PvPlayer p = null;
+			if (args.length == 2 && sender instanceof Player) {
+				p = plugin.getPlayerHandler().get((Player) sender);
+			} else if (args.length == 3) {
+				if (!CombatUtils.isOnline(args[2])) {
+					sender.sendMessage("§4Player not online!");
+					return true;
+				}
+				p = plugin.getPlayerHandler().get(Bukkit.getPlayer(args[2]));
+			}
+			if (p == null)
+				return true;
+			if (args[1].equalsIgnoreCase("tag")) {
+				p.setTagged(true, "Debug");
+			} else if (args[1].equalsIgnoreCase("ct")) {
+				p.message("Tagged: " + p.isInCombat());
+			} else if (args[1].equalsIgnoreCase("newbie")) {
+				p.setNewbie(true);
+			} else if (args[1].equalsIgnoreCase("attack")) {
+				plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
+			}
+			return true;
 		}
 		sender.sendMessage(Messages.getErrorCommand());
 		return false;
