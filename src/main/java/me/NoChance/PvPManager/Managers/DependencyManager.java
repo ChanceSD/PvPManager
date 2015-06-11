@@ -89,8 +89,8 @@ public class DependencyManager {
 		}
 	}
 
-	public final boolean hasWGFlag(final Player defender) {
-		return useWG ? dependencies.get("WorldGuard").canAttack(null, defender) : false;
+	public final boolean hasWGFlag(final Player attacker, final Player defender) {
+		return useWG ? dependencies.get("WorldGuard").canAttack(attacker, defender) : false;
 	}
 
 	public final boolean canAttack(final Player attacker, final Player defender) {
