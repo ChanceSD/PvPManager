@@ -217,12 +217,12 @@ public class Messages {
 		return commandDeniedIncombat;
 	}
 
-	public static String getAttackDeniedYou() {
+	public static String pvpDisabled() {
 		return attackDeniedYou;
 	}
 
-	public static String getAttackDeniedOther() {
-		return attackDeniedOther;
+	public static String pvpDisabledOther(String name) {
+		return attackDeniedOther.replace("%p", name);
 	}
 
 	public static String getTaggedAttacker() {
@@ -249,12 +249,12 @@ public class Messages {
 		return pvplogBroadcast;
 	}
 
-	public static String getNewbieProtectionOnHit() {
+	public static String newbieBlocked() {
 		return newbieProtectionOnHit;
 	}
 
-	public static String getNewbieProtectionAtacker() {
-		return newbieProtectionAtacker;
+	public static String newbieBlockedOther(String name) {
+		return newbieProtectionAtacker.replace("%p", name);
 	}
 
 	public static String getPvptoggleOnBroadcast() {

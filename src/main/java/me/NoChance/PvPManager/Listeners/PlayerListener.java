@@ -155,7 +155,7 @@ public class PlayerListener implements Listener {
 					if (target == null)
 						continue;
 					if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
-						pvplayer.message(Messages.getAttackDeniedOther().replace("%p", target.getName()));
+						pvplayer.message(Messages.pvpDisabledOther(target.getName()));
 						e.setCancelled(true);
 						return;
 					}

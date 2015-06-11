@@ -97,7 +97,6 @@ public class DamageListenerTest {
 		DependencyManager dm = PowerMockito.spy(plugin.getDependencyManager());
 		Whitebox.setInternalState(ph, "dependencyManager", dm);
 		Mockito.doReturn(true).when(dm).hasWGFlag(attacker, defender);
-		assertEquals(CancelResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
 
 		ph.get(attacker).setPvP(false);
 		assertEquals(CancelResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
@@ -118,7 +117,7 @@ public class DamageListenerTest {
 		createAttack(false);
 
 		assertEquals(CancelResult.NEWBIE, ph.tryCancel(attacker, defender));
-		verify(attacker, times(2)).sendMessage(Messages.getNewbieProtectionOnHit());
+		verify(attacker, times(2)).sendMessage(Messages.newbieBlocked());
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);
@@ -129,8 +128,8 @@ public class DamageListenerTest {
 		ph.get(defender).setPvP(false);
 		createAttack(false);
 
-		assertEquals(CancelResult.PVPDISABLED_OTHER, ph.tryCancel(attacker, defender));
-		verify(attacker, times(2)).sendMessage(Messages.getAttackDeniedOther().replace("%p", defender.getName()));
+		assertEquals(CancelResult.PVPDISABLED, ph.tryCancel(attacker, defender));
+		verify(attacker, times(2)).sendMessage(Messages.pvpDisabledOther(defender.getName()));
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);

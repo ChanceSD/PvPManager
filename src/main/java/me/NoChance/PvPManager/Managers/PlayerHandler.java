@@ -38,24 +38,20 @@ public class PlayerHandler {
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
-		if (attacker.hasOverride() || dependencyManager.hasWGFlag(damager, defender) || Variables.isStopBorderHopping() && canAttack(attacker, attacked))
+		if (attacker.hasOverride() || canAttack(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
 			return CancelResult.RESPAWN_PROTECTION;
-		if (attacked.isNewbie())
-			return CancelResult.NEWBIE_OTHER;
-		if (attacker.isNewbie())
-			return CancelResult.NEWBIE;
-		if (!attacked.hasPvPEnabled())
-			return CancelResult.PVPDISABLED_OTHER;
-		if (!attacker.hasPvPEnabled())
-			return CancelResult.PVPDISABLED;
+		if (attacked.isNewbie() || attacker.isNewbie())
+			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
+		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled())
+			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 
 		return CancelResult.FAIL;
 	}
 
 	private boolean canAttack(final PvPlayer attacker, final PvPlayer defender) {
-		if (attacker.isInCombat() && defender.isInCombat())
+		if (dependencyManager.hasWGFlag(attacker.getPlayer(), defender.getPlayer()) || Variables.isStopBorderHopping() && attacker.isInCombat() && defender.isInCombat())
 			return dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
 		return false;
 	}
