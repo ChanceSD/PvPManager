@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.TeamProfile;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
@@ -18,7 +17,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class PlayerHandler {
 
-	private final HashMap<String, PvPlayer> players = new HashMap<>();
+	private final HashMap<UUID, PvPlayer> players = new HashMap<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
@@ -29,7 +28,7 @@ public class PlayerHandler {
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
 		if (Variables.isKillAbuseEnabled())
-			new CleanKillersTask(this).runTaskTimer(plugin, 1200, Variables.getKillAbuseTime() * 20);
+			new CleanKillersTask(this).runTaskTimer(plugin, 0, Variables.getKillAbuseTime() * 20);
 
 		addOnlinePlayers();
 		tagTask.runTaskTimerAsynchronously(plugin, 20, 20);
@@ -38,7 +37,7 @@ public class PlayerHandler {
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
-		if (attacker.hasOverride() || Variables.isStopBorderHopping() && canAttack(attacker, attacked))
+		if (attacker.hasOverride() || Variables.isStopBorderHopping() && canAttackHooks(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
 			return CancelResult.RESPAWN_PROTECTION;
@@ -61,12 +60,12 @@ public class PlayerHandler {
 	 *
 	 * @return true if the attack didn't get blocked or if it got override, otherwise false
 	 */
-	public boolean canAttack(final Player attacker, final Player defender) {
+	public final boolean canAttack(final Player attacker, final Player defender) {
 		CancelResult cr = tryCancel(attacker, defender);
 		return cr.equals(CancelResult.FAIL) || cr.equals(CancelResult.FAIL_OVERRIDE);
 	}
 
-	private boolean canAttack(final PvPlayer attacker, final PvPlayer defender) {
+	private boolean canAttackHooks(final PvPlayer attacker, final PvPlayer defender) {
 		if (attacker.isInCombat() && defender.isInCombat())
 			return dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
 		return false;
@@ -79,17 +78,15 @@ public class PlayerHandler {
 	}
 
 	public final PvPlayer get(final Player player) {
-		final String name = player.getName();
-		return players.containsKey(name) ? players.get(name) : add(player);
+		final UUID uuid = player.getUniqueId();
+		return players.containsKey(uuid) ? players.get(uuid) : add(player);
 	}
 
 	private PvPlayer add(final Player player) {
 		if (plugin.getServer().getPlayer(player.getUniqueId()) == null)
 			return null;
 		final PvPlayer pvPlayer = new PvPlayer(player, plugin);
-		players.put(player.getName(), pvPlayer);
-		if ((Variables.isUseNameTag() || Variables.isToggleNametagsEnabled()) && players.size() == 1)
-			TeamProfile.setupTeams();
+		players.put(player.getUniqueId(), pvPlayer);
 		pvPlayer.loadPvPState();
 		return pvPlayer;
 	}
@@ -108,7 +105,7 @@ public class PlayerHandler {
 			@Override
 			public void run() {
 				if (!player.isOnline()) {
-					players.remove(player.getName());
+					players.remove(player.getUUID());
 				}
 			}
 		}.runTaskLater(plugin, 1200);
@@ -145,7 +142,7 @@ public class PlayerHandler {
 			player.applyFine();
 	}
 
-	public final HashMap<String, PvPlayer> getPlayers() {
+	public final HashMap<UUID, PvPlayer> getPlayers() {
 		return players;
 	}
 
