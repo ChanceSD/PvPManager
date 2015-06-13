@@ -10,7 +10,7 @@ public enum CancelResult {
 		return isAttacker;
 	}
 
-	public CancelResult setAttackerCaused(boolean attacker) {
+	public CancelResult setAttackerCaused(final boolean attacker) {
 		isAttacker = attacker;
 		return this;
 	}

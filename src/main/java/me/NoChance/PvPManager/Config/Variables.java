@@ -130,7 +130,7 @@ public final class Variables {
 		newbieGodMode = getBoolean("Newbie Protection.Protect From Everything", false);
 		commandsWhitelist = getBoolean("In Combat.Stop Commands.Whitelist", true);
 		blockPlaceBlocks = getBoolean("In Combat.Block Place Blocks", false);
-		dropMode = DropMode.valueOf(getString("Player Drops.Mode", "ALWAYS"));
+		dropMode = DropMode.valueOf(getString("Player Drops.Mode", "ALWAYS").toUpperCase());
 		updateLocation = getString("Update Check.Update Location", "Spigot");
 	}
 
