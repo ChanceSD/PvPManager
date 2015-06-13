@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 public class PvPlayer extends EcoPlayer {
 
 	private WeakReference<Player> player;
+	private final UUID uuid;
 	private boolean newbie;
 	private boolean tagged;
 	private boolean pvpState;
@@ -31,6 +32,7 @@ public class PvPlayer extends EcoPlayer {
 	public PvPlayer(final Player player, final PvPManager plugin) {
 		super(plugin.getDependencyManager().getEconomy());
 		this.player = new WeakReference<>(player);
+		this.uuid = player.getUniqueId();
 		this.plugin = plugin;
 		this.newbieTask = new NewbieTask(this);
 		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled())
@@ -44,7 +46,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final UUID getUUID() {
-		return getPlayer().getUniqueId();
+		return uuid;
 	}
 
 	@Override
