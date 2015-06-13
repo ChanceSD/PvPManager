@@ -129,9 +129,11 @@ Newbie Protection:
 Default PvP: true
 
 # Should PvPManager be allowed to check for updates and tell you about them
+# Update Location - Check and download from Spigot or from Bukkit website
 # Auto Update - After checking should we download it automatically for you?
 Update Check:
   Enabled: true
+  Update Location: Spigot
   Auto Update: true
 
 # In these worlds PvPManager will not have any effect

@@ -12,14 +12,17 @@ import me.NoChance.PvPManager.Config.LogFile;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Lib.CustomMetrics;
-import me.NoChance.PvPManager.Lib.Updater;
-import me.NoChance.PvPManager.Lib.Updater.UpdateResult;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Listeners.WGListener;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Updater.BukkitUpdater;
+import me.NoChance.PvPManager.Updater.SpigotUpdater;
+import me.NoChance.PvPManager.Updater.Updater;
+import me.NoChance.PvPManager.Updater.Updater.UpdateResult;
+import me.NoChance.PvPManager.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Utils.Log;
 
 import org.bukkit.event.Listener;
@@ -30,6 +33,7 @@ public final class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
 	private PlayerHandler playerHandler;
+	private Updater updater;
 	private LogFile log;
 	private DependencyManager dependencyManager;
 
@@ -53,7 +57,7 @@ public final class PvPManager extends JavaPlugin {
 				public void run() {
 					checkForUpdates();
 				}
-			}.runTaskTimerAsynchronously(this, 0, 360000);
+			}.runTaskTimer(this, 0, 360000);
 		}
 	}
 
@@ -88,12 +92,16 @@ public final class PvPManager extends JavaPlugin {
 
 	private void checkForUpdates() {
 		Log.info("Checking for updates...");
-		final Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+		if (Variables.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
+			updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
+		} else
+			updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
 			Log.info("Update Available: " + Messages.getNewversion());
 			if (Variables.isAutoUpdate()) {
 				downloadUpdate();
+				Log.info("Version Downloaded To Your Update Folder");
 				return;
 			}
 			Variables.setUpdate(true);
@@ -103,8 +111,7 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	public boolean downloadUpdate() {
-		final Updater updater = new Updater(this, 63773, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, false);
-		return updater.getResult() == UpdateResult.SUCCESS;
+		return updater.downloadFile();
 	}
 
 	public void registerListener(final Listener listener) {
