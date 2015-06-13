@@ -14,7 +14,6 @@ import java.util.UUID;
 
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Listeners.EntityListener;
-import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -30,10 +29,8 @@ import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.reflect.Whitebox;
 
 public class DamageListenerTest {
 
@@ -90,25 +87,6 @@ public class DamageListenerTest {
 		damageListener.onPlayerDamage(projMockEvent);
 		damageListener.onPlayerDamageOverride(projMockEvent);
 		damageListener.onPlayerDamageMonitor(projMockEvent);
-	}
-
-	@Test
-	public final void worldGuardInteractions() {
-		DependencyManager dm = PowerMockito.spy(plugin.getDependencyManager());
-		Whitebox.setInternalState(ph, "dependencyManager", dm);
-		Mockito.doReturn(true).when(dm).hasWGFlag(attacker, defender);
-
-		ph.get(attacker).setPvP(false);
-		assertEquals(CancelResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
-
-		ph.get(defender).setPvP(false);
-		assertEquals(CancelResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
-
-		ph.get(attacker).setNewbie(true);
-		assertEquals(CancelResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
-
-		ph.get(defender).setNewbie(true);
-		assertEquals(CancelResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
 	}
 
 	@Test

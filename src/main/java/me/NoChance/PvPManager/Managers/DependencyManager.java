@@ -8,7 +8,6 @@ import me.NoChance.PvPManager.PvPlugin;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Dependencies.Factions;
 import me.NoChance.PvPManager.Dependencies.FactionsUUID;
-import me.NoChance.PvPManager.Dependencies.WorldGuard;
 import me.NoChance.PvPManager.Utils.Log;
 import net.milkbowl.vault.economy.Economy;
 
@@ -16,8 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class DependencyManager {
 
@@ -55,14 +52,8 @@ public class DependencyManager {
 
 	private void checkForWorldguard() {
 		if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-			WorldGuardPlugin wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
-			if (wg.getDescription().getVersion().startsWith("6")) {
-				useWG = true;
-				dependencies.put("WorldGuard", new WorldGuard(wg));
-				Log.info("WorldGuard Found! Enabling WorldGuard Support");
-			} else {
-				Log.info("WorldGuard Found But Not Supported, Update Your WorldGuard Version!");
-			}
+			useWG = true;
+			Log.info("WorldGuard Found! Enabling WorldGuard Support");
 		}
 	}
 
@@ -87,10 +78,6 @@ public class DependencyManager {
 		} catch (final NumberFormatException e) {
 			Log.warning("Couldn't read Factions version, maybe it's yet another fork?");
 		}
-	}
-
-	public final boolean hasWGFlag(final Player attacker, final Player defender) {
-		return useWG ? dependencies.get("WorldGuard").canAttack(attacker, defender) : false;
 	}
 
 	public final boolean canAttack(final Player attacker, final Player defender) {
