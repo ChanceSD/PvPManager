@@ -16,18 +16,18 @@ public class SpigotUpdater extends Updater {
 
 	public SpigotUpdater(final Plugin plugin, final UpdateType type) {
 		super(plugin, type);
-		this.thread.start();
+		this.getThread().start();
 	}
 
 	@Override
-	public void runUpdater() {
+	public final void runUpdater() {
 		user = new UserAgent();
 		try {
 			user.visit("http://www.spigotmc.org/resources/pvpmanager.845/history");
 			Element versionEntry = user.doc.findFirst("<td class=version>");
 			if (versionCheck(versionEntry.innerHTML())) {
-				result = UpdateResult.UPDATE_AVAILABLE;
-				if (type == UpdateType.VERSION_CHECK)
+				setResult(UpdateResult.UPDATE_AVAILABLE);
+				if (getType() == UpdateType.VERSION_CHECK)
 					return;
 				downloadFile();
 			}
@@ -37,13 +37,13 @@ public class SpigotUpdater extends Updater {
 	}
 
 	@Override
-	public boolean downloadFile() {
+	public final boolean downloadFile() {
 		try {
 			Element download = user.doc.findFirst("<td class=dataOptions.download>");
 			HandlerForBinary handlerForBinary = new HandlerForBinary();
 			user.setHandler("application/octet-stream", handlerForBinary);
 			user.visit(download.getElement(0).getAt("href"));
-			Files.write(handlerForBinary.getContent(), file);
+			Files.write(handlerForBinary.getContent(), getFile());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -52,8 +52,8 @@ public class SpigotUpdater extends Updater {
 	}
 
 	@Override
-	protected boolean versionCheck(final String title) {
-		final String version = this.plugin.getDescription().getVersion();
+	protected final boolean versionCheck(final String title) {
+		final String version = this.getPlugin().getDescription().getVersion();
 		this.versionName = title;
 		if (title.matches("^\\d.*")) {
 			String[] remote = getVersionArray(title);
@@ -66,7 +66,7 @@ public class SpigotUpdater extends Updater {
 					if (remoteNumber > localNumber)
 						return true;
 					if (remoteNumber < localNumber || title.equalsIgnoreCase(version)) {
-						this.result = UpdateResult.NO_UPDATE;
+						this.setResult(UpdateResult.NO_UPDATE);
 						return false;
 					}
 				}
@@ -74,14 +74,14 @@ public class SpigotUpdater extends Updater {
 				Log.warning("Error reading version number!");
 			}
 		} else {
-			this.result = UpdateResult.FAIL_NOVERSION;
+			this.setResult(UpdateResult.FAIL_NOVERSION);
 			return false;
 		}
 		return true;
 	}
 
 	@Override
-	public String getLatestName() {
+	public final String getLatestName() {
 		this.waitForThread();
 		return versionName;
 	}

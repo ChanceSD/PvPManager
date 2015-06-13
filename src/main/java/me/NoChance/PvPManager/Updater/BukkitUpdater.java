@@ -42,26 +42,26 @@ public class BukkitUpdater extends Updater {
 			this.url = new URL(HOST + QUERY + id);
 		} catch (final MalformedURLException e) {
 			Log.severe("The project ID provided for updating, " + id + " is invalid.");
-			this.result = UpdateResult.FAIL_BADID;
+			this.setResult(UpdateResult.FAIL_BADID);
 			e.printStackTrace();
 		}
-		this.thread.start();
+		this.getThread().start();
 	}
 
 	@Override
-	protected void runUpdater() {
+	protected final void runUpdater() {
 		if (this.url != null) {
 			if (this.read()) {
 				if (this.versionCheck(this.versionName)) {
-					if (this.versionLink != null && this.type == UpdateType.DOWNLOAD) {
+					if (this.versionLink != null && this.getType() == UpdateType.DOWNLOAD) {
 						try {
 							this.downloadFile();
 						} catch (Exception e) {
 							Log.warning("The auto-updater tried to download a new update, but was unsuccessful.");
-							this.result = UpdateResult.FAIL_DOWNLOAD;
+							this.setResult(UpdateResult.FAIL_DOWNLOAD);
 						}
 					} else {
-						this.result = UpdateResult.UPDATE_AVAILABLE;
+						this.setResult(UpdateResult.UPDATE_AVAILABLE);
 					}
 				}
 			}
@@ -69,7 +69,7 @@ public class BukkitUpdater extends Updater {
 	}
 
 	@Override
-	public String getLatestName() {
+	public final String getLatestName() {
 		this.waitForThread();
 		return this.versionName;
 	}
@@ -90,7 +90,7 @@ public class BukkitUpdater extends Updater {
 	}
 
 	@Override
-	public boolean downloadFile() {
+	public final boolean downloadFile() {
 		URL url1;
 		try {
 			url1 = new URL(this.versionLink);
@@ -98,7 +98,7 @@ public class BukkitUpdater extends Updater {
 			e1.printStackTrace();
 			return false;
 		}
-		try (FileOutputStream fout = new FileOutputStream(file); BufferedInputStream in = new BufferedInputStream(url1.openStream())) {
+		try (FileOutputStream fout = new FileOutputStream(getFile()); BufferedInputStream in = new BufferedInputStream(url1.openStream())) {
 			final byte[] data = new byte[BYTE_SIZE];
 			int count;
 			while ((count = in.read(data, 0, BYTE_SIZE)) != -1) {
@@ -112,8 +112,8 @@ public class BukkitUpdater extends Updater {
 	}
 
 	@Override
-	protected boolean versionCheck(final String title) {
-		final String version = this.plugin.getDescription().getVersion();
+	protected final boolean versionCheck(final String title) {
+		final String version = this.getPlugin().getDescription().getVersion();
 		if (title.split(" v").length == 2) {
 			final String remoteVersion = title.split(" v")[1].split(" ")[0];
 			String[] remote = getVersionArray(remoteVersion);
@@ -126,7 +126,7 @@ public class BukkitUpdater extends Updater {
 					if (remoteNumber > localNumber)
 						return true;
 					if (remoteNumber < localNumber || remoteVersion.equalsIgnoreCase(version)) {
-						this.result = UpdateResult.NO_UPDATE;
+						this.setResult(UpdateResult.NO_UPDATE);
 						return false;
 					}
 				}
@@ -134,7 +134,7 @@ public class BukkitUpdater extends Updater {
 				Log.warning("Error reading version number!");
 			}
 		} else {
-			this.result = UpdateResult.FAIL_NOVERSION;
+			this.setResult(UpdateResult.FAIL_NOVERSION);
 			return false;
 		}
 		return true;
@@ -152,7 +152,7 @@ public class BukkitUpdater extends Updater {
 			final JSONArray array = (JSONArray) JSONValue.parse(response);
 			if (array.size() == 0) {
 				Log.warning("The updater could not find any files for the project id " + this.id);
-				this.result = UpdateResult.FAIL_BADID;
+				this.setResult(UpdateResult.FAIL_BADID);
 				return false;
 			}
 			this.versionName = (String) ((JSONObject) array.get(array.size() - 1)).get(TITLE_VALUE);
@@ -163,7 +163,7 @@ public class BukkitUpdater extends Updater {
 		} catch (final IOException e) {
 			Log.warning("The updater could not contact dev.bukkit.org for updating.");
 			Log.warning("If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
-			this.result = UpdateResult.FAIL_DBO;
+			this.setResult(UpdateResult.FAIL_DBO);
 			e.printStackTrace();
 			return false;
 		} finally {
