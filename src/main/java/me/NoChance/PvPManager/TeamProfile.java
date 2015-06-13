@@ -3,28 +3,26 @@ package me.NoChance.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-@SuppressWarnings("deprecation")
 public class TeamProfile {
 
-	private static Team inCombat;
-	private static Team pvpOn;
-	private static Team pvpOff;
+	private Team inCombat;
+	private Team pvpOn;
+	private Team pvpOff;
 	private Team previousTeam;
 	private final PvPlayer pvPlayer;
-	private static Scoreboard scoreboard;
+	private final Scoreboard scoreboard;
 
 	public TeamProfile(final PvPlayer p) {
 		this.pvPlayer = p;
-		if (scoreboard == null)
-			scoreboard = p.getPlayer().getScoreboard();
-		previousTeam = scoreboard.getPlayerTeam(p.getPlayer());
+		scoreboard = p.getPlayer().getScoreboard();
+		setupTeams();
+		previousTeam = scoreboard.getEntryTeam(p.getName());
 	}
 
-	public static void setupTeams() {
+	public final void setupTeams() {
 		if (scoreboard.getTeam("InCombat") != null)
 			inCombat = scoreboard.getTeam("InCombat");
 		else
@@ -47,21 +45,20 @@ public class TeamProfile {
 	}
 
 	public final void setInCombat() {
-		final Player player = pvPlayer.getPlayer();
 		if (pvpOn != null || pvpOff != null)
-			previousTeam = scoreboard.getPlayerTeam(player);
-		inCombat.addPlayer(player);
+			previousTeam = scoreboard.getEntryTeam(pvPlayer.getName());
+		inCombat.addEntry(pvPlayer.getName());
 	}
 
 	public final void restoreTeam() {
 		try {
 			if (previousTeam != null && scoreboard.getTeam(previousTeam.getName()) != null)
-				previousTeam.addPlayer(pvPlayer.getPlayer());
+				previousTeam.addEntry(pvPlayer.getName());
 			else
-				inCombat.removePlayer(pvPlayer.getPlayer());
+				inCombat.removeEntry(pvPlayer.getName());
 		} catch (final IllegalStateException e) {
 			System.out.println("[PvPManager] Error restoring nametag for: " + pvPlayer.getName());
-			inCombat.removePlayer(pvPlayer.getPlayer());
+			inCombat.removeEntry(pvPlayer.getName());
 		}
 	}
 
@@ -70,12 +67,12 @@ public class TeamProfile {
 			if (pvpOn == null)
 				restoreTeam();
 			else
-				pvpOn.addPlayer(pvPlayer.getPlayer());
+				pvpOn.addEntry(pvPlayer.getName());
 		} else {
 			if (pvpOff == null)
 				restoreTeam();
 			else
-				pvpOff.addPlayer(pvPlayer.getPlayer());
+				pvpOff.addEntry(pvPlayer.getName());
 		}
 	}
 }
