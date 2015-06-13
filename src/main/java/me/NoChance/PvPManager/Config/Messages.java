@@ -51,6 +51,7 @@ public class Messages {
 	private static String currentVersion;
 	private static String newVersion;
 	private static String moneyReward;
+	private static String moneyPenalty;
 	private static Locale locale;
 
 	public static void setup(final PvPManager plugin) {
@@ -135,6 +136,7 @@ public class Messages {
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
 		errorPermission = getString("Error_Permission");
 		moneyReward = getString("Money_Reward");
+		moneyPenalty = getString("Money_Penalty");
 	}
 
 	private static void checkChanges() {
@@ -221,7 +223,7 @@ public class Messages {
 		return attackDeniedYou;
 	}
 
-	public static String pvpDisabledOther(String name) {
+	public static String pvpDisabledOther(final String name) {
 		return attackDeniedOther.replace("%p", name);
 	}
 
@@ -253,7 +255,7 @@ public class Messages {
 		return newbieProtectionOnHit;
 	}
 
-	public static String newbieBlockedOther(String name) {
+	public static String newbieBlockedOther(final String name) {
 		return newbieProtectionAtacker.replace("%p", name);
 	}
 
@@ -283,6 +285,10 @@ public class Messages {
 
 	public static String getMoneyReward() {
 		return moneyReward;
+	}
+
+	public static String getMoneyPenalty() {
+		return moneyPenalty;
 	}
 
 	public final Locale getLocale() {

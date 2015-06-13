@@ -39,7 +39,7 @@ public abstract class EcoPlayer {
 
 	public final void applyPenalty() {
 		withdrawMoney(Variables.getMoneyPenalty());
-		message("§cYou lost " + Variables.getMoneyPenalty() + " for getting killed");
+		message(Messages.getMoneyPenalty().replace("%m", Double.toString(Variables.getMoneyPenalty())));
 	}
 
 	public final void giveReward(final Player victim) {
