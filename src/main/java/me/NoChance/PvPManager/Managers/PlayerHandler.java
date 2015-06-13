@@ -38,7 +38,7 @@ public class PlayerHandler {
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
-		if (attacker.hasOverride() || canAttack(attacker, attacked))
+		if (attacker.hasOverride() || Variables.isStopBorderHopping() && canAttack(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
 			return CancelResult.RESPAWN_PROTECTION;
@@ -56,7 +56,7 @@ public class PlayerHandler {
 	}
 
 	private boolean canAttack(final PvPlayer attacker, final PvPlayer defender) {
-		if (dependencyManager.hasWGFlag(attacker.getPlayer(), defender.getPlayer()) || Variables.isStopBorderHopping() && attacker.isInCombat() && defender.isInCombat())
+		if (attacker.isInCombat() && defender.isInCombat())
 			return dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
 		return false;
 	}
