@@ -50,8 +50,19 @@ public class PlayerHandler {
 		return CancelResult.FAIL;
 	}
 
-	public boolean canAttack(final Player damager, final Player defender) {
-		CancelResult cr = tryCancel(damager, defender);
+	/**
+	 * Use this method to check PvP instead of using {@link PlayerHandler#tryCancel(Player, Player)}
+	 * This method will not be changed while the previous might change at any time.
+	 *
+	 * @param attacker
+	 *            The attacking player
+	 * @param defender
+	 *            The player being attacked
+	 *
+	 * @return true if the attack didn't get blocked or if it got override, otherwise false
+	 */
+	public boolean canAttack(final Player attacker, final Player defender) {
+		CancelResult cr = tryCancel(attacker, defender);
 		return cr.equals(CancelResult.FAIL) || cr.equals(CancelResult.FAIL_OVERRIDE);
 	}
 
