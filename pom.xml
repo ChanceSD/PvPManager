@@ -9,13 +9,40 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<pvpmanager.version>${project.version}-b${build.number}</pvpmanager.version>
-		<config.version>29</config.version>
+		<config.version>30</config.version>
 		<powermock.version>1.6.2</powermock.version>
 	</properties>
 
 	<prerequisites>
 		<maven>3.3.3</maven>
 	</prerequisites>
+
+	<repositories>
+		<repository>
+			<id>local-repo</id>
+			<url>file:///${basedir}/repo/</url>
+		</repository>
+		<repository>
+			<id>sk89q-repo</id>
+			<url>http://maven.sk89q.com/repo/</url>
+		</repository>
+		<repository>
+			<id>vault-repo</id>
+			<url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+		</repository>
+		<repository>
+			<id>disguisecraft-repo</id>
+			<url>http://build.yu8.me:8080/plugin/repository/everything/</url>
+		</repository>
+		<repository>
+			<id>libsdisguises-repo</id>
+			<url>http://repo.md-5.net/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
@@ -61,6 +88,9 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<optimize>true</optimize>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -77,31 +107,25 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<minimizeJar>true</minimizeJar>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>sk89q-repo</id>
-			<url>http://maven.sk89q.com/repo/</url>
-		</repository>
-		<repository>
-			<id>vault-repo</id>
-			<url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
-		</repository>
-		<repository>
-			<id>disguisecraft-repo</id>
-			<url>http://build.yu8.me:8080/plugin/repository/everything/</url>
-		</repository>
-		<repository>
-			<id>libsdisguises-repo</id>
-			<url>http://repo.md-5.net/content/groups/public/</url>
-		</repository>
-		<repository>
-			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -121,9 +145,13 @@
 			<groupId>com.massivecraft</groupId>
 			<artifactId>Factions</artifactId>
 			<version>2.7.5</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/repo/Factions.jar</systemPath>
 			<optional>true</optional>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jaunt</groupId>
+			<artifactId>jaunt</artifactId>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
@@ -143,22 +171,21 @@
 					<groupId>javax.persistence</groupId>
 				</exclusion>
 			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>MassiveCore</artifactId>
 			<version>7.3.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/repo/MassiveCore.jar</systemPath>
 			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>FactionsUUID</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/repo/FactionsUUID.jar</systemPath>
 			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>

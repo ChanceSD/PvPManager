@@ -69,6 +69,7 @@ public final class Variables {
 	private static boolean commandsWhitelist;
 	private static boolean blockPlaceBlocks;
 	private static DropMode dropMode;
+	private static String updateLocation;
 	private static ConfigManager cm;
 
 	private Variables() {
@@ -130,6 +131,7 @@ public final class Variables {
 		commandsWhitelist = getBoolean("In Combat.Stop Commands.Whitelist", true);
 		blockPlaceBlocks = getBoolean("In Combat.Block Place Blocks", false);
 		dropMode = DropMode.valueOf(getString("Player Drops.Mode", "ALWAYS"));
+		updateLocation = getString("Update Check.Update Location", "Spigot");
 	}
 
 	public static void helpMenu(final Player player) {
@@ -152,6 +154,10 @@ public final class Variables {
 
 	private static boolean getBoolean(final String message, final boolean defaultValue) {
 		return cm.getConfig().getBoolean(message, defaultValue);
+	}
+
+	public static String getUpdateLocation() {
+		return updateLocation;
 	}
 
 	public static boolean isInCombatEnabled() {

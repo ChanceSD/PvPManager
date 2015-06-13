@@ -86,6 +86,7 @@ public class ConfigManager {
 		this.config.set("Newbie Protection.Protect From Everything", Variables.isNewbieGodMode());
 
 		this.config.set("Update Check.Enabled", Variables.isUpdateCheck());
+		this.config.set("Update Check.Update Location", Variables.getUpdateLocation());
 		this.config.set("Update Check.Auto Update", Variables.isUpdate());
 
 		this.config.set("World Exclusions", Variables.getWorldsExcluded());
