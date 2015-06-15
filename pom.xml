@@ -42,6 +42,10 @@
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
+		<repository>
+			<id>ess-repo</id>
+			<url>http://repo.ess3.net/content/groups/essentials</url>
+		</repository>
 	</repositories>
 
 	<build>
@@ -128,6 +132,11 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>net.ess3</groupId>
+			<artifactId>Essentials</artifactId>
+			<version>2.13-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>pgDev</groupId>
 			<artifactId>DisguiseCraft</artifactId>
@@ -229,6 +238,30 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
+			<artifactId>commandbook</artifactId>
+			<version>2.5-SNAPSHOT</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>js</artifactId>
+					<groupId>rhino</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bukkit</artifactId>
+					<groupId>org.bukkit</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>truezip</artifactId>
+					<groupId>de.schlichtherle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>worldedit</artifactId>
+					<groupId>com.sk89q</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.sk89q</groupId>
 			<artifactId>worldguard</artifactId>
 			<version>6.1</version>
 			<scope>provided</scope>
@@ -240,10 +273,6 @@
 				<exclusion>
 					<artifactId>prtree</artifactId>
 					<groupId>org.khelekore</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>commandbook</artifactId>
-					<groupId>com.sk89q</groupId>
 				</exclusion>
 				<exclusion>
 					<artifactId>opencsv</artifactId>

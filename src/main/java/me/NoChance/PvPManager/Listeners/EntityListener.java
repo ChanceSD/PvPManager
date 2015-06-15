@@ -26,12 +26,22 @@ import org.bukkit.potion.PotionEffectType;
 
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 
+import com.earth2me.essentials.Essentials;
+import com.sk89q.commandbook.CommandBook;
+import com.sk89q.commandbook.GodComponent;
+
 public class EntityListener implements Listener {
 
 	private final PlayerHandler ph;
+	private GodComponent gc;
+	private Essentials ess;
 
 	public EntityListener(final PlayerHandler ph) {
 		this.ph = ph;
+		if (Bukkit.getPluginManager().isPluginEnabled("CommandBook"))
+			this.gc = (GodComponent) CommandBook.inst().getComponentManager().getComponent("god");
+		if (Bukkit.getPluginManager().isPluginEnabled("Essentials"))
+			this.ess = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -112,6 +122,10 @@ public class EntityListener implements Listener {
 			}
 			if (Variables.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY))
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
+			if (gc != null && gc.hasGodMode(attacker))
+				gc.disableGodMode(attacker);
+			if (ess != null && ess.getUser(attacker).isGodModeEnabled())
+				ess.getUser(attacker).setGodModeEnabled(false);
 		}
 		if (Variables.isInCombatEnabled()) {
 			if (Variables.isOnlyTagAttacker()) {
