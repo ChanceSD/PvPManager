@@ -44,6 +44,8 @@ Ignore No Damage Hits: false
 # write a prefix but make sure it's under 16 characters. Example - '&c[Tagged] '
 # Stop Commands - Should commands be blocked in combat(Example - To prevent teleports)
 # -> Commands - Commands allowed if whitelist mode is true or blocked if not
+# --> Command list works like permissions, 'money' will allow 'money', 'money top', etc
+# --> Whitelisting 'money top' would allow 'money top' but not 'money'
 # Punishments - When player logs out in combat (PvP log), should he be punished?
 # -> Broadcast PvPLog - Broadcast to all the players when someone PvP logs
 # -> Log To File - Log all pvp loggers to a file

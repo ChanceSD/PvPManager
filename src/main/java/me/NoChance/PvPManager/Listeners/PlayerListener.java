@@ -89,7 +89,7 @@ public class PlayerListener implements Listener {
 		}
 
 		final Player killer = player.getKiller();
-		boolean pvpDeath = killer != null ? true : false;
+		final boolean pvpDeath = killer != null ? true : false;
 		// Player died in combat, process that
 		if (pvpDeath && !killer.equals(player)) {
 			final PvPlayer pKiller = ph.get(killer);
@@ -107,7 +107,7 @@ public class PlayerListener implements Listener {
 				}
 		}
 		if (!pvPlayer.hasPvPLogged()) {
-			DropMode mode = Variables.getDropMode();
+			final DropMode mode = Variables.getDropMode();
 			switch (mode) {
 			case DROP:
 				if (!pvpDeath)
@@ -119,8 +119,8 @@ public class PlayerListener implements Listener {
 				break;
 			case TRANSFER:
 				if (pvpDeath) {
-					ItemStack[] drops = event.getDrops().toArray(new ItemStack[event.getDrops().size()]);
-					HashMap<Integer, ItemStack> returned = killer.getInventory().addItem(drops);
+					final ItemStack[] drops = event.getDrops().toArray(new ItemStack[event.getDrops().size()]);
+					final HashMap<Integer, ItemStack> returned = killer.getInventory().addItem(drops);
 					CombatUtils.fakeItemStackDrop(player, returned.values().toArray(new ItemStack[returned.values().size()]));
 					event.getDrops().clear();
 				}
@@ -212,7 +212,18 @@ public class PlayerListener implements Listener {
 	public final void onCommand(final PlayerCommandPreprocessEvent event) { // NO_UCD
 		if (Variables.isStopCommands() && Variables.isInCombatEnabled()) {
 			if (ph.get(event.getPlayer()).isInCombat()) {
-				final boolean contains = Variables.getCommandsAllowed().contains(event.getMessage().substring(1));
+				boolean contains = false;
+				final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
+				for (int i = 0; i < givenCommand.length; i++) {
+					String args = givenCommand[0];
+					for (int j = 1; j <= i; j++) {
+						args += " " + givenCommand[j];
+					}
+					if (Variables.getCommandsAllowed().contains(args)) {
+						contains = true;
+						break;
+					}
+				}
 				if (Variables.isCommandsWhitelist() ? !contains : contains) {
 					event.setCancelled(true);
 					event.getPlayer().sendMessage(Messages.getCommandDeniedIncombat());
