@@ -113,7 +113,7 @@ public final class Variables {
 		inCombatSilent = getBoolean("In Combat.Silent", false);
 		stopBorderHopping = getBoolean("Ignore Zones For Tagged", true);
 		nameTagColor = getString("In Combat.Name Tag Color", "&c");
-		useNameTag = nameTagColor.equalsIgnoreCase("none") ? false : true;
+		setUseNameTag(nameTagColor.equalsIgnoreCase("none") ? false : true);
 		locale = getString("Locale", "en").toUpperCase();
 		ignoreNoDamageHits = getBoolean("Ignore No Damage Hits", false);
 		respawnProtection = cm.getConfig().getInt("Kill Abuse.Respawn Protection", 5);
@@ -121,7 +121,7 @@ public final class Variables {
 		commandsOnKillEnabled = getBoolean("Player Kills.Commands On Kill.Enabled", false);
 		commandsOnKill = (List<String>) cm.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
 		disableInvisibility = getBoolean("Disable Invisibility", false);
-		toggleNametagsEnabled = getBoolean("PvP Toggle.NameTags.Enabled", false);
+		setToggleNametagsEnabled(getBoolean("PvP Toggle.NameTags.Enabled", false));
 		toggleColorOn = getString("PvP Toggle.NameTags.Color On", "&1");
 		toggleColorOff = getString("PvP Toggle.NameTags.Color Off", "&2");
 		logToFile = getBoolean("In Combat.Punishments.Log To File", true);
@@ -398,5 +398,13 @@ public final class Variables {
 
 	public static DropMode getDropMode() {
 		return dropMode;
+	}
+
+	public static void setUseNameTag(boolean useNameTag) {
+		Variables.useNameTag = useNameTag;
+	}
+
+	public static void setToggleNametagsEnabled(boolean toggleNametagsEnabled) {
+		Variables.toggleNametagsEnabled = toggleNametagsEnabled;
 	}
 }
