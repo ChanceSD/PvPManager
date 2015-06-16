@@ -32,3 +32,8 @@ pvpmanager.nocombat - Players/ranks are not placed in combat
 pvpmanager.nopvp - Players/ranks have PvP disabled
 
 pvpmanager.nodisable - Players/ranks don't get fly and gamemode disabled on PvP 
+
+License
+-----------
+Copyright (c) 2015 , NoChanceSD
+All rights reserved
