@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager;
 
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Utils.Log;
 
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Scoreboard;
@@ -19,7 +20,13 @@ public class TeamProfile {
 		this.pvPlayer = p;
 		scoreboard = p.getPlayer().getScoreboard();
 		setupTeams();
-		previousTeam = scoreboard.getEntryTeam(p.getName());
+		try {
+			previousTeam = scoreboard.getEntryTeam(p.getName());
+		} catch (final NoSuchMethodError e) {
+			Variables.setUseNameTag(false);
+			Variables.setToggleNametagsEnabled(false);
+			Log.severe("Colored nametags disabled. Update your Spigot version.");
+		}
 	}
 
 	public final void setupTeams() {
