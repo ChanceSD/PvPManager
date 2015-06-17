@@ -109,7 +109,7 @@ public class EntityListener implements Listener {
 			if (Variables.isDisableFly()) {
 				if (attacker.isFlying() || attacker.getAllowFlight())
 					pvpAttacker.disableFly();
-				if (defender.isFlying() || defender.getAllowFlight())
+				if (!defender.hasPermission("pvpmanager.nodisable") && (defender.isFlying() || defender.getAllowFlight()))
 					pvpDefender.disableFly();
 			}
 			if (Variables.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL))
