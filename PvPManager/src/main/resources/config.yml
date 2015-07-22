@@ -115,7 +115,7 @@ Kill Abuse:
   Time Limit: 60
   Commands on Abuse:
     - kick <player> Kill Abuse Is Not Allowed!
-  Respawn Protection: 5
+  Respawn Protection: 3
 
 # Should new players on your server be protected from PvP (If they want to PvP just use /pvp disable protection)
 # Time(minutes) - If so, for how many minutes should protection last
