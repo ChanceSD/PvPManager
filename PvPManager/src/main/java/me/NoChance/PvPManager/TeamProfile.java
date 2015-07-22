@@ -1,11 +1,12 @@
 package me.NoChance.PvPManager;
 
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Utils.Log;
-
 import org.bukkit.ChatColor;
+import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class TeamProfile {
 
@@ -32,22 +33,31 @@ public class TeamProfile {
 	public final void setupTeams() {
 		if (scoreboard.getTeam("InCombat") != null)
 			inCombat = scoreboard.getTeam("InCombat");
-		else
+		else {
 			inCombat = scoreboard.registerNewTeam("InCombat");
-		inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()));
+			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()));
+			inCombat.setNameTagVisibility(NameTagVisibility.NEVER);
+			inCombat.setCanSeeFriendlyInvisibles(false);
+		}
 		if (!Variables.getToggleColorOn().equalsIgnoreCase("none")) {
 			if (scoreboard.getTeam("PvPOn") != null)
 				pvpOn = scoreboard.getTeam("PvPOn");
-			else
+			else {
 				pvpOn = scoreboard.registerNewTeam("PvPOn");
-			pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOn()));
+				pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOn()));
+				pvpOn.setNameTagVisibility(NameTagVisibility.NEVER);
+				pvpOn.setCanSeeFriendlyInvisibles(false);
+			}
 		}
 		if (!Variables.getToggleColorOff().equalsIgnoreCase("none")) {
 			if (scoreboard.getTeam("PvPOff") != null)
 				pvpOff = scoreboard.getTeam("PvPOff");
-			else
+			else {
 				pvpOff = scoreboard.registerNewTeam("PvPOff");
-			pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
+				pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
+				pvpOff.setNameTagVisibility(NameTagVisibility.NEVER);
+				pvpOff.setCanSeeFriendlyInvisibles(false);
+			}
 		}
 	}
 
