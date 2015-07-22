@@ -1,18 +1,21 @@
 package me.NoChance.PvPManager.Updater;
 
-import me.NoChance.PvPManager.Utils.Log;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
 
 import org.bukkit.plugin.Plugin;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
-import com.google.common.io.Files;
-import com.jaunt.Element;
-import com.jaunt.UserAgent;
-import com.jaunt.util.HandlerForBinary;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class SpigotUpdater extends Updater {
 
-	private UserAgent user;
 	private String versionName;
+	private Document doc;
 
 	public SpigotUpdater(final Plugin plugin, final UpdateType type) {
 		super(plugin, type);
@@ -21,17 +24,16 @@ public class SpigotUpdater extends Updater {
 
 	@Override
 	public final void runUpdater() {
-		user = new UserAgent();
 		try {
-			user.visit("http://www.spigotmc.org/resources/pvpmanager.845/history");
-			Element versionEntry = user.doc.findFirst("<td class=version>");
-			if (versionCheck(versionEntry.innerHTML())) {
+			doc = Jsoup.connect("http://www.spigotmc.org/resources/pvpmanager.845/history").userAgent("Mozilla").get();
+			final Element versionEntry = doc.select("td.version").first();
+			if (versionCheck(versionEntry.text())) {
 				setResult(UpdateResult.UPDATE_AVAILABLE);
 				if (getType() == UpdateType.VERSION_CHECK)
 					return;
 				downloadFile();
 			}
-		} catch (Exception e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -39,14 +41,13 @@ public class SpigotUpdater extends Updater {
 	@Override
 	public final boolean downloadFile() {
 		try {
-			Element download = user.doc.findFirst("<td class=dataOptions.download>");
-			HandlerForBinary handlerForBinary = new HandlerForBinary();
-			user.setHandler("application/octet-stream", handlerForBinary);
-			user.visit(download.getElement(0).getAt("href"));
-			Files.write(handlerForBinary.getContent(), getFile());
-		} catch (Exception e) {
+			final Element download = doc.select("td.dataOptions.download").first();
+			final String link = download.childNode(0).attr("abs:href");
+			final URLConnection url = new URL(link).openConnection();
+			url.setRequestProperty("User-Agent", "Mozilla");
+			Files.copy(url.getInputStream(), getFile().toPath());
+		} catch (final IOException e) {
 			e.printStackTrace();
-			return false;
 		}
 		return true;
 	}
@@ -56,8 +57,8 @@ public class SpigotUpdater extends Updater {
 		final String version = this.getPlugin().getDescription().getVersion();
 		this.versionName = title;
 		if (title.matches("^\\d.*")) {
-			String[] remote = getVersionArray(title);
-			String[] local = getVersionArray(version);
+			final String[] remote = getVersionArray(title);
+			final String[] local = getVersionArray(version);
 			final int length = Math.max(local.length, remote.length);
 			try {
 				for (int i = 0; i < length; i++) {
@@ -70,7 +71,7 @@ public class SpigotUpdater extends Updater {
 						return false;
 					}
 				}
-			} catch (NumberFormatException ex) {
+			} catch (final NumberFormatException ex) {
 				Log.warning("Error reading version number!");
 			}
 		} else {
