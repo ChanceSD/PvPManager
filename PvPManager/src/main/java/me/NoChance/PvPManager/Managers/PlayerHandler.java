@@ -83,14 +83,17 @@ public class PlayerHandler {
 	}
 
 	private PvPlayer add(final Player player) {
-		if (plugin.getServer().getPlayer(player.getUniqueId()) == null)
-			return null;
 		final PvPlayer pvPlayer = new PvPlayer(player, plugin);
-		players.put(player.getUniqueId(), pvPlayer);
 		pvPlayer.loadPvPState();
-		return pvPlayer;
+		return save(pvPlayer);
 	}
 
+	private PvPlayer save(final PvPlayer p) {
+		if (plugin.getServer().getPlayer(p.getUUID()) != null) {
+			players.put(p.getUUID(), p);
+                }
+		return p;
+	}
 	public final void untag(final PvPlayer p) {
 		tagTask.getTagged().remove(p);
 		p.unTag();
