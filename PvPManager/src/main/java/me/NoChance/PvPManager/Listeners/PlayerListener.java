@@ -2,13 +2,6 @@ package me.NoChance.PvPManager.Listeners;
 
 import java.util.HashMap;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Config.Variables.DropMode;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Utils.CombatUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,6 +20,13 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
+
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Variables.DropMode;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PlayerListener implements Listener {
 
@@ -61,13 +61,11 @@ public class PlayerListener implements Listener {
 
 	@SuppressWarnings("null")
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public final void onPlayerDeath(final PlayerDeathEvent event) { // NO_UCD (unused code)
+	public final void onPlayerDeath(final PlayerDeathEvent event) {
 		final Player player = event.getEntity();
 		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()))
 			return;
 		final PvPlayer pvPlayer = ph.get(player);
-		if (pvPlayer == null)
-			return;
 		if (pvPlayer.isInCombat())
 			ph.untag(pvPlayer);
 
@@ -139,8 +137,8 @@ public class PlayerListener implements Listener {
 			if (Variables.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
 				if (player.getHealth() == player.getMaxHealth())
 					return;
-				player.setHealth(player.getHealth() + Variables.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth()
-						+ Variables.getSoupHealth());
+				player.setHealth(player.getHealth() + Variables.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth()
+						: player.getHealth() + Variables.getSoupHealth());
 				i.setType(Material.BOWL);
 				return;
 			}
@@ -196,15 +194,13 @@ public class PlayerListener implements Listener {
 	// }
 
 	@EventHandler
-	public final void onPlayerTeleport(final PlayerTeleportEvent event) { // NO_UCD
+	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
 		final PvPlayer player = ph.get(event.getPlayer());
 		if (player != null && Variables.isInCombatEnabled() && player.isInCombat()) {
-			if (event.getCause().equals(TeleportCause.ENDER_PEARL)) {
-				if (!Variables.isBlockEnderPearl())
-					return;
+			if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Variables.isBlockEnderPearl()) {
+				event.setCancelled(true);
 				player.message(Messages.getEnderpearlBlockedIncombat());
 			}
-			event.setCancelled(true);
 		}
 	}
 
