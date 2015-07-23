@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager;
 
 import org.bukkit.ChatColor;
-import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -36,7 +35,6 @@ public class TeamProfile {
 		else {
 			inCombat = scoreboard.registerNewTeam("InCombat");
 			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()));
-			inCombat.setNameTagVisibility(NameTagVisibility.NEVER);
 			inCombat.setCanSeeFriendlyInvisibles(false);
 		}
 		if (!Variables.getToggleColorOn().equalsIgnoreCase("none")) {
@@ -45,7 +43,6 @@ public class TeamProfile {
 			else {
 				pvpOn = scoreboard.registerNewTeam("PvPOn");
 				pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOn()));
-				pvpOn.setNameTagVisibility(NameTagVisibility.NEVER);
 				pvpOn.setCanSeeFriendlyInvisibles(false);
 			}
 		}
@@ -55,7 +52,6 @@ public class TeamProfile {
 			else {
 				pvpOff = scoreboard.registerNewTeam("PvPOff");
 				pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
-				pvpOff.setNameTagVisibility(NameTagVisibility.NEVER);
 				pvpOff.setCanSeeFriendlyInvisibles(false);
 			}
 		}
