@@ -4,13 +4,13 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public class PvPlayer extends EcoPlayer {
 
@@ -72,7 +72,7 @@ public class PvPlayer extends EcoPlayer {
 	public final boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = (toggleTime + Variables.getToggleCooldown() * 1000 - System.currentTimeMillis()) / 1000;
-			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft)));
+			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft / 60)));
 			return false;
 		}
 		return true;
