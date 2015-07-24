@@ -47,7 +47,7 @@ Ignore No Damage Hits: false
 # --> Command list works like permissions, 'money' will allow 'money', 'money top', etc
 # --> Whitelisting 'money top' would allow 'money top' but not 'money'
 # Punishments - When player logs out in combat (PvP log), should he be punished?
-# -> Broadcast PvPLog - Broadcast to all the players when someone PvP logs
+# -> Commands On PvPLog - Commands to execute on PvP log, %p for player name
 # -> Log To File - Log all pvp loggers to a file
 # -> Fine - Take money from player when he PvP logs (needs Vault)
 In Combat:
@@ -66,8 +66,9 @@ In Combat:
       - tag
   Punishments:
     Enabled: true
-    Broadcast PvPLog: true
     Log To File: true
+    Commands On PvPLog:
+      - say &6[&8PvPManager&6] %p tried to escape combat and got punished!
     Kill on Logout:
       Enabled: true
       Drops:

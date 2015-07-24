@@ -29,7 +29,6 @@ public final class Variables {
 	private static boolean autoUpdate;
 	private static boolean newbieProtectionEnabled;
 	private static int newbieProtectionTime;
-	private static boolean broadcastPvpLog;
 	private static boolean fineEnabled;
 	private static double fineAmount;
 	private static boolean pvpBlood;
@@ -71,6 +70,7 @@ public final class Variables {
 	private static DropMode dropMode;
 	private static String updateLocation;
 	private static ConfigManager cm;
+	private static List<String> commandsOnPvPLog = Arrays.asList("say &6[&8PvPManager&6] %p tried to escape combat and got punished!");
 
 	private Variables() {
 	}
@@ -94,7 +94,6 @@ public final class Variables {
 		autoUpdate = getBoolean("Update Check.Auto Update", true);
 		newbieProtectionEnabled = getBoolean("Newbie Protection.Enabled", true);
 		newbieProtectionTime = cm.getConfig().getInt("Newbie Protection.Time(minutes)", 5);
-		broadcastPvpLog = getBoolean("In Combat.Punishments.Broadcast PvPLog", true);
 		setFineEnabled(getBoolean("In Combat.Punishments.Fine.Enabled", false));
 		fineAmount = cm.getConfig().getDouble("In Combat.Punishments.Fine.Amount", 10.00);
 		pvpBlood = getBoolean("PvP Blood", true);
@@ -132,6 +131,7 @@ public final class Variables {
 		blockPlaceBlocks = getBoolean("In Combat.Block Place Blocks", false);
 		dropMode = DropMode.valueOf(getString("Player Drops.Mode", "ALWAYS").toUpperCase());
 		updateLocation = getString("Update Check.Update Location", "Spigot");
+		commandsOnPvPLog = (List<String>) cm.getConfig().getList("In Combat.Punishments.Commands On PvPLog", commandsOnPvPLog);
 	}
 
 	public static void helpMenu(final Player player) {
@@ -218,10 +218,6 @@ public final class Variables {
 
 	public static int getNewbieProtectionTime() {
 		return newbieProtectionTime;
-	}
-
-	public static boolean isBroadcastPvpLog() {
-		return broadcastPvpLog;
 	}
 
 	public static boolean isFineEnabled() {
@@ -406,5 +402,9 @@ public final class Variables {
 
 	public static void setToggleNametagsEnabled(final boolean toggleNametagsEnabled) {
 		Variables.toggleNametagsEnabled = toggleNametagsEnabled;
+	}
+
+	public static List<String> getCommandsOnPvPLog() {
+		return commandsOnPvPLog;
 	}
 }

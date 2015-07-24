@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Version;
 import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Utils.Log;
-
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ConfigManager {
 
@@ -54,7 +54,7 @@ public class ConfigManager {
 		this.config.set("In Combat.Stop Commands.Whitelist", Variables.isCommandsWhitelist());
 		this.config.set("In Combat.Stop Commands.Commands", Variables.getCommandsAllowed());
 		this.config.set("In Combat.Punishments.Enabled", Variables.isPunishmentsEnabled());
-		this.config.set("In Combat.Punishments.Broadcast PvPLog", Variables.isBroadcastPvpLog());
+		this.config.set("In Combat.Punishments.Commands On PvPLog", Variables.getCommandsOnPvPLog());
 		this.config.set("In Combat.Punishments.Log To File", Variables.isLogToFile());
 		this.config.set("In Combat.Punishments.Kill on Logout.Enabled", Variables.isKillOnLogout());
 		this.config.set("In Combat.Punishments.Kill on Logout.Drops.Inventory", Variables.isDropInventory());
