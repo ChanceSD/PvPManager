@@ -217,7 +217,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void loadPvPState() {
-		if (getPlayer().hasPermission("pvpmanager.nopvp"))
+		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp"))
 			this.pvpState = false;
 		else if (!getPlayer().hasPlayedBefore()) {
 			this.pvpState = Variables.isDefaultPvp();
