@@ -2,12 +2,17 @@ package me.NoChance.PvPManager;
 
 import java.io.File;
 
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import me.NoChance.PvPManager.Commands.PM;
 import me.NoChance.PvPManager.Commands.PvP;
 import me.NoChance.PvPManager.Commands.PvPInfo;
 import me.NoChance.PvPManager.Commands.PvPList;
 import me.NoChance.PvPManager.Commands.PvPOverride;
 import me.NoChance.PvPManager.Commands.PvPStatus;
+import me.NoChance.PvPManager.Commands.Tag;
 import me.NoChance.PvPManager.Config.LogFile;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
@@ -24,10 +29,6 @@ import me.NoChance.PvPManager.Updater.Updater;
 import me.NoChance.PvPManager.Updater.Updater.UpdateResult;
 import me.NoChance.PvPManager.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Utils.Log;
-
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public final class PvPManager extends JavaPlugin {
 
@@ -50,6 +51,7 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvpinfo").setExecutor(new PvPInfo(playerHandler));
 		getCommand("pvplist").setExecutor(new PvPList(playerHandler));
 		getCommand("pvpstatus").setExecutor(new PvPStatus(playerHandler));
+		getCommand("tag").setExecutor(new Tag(playerHandler));
 		startMetrics();
 		if (Variables.isUpdateCheck()) {
 			new BukkitRunnable() {
