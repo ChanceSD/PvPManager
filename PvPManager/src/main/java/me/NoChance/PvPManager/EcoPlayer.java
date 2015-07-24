@@ -1,10 +1,10 @@
 package me.NoChance.PvPManager;
 
+import org.bukkit.entity.Player;
+
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.entity.Player;
 
 public abstract class EcoPlayer {
 
@@ -38,12 +38,12 @@ public abstract class EcoPlayer {
 	}
 
 	public final void applyPenalty() {
-		withdrawMoney(Variables.getMoneyPenalty());
+		withdrawMoney(Variables.getMoneyPenalty() >= 1 ? Variables.getMoneyPenalty() : Variables.getMoneyPenalty() * economy.getBalance(getPlayer()));
 		message(Messages.getMoneyPenalty().replace("%m", Double.toString(Variables.getMoneyPenalty())));
 	}
 
 	public final void giveReward(final Player victim) {
-		depositMoney(Variables.getMoneyReward());
+		depositMoney(Variables.getMoneyReward() >= 1 ? Variables.getMoneyReward() : Variables.getMoneyReward() * economy.getBalance(getPlayer()));
 		message(Messages.getMoneyReward().replace("%m", Double.toString(Variables.getMoneyReward())).replace("%p", victim.getName()));
 	}
 
