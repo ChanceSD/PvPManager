@@ -3,10 +3,10 @@ package me.NoChance.PvPManager.Config;
 import java.util.Arrays;
 import java.util.List;
 
-import me.NoChance.PvPManager.Managers.ConfigManager;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import me.NoChance.PvPManager.Managers.ConfigManager;
 
 public final class Variables {
 
@@ -35,7 +35,7 @@ public final class Variables {
 	private static boolean pvpBlood;
 	private static boolean disableGamemode;
 	private static boolean update = false;
-	private static List<String> commandsAllowed = Arrays.asList(new String[] { "tell", "money" });
+	private static List<String> commandsAllowed = Arrays.asList(new String[] { "tell", "tag" });
 	private static int toggleCooldown;
 	private static boolean defaultPvp;
 	private static boolean disableDisguise;
@@ -400,11 +400,11 @@ public final class Variables {
 		return dropMode;
 	}
 
-	public static void setUseNameTag(boolean useNameTag) {
+	public static void setUseNameTag(final boolean useNameTag) {
 		Variables.useNameTag = useNameTag;
 	}
 
-	public static void setToggleNametagsEnabled(boolean toggleNametagsEnabled) {
+	public static void setToggleNametagsEnabled(final boolean toggleNametagsEnabled) {
 		Variables.toggleNametagsEnabled = toggleNametagsEnabled;
 	}
 }

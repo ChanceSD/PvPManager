@@ -215,7 +215,7 @@ public class PlayerListener implements Listener {
 					for (int j = 1; j <= i; j++) {
 						args += " " + givenCommand[j];
 					}
-					if (Variables.getCommandsAllowed().contains(args)) {
+					if (Variables.getCommandsAllowed().contains(args.toLowerCase())) {
 						contains = true;
 						break;
 					}
