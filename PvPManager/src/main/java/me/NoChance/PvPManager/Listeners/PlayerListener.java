@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Listeners;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,8 +52,8 @@ public class PlayerListener implements Listener {
 		if (pvPlayer.isInCombat()) {
 			if (Variables.isLogToFile())
 				ph.getPlugin().getLog().log(Messages.getPvplogBroadcast().replace("%p", player.getName()));
-			if (Variables.isBroadcastPvpLog())
-				Bukkit.broadcastMessage(Messages.getPvplogBroadcast().replace("%p", player.getName()));
+			for (final String s : Variables.getCommandsOnPvPLog())
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", player.getName())));
 			if (Variables.isPunishmentsEnabled())
 				ph.applyPunishments(pvPlayer);
 		}
