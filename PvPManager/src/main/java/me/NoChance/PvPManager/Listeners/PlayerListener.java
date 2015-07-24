@@ -51,7 +51,7 @@ public class PlayerListener implements Listener {
 			return;
 		if (pvPlayer.isInCombat()) {
 			if (Variables.isLogToFile())
-				ph.getPlugin().getLog().log(Messages.getPvplogBroadcast().replace("%p", player.getName()));
+				ph.getPlugin().getLog().log(player.getName() + " tried to escape combat and got punished!");
 			for (final String s : Variables.getCommandsOnPvPLog())
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", player.getName())));
 			if (Variables.isPunishmentsEnabled())

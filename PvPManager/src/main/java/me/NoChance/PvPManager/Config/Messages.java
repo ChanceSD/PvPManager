@@ -12,11 +12,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils.Log;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class Messages {
 
@@ -41,7 +41,6 @@ public class Messages {
 	private static String outOfCombat;
 	private static String newbieProtection;
 	private static String newbieProtectionEnd;
-	private static String pvplogBroadcast;
 	private static String newbieProtectionOnHit;
 	private static String newbieProtectionAtacker;
 	private static String pvptoggleOnBroadcast;
@@ -81,7 +80,7 @@ public class Messages {
 			}
 			Log.info("New Messages File Created Successfully!");
 		}
-		File[] listFiles = plugin.getDataFolder().listFiles();
+		final File[] listFiles = plugin.getDataFolder().listFiles();
 		if (listFiles != null)
 			for (final File file : listFiles) {
 				final String fileName = file.getName();
@@ -126,7 +125,6 @@ public class Messages {
 		outOfCombat = getString("Out_Of_Combat");
 		newbieProtection = getString("Newbie_Protection");
 		newbieProtectionEnd = getString("Newbie_Protection_End");
-		pvplogBroadcast = getString("PvPLog_Broadcast");
 		newbieProtectionOnHit = getString("Newbie_Protection_On_Hit");
 		newbieProtectionAtacker = getString("Newbie_Protection_Atacker");
 		pvptoggleOnBroadcast = getString("PvPToggle_On_Broadcast");
@@ -245,10 +243,6 @@ public class Messages {
 
 	public static String getNewbieProtectionEnd() {
 		return newbieProtectionEnd;
-	}
-
-	public static String getPvplogBroadcast() {
-		return pvplogBroadcast;
 	}
 
 	public static String newbieBlocked() {
