@@ -38,13 +38,13 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public final void onBlockPlace(final BlockPlaceEvent event) { // NO_UCD
+	public final void onBlockPlace(final BlockPlaceEvent event) {
 		if (Variables.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat())
 			event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
-	public final void onPlayerLogout(final PlayerQuitEvent event) { // NO_UCD
+	public final void onPlayerLogout(final PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer == null)
