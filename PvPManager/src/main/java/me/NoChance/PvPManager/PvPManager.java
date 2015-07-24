@@ -41,6 +41,14 @@ public final class PvPManager extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		Log.setup(getLogger());
+		if (Variables.isUpdateCheck() && getConfig().getInt("Config Version", 0) != 0) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					checkForUpdates();
+				}
+			}.runTaskTimer(this, 0, 360000);
+		}
 		loadFiles();
 		dependencyManager = new DependencyManager(this);
 		playerHandler = new PlayerHandler(this);
@@ -53,14 +61,6 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvpstatus").setExecutor(new PvPStatus(playerHandler));
 		getCommand("tag").setExecutor(new Tag(playerHandler));
 		startMetrics();
-		if (Variables.isUpdateCheck()) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					checkForUpdates();
-				}
-			}.runTaskTimer(this, 0, 360000);
-		}
 	}
 
 	@Override
