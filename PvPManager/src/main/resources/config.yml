@@ -43,7 +43,7 @@ Ignore No Damage Hits: false
 # Name Tag Color - Choose the color above the player when in combat, write 'none' to disable, you can also
 # write a prefix but make sure it's under 16 characters. Example - '&c[Tagged] '
 # Stop Commands - Should commands be blocked in combat(Example - To prevent teleports)
-# -> Commands - Commands allowed if whitelist mode is true or blocked if not
+# -> Commands - Commands, in lowercase, allowed if whitelist mode is true or blocked if not
 # --> Command list works like permissions, 'money' will allow 'money', 'money top', etc
 # --> Whitelisting 'money top' would allow 'money top' but not 'money'
 # Punishments - When player logs out in combat (PvP log), should he be punished?
@@ -63,7 +63,7 @@ In Combat:
     Whitelist: true
     Commands:
       - tell
-      - money
+      - tag
   Punishments:
     Enabled: true
     Broadcast PvPLog: true
