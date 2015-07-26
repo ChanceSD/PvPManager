@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Version;
@@ -109,10 +110,19 @@ public class ConfigManager {
 				Log.info("New Config File Created Successfully!");
 				config = new Config(plugin, "config.yml");
 				Variables.initizalizeVariables(this);
+				return;
 			}
 		} else {
 			config = new Config(plugin, "config.yml");
 			Variables.initizalizeVariables(this);
+		}
+		if (Variables.isUpdateCheck()) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					plugin.checkForUpdates();
+				}
+			}.runTaskTimer(plugin, 0, 360000);
 		}
 	}
 
