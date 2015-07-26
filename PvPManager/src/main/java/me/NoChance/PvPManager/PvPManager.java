@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.Commands.PM;
 import me.NoChance.PvPManager.Commands.PvP;
@@ -41,14 +40,6 @@ public final class PvPManager extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		Log.setup(getLogger());
-		if (Variables.isUpdateCheck() && getConfig().getInt("Config Version", 0) != 0) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					checkForUpdates();
-				}
-			}.runTaskTimer(this, 0, 360000);
-		}
 		loadFiles();
 		dependencyManager = new DependencyManager(this);
 		playerHandler = new PlayerHandler(this);
@@ -92,7 +83,7 @@ public final class PvPManager extends JavaPlugin {
 		new CustomMetrics(this);
 	}
 
-	private void checkForUpdates() {
+	public void checkForUpdates() {
 		Log.info("Checking for updates...");
 		if (Variables.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
 			updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
