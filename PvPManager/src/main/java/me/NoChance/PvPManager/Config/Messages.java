@@ -43,8 +43,6 @@ public class Messages {
 	private static String newbieProtectionEnd;
 	private static String newbieProtectionOnHit;
 	private static String newbieProtectionAtacker;
-	private static String pvptoggleOnBroadcast;
-	private static String pvptoggleOffBroadcast;
 	private static String enderpearlBlockedIncombat;
 	private static String errorCommand;
 	private static String currentVersion;
@@ -127,8 +125,6 @@ public class Messages {
 		newbieProtectionEnd = getString("Newbie_Protection_End");
 		newbieProtectionOnHit = getString("Newbie_Protection_On_Hit");
 		newbieProtectionAtacker = getString("Newbie_Protection_Atacker");
-		pvptoggleOnBroadcast = getString("PvPToggle_On_Broadcast");
-		pvptoggleOffBroadcast = getString("PvPToggle_Off_Broadcast");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
 		errorCommand = getString("Error_Command");
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
@@ -251,14 +247,6 @@ public class Messages {
 
 	public static String newbieBlockedOther(final String name) {
 		return newbieProtectionAtacker.replace("%p", name);
-	}
-
-	public static String getPvptoggleOnBroadcast() {
-		return pvptoggleOnBroadcast;
-	}
-
-	public static String getPvptoggleOffBroadcast() {
-		return pvptoggleOffBroadcast;
 	}
 
 	public static String getEnderpearlBlockedIncombat() {

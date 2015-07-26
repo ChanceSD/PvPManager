@@ -68,7 +68,7 @@ In Combat:
     Enabled: true
     Log To File: true
     Commands On PvPLog:
-      - say &6[&8PvPManager&6] %p tried to escape combat and got punished!
+      - 'say &6[&8PvPManager&6] %p tried to escape combat and got punished!'
     Kill on Logout:
       Enabled: true
       Drops:
@@ -89,13 +89,13 @@ Player Kills:
   Commands On Kill:
     Enabled: false
     Commands:
-      - heal <player>
+      - 'heal <player>'
 
 # Section for PvP Toggle command(/pvp)
-# Broadcast - Broadcast a message when players toggle PvP
 # Cooldown(seconds) - How many seconds players have to wait until they can use /pvp again
 # NameTags - Control if the nametag of the player should have colors when pvp is turned on/off.
 # You can write 'none' to disable one of the nametags, use "Enabled - false" to disable both
+# Commands to execute on PvP toggle, delete the default command for none
 PvP Toggle:
   Broadcast: false
   Cooldown(seconds): 15
@@ -103,6 +103,10 @@ PvP Toggle:
     Enabled: false
     Color On: '&1'
     Color Off: '&2'
+    Commands PvP On:
+      - 'say &6[&8PvPManager&6]&e %p &4has just turned PvP on!'
+    Commands PvP Off:
+      - 'say &6[&8PvPManager&6]&e %p &2is scared and has just turned PvP off!'
 
 # This feature prevents player abuse by killing the same player several times to rise in rank or get rewards
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
@@ -113,7 +117,7 @@ Kill Abuse:
   Max Kills: 5
   Time Limit: 60
   Commands on Abuse:
-    - kick <player> Kill Abuse Is Not Allowed!
+    - 'kick <player> Kill Abuse Is Not Allowed!'
   Respawn Protection: 3
 
 # Should new players on your server be protected from PvP (If they want to PvP just use /pvp disable protection)
