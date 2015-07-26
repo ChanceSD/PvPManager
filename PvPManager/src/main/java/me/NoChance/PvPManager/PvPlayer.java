@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Config.Messages;
@@ -159,12 +160,12 @@ public class PvPlayer extends EcoPlayer {
 			teamProfile.setPvP(pvpState);
 		if (!pvpState) {
 			message(Messages.getPvpDisabled());
-			if (Variables.isToggleBroadcast())
-				Bukkit.broadcastMessage(Messages.getPvptoggleOffBroadcast().replace("%p", getName()));
+			for (final String s : Variables.getCommandsPvPOff())
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", getName())));
 		} else {
 			message(Messages.getPvpEnabled());
-			if (Variables.isToggleBroadcast())
-				Bukkit.broadcastMessage(Messages.getPvptoggleOnBroadcast().replace("%p", getName()));
+			for (final String s : Variables.getCommandsPvPOn())
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", getName())));
 		}
 	}
 

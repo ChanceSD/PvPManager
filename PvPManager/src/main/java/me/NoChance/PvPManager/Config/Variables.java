@@ -42,7 +42,6 @@ public final class Variables {
 	private static int killAbuseMaxKills;
 	private static int killAbuseTime;
 	private static List<String> killAbuseCommands = Arrays.asList("kick <player> Kill Abuse Is Not Allowed!");
-	private static boolean toggleBroadcast;
 	private static boolean blockEnderPearl;
 	private static boolean autoSoupEnabled;
 	private static double soupHealth;
@@ -71,6 +70,8 @@ public final class Variables {
 	private static String updateLocation;
 	private static ConfigManager cm;
 	private static List<String> commandsOnPvPLog = Arrays.asList("say &6[&8PvPManager&6] %p tried to escape combat and got punished!");
+	private static List<String> commandsPvPOn = Arrays.asList("say &6[&8PvPManager&6]&e %p &4has just turned PvP on!");
+	private static List<String> commandsPvPOff = Arrays.asList("say &6[&8PvPManager&6]&e %p &2is scared and has just turned PvP off!");
 
 	private Variables() {
 	}
@@ -100,7 +101,6 @@ public final class Variables {
 		disableGamemode = getBoolean("Disable GameMode", true);
 		commandsAllowed = (List<String>) cm.getConfig().getList("In Combat.Stop Commands.Commands", commandsAllowed);
 		toggleCooldown = cm.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
-		toggleBroadcast = getBoolean("PvP Toggle.Broadcast", false);
 		defaultPvp = getBoolean("Default PvP", true);
 		disableDisguise = getBoolean("Disable Disguise", true);
 		killAbuseMaxKills = cm.getConfig().getInt("Kill Abuse.Max Kills", 5);
@@ -132,6 +132,8 @@ public final class Variables {
 		dropMode = DropMode.valueOf(getString("Player Drops.Mode", "ALWAYS").toUpperCase());
 		updateLocation = getString("Update Check.Update Location", "Spigot");
 		commandsOnPvPLog = (List<String>) cm.getConfig().getList("In Combat.Punishments.Commands On PvPLog", commandsOnPvPLog);
+		commandsPvPOn = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP On", commandsPvPOn);
+		commandsPvPOff = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP Off", commandsPvPOff);
 	}
 
 	public static void helpMenu(final Player player) {
@@ -272,10 +274,6 @@ public final class Variables {
 		return killAbuseCommands;
 	}
 
-	public static boolean isToggleBroadcast() {
-		return toggleBroadcast;
-	}
-
 	public static boolean isBlockEnderPearl() {
 		return blockEnderPearl;
 	}
@@ -407,4 +405,13 @@ public final class Variables {
 	public static List<String> getCommandsOnPvPLog() {
 		return commandsOnPvPLog;
 	}
+
+	public static List<String> getCommandsPvPOn() {
+		return commandsPvPOn;
+	}
+
+	public static List<String> getCommandsPvPOff() {
+		return commandsPvPOff;
+	}
+
 }

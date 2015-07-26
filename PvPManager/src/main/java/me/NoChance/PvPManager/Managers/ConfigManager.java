@@ -69,10 +69,11 @@ public class ConfigManager {
 		this.config.set("Player Kills.Commands On Kill.Commands", Variables.getCommandsOnKill());
 
 		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.getToggleCooldown());
-		this.config.set("PvP Toggle.Broadcast", Variables.isToggleBroadcast());
 		this.config.set("PvP Toggle.NameTags.Enabled", Variables.isToggleNametagsEnabled());
 		this.config.set("PvP Toggle.NameTags.Color On", Variables.getToggleColorOn());
 		this.config.set("PvP Toggle.NameTags.Color Off", Variables.getToggleColorOff());
+		this.config.set("PvP Toggle.NameTags.Commands PvP On", Variables.getCommandsPvPOn());
+		this.config.set("PvP Toggle.NameTags.Commands PvP Off", Variables.getCommandsPvPOff());
 
 		this.config.set("Kill Abuse.Enabled", Variables.isKillAbuseEnabled());
 		this.config.set("Kill Abuse.Max Kills", Variables.getKillAbuseMaxKills());
