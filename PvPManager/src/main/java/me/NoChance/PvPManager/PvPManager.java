@@ -5,6 +5,7 @@ import java.io.File;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.NoChance.PvPManager.Commands.Announce;
 import me.NoChance.PvPManager.Commands.PM;
 import me.NoChance.PvPManager.Commands.PvP;
 import me.NoChance.PvPManager.Commands.PvPInfo;
@@ -51,6 +52,7 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvplist").setExecutor(new PvPList(playerHandler));
 		getCommand("pvpstatus").setExecutor(new PvPStatus(playerHandler));
 		getCommand("tag").setExecutor(new Tag(playerHandler));
+		getCommand("announce").setExecutor(new Announce());
 		startMetrics();
 	}
 

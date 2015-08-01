@@ -47,7 +47,7 @@ Ignore No Damage Hits: false
 # --> Command list works like permissions, 'money' will allow 'money', 'money top', etc
 # --> Whitelisting 'money top' would allow 'money top' but not 'money'
 # Punishments - When player logs out in combat (PvP log), should he be punished?
-# -> Commands On PvPLog - Commands to execute on PvP log, %p for player name
+# -> Commands On PvPLog - Commands to execute on PvP log, %p is the player name, use 'announce' to broadcast
 # -> Log To File - Log all pvp loggers to a file
 # -> Fine - Take money from player when he PvP logs (needs Vault)
 In Combat:
@@ -68,7 +68,7 @@ In Combat:
     Enabled: true
     Log To File: true
     Commands On PvPLog:
-      - 'say &6[&8PvPManager&6] %p tried to escape combat and got punished!'
+      - 'announce &6[&8PvPManager&6] %p tried to escape combat and got punished!'
     Kill on Logout:
       Enabled: true
       Drops:
@@ -104,9 +104,9 @@ PvP Toggle:
     Color On: '&1'
     Color Off: '&2'
     Commands PvP On:
-      - 'say &6[&8PvPManager&6]&e %p &4has just turned PvP on!'
+      - 'announce &6[&8PvPManager&6]&e %p &4has just turned PvP on!'
     Commands PvP Off:
-      - 'say &6[&8PvPManager&6]&e %p &2is scared and has just turned PvP off!'
+      - 'announce &6[&8PvPManager&6]&e %p &2is scared and has just turned PvP off!'
 
 # This feature prevents player abuse by killing the same player several times to rise in rank or get rewards
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
