@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Config;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public final class Variables {
 	private static boolean pvpBlood;
 	private static boolean disableGamemode;
 	private static boolean update = false;
-	private static List<String> commandsAllowed = Arrays.asList(new String[] { "tell", "tag" });
+	private static List<String> commandsAllowed = Arrays.asList("tag");
 	private static int toggleCooldown;
 	private static boolean defaultPvp;
 	private static boolean disableDisguise;
@@ -69,9 +70,9 @@ public final class Variables {
 	private static DropMode dropMode;
 	private static String updateLocation;
 	private static ConfigManager cm;
-	private static List<String> commandsOnPvPLog = Arrays.asList("say &6[&8PvPManager&6] %p tried to escape combat and got punished!");
-	private static List<String> commandsPvPOn = Arrays.asList("say &6[&8PvPManager&6]&e %p &4has just turned PvP on!");
-	private static List<String> commandsPvPOff = Arrays.asList("say &6[&8PvPManager&6]&e %p &2is scared and has just turned PvP off!");
+	private static List<String> commandsOnPvPLog = new ArrayList<>();
+	private static List<String> commandsPvPOn = new ArrayList<>();
+	private static List<String> commandsPvPOff = new ArrayList<>();
 
 	private Variables() {
 	}
