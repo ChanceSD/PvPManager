@@ -1,13 +1,5 @@
 package me.NoChance.PvPManager.Listeners;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Utils.CancelResult;
-import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.libraryaddict.disguise.DisguiseAPI;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
@@ -24,11 +16,18 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
-
 import com.earth2me.essentials.Essentials;
 import com.sk89q.commandbook.CommandBook;
 import com.sk89q.commandbook.GodComponent;
+
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Utils.CancelResult;
+import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.libraryaddict.disguise.DisguiseAPI;
+import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 
 public class EntityListener implements Listener {
 
@@ -48,12 +47,12 @@ public class EntityListener implements Listener {
 	public final void onPlayerDamage(final EntityDamageByEntityEvent event) { // NO_UCD
 		if (!CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
 			return;
-		if (Variables.isNewbieGodMode() && event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie()) {
-			event.setCancelled(true);
+		if (!CombatUtils.isPvP(event)) {
+			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Variables.isNewbieGodMode())
+				event.setCancelled(true);
 			return;
 		}
-		if (!CombatUtils.isPvP(event))
-			return;
+
 		final Player attacker = getAttacker(event);
 		final Player attacked = (Player) event.getEntity();
 		final CancelResult result = ph.tryCancel(attacker, attacked);
