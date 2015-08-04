@@ -6,6 +6,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 
 import org.bukkit.plugin.Plugin;
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,7 +26,8 @@ public class SpigotUpdater extends Updater {
 	@Override
 	public final void runUpdater() {
 		try {
-			doc = Jsoup.connect("http://www.spigotmc.org/resources/pvpmanager.845/history").userAgent("Mozilla").get();
+			final Response response = Jsoup.connect("http://www.spigotmc.org/resources/pvpmanager.845/history").userAgent("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0").execute();
+			doc = response.parse();
 			final Element versionEntry = doc.select("td.version").first();
 			if (versionCheck(versionEntry.text())) {
 				setResult(UpdateResult.UPDATE_AVAILABLE);
@@ -34,7 +36,8 @@ public class SpigotUpdater extends Updater {
 				downloadFile();
 			}
 		} catch (final IOException e) {
-			e.printStackTrace();
+			Log.severe("Spigot might be down or have it's protection up! This error can be safely ignored");
+			Log.severe("If this keeps happening try setting the updater to Bukkit in the config");
 		}
 	}
 
