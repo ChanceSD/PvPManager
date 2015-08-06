@@ -33,6 +33,8 @@ pvpmanager.nopvp - Players/ranks have PvP disabled
 
 pvpmanager.nodisable - Players/ranks don't get fly and gamemode disabled on PvP 
 
+pvpmanager.pvpstatus.nocooldown - Bypass PvP toggle cooldown period
+
 License
 -----------
 Copyright (c) 2015 , NoChanceSD
