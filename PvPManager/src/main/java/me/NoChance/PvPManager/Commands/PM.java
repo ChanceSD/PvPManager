@@ -87,8 +87,8 @@ public class PM implements CommandExecutor {
 	public final void reload(final CommandSender player) {
 		Variables.setUpdate(false);
 		plugin.getServer().getScheduler().cancelTasks(plugin);
-		plugin.getServer().getPluginManager().disablePlugin(plugin);
-		plugin.getServer().getPluginManager().enablePlugin(plugin);
+		plugin.onDisable();
+		plugin.onEnable();
 		player.sendMessage("§2PvPManager Reloaded!");
 	}
 
