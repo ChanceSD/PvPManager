@@ -55,6 +55,7 @@ public class ConfigManager {
 		this.config.set("In Combat.Stop Commands.Whitelist", Variables.isCommandsWhitelist());
 		this.config.set("In Combat.Stop Commands.Commands", Variables.getCommandsAllowed());
 		this.config.set("In Combat.Punishments.Enabled", Variables.isPunishmentsEnabled());
+		this.config.set("In Combat.Punishments.Punish On Kick", Variables.punishOnKick());
 		this.config.set("In Combat.Punishments.Commands On PvPLog", Variables.getCommandsOnPvPLog());
 		this.config.set("In Combat.Punishments.Log To File", Variables.isLogToFile());
 		this.config.set("In Combat.Punishments.Kill on Logout.Enabled", Variables.isKillOnLogout());

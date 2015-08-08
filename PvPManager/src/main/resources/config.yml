@@ -49,6 +49,7 @@ Ignore No Damage Hits: false
 # Punishments - When player logs out in combat (PvP log), should he be punished?
 # -> Commands On PvPLog - Commands to execute on PvP log, %p is the player name, use 'announce' to broadcast
 # -> Log To File - Log all pvp loggers to a file
+# -> Punish On Kick - Punish the player even if he was kicked
 # -> Fine - Take money from player when he PvP logs (needs Vault)
 In Combat:
   Enabled: true
@@ -66,6 +67,7 @@ In Combat:
       - tag
   Punishments:
     Enabled: true
+    Punish On Kick: true
     Log To File: true
     Commands On PvPLog:
       - 'announce &6[&8PvPManager&6] %p tried to escape combat and got punished!'

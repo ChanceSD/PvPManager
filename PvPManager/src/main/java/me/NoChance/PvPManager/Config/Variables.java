@@ -73,6 +73,7 @@ public final class Variables {
 	private static List<String> commandsOnPvPLog = new ArrayList<>();
 	private static List<String> commandsPvPOn = new ArrayList<>();
 	private static List<String> commandsPvPOff = new ArrayList<>();
+	private static boolean punishOnKick;
 
 	private Variables() {
 	}
@@ -135,6 +136,7 @@ public final class Variables {
 		commandsOnPvPLog = (List<String>) cm.getConfig().getList("In Combat.Punishments.Commands On PvPLog", commandsOnPvPLog);
 		commandsPvPOn = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP On", commandsPvPOn);
 		commandsPvPOff = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP Off", commandsPvPOff);
+		punishOnKick = getBoolean("In Combat.Punishments.Punish On Kick", true);
 	}
 
 	public static void helpMenu(final Player player) {
@@ -415,4 +417,7 @@ public final class Variables {
 		return commandsPvPOff;
 	}
 
+	public static boolean punishOnKick() {
+		return punishOnKick;
+	}
 }

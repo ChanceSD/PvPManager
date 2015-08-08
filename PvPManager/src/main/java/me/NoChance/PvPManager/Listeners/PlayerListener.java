@@ -15,6 +15,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -47,8 +48,6 @@ public class PlayerListener implements Listener {
 	public final void onPlayerLogout(final PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
-		if (pvPlayer == null)
-			return;
 		if (pvPlayer.isInCombat()) {
 			if (Variables.isLogToFile())
 				ph.getPlugin().getLog().log(player.getName() + " tried to escape combat and got punished!");
@@ -138,8 +137,7 @@ public class PlayerListener implements Listener {
 			if (Variables.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
 				if (player.getHealth() == player.getMaxHealth())
 					return;
-				player.setHealth(player.getHealth() + Variables.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth()
-						: player.getHealth() + Variables.getSoupHealth());
+				player.setHealth(player.getHealth() + Variables.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Variables.getSoupHealth());
 				i.setType(Material.BOWL);
 				return;
 			}
@@ -173,7 +171,7 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public final void onPlayerJoin(final PlayerJoinEvent event) { // NO_UCD (unused code)
+	public final void onPlayerJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
 		ph.get(player).updatePlayer(player);
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
@@ -184,15 +182,13 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	// @EventHandler
-	// public final void onPlayerKick(final PlayerKickEvent event) { // NO_UCD
-	// final PvPlayer pvPlayer = ph.get(event.getPlayer());
-	// if (pvPlayer == null)
-	// return;
-	// if (pvPlayer.isInCombat() && Variables.isPunishmentsEnabled())
-	// ph.applyPunishments(pvPlayer);
-	// ph.remove(pvPlayer);
-	// }
+	@EventHandler
+	public final void onPlayerKick(final PlayerKickEvent event) {
+		final PvPlayer pvPlayer = ph.get(event.getPlayer());
+		if (pvPlayer.isInCombat() && Variables.isPunishmentsEnabled() && !Variables.punishOnKick()) {
+			ph.untag(pvPlayer);
+		}
+	}
 
 	@EventHandler
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
