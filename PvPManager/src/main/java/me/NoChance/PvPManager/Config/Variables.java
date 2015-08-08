@@ -133,9 +133,9 @@ public final class Variables {
 		blockPlaceBlocks = getBoolean("In Combat.Block Place Blocks", false);
 		dropMode = DropMode.valueOf(getString("Player Drops.Mode", "ALWAYS").toUpperCase());
 		updateLocation = getString("Update Check.Update Location", "Spigot");
-		commandsOnPvPLog = (List<String>) cm.getConfig().getList("In Combat.Punishments.Commands On PvPLog", commandsOnPvPLog);
-		commandsPvPOn = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP On", commandsPvPOn);
-		commandsPvPOff = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP Off", commandsPvPOff);
+		commandsOnPvPLog = (List<String>) cm.getConfig().getList("In Combat.Punishments.Commands On PvPLog", new ArrayList<>());
+		commandsPvPOn = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP On", new ArrayList<>());
+		commandsPvPOff = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP Off", new ArrayList<>());
 		punishOnKick = getBoolean("In Combat.Punishments.Punish On Kick", true);
 	}
 
