@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+  <classpathentry kind="src" path="src/test/java" output="target/test-classes" including="**/*.java"/>
+  <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
+  <classpathentry kind="src" path="target/generated-sources/java-templates" including="**/*.java"/>
+  <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+  <classpathentry kind="var" path="M2_REPO/org/spigotmc/spigot-api/1.8.7-R0.1-SNAPSHOT/spigot-api-1.8.7-R0.1-SNAPSHOT.jar" sourcepath="M2_REPO/org/spigotmc/spigot-api/1.8.7-R0.1-SNAPSHOT/spigot-api-1.8.7-R0.1-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar" sourcepath="M2_REPO/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/4.12/junit-4.12.jar" sourcepath="M2_REPO/junit/junit/4.12/junit-4.12-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/17.0/guava-17.0.jar" sourcepath="M2_REPO/com/google/guava/guava/17.0/guava-17.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/avaje/ebean/2.8.1/ebean-2.8.1.jar" sourcepath="M2_REPO/org/avaje/ebean/2.8.1/ebean-2.8.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/yaml/snakeyaml/1.15/snakeyaml-1.15.jar" sourcepath="M2_REPO/org/yaml/snakeyaml/1.15/snakeyaml-1.15-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sk89q/commandbook/2.5-SNAPSHOT/commandbook-2.5-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/net/ess3/Essentials/2.14-SNAPSHOT/Essentials-2.14-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/pgDev/DisguiseCraft/5.1/DisguiseCraft-5.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/massivecraft/Factions/2.7.5/Factions-2.7.5.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jsoup/jsoup/1.8.2/jsoup-1.8.2.jar" sourcepath="M2_REPO/org/jsoup/jsoup/1.8.2/jsoup-1.8.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/massivecraft/MassiveCore/7.3.0/MassiveCore-7.3.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/massivecraft/FactionsUUID/1.0/FactionsUUID-1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/net/milkbowl/vault/Vault/1.5.4/Vault-1.5.4.jar"/>
+  <classpathentry kind="var" path="M2_REPO/LibsDisguises/LibsDisguises/8.2.6/LibsDisguises-8.2.6.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sk89q/worldguard/6.1.1-SNAPSHOT/worldguard-6.1.1-SNAPSHOT.jar" sourcepath="M2_REPO/com/sk89q/worldguard/6.1.1-SNAPSHOT/worldguard-6.1.1-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/powermock/powermock-module-junit4/1.6.2/powermock-module-junit4-1.6.2.jar" sourcepath="M2_REPO/org/powermock/powermock-module-junit4/1.6.2/powermock-module-junit4-1.6.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/powermock/powermock-module-junit4-common/1.6.2/powermock-module-junit4-common-1.6.2.jar" sourcepath="M2_REPO/org/powermock/powermock-module-junit4-common/1.6.2/powermock-module-junit4-common-1.6.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/powermock/powermock-api-mockito/1.6.2/powermock-api-mockito-1.6.2.jar" sourcepath="M2_REPO/org/powermock/powermock-api-mockito/1.6.2/powermock-api-mockito-1.6.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.10.19/mockito-all-1.10.19-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/powermock/powermock-api-support/1.6.2/powermock-api-support-1.6.2.jar" sourcepath="M2_REPO/org/powermock/powermock-api-support/1.6.2/powermock-api-support-1.6.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/powermock/powermock-core/1.6.2/powermock-core-1.6.2.jar" sourcepath="M2_REPO/org/powermock/powermock-core/1.6.2/powermock-core-1.6.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/powermock/powermock-reflect/1.6.2/powermock-reflect-1.6.2.jar" sourcepath="M2_REPO/org/powermock/powermock-reflect/1.6.2/powermock-reflect-1.6.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/2.1/objenesis-2.1.jar" sourcepath="M2_REPO/org/objenesis/objenesis/2.1/objenesis-2.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/javassist/javassist/3.19.0-GA/javassist-3.19.0-GA.jar" sourcepath="M2_REPO/org/javassist/javassist/3.19.0-GA/javassist-3.19.0-GA-sources.jar"/>
+</classpath>
