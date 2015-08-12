@@ -3,17 +3,17 @@ package me.NoChance.PvPManager.Managers;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CancelResult;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
 
 public class PlayerHandler {
 
@@ -61,7 +61,7 @@ public class PlayerHandler {
 	 * @return true if the attack didn't get blocked or if it got override, otherwise false
 	 */
 	public final boolean canAttack(final Player attacker, final Player defender) {
-		CancelResult cr = tryCancel(attacker, defender);
+		final CancelResult cr = tryCancel(attacker, defender);
 		return cr.equals(CancelResult.FAIL) || cr.equals(CancelResult.FAIL_OVERRIDE);
 	}
 
@@ -91,16 +91,16 @@ public class PlayerHandler {
 	private PvPlayer save(final PvPlayer p) {
 		if (plugin.getServer().getPlayer(p.getUUID()) != null) {
 			players.put(p.getUUID(), p);
-                }
+		}
 		return p;
 	}
+
 	public final void untag(final PvPlayer p) {
-		tagTask.getTagged().remove(p);
-		p.unTag();
+		tagTask.untag(p);
 	}
 
 	public final void tag(final PvPlayer p) {
-		tagTask.getTagged().add(p);
+		tagTask.addTagged(p);
 	}
 
 	public final void remove(final PvPlayer player) {
@@ -136,7 +136,7 @@ public class PlayerHandler {
 	}
 
 	public final void applyPunishments(final PvPlayer player) {
-		Player p = player.getPlayer();
+		final Player p = player.getPlayer();
 		if (Variables.isKillOnLogout()) {
 			player.setPvpLogged(true);
 			p.setHealth(0);
