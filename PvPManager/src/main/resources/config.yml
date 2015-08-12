@@ -140,7 +140,7 @@ Default PvP: true
 # Auto Update - After checking should we download it automatically for you?
 Update Check:
   Enabled: true
-  Update Location: Spigot
+  Update Location: Bukkit
   Auto Update: true
 
 # In these worlds PvPManager will not have any effect

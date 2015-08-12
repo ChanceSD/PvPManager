@@ -132,7 +132,7 @@ public final class Variables {
 		commandsWhitelist = getBoolean("In Combat.Stop Commands.Whitelist", true);
 		blockPlaceBlocks = getBoolean("In Combat.Block Place Blocks", false);
 		dropMode = DropMode.valueOf(getString("Player Drops.Mode", "ALWAYS").toUpperCase());
-		updateLocation = getString("Update Check.Update Location", "Spigot");
+		updateLocation = getString("Update Check.Update Location", "Bukkit");
 		commandsOnPvPLog = (List<String>) cm.getConfig().getList("In Combat.Punishments.Commands On PvPLog", new ArrayList<>());
 		commandsPvPOn = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP On", new ArrayList<>());
 		commandsPvPOff = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP Off", new ArrayList<>());
