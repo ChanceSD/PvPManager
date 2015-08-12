@@ -4,14 +4,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.bukkit.scheduler.BukkitRunnable;
+import java.util.TimerTask;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
-public class TagTask extends BukkitRunnable {
+public class TagTask extends TimerTask {
 
 	private final int time = Variables.getTimeInCombat();
 	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<PvPlayer>());
@@ -31,9 +30,9 @@ public class TagTask extends BukkitRunnable {
 	}
 
 	@Override
-	public synchronized void cancel() throws IllegalStateException {
-		super.cancel();
+	public synchronized boolean cancel() throws IllegalStateException {
 		tagged.clear();
+		return super.cancel();
 	}
 
 	public void addTagged(final PvPlayer p) {

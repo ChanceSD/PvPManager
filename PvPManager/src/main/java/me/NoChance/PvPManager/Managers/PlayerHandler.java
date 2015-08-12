@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
+import java.util.Timer;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -31,7 +32,7 @@ public class PlayerHandler {
 			new CleanKillersTask(this).runTaskTimer(plugin, 0, Variables.getKillAbuseTime() * 20);
 
 		addOnlinePlayers();
-		tagTask.runTaskTimerAsynchronously(plugin, 20, 20);
+		new Timer(true).scheduleAtFixedRate(tagTask, 1000, 1000);
 	}
 
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
