@@ -1,20 +1,19 @@
 package me.NoChance.PvPManager.Managers;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.UUID;
-
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Tasks.CleanKillersTask;
+import me.NoChance.PvPManager.Tasks.TagTask;
+import me.NoChance.PvPManager.Utils.CancelResult;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Tasks.CleanKillersTask;
-import me.NoChance.PvPManager.Tasks.TagTask;
-import me.NoChance.PvPManager.Utils.CancelResult;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.UUID;
 
 public class PlayerHandler {
 

@@ -1,31 +1,20 @@
 package me.NoChance.PvPManager.Lib;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.zip.GZIPOutputStream;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.*;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.zip.GZIPOutputStream;
 
 public class Metrics {
 
@@ -162,16 +151,16 @@ public class Metrics {
 	 *
 	 * @return True if statistics measuring is running, otherwise false.
 	 */
-	public final boolean start() {
+	public final void start() {
 		synchronized (optOutLock) {
 			// Did we opt out?
 			if (isOptOut()) {
-				return false;
+				return;
 			}
 
 			// Is metrics already running?
 			if (task != null) {
-				return true;
+				return;
 			}
 
 			// Begin hitting the server with glorious data
@@ -213,7 +202,7 @@ public class Metrics {
 				}
 			}, 0, PING_INTERVAL * 1200);
 
-			return true;
+			return;
 		}
 	}
 
@@ -222,7 +211,7 @@ public class Metrics {
 	 *
 	 * @return true if metrics should be opted out of it
 	 */
-	public final boolean isOptOut() {
+	private boolean isOptOut() {
 		synchronized (optOutLock) {
 			try {
 				// Reload the metrics file
@@ -293,7 +282,7 @@ public class Metrics {
 	 *
 	 * @return the File object for the config file
 	 */
-	public final File getConfigFile() {
+	private File getConfigFile() {
 		// I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins
 		// to
 		// use
@@ -370,11 +359,7 @@ public class Metrics {
 
 				boolean firstGraph = true;
 
-				final Iterator<Graph> iter = graphs.iterator();
-
-				while (iter.hasNext()) {
-					final Graph graph = iter.next();
-
+				for (Graph graph : graphs) {
 					final StringBuilder graphJson = new StringBuilder();
 					graphJson.append('{');
 
@@ -455,11 +440,8 @@ public class Metrics {
 			// Is this the first update this hour?
 			if (response.equals("1") || response.contains("This is your first update this hour")) {
 				synchronized (graphs) {
-					final Iterator<Graph> iter = graphs.iterator();
 
-					while (iter.hasNext()) {
-						final Graph graph = iter.next();
-
+					for (Graph graph : graphs) {
 						for (final Plotter plotter : graph.getPlotters()) {
 							plotter.reset();
 						}
@@ -475,7 +457,7 @@ public class Metrics {
 	 * @param input
 	 * @return
 	 */
-	public static byte[] gzip(final String input) {
+	private static byte[] gzip(final String input) {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		GZIPOutputStream gzos = null;
 
@@ -517,7 +499,7 @@ public class Metrics {
 	 * @param value
 	 * @throws UnsupportedEncodingException
 	 */
-	private static void appendJSONPair(final StringBuilder json, final String key, final String value) throws UnsupportedEncodingException {
+	private static void appendJSONPair(final StringBuilder json, final String key, final String value) {
 		boolean isValueNumeric = false;
 
 		try {
@@ -577,7 +559,7 @@ public class Metrics {
 			default:
 				if (chr < ' ') {
 					final String t = "000" + Integer.toHexString(chr);
-					builder.append("\\u" + t.substring(t.length() - 4));
+					builder.append("\\u").append(t.substring(t.length() - 4));
 				} else {
 					builder.append(chr);
 				}
@@ -677,7 +659,7 @@ public class Metrics {
 		 * Called when the server owner decides to opt-out of BukkitMetrics while the server is
 		 * running.
 		 */
-		protected void onOptOut() {
+		void onOptOut() {
 		}
 	}
 

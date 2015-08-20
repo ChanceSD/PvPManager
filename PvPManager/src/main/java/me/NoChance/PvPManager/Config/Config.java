@@ -1,23 +1,13 @@
 package me.NoChance.PvPManager.Config;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.List;
-
 import me.NoChance.PvPManager.PvPManager;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.List;
 
 public class Config extends YamlConfiguration {
 
@@ -95,7 +85,7 @@ public class Config extends YamlConfiguration {
 		return this.config.getList(path, def);
 	}
 
-	public final InputStream getConfigContent(final File file1) {
+	private InputStream getConfigContent(final File file1) {
 		if (!file1.exists()) {
 			return null;
 		}
@@ -108,22 +98,21 @@ public class Config extends YamlConfiguration {
 			while ((currentLine = reader.readLine()) != null) {
 				if (currentLine.startsWith("#")) {
 					addLine = currentLine.replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
-					whole.append(addLine + "\n");
+					whole.append(addLine).append("\n");
 					commentNum++;
 
 				} else {
-					whole.append(currentLine + "\n");
+					whole.append(currentLine).append("\n");
 				}
 			}
-			final InputStream configStream = new ByteArrayInputStream(whole.toString().getBytes(Charset.forName("UTF-8")));
-			return configStream;
+			return new ByteArrayInputStream(whole.toString().getBytes(Charset.forName("UTF-8")));
 		} catch (final IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public final void prepareFile(final File file1, final String resource) {
+	private void prepareFile(final File file1, final String resource) {
 		try {
 			file1.getParentFile().mkdirs();
 			file1.createNewFile();
@@ -153,7 +142,7 @@ public class Config extends YamlConfiguration {
 		saveConfig(this.config.saveToString(), this.file);
 	}
 
-	public final void saveConfig(final String configString, final File file1) {
+	private void saveConfig(final String configString, final File file1) {
 		final String configuration = this.prepareConfigString(configString);
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file1))) {
 			writer.write(configuration);
@@ -173,11 +162,11 @@ public class Config extends YamlConfiguration {
 				final String comment = "#" + line.trim().substring(line.indexOf(":") + 1);
 				if (comment.startsWith("# +-")) {
 					if (headerLine == 0) {
-						config1.append(comment + "\n");
+						config1.append(comment).append("\n");
 						lastLine = 0;
 						headerLine = 1;
-					} else if (headerLine == 1) {
-						config1.append(comment + "\n\n");
+					} else {
+						config1.append(comment).append("\n\n");
 
 						lastLine = 0;
 						headerLine = 0;
@@ -190,21 +179,21 @@ public class Config extends YamlConfiguration {
 						normalComment = comment;
 					}
 					if (lastLine == 0) {
-						config1.append(normalComment + "\n");
-					} else if (lastLine == 1) {
-						config1.append("\n" + normalComment + "\n");
+						config1.append(normalComment).append("\n");
+					} else {
+						config1.append("\n").append(normalComment).append("\n");
 					}
 					lastLine = 0;
 				}
 			} else {
-				config1.append(line + "\n");
+				config1.append(line).append("\n");
 				lastLine = 1;
 			}
 		}
 		return config1.toString();
 	}
 
-	public final String getPluginName() {
+	private String getPluginName() {
 		return plugin.getDescription().getName();
 	}
 

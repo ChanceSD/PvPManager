@@ -1,10 +1,9 @@
 package me.NoChance.PvPManager.Commands;
 
-import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -45,7 +44,7 @@ public class PvP implements CommandExecutor {
 				if ((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && sender instanceof Player) {
 					final PvPlayer pvpPlayer = ph.get((Player) sender);
 					if (pvpPlayer.hasToggleCooldownPassed()) {
-						final boolean enable = args[0].equalsIgnoreCase("on") ? true : false;
+						final boolean enable = args[0].equalsIgnoreCase("on");
 						if (!enable && pvpPlayer.hasPvPEnabled() || enable && !pvpPlayer.hasPvPEnabled()) {
 							pvpPlayer.setPvP(enable);
 							return true;
@@ -62,7 +61,7 @@ public class PvP implements CommandExecutor {
 					final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(args[0]));
 					final boolean enable;
 					if (args.length == 1)
-						enable = specifiedPlayer.hasPvPEnabled() ? false : true;
+						enable = !specifiedPlayer.hasPvPEnabled();
 					else {
 						if (args[1].equalsIgnoreCase("off"))
 							enable = false;

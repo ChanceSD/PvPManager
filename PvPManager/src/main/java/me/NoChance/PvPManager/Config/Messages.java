@@ -1,22 +1,13 @@
 package me.NoChance.PvPManager.Config;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
-import java.util.Properties;
-
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Utils.Log;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils.Log;
+import java.io.*;
+import java.util.Enumeration;
+import java.util.Properties;
 
 public class Messages {
 
@@ -92,11 +83,12 @@ public class Messages {
 				getMessages();
 			}
 		} catch (final IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	private static String getString(final String key) {
-		String message = null;
+		String message;
 		try {
 			message = new String(LANG.getProperty(key).getBytes("ISO-8859-1"), "UTF-8");
 		} catch (final UnsupportedEncodingException e1) {
@@ -146,6 +138,7 @@ public class Messages {
 				}
 			}
 		} catch (final IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -153,6 +146,7 @@ public class Messages {
 		try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), "UTF-8"))) {
 			pw.println(a);
 		} catch (final IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -277,7 +271,7 @@ public class Messages {
 		return locale;
 	}
 
-	public static String getNewVersion() {
+	private static String getNewVersion() {
 		return newVersion;
 	}
 

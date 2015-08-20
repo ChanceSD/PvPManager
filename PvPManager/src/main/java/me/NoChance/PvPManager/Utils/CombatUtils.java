@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
 import me.NoChance.PvPManager.Config.Variables;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,7 +18,7 @@ public final class CombatUtils {
 	}
 
 	public static boolean hasTimePassed(final long toggleTime, final int cooldown) {
-		return System.currentTimeMillis() - toggleTime < cooldown * 1000 ? false : true;
+		return System.currentTimeMillis() - toggleTime >= cooldown * 1000;
 	}
 
 	public static boolean isPvP(final EntityDamageByEntityEvent event) {
@@ -34,9 +33,7 @@ public final class CombatUtils {
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
 					if (!shooter.equals(defender) && !shooter.hasMetadata("NPC")) {
-						if (Variables.isIgnoreNoDamageHits() && event.getDamage() == 0)
-							return false;
-						return true;
+						return !(Variables.isIgnoreNoDamageHits() && event.getDamage() == 0);
 					}
 				}
 			}

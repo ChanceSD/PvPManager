@@ -1,19 +1,18 @@
 package me.NoChance.PvPManager.Managers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-
+import me.NoChance.PvPManager.Config.Config;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Utils.Log;
+import me.NoChance.PvPManager.Version;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Version;
-import me.NoChance.PvPManager.Config.Config;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Utils.Log;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 public class ConfigManager {
 

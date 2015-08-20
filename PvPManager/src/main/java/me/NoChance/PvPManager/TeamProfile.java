@@ -1,13 +1,12 @@
 package me.NoChance.PvPManager;
 
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Utils.Log;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Utils.Log;
-
-public class TeamProfile {
+class TeamProfile {
 
 	private Team inCombat;
 	private Team pvpOn;
@@ -29,7 +28,7 @@ public class TeamProfile {
 		}
 	}
 
-	public final void setupTeams() {
+	private void setupTeams() {
 		if (scoreboard.getTeam("InCombat") != null)
 			inCombat = scoreboard.getTeam("InCombat");
 		else {

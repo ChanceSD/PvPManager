@@ -1,8 +1,7 @@
 package me.NoChance.PvPManager.Commands;
 
-import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-
+import me.NoChance.PvPManager.PvPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +26,7 @@ public class PvPList implements CommandExecutor {
 		final StringBuilder list = new StringBuilder();
 		for (final PvPlayer p : ph.getPlayers().values()) {
 			if (p.hasPvPEnabled()) {
-				list.append(p.getName() + ", ");
+				list.append(p.getName()).append(", ");
 			}
 		}
 		if (list.toString().isEmpty())

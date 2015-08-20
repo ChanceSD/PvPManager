@@ -1,12 +1,10 @@
 package me.NoChance.PvPManager.Dependencies;
 
-import org.bukkit.entity.Player;
-
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.struct.Relation;
-
 import me.NoChance.PvPManager.PvPlugin;
+import org.bukkit.entity.Player;
 
 public class FactionsUUID implements PvPlugin {
 

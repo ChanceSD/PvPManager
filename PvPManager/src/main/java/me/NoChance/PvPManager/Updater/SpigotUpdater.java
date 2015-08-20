@@ -1,17 +1,16 @@
 package me.NoChance.PvPManager.Updater;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.file.Files;
-
+import me.NoChance.PvPManager.Utils.Log;
 import org.bukkit.plugin.Plugin;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import me.NoChance.PvPManager.Utils.Log;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
 
 public class SpigotUpdater extends Updater {
 

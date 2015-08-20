@@ -1,13 +1,13 @@
 package me.NoChance.PvPManager.Config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import me.NoChance.PvPManager.Managers.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import me.NoChance.PvPManager.Managers.ConfigManager;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public final class Variables {
 
@@ -23,7 +23,7 @@ public final class Variables {
 	private static boolean dropExp;
 	private static boolean dropArmor;
 	private static boolean killOnLogout;
-	private static List<String> worldsExcluded = Arrays.asList(new String[] { "Example", "Example2" });
+	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static boolean disableFly;
 	private static boolean onlyTagAttacker;
 	private static boolean updateCheck;
@@ -35,14 +35,14 @@ public final class Variables {
 	private static boolean pvpBlood;
 	private static boolean disableGamemode;
 	private static boolean update = false;
-	private static List<String> commandsAllowed = Arrays.asList("tag");
+	private static List<String> commandsAllowed = Collections.singletonList("tag");
 	private static int toggleCooldown;
 	private static boolean defaultPvp;
 	private static boolean disableDisguise;
 	private static boolean killAbuseEnabled;
 	private static int killAbuseMaxKills;
 	private static int killAbuseTime;
-	private static List<String> killAbuseCommands = Arrays.asList("kick <player> Kill Abuse Is Not Allowed!");
+	private static List<String> killAbuseCommands = Collections.singletonList("kick <player> Kill Abuse Is Not Allowed!");
 	private static boolean blockEnderPearl;
 	private static boolean autoSoupEnabled;
 	private static double soupHealth;
@@ -56,7 +56,7 @@ public final class Variables {
 	private static int respawnProtection;
 	private static double moneyReward;
 	private static boolean commandsOnKillEnabled;
-	private static List<String> commandsOnKill = Arrays.asList("heal <player>");
+	private static List<String> commandsOnKill = Collections.singletonList("heal <player>");
 	private static boolean disableInvisibility;
 	private static boolean toggleNametagsEnabled;
 	private static String toggleColorOn;
@@ -114,7 +114,7 @@ public final class Variables {
 		inCombatSilent = getBoolean("In Combat.Silent", false);
 		stopBorderHopping = getBoolean("Ignore Zones For Tagged", true);
 		nameTagColor = getString("In Combat.Name Tag Color", "&c");
-		setUseNameTag(nameTagColor.equalsIgnoreCase("none") ? false : true);
+		setUseNameTag(!nameTagColor.equalsIgnoreCase("none"));
 		locale = getString("Locale", "en").toUpperCase();
 		ignoreNoDamageHits = getBoolean("Ignore No Damage Hits", false);
 		respawnProtection = cm.getConfig().getInt("Kill Abuse.Respawn Protection", 5);
