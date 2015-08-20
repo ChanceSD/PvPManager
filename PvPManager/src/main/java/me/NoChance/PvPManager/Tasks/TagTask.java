@@ -27,6 +27,12 @@ public class TagTask extends TimerTask {
 
 	@Override
 	public synchronized boolean cancel() throws IllegalStateException {
+		synchronized (tagged) {
+			for (PvPlayer pvPlayer : tagged) {
+				if (pvPlayer.isInCombat())
+					pvPlayer.unTag();
+			}
+		}
 		tagged.clear();
 		return super.cancel();
 	}
