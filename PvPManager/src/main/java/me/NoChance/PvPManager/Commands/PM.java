@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -85,7 +86,8 @@ public class PM implements CommandExecutor {
 
 	private void reload(final CommandSender player) {
 		Variables.setUpdate(false);
-		plugin.getServer().getScheduler().cancelTasks(plugin);
+		Bukkit.getScheduler().cancelTasks(plugin);
+		HandlerList.unregisterAll(plugin);
 		plugin.onDisable();
 		plugin.onEnable();
 		player.sendMessage("§2PvPManager Reloaded!");

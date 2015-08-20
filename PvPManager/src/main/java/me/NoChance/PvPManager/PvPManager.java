@@ -52,8 +52,6 @@ public final class PvPManager extends JavaPlugin {
 	public void onDisable() {
 		playerHandler.getTagTask().cancel();
 		for (final PvPlayer p : playerHandler.getPlayers().values()) {
-			if (p.isInCombat())
-				p.unTag();
 			playerHandler.savePvPState(p.getUUID(), p.hasPvPEnabled());
 		}
 		playerHandler.removeTeams();
