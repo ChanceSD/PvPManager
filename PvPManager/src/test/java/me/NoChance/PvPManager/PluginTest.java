@@ -1,11 +1,5 @@
 package me.NoChance.PvPManager;
 
-import static org.mockito.Mockito.mock;
-
-import java.io.File;
-import java.net.URLDecoder;
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
@@ -16,11 +10,16 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
+import java.io.File;
+import java.net.URLDecoder;
+import java.util.logging.Logger;
+
+import static org.mockito.Mockito.mock;
+
 public class PluginTest {
 
 	private PvPManager plugin;
-	private Logger logger = Logger.getLogger("PvPManager-Test");
-	private File pluginDirectory;
+	private final Logger logger = Logger.getLogger("PvPManager-Test");
 	private String filePath;
 	private static PluginTest instance;
 
@@ -30,7 +29,7 @@ public class PluginTest {
 	public final void setup() throws Exception {
 		filePath = URLDecoder.decode(PluginTest.class.getClassLoader().getResource("").getPath(), "UTF-8");
 		String decoded = filePath + "TestServer/plugins/PvPManager";
-		pluginDirectory = new File(decoded);
+		File pluginDirectory = new File(decoded);
 		pluginDirectory.mkdirs();
 		Server server = mock(Server.class, Mockito.RETURNS_MOCKS);
 		Mockito.when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
@@ -52,8 +51,8 @@ public class PluginTest {
 		if (file.isDirectory()) {
 			String[] children = file.list();
 			if (children != null)
-				for (int i = 0; i < children.length; i++) {
-					boolean success = deleteDir(new File(file, children[i]));
+				for (String aChildren : children) {
+					boolean success = deleteDir(new File(file, aChildren));
 					if (!success) {
 						return false;
 					}

@@ -1,5 +1,10 @@
 package me.NoChance.PvPManager.Commands;
 
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,12 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PM implements CommandExecutor {
 
@@ -84,7 +83,7 @@ public class PM implements CommandExecutor {
 		return false;
 	}
 
-	public final void reload(final CommandSender player) {
+	private void reload(final CommandSender player) {
 		Variables.setUpdate(false);
 		plugin.getServer().getScheduler().cancelTasks(plugin);
 		plugin.onDisable();

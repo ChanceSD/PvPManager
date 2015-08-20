@@ -1,13 +1,12 @@
 package me.NoChance.PvPManager.Commands;
 
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.PvPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
 
 public class Tag implements CommandExecutor {
 

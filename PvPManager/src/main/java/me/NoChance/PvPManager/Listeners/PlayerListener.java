@@ -1,7 +1,11 @@
 package me.NoChance.PvPManager.Listeners;
 
-import java.util.HashMap;
-
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Variables.DropMode;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,23 +16,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Config.Variables.DropMode;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import java.util.HashMap;
 
 public class PlayerListener implements Listener {
 
@@ -87,7 +79,7 @@ public class PlayerListener implements Listener {
 		}
 
 		final Player killer = player.getKiller();
-		final boolean pvpDeath = killer != null ? true : false;
+		final boolean pvpDeath = killer != null;
 		// Player died in combat, process that
 		if (pvpDeath && !killer.equals(player)) {
 			final PvPlayer pKiller = ph.get(killer);

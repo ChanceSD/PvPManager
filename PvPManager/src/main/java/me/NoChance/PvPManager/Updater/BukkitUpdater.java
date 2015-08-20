@@ -1,20 +1,15 @@
 package me.NoChance.PvPManager.Updater;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-
 import me.NoChance.PvPManager.Utils.Log;
-
 import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class BukkitUpdater extends Updater {
 

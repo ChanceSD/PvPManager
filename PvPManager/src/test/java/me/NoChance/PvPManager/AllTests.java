@@ -2,7 +2,6 @@ package me.NoChance.PvPManager;
 
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-
 import org.bukkit.command.PluginCommand;
 import org.junit.ClassRule;
 import org.junit.rules.ExternalResource;

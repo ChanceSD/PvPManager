@@ -1,9 +1,9 @@
 package me.NoChance.PvPManager.Updater;
 
-import java.io.File;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+
+import java.io.File;
 
 public abstract class Updater {
 
@@ -22,7 +22,7 @@ public abstract class Updater {
 	private final UpdateType type;
 	private final File file = new File(Bukkit.getUpdateFolderFile(), "PvPManager.jar");
 
-	protected Updater(final Plugin plugin, final UpdateType type) {
+	Updater(final Plugin plugin, final UpdateType type) {
 		this.plugin = plugin;
 		this.type = type;
 		this.thread = new Thread() {
@@ -38,8 +38,8 @@ public abstract class Updater {
 		return this.result;
 	}
 
-	protected final void waitForThread() {
-		if ((this.thread != null) && this.thread.isAlive()) {
+	final void waitForThread() {
+		if (this.thread.isAlive()) {
 			try {
 				this.thread.join();
 			} catch (final InterruptedException e) {
@@ -48,8 +48,8 @@ public abstract class Updater {
 		}
 	}
 
-	protected final String[] getVersionArray(final String version) {
-		String[] versionArray = null;
+	final String[] getVersionArray(final String version) {
+		String[] versionArray;
 		if (hasTag(version)) {
 			versionArray = version.replaceFirst("(-.+?)(?=\\d)", "\\.").split("\\.");
 		} else {
@@ -67,23 +67,23 @@ public abstract class Updater {
 		return false;
 	}
 
-	public final Thread getThread() {
+	final Thread getThread() {
 		return thread;
 	}
 
-	public final Plugin getPlugin() {
+	final Plugin getPlugin() {
 		return plugin;
 	}
 
-	public final UpdateType getType() {
+	final UpdateType getType() {
 		return type;
 	}
 
-	public final File getFile() {
+	final File getFile() {
 		return file;
 	}
 
-	public final void setResult(final UpdateResult result) {
+	final void setResult(final UpdateResult result) {
 		this.result = result;
 	}
 

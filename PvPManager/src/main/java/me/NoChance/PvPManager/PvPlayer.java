@@ -1,17 +1,16 @@
 package me.NoChance.PvPManager;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class PvPlayer extends EcoPlayer {
 

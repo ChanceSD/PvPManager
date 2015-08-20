@@ -1,10 +1,9 @@
 package me.NoChance.PvPManager.Commands;
 
-import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

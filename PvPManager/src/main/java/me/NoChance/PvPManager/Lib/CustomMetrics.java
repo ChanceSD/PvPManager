@@ -1,10 +1,10 @@
 package me.NoChance.PvPManager.Lib;
 
-import java.io.IOException;
-
-import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Lib.Metrics.Graph;
+import me.NoChance.PvPManager.PvPManager;
+
+import java.io.IOException;
 
 public class CustomMetrics {
 
@@ -15,7 +15,7 @@ public class CustomMetrics {
 		initMetrics();
 	}
 
-	public final void initMetrics() {
+	private void initMetrics() {
 		try {
 			final Metrics metrics = new Metrics(plugin);
 			final Graph keepItemsExp = metrics.createGraph("Percentage of Keep and Drop");
@@ -213,7 +213,7 @@ public class CustomMetrics {
 				});
 			}
 			metrics.start();
-		} catch (final IOException e) {
+		} catch (final IOException ignored) {
 		}
 	}
 }

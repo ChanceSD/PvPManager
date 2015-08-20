@@ -1,20 +1,19 @@
 package me.NoChance.PvPManager.Managers;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlugin;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Dependencies.Factions;
 import me.NoChance.PvPManager.Dependencies.FactionsUUID;
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlugin;
 import me.NoChance.PvPManager.Utils.Log;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class DependencyManager {
 

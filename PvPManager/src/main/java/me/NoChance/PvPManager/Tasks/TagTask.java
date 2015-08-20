@@ -1,14 +1,10 @@
 package me.NoChance.PvPManager.Tasks;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TimerTask;
-
-import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+
+import java.util.*;
 
 public class TagTask extends TimerTask {
 

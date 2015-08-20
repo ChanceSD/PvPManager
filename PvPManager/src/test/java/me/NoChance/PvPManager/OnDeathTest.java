@@ -1,10 +1,7 @@
 package me.NoChance.PvPManager;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -17,9 +14,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
 public class OnDeathTest {
 
-	private static PvPManager plugin;
 	private static PlayerListener listener;
 	private PlayerDeathEvent event;
 	@Mock(answer = Answers.RETURNS_MOCKS)
@@ -30,7 +29,7 @@ public class OnDeathTest {
 	@BeforeClass
 	public static void setupClass() {
 		PluginTest pt = AllTests.getPt();
-		plugin = pt.getPlugin();
+		PvPManager plugin = pt.getPlugin();
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
 		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Matchers.anyObject())).thenCallRealMethod();

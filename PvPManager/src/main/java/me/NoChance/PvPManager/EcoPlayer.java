@@ -1,20 +1,19 @@
 package me.NoChance.PvPManager;
 
-import org.bukkit.entity.Player;
-
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.entity.Player;
 
 public abstract class EcoPlayer {
 
 	private final Economy economy;
 
-	protected EcoPlayer(final Economy economy) {
+	EcoPlayer(final Economy economy) {
 		this.economy = economy;
 	}
 
-	public abstract Player getPlayer();
+	protected abstract Player getPlayer();
 
 	public final boolean isOnline() {
 		return getPlayer() != null;
@@ -25,11 +24,11 @@ public abstract class EcoPlayer {
 			getPlayer().sendMessage(message);
 	}
 
-	public final void withdrawMoney(final double amount) {
+	private void withdrawMoney(final double amount) {
 		economy.withdrawPlayer(getPlayer(), amount);
 	}
 
-	public final void depositMoney(final double amount) {
+	private void depositMoney(final double amount) {
 		economy.depositPlayer(getPlayer(), amount);
 	}
 

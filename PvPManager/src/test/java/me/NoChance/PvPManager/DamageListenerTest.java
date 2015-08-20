@@ -1,23 +1,10 @@
 package me.NoChance.PvPManager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.UUID;
-
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -32,9 +19,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
+
 public class DamageListenerTest {
 
-	private static PvPManager plugin;
 	private static EntityListener damageListener;
 	private EntityDamageByEntityEvent mockEvent;
 	private EntityDamageByEntityEvent projMockEvent;
@@ -47,7 +39,7 @@ public class DamageListenerTest {
 	@BeforeClass
 	public static void setupClass() {
 		PluginTest pt = AllTests.getPt();
-		plugin = pt.getPlugin();
+		PvPManager plugin = pt.getPlugin();
 		ph = plugin.getPlayerHandler();
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
@@ -72,7 +64,7 @@ public class DamageListenerTest {
 	}
 
 	@SuppressWarnings("deprecation")
-	public final void createAttack(final boolean cancelled) {
+	private void createAttack(final boolean cancelled) {
 		mockEvent = spy(new EntityDamageByEntityEvent(attacker, defender, DamageCause.ENTITY_ATTACK, 5));
 		when(mockEvent.isCancelled()).thenReturn(cancelled);
 
