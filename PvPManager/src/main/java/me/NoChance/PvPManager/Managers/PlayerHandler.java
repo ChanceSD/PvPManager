@@ -1,19 +1,20 @@
 package me.NoChance.PvPManager.Managers;
 
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Tasks.CleanKillersTask;
-import me.NoChance.PvPManager.Tasks.TagTask;
-import me.NoChance.PvPManager.Utils.CancelResult;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.UUID;
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Tasks.CleanKillersTask;
+import me.NoChance.PvPManager.Tasks.TagTask;
+import me.NoChance.PvPManager.Utils.CancelResult;
 
 public class PlayerHandler {
 
@@ -73,24 +74,20 @@ public class PlayerHandler {
 
 	private void addOnlinePlayers() {
 		for (final Player p : plugin.getServer().getOnlinePlayers()) {
-			add(p);
+			get(p);
 		}
 	}
 
 	public final PvPlayer get(final Player player) {
 		final UUID uuid = player.getUniqueId();
-		return players.containsKey(uuid) ? players.get(uuid) : add(player);
-	}
-
-	private PvPlayer add(final Player player) {
-		final PvPlayer pvPlayer = new PvPlayer(player, plugin);
-		pvPlayer.loadPvPState();
-		return save(pvPlayer);
+		return players.containsKey(uuid) ? players.get(uuid) : save(new PvPlayer(player, plugin));
 	}
 
 	private PvPlayer save(final PvPlayer p) {
-		if (plugin.getServer().getPlayer(p.getUUID()) != null) {
+		// Save only if player actually exists
+		if (Bukkit.getPlayer(p.getUUID()) != null) {
 			players.put(p.getUUID(), p);
+			p.loadPvPState();
 		}
 		return p;
 	}

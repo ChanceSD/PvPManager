@@ -1,16 +1,17 @@
 package me.NoChance.PvPManager;
 
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Tasks.NewbieTask;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.UUID;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Tasks.NewbieTask;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PvPlayer extends EcoPlayer {
 
@@ -24,21 +25,21 @@ public class PvPlayer extends EcoPlayer {
 	private long toggleTime;
 	private long respawnTime;
 	private long taggedTime;
-	private final NewbieTask newbieTask;
+	private NewbieTask newbieTask;
 	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
-	private final TeamProfile teamProfile;
+	private TeamProfile teamProfile;
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
 		super(plugin.getDependencyManager().getEconomy());
 		this.player = new WeakReference<>(player);
 		this.uuid = player.getUniqueId();
+		this.pvpState = true;
 		this.plugin = plugin;
-		this.newbieTask = new NewbieTask(this);
 		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled())
-			teamProfile = new TeamProfile(this);
+			this.teamProfile = new TeamProfile(this);
 		else
-			teamProfile = null;
+			this.teamProfile = null;
 	}
 
 	public final String getName() {
@@ -106,6 +107,7 @@ public class PvPlayer extends EcoPlayer {
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
 			message(Messages.getNewbieProtection().replace("%", Integer.toString(Variables.getNewbieProtectionTime())));
+			this.newbieTask = new NewbieTask(this);
 			newbieTask.runTaskLater(plugin, Variables.getNewbieProtectionTime() * 1200);
 		} else {
 			if (Bukkit.getServer().getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
