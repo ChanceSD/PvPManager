@@ -1,11 +1,7 @@
 package me.NoChance.PvPManager.Listeners;
 
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Config.Variables.DropMode;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,11 +12,23 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Variables.DropMode;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PlayerListener implements Listener {
 
@@ -126,16 +134,7 @@ public class PlayerListener implements Listener {
 		final Player player = e.getPlayer();
 		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			final ItemStack i = player.getItemInHand();
-			if (Variables.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
-				if (player.getHealth() == player.getMaxHealth())
-					return;
-				player.setHealth(player.getHealth() + Variables.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Variables.getSoupHealth());
-				i.setType(Material.BOWL);
-				return;
-			}
 			final PvPlayer pvplayer = ph.get(player);
-			if (pvplayer == null)
-				return;
 			if ((i.getType().equals(Material.FLINT_AND_STEEL) || i.getType().equals(Material.LAVA_BUCKET)) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
 					if (e.getPlayer().equals(p))

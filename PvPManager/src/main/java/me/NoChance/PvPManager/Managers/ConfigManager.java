@@ -1,18 +1,19 @@
 package me.NoChance.PvPManager.Managers;
 
-import me.NoChance.PvPManager.Config.Config;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils.Log;
-import me.NoChance.PvPManager.Version;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Version;
+import me.NoChance.PvPManager.Config.Config;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class ConfigManager {
 
@@ -34,8 +35,6 @@ public class ConfigManager {
 	private void updateDefaultConfig() {
 		this.config.set("Default PvP", Variables.isDefaultPvp());
 		this.config.set("PvP Blood", Variables.isPvpBlood());
-		this.config.set("Auto Soup.Enabled", Variables.isAutoSoupEnabled());
-		this.config.set("Auto Soup.Health Gain", Variables.getSoupHealth());
 		this.config.set("Disable Fly", Variables.isDisableFly());
 		this.config.set("Disable GameMode", Variables.isDisableGamemode());
 		this.config.set("Disable Disguise", Variables.isDisableDisguise());
@@ -47,7 +46,6 @@ public class ConfigManager {
 		this.config.set("In Combat.Silent", Variables.isInCombatSilent());
 		this.config.set("In Combat.Time(seconds)", Variables.getTimeInCombat());
 		this.config.set("In Combat.Name Tag Color", Variables.getNameTagColor());
-		this.config.set("In Combat.Only Tag Attacker", Variables.isOnlyTagAttacker());
 		this.config.set("In Combat.Block EnderPearl", Variables.isBlockEnderPearl());
 		this.config.set("In Combat.Block Place Blocks", Variables.isBlockPlaceBlocks());
 		this.config.set("In Combat.Stop Commands.Enabled", Variables.isStopCommands());

@@ -1,116 +1,93 @@
 # +--------------------------------------------------------------------------+ #
 # <                     PvPManager Configuration File                        > #
 # <--------------------------------------------------------------------------> #
-# <         For a more detailed explanation of each setting go to            > #
-# <   http://dev.bukkit.org/bukkit-plugins/pvpmanager/pages/configuration/   > #
+# <               For help understanding a config option go to               > #
+# <            https://www.spigotmc.org/threads/pvpmanager.25420/            > #
 # +--------------------------------------------------------------------------+ #
 
-# Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
-Config Version: ${config.version}
-# This changes the plugin's messages to the specified language.
-# Currently there is - en ru ch es it de br
-Locale: en
-
-# Should blood animation on PvP be enabled
-PvP Blood: true
-
-# Should soup instantly heal you
-Auto Soup:
-  Enabled: false
-  Health Gain: 6
-
-# This defines what happens when a player dies in PvP (only PvP - Experimental!)
-# The options are 'ALWAYS' - (PvPManager does nothing), 'DROP' - (Players drop items when killed in PvP but not in PvE),
+# Locale -> Changes messages language, options are - en ru ch es it de br
+# Default PvP -> Leave it at true unless you want no PvP for new players
+# PvP Blood -> Enable blood particles on PvP
+# Player Drop Mode -> What happens to a player's drops on death
+# The options are 'ALWAYS' - (PvPManager does nothing, so feature is disabled),
+# mode 'DROP' - (Players drop items when killed in PvP but not in PvE),
 # mode 'KEEP' - (Players keep items when killed in PvP but not in PvE) and
 # mode 'TRANSFER' - (Same as 'DROP' but transfer items directly to killer without drops)
-Player Drops:
-  Mode: ALWAYS
+# Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
+# Stop Border Hopping -> Players are vulnerable in safezones after getting tagged
+# This prevents players from doing a hit and run between zone borders
+# World Exclusions -> List of worlds where PvPManager will have no effect
+General:
+  Locale: en
+  Default PvP: true
+  PvP Blood: true
+  Player Drop Mode: ALWAYS
+  Ignore No Damage Hits: false
+  Stop Border Hopping: true
+  World Exclusions:
+    - Example
 
-# What should be disabled on PvP
-# Disabling disguises support DisguiseCraft and LibsDisguises
-# Ignore Zones For Tagged - Players can be attacked in safe zones if in combat(They can't run away from fight)
-# Ignore No Damage Hits - Plugin will ignore hits from snowballs, eggs and fishing rod
-Disable Fly: true
-Disable GameMode: true
-Disable Disguise: true
-Disable Invisibility: false
-Ignore Zones For Tagged: true
-Ignore No Damage Hits: false
+# What should be disabled when a player(except operators) enters PvP
+# Fly -> Disable any kind of fly mode
+# GameMode -> Anything not Survival gets disabled
+# Disguise -> Disguises from DisguiseCraft or LibsDisguises
+# GodMode -> GodMode from Essentials or CommandBook
+# Invisibility -> Invisibility potions, defaults to false as it's a vanilla feature
+Disable:
+  Fly: true
+  GameMode: true
+  Disguise: true
+  GodMode: true
+  Invisibility: false
 
-# This section defines everything that will happen when a player is tagged in combat
-# Silent - Should messages be sent when players are in/out combat
-# Time(seconds) - For how many seconds should the player be tagged
-# Name Tag Color - Choose the color above the player when in combat, write 'none' to disable, you can also
-# write a prefix but make sure it's under 16 characters. Example - '&c[Tagged] '
-# Stop Commands - Should commands be blocked in combat(Example - To prevent teleports)
-# -> Commands - Commands, in lowercase, allowed if whitelist mode is true or blocked if not
-# --> Command list works like permissions, 'money' will allow 'money', 'money top', etc
-# --> Whitelisting 'money top' would allow 'money top' but not 'money'
-# Punishments - When player logs out in combat (PvP log), should he be punished?
-# -> Commands On PvPLog - Commands to execute on PvP log, %p is the player name, use 'announce' to broadcast
-# -> Log To File - Log all pvp loggers to a file
-# -> Punish On Kick - Punish the player even if he was kicked
-# -> Fine - Take money from player when he PvP logs (needs Vault)
-In Combat:
+# Section about the tag system
+# Time -> How long should the tag last in seconds
+# NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color his name red
+# while 'none' will disable this feature completely
+# Block -> Section is self-explanatory, what to block in combat
+# Command whitelist is recursive, allowing 'tell' will allow 'tell' with any number of arguments
+# Punish On Kick -> Punish the player even if he gets kicked by other plugin while tagged
+# Log To File -> Logs all combat loggers to a file that you can read later
+# Kill on Logout -> Should the player be killed and, if so, what will he drop
+# Commands On PvPLog -> List of commands to execute on combat log, use '%p' for player name
+# And use the 'announce' command to broadcast, to disable just delete the command
+Tagged In Combat:
   Enabled: true
-  Silent: false
-  Time(seconds): 10
-  Name Tag Color: '&c'
-  Only Tag Attacker: false
-  Block EnderPearl: true
-  Block Place Blocks: false
-  Stop Commands:
-    Enabled: true
-    Whitelist: true
+  Time: 10
+  NameTag Prefix: '&c'
+  Block:
+    EnderPearls: true
+    Place Blocks: false
     Commands:
-      - tell
-      - tag
+      Enabled: true
+      Whitelist: true
+      Command List:
+        - tell
+        - tag
   Punishments:
-    Enabled: true
     Punish On Kick: true
+    Money Penalty: 0
     Log To File: true
-    Commands On PvPLog:
-      - 'announce &6[&8PvPManager&6] %p tried to escape combat and got punished!'
     Kill on Logout:
       Enabled: true
-      Drops:
+      Player Drops:
         Inventory: true
         Experience: true
         Armor: true
-    Fine:
-      Enabled: false
-      Amount: 10.0
+    Commands On PvPLog:
+      - 'announce &6[&8PvPManager&6] %p tried to escape combat and got punished!'
 
-# Section with settings triggered when a player kills another player
-# Money Reward - Money won as reward, use less than 1 for percentage like 0.05 for 5% (0 to disable)
-# Money Penalty - Money lost on PvP death, use less than 1 for percentage like 0.1 for 10% (0 to disable)
-# Commands On Kill - Commands to execute on kill (<player> is the killer, <victim> is the victim)
-Player Kills:
-  Money Reward: 0
-  Money Penalty: 0
-  Commands On Kill:
-    Enabled: false
-    Commands:
-      - 'heal <player>'
+# Should new players on your server be protected from PvP (If they want to PvP anyway they can use /pvp disable)
+# Time - How many minutes should newbie protection last, not persistent through restarts
+# Block Pick Items - Block players from picking up items while they have protection
+# Protect From Everything - Protect newbies from all types of damage including PvE
+Newbie Protection:
+  Enabled: true
+  Time(minutes): 5
+  Block Pick Items: false
+  Protect From Everything: false
 
-# Section for PvP Toggle command(/pvp)
-# Cooldown(seconds) - How many seconds players have to wait until they can use /pvp again
-# NameTags - Control if the nametag of the player should have colors when pvp is turned on/off.
-# You can write 'none' to disable one of the nametags, use "Enabled - false" to disable both
-# Commands to execute on PvP toggle, delete the default command for none
-PvP Toggle:
-  Broadcast: false
-  Cooldown(seconds): 15
-  NameTags:
-    Enabled: false
-    Color On: '&1'
-    Color Off: '&2'
-    Commands PvP On:
-      - 'announce &6[&8PvPManager&6]&e %p &4has just turned PvP on!'
-    Commands PvP Off:
-      - 'announce &6[&8PvPManager&6]&e %p &2is scared and has just turned PvP off!'
-
-# This feature prevents player abuse by killing the same player several times to rise in rank or get rewards
+# Prevent player abuse by killing the same player several times to rise in rank or even just grief
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
 # In this case, it would check every 60 seconds for abusers
 # Respawn Protection - After respawn, how many seconds should players be protected (0 to disable)
@@ -122,18 +99,29 @@ Kill Abuse:
     - 'kick <player> Kill Abuse Is Not Allowed!'
   Respawn Protection: 3
 
-# Should new players on your server be protected from PvP (If they want to PvP just use /pvp disable protection)
-# Time(minutes) - If so, for how many minutes should protection last
-# Block Pick Items - Block players from picking up items while they have protection
-# Protect From Everything - Protect newbies from all types of damage
-Newbie Protection:
-  Enabled: true
-  Time(minutes): 5
-  Block Pick Items: false
-  Protect From Everything: false
+# Section with settings triggered when a player kills another player
+# Money Reward - Money won as reward, use less than 1 for percentage like 0.05 for 5% (0 to disable)
+# Money Penalty - Money lost on PvP death, use less than 1 for percentage like 0.1 for 10% (0 to disable)
+# Commands On Kill - Commands to execute on kill (<player> is the killer, <victim> is the victim)
+Player Kills:
+  Money Reward: 0
+  Money Penalty: 0
+  Commands On Kill: []
 
-# Default PvP - All players should start with PvP ON(=true) or OFF(=false) by default(Only works for new players)
-Default PvP: true
+# Section for PvP Toggle command - /pvp
+# Players can't use the command unless they have permission
+# Cooldown - How many seconds until players can use the command again
+# NameTags - What should the player's prefix be when pvp is on/off
+# You can write 'none' to disable one of the nametags, or set 'Enabled' to false to disable both
+# Commands -> Command list to execute on PvP toggle, use '%p' for player name
+PvP Toggle:
+  Cooldown: 15
+  NameTags:
+    Enabled: false
+    Prefix On: '&1'
+    Prefix Off: '&2'
+  Commands PvP On: []
+  Commands PvP Off: []
 
 # Should PvPManager be allowed to check for updates and tell you about them
 # Update Location - Check and download from Spigot or from Bukkit website
@@ -143,7 +131,5 @@ Update Check:
   Update Location: Bukkit
   Auto Update: true
 
-# In these worlds PvPManager will not have any effect
-World Exclusions:
-  - Example
-  - Example2
+# Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
+Config Version: ${config.version}
