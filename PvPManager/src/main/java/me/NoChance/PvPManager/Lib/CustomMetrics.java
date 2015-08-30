@@ -1,10 +1,10 @@
 package me.NoChance.PvPManager.Lib;
 
+import java.io.IOException;
+
+import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Config.Variables;
 import me.NoChance.PvPManager.Lib.Metrics.Graph;
-import me.NoChance.PvPManager.PvPManager;
-
-import java.io.IOException;
 
 public class CustomMetrics {
 
@@ -18,31 +18,23 @@ public class CustomMetrics {
 	private void initMetrics() {
 		try {
 			final Metrics metrics = new Metrics(plugin);
-			final Graph keepItemsExp = metrics.createGraph("Percentage of Keep and Drop");
 			final Graph inCombatTime = metrics.createGraph("Time in Combat");
 			final Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
 			final Graph updateCheck = metrics.createGraph("Update Check Usage");
 			final Graph killAbuse = metrics.createGraph("Kill Abuse Usage");
-			final Graph autoSoup = metrics.createGraph("Auto Soup Usage");
+			final Graph blood = metrics.createGraph("Blood Usage");
 
-			autoSoup.addPlotter(new Metrics.Plotter("Enabled") {
+			blood.addPlotter(new Metrics.Plotter("Enabled") {
 				@Override
 				public int getValue() {
-					int i = 0;
-					if (Variables.isAutoSoupEnabled())
-						i++;
-
-					return i;
+					return Variables.isPvpBlood() ? 1 : 0;
 				}
+
 			});
-			autoSoup.addPlotter(new Metrics.Plotter("Disabled") {
+			blood.addPlotter(new Metrics.Plotter("Disabled") {
 				@Override
 				public int getValue() {
-					int i = 0;
-					if (!Variables.isAutoSoupEnabled())
-						i++;
-
-					return i;
+					return !Variables.isPvpBlood() ? 1 : 0;
 				}
 			});
 
@@ -130,88 +122,6 @@ public class CustomMetrics {
 				}
 			});
 
-			if (Variables.isPunishmentsEnabled() && Variables.isInCombatEnabled()) {
-				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Everything") {
-					@Override
-					public int getValue() {
-						int i = 0;
-						if (!Variables.isDropInventory() && !Variables.isDropExp() && !Variables.isDropArmor())
-							i++;
-
-						return i;
-					}
-				});
-				keepItemsExp.addPlotter(new Metrics.Plotter("Drop Everything") {
-					@Override
-					public int getValue() {
-						int i = 0;
-						if (Variables.isDropInventory() && Variables.isDropExp() && Variables.isDropArmor())
-							i++;
-
-						return i;
-					}
-				});
-				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Inventory/Armor and Drop Exp") {
-					@Override
-					public int getValue() {
-						int i = 0;
-						if (!Variables.isDropInventory() && !Variables.isDropArmor() && Variables.isDropExp())
-							i++;
-
-						return i;
-					}
-				});
-				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Inventory/Exp and Drop Armor") {
-					@Override
-					public int getValue() {
-						int i = 0;
-						if (!Variables.isDropInventory() && !Variables.isDropExp() && Variables.isDropArmor())
-							i++;
-
-						return i;
-					}
-				});
-				keepItemsExp.addPlotter(new Metrics.Plotter("Keep Exp/Armor and Drop Inventory") {
-					@Override
-					public int getValue() {
-						int i = 0;
-						if (Variables.isDropInventory() && !Variables.isDropExp() && !Variables.isDropArmor())
-							i++;
-
-						return i;
-					}
-				});
-				keepItemsExp.addPlotter(new Metrics.Plotter("Drop Exp/Armor and Keep Inventory") {
-					@Override
-					public int getValue() {
-						int i = 0;
-						if (!Variables.isDropInventory() && Variables.isDropExp() && Variables.isDropArmor())
-							i++;
-
-						return i;
-					}
-				});
-				keepItemsExp.addPlotter(new Metrics.Plotter("Drop Exp/Inventory and Keep Armor") {
-					@Override
-					public int getValue() {
-						int i = 0;
-						if (Variables.isDropInventory() && Variables.isDropExp() && !Variables.isDropArmor())
-							i++;
-
-						return i;
-					}
-				});
-				keepItemsExp.addPlotter(new Metrics.Plotter("Drop Inventory/Armor and Keep Exp") {
-					@Override
-					public int getValue() {
-						int i = 0;
-						if (Variables.isDropInventory() && !Variables.isDropExp() && Variables.isDropArmor())
-							i++;
-
-						return i;
-					}
-				});
-			}
 			metrics.start();
 		} catch (final IOException ignored) {
 		}

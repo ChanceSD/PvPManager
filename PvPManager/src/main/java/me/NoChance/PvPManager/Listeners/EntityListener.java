@@ -1,15 +1,5 @@
 package me.NoChance.PvPManager.Listeners;
 
-import com.earth2me.essentials.Essentials;
-import com.sk89q.commandbook.CommandBook;
-import com.sk89q.commandbook.GodComponent;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Utils.CancelResult;
-import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.libraryaddict.disguise.DisguiseAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
@@ -25,6 +15,18 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import com.earth2me.essentials.Essentials;
+import com.sk89q.commandbook.CommandBook;
+import com.sk89q.commandbook.GodComponent;
+
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Utils.CancelResult;
+import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.libraryaddict.disguise.DisguiseAPI;
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 
 public class EntityListener implements Listener {
@@ -125,10 +127,6 @@ public class EntityListener implements Listener {
 				ess.getUser(attacker).setGodModeEnabled(false);
 		}
 		if (Variables.isInCombatEnabled()) {
-			if (Variables.isOnlyTagAttacker()) {
-				pvpAttacker.setTagged(true, pvpDefender.getName());
-				return;
-			}
 			pvpAttacker.setTagged(true, pvpDefender.getName());
 			pvpDefender.setTagged(false, pvpAttacker.getName());
 		}
