@@ -137,7 +137,7 @@ public class PlayerListener implements Listener {
 			final PvPlayer pvplayer = ph.get(player);
 			if ((i.getType().equals(Material.FLINT_AND_STEEL) || i.getType().equals(Material.LAVA_BUCKET)) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
-					if (e.getPlayer().equals(p))
+					if (e.getPlayer().equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()))
 						continue;
 					final PvPlayer target = ph.get(p);
 					if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
