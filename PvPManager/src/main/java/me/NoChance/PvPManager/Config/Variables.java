@@ -24,7 +24,6 @@ public final class Variables {
 	private static ConfigManager cm;
 	private static List<String> commandsAllowed = Collections.singletonList("tag");
 	private static List<String> commandsOnKill = Collections.singletonList("heal <player>");
-	private static boolean commandsOnKillEnabled;
 	private static List<String> commandsOnPvPLog = new ArrayList<>();
 	private static List<String> commandsPvPOff = new ArrayList<>();
 	private static List<String> commandsPvPOn = new ArrayList<>();
@@ -71,7 +70,6 @@ public final class Variables {
 	private static boolean update = false;
 	private static boolean updateCheck;
 	private static String updateLocation;
-	private static boolean useNameTag;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection DISABLE;
@@ -80,6 +78,7 @@ public final class Variables {
 	private static ConfigurationSection KILLABUSE;
 	private static ConfigurationSection PLAYERKILLS;
 	private static ConfigurationSection PVPTOGGLE;
+	private static boolean disableGodMode;
 
 	private Variables() {
 	}
@@ -197,7 +196,7 @@ public final class Variables {
 	public static void assignSections() {
 		GENERAL = cm.getConfig().getConfigurationSection("General.");
 		DISABLE = cm.getConfig().getConfigurationSection("Disable.");
-		TAGGEDCOMBAT = cm.getConfig().getConfigurationSection("Tagged In Combat.");
+		TAGGEDCOMBAT = cm.getConfig().getConfigurationSection("Tagged ");
 		NEWBIEPROTECTION = cm.getConfig().getConfigurationSection("Newbie Protection.");
 		KILLABUSE = cm.getConfig().getConfigurationSection("Kill Abuse.");
 		PLAYERKILLS = cm.getConfig().getConfigurationSection("Player Kills.");
@@ -212,63 +211,61 @@ public final class Variables {
 		locale = GENERAL.getString("Locale", "en").toUpperCase();
 		defaultPvp = GENERAL.getBoolean("Default PvP", true);
 		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
-		dropMode = DropMode.valueOf(GENERAL.getString("Player Drops.Mode", "ALWAYS").toUpperCase());
+		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
 		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
-		stopBorderHopping = GENERAL.getBoolean("Ignore Zones For Tagged", true);
+		stopBorderHopping = GENERAL.getBoolean("Stop Border Hopping", true);
 		worldsExcluded = (List<String>) GENERAL.getList("World Exclusions", worldsExcluded);
 
-		disableFly = DISABLE.getBoolean("Disable Fly", true);
-		disableGamemode = DISABLE.getBoolean("Disable GameMode", true);
-		disableDisguise = DISABLE.getBoolean("Disable Disguise", true);
-		disableGodMode = DISABLE.getBoolean("Disable Fly", true);
-		disableInvisibility = DISABLE.getBoolean("Disable Invisibility", false);
+		disableFly = DISABLE.getBoolean("Fly", true);
+		disableGamemode = DISABLE.getBoolean("GameMode", true);
+		disableDisguise = DISABLE.getBoolean("Disguise", true);
+		disableGodMode = DISABLE.getBoolean("GodMode", true);
+		disableInvisibility = DISABLE.getBoolean("Invisibility", false);
 
-		inCombatEnabled = TAGGEDCOMBAT.getBoolean("In Combat.Enabled", true);
-		timeInCombat = TAGGEDCOMBAT.getInt("In Combat.Time(seconds)", 10);
-		nameTagColor = TAGGEDCOMBAT.getString("In Combat.Name Tag Color", "&c");
-		blockEnderPearl = TAGGEDCOMBAT.getBoolean("In Combat.Block EnderPearl", true);
-		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("In Combat.Block Place Blocks", false);
-		stopCommands = TAGGEDCOMBAT.getBoolean("In Combat.Stop Commands.Enabled", true);
+		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
+		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
+		nameTagColor = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
+		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
+		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
+		stopCommands = TAGGEDCOMBAT.getBoolean("Stop Commands.Enabled", true);
+		commandsWhitelist = getBoolean("Stop Commands.Whitelist", true);
+		commandsAllowed = (List<String>) cm.getConfig().getList("Stop Commands.Commands", commandsAllowed);
+		punishmentsEnabled = getBoolean("Punishments.Enabled", true);
+		punishOnKick = getBoolean("Punishments.Punish On Kick", true);
+		fineAmount = cm.getConfig().getDouble("Punishments.Fine.Amount", 10.00);
+		logToFile = getBoolean("Punishments.Log To File", true);
+		killOnLogout = getBoolean("Punishments.Kill on Logout.Enabled", true);
+		dropInventory = getBoolean("Punishments.Kill on Logout.Drops.Inventory", true);
+		dropExp = getBoolean("Punishments.Kill on Logout.Drops.Experience", true);
+		dropArmor = getBoolean("Punishments.Kill on Logout.Drops.Armor", true);
+		commandsOnPvPLog = (List<String>) cm.getConfig().getList("Punishments.Commands On PvPLog", new ArrayList<>());
 
-		punishmentsEnabled = getBoolean("In Combat.Punishments.Enabled", true);
-		dropInventory = getBoolean("In Combat.Punishments.Kill on Logout.Drops.Inventory", true);
-		dropExp = getBoolean("In Combat.Punishments.Kill on Logout.Drops.Experience", true);
-		dropArmor = getBoolean("In Combat.Punishments.Kill on Logout.Drops.Armor", true);
-		killOnLogout = getBoolean("In Combat.Punishments.Kill on Logout.Enabled", true);
-		updateCheck = getBoolean("Update Check.Enabled", true);
-		autoUpdate = getBoolean("Update Check.Auto Update", true);
 		newbieProtectionEnabled = getBoolean("Newbie Protection.Enabled", true);
 		newbieProtectionTime = cm.getConfig().getInt("Newbie Protection.Time(minutes)", 5);
-		setFineEnabled(getBoolean("In Combat.Punishments.Fine.Enabled", false));
-		fineAmount = cm.getConfig().getDouble("In Combat.Punishments.Fine.Amount", 10.00);
-		commandsAllowed = (List<String>) cm.getConfig().getList("In Combat.Stop Commands.Commands", commandsAllowed);
-		toggleCooldown = cm.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
+		blockPickNewbies = getBoolean("Newbie Protection.Block Pick Items", false);
+		newbieGodMode = getBoolean("Newbie Protection.Protect From Everything", false);
+
+		killAbuseEnabled = getBoolean("Kill Abuse.Enabled", true);
 		killAbuseMaxKills = cm.getConfig().getInt("Kill Abuse.Max Kills", 5);
 		killAbuseTime = cm.getConfig().getInt("Kill Abuse.Time Limit", 60);
 		killAbuseCommands = (List<String>) cm.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
-		killAbuseEnabled = getBoolean("Kill Abuse.Enabled", true);
-		inCombatSilent = getBoolean("In Combat.Silent", false);
-
-		setUseNameTag(!nameTagColor.equalsIgnoreCase("none"));
-		locale = getString("Locale", "en").toUpperCase();
 		respawnProtection = cm.getConfig().getInt("Kill Abuse.Respawn Protection", 5);
+
 		setMoneyReward(cm.getConfig().getDouble("Player Kills.Money Reward", 10));
-		commandsOnKillEnabled = getBoolean("Player Kills.Commands On Kill.Enabled", false);
+		setMoneyPenalty(cm.getConfig().getDouble("Player Kills.Money Penalty", 10));
 		commandsOnKill = (List<String>) cm.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
+
+		toggleCooldown = cm.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
 		setToggleNametagsEnabled(getBoolean("PvP Toggle.NameTags.Enabled", false));
 		toggleColorOn = getString("PvP Toggle.NameTags.Color On", "&1");
 		toggleColorOff = getString("PvP Toggle.NameTags.Color Off", "&2");
-		logToFile = getBoolean("In Combat.Punishments.Log To File", true);
-		setMoneyPenalty(cm.getConfig().getDouble("Player Kills.Money Penalty", 10));
-		blockPickNewbies = getBoolean("Newbie Protection.Block Pick Items", false);
-		newbieGodMode = getBoolean("Newbie Protection.Protect From Everything", false);
-		commandsWhitelist = getBoolean("In Combat.Stop Commands.Whitelist", true);
-
-		updateLocation = getString("Update Check.Update Location", "Bukkit");
-		commandsOnPvPLog = (List<String>) cm.getConfig().getList("In Combat.Punishments.Commands On PvPLog", new ArrayList<>());
 		commandsPvPOn = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP On", new ArrayList<>());
 		commandsPvPOff = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP Off", new ArrayList<>());
-		punishOnKick = getBoolean("In Combat.Punishments.Punish On Kick", true);
+
+		updateCheck = getBoolean("Update Check.Enabled", true);
+		updateLocation = getString("Update Check.Update Location", "Bukkit");
+		autoUpdate = getBoolean("Update Check.Auto Update", true);
+
 	}
 
 	public static boolean isAutoUpdate() {
@@ -285,10 +282,6 @@ public final class Variables {
 
 	public static boolean isBlockPlaceBlocks() {
 		return blockPlaceBlocks;
-	}
-
-	public static boolean isCommandsOnKillEnabled() {
-		return commandsOnKillEnabled;
 	}
 
 	public static boolean isCommandsWhitelist() {
@@ -395,10 +388,6 @@ public final class Variables {
 		return updateCheck;
 	}
 
-	public static boolean isUseNameTag() {
-		return useNameTag;
-	}
-
 	public static boolean punishOnKick() {
 		return punishOnKick;
 	}
@@ -425,10 +414,6 @@ public final class Variables {
 
 	public static void setUpdate(final boolean update) {
 		Variables.update = update;
-	}
-
-	public static void setUseNameTag(final boolean useNameTag) {
-		Variables.useNameTag = useNameTag;
 	}
 
 }
