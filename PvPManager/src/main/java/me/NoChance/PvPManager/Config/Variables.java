@@ -83,7 +83,7 @@ public final class Variables {
 	public static void assignSections() {
 		GENERAL = config.getConfigurationSection("General");
 		DISABLE = config.getConfigurationSection("Disable");
-		TAGGEDCOMBAT = config.getConfigurationSection("Tagged ");
+		TAGGEDCOMBAT = config.getConfigurationSection("Tagged In Combat");
 		NEWBIEPROTECTION = config.getConfigurationSection("Newbie Protection");
 		KILLABUSE = config.getConfigurationSection("Kill Abuse");
 		PLAYERKILLS = config.getConfigurationSection("Player Kills");
