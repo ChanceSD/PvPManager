@@ -75,7 +75,7 @@ Tagged In Combat:
         Experience: true
         Armor: true
     Commands On PvPLog:
-      - 'announce &6[&8PvPManager&6] %p tried to escape combat and got punished!'
+      - 'announce &6[&8PvPManager&6] %p tried to escape combat!'
 
 # Should new players on your server be protected from PvP (If they want to PvP anyway they can use /pvp disable)
 # Time - How many minutes should newbie protection last, not persistent through restarts

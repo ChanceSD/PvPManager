@@ -32,96 +32,34 @@ public class ConfigManager {
 		loadUsers();
 	}
 
-	private void updateDefaultConfig() {
-		this.config.set("Default PvP", Variables.isDefaultPvp());
-		this.config.set("PvP Blood", Variables.isPvpBlood());
-		this.config.set("Disable Fly", Variables.isDisableFly());
-		this.config.set("Disable GameMode", Variables.isDisableGamemode());
-		this.config.set("Disable Disguise", Variables.isDisableDisguise());
-		this.config.set("Disable Invisibility", Variables.isDisableInvisibility());
-		this.config.set("Ignore Zones For Tagged", Variables.isStopBorderHopping());
-		this.config.set("Ignore No Damage Hits", Variables.isIgnoreNoDamageHits());
-
-		this.config.set("In Combat.Enabled", Variables.isInCombatEnabled());
-		this.config.set("In Combat.Silent", Variables.isInCombatSilent());
-		this.config.set("In Combat.Time(seconds)", Variables.getTimeInCombat());
-		this.config.set("In Combat.Name Tag Color", Variables.getNameTagColor());
-		this.config.set("In Combat.Block EnderPearl", Variables.isBlockEnderPearl());
-		this.config.set("In Combat.Block Place Blocks", Variables.isBlockPlaceBlocks());
-		this.config.set("In Combat.Stop Commands.Enabled", Variables.isStopCommands());
-		this.config.set("In Combat.Stop Commands.Whitelist", Variables.isCommandsWhitelist());
-		this.config.set("In Combat.Stop Commands.Commands", Variables.getCommandsAllowed());
-		this.config.set("In Combat.Punishments.Enabled", Variables.isPunishmentsEnabled());
-		this.config.set("In Combat.Punishments.Punish On Kick", Variables.punishOnKick());
-		this.config.set("In Combat.Punishments.Commands On PvPLog", Variables.getCommandsOnPvPLog());
-		this.config.set("In Combat.Punishments.Log To File", Variables.isLogToFile());
-		this.config.set("In Combat.Punishments.Kill on Logout.Enabled", Variables.isKillOnLogout());
-		this.config.set("In Combat.Punishments.Kill on Logout.Drops.Inventory", Variables.isDropInventory());
-		this.config.set("In Combat.Punishments.Kill on Logout.Drops.Experience", Variables.isDropExp());
-		this.config.set("In Combat.Punishments.Kill on Logout.Drops.Armor", Variables.isDropArmor());
-		this.config.set("In Combat.Punishments.Fine.Enabled", Variables.isFineEnabled());
-		this.config.set("In Combat.Punishments.Fine.Amount", Variables.getFineAmount());
-
-		this.config.set("Player Kills.Money Reward", Variables.getMoneyReward());
-		this.config.set("Player Kills.Money Penalty", Variables.getMoneyPenalty());
-		this.config.set("Player Kills.Commands On Kill.Enabled", Variables.isCommandsOnKillEnabled());
-		this.config.set("Player Kills.Commands On Kill.Commands", Variables.getCommandsOnKill());
-
-		this.config.set("PvP Toggle.Cooldown(seconds)", Variables.getToggleCooldown());
-		this.config.set("PvP Toggle.NameTags.Enabled", Variables.isToggleNametagsEnabled());
-		this.config.set("PvP Toggle.NameTags.Color On", Variables.getToggleColorOn());
-		this.config.set("PvP Toggle.NameTags.Color Off", Variables.getToggleColorOff());
-		this.config.set("PvP Toggle.NameTags.Commands PvP On", Variables.getCommandsPvPOn());
-		this.config.set("PvP Toggle.NameTags.Commands PvP Off", Variables.getCommandsPvPOff());
-
-		this.config.set("Kill Abuse.Enabled", Variables.isKillAbuseEnabled());
-		this.config.set("Kill Abuse.Max Kills", Variables.getKillAbuseMaxKills());
-		this.config.set("Kill Abuse.Time Limit", Variables.getKillAbuseTime());
-		this.config.set("Kill Abuse.Commands on Abuse", Variables.getKillAbuseCommands());
-		this.config.set("Kill Abuse.Respawn Protection", Variables.getRespawnProtection());
-
-		this.config.set("Newbie Protection.Enabled", Variables.isNewbieProtectionEnabled());
-		this.config.set("Newbie Protection.Time(minutes)", Variables.getNewbieProtectionTime());
-		this.config.set("Newbie Protection.Block Pick Items", Variables.isBlockPickNewbies());
-		this.config.set("Newbie Protection.Protect From Everything", Variables.isNewbieGodMode());
-
-		this.config.set("Update Check.Enabled", Variables.isUpdateCheck());
-		this.config.set("Update Check.Update Location", Variables.getUpdateLocation());
-		this.config.set("Update Check.Auto Update", Variables.isUpdate());
-
-		this.config.set("World Exclusions", Variables.getWorldsExcluded());
-		this.config.saveConfig();
-	}
-
 	private void loadConfig() {
 		if (getConfigVersion() < Integer.parseInt(Version.getConfigVersion())) {
 			final File configFile = new File(plugin.getDataFolder(), "config.yml");
 			if (configFile.exists()) {
 				config = new Config(plugin, "config.yml");
-				Variables.initizalizeVariables(this);
+				Variables.initizalizeVariables(config);
 				configFile.delete();
 				config = new Config(plugin, "config.yml");
-				updateDefaultConfig();
+				Variables.updateDefaultConfig();
 				Variables.setConfigUpdated(true);
 				configVersion = config.getInt("Config Version");
 			} else {
 				Log.info("New Config File Created Successfully!");
 				config = new Config(plugin, "config.yml");
-				Variables.initizalizeVariables(this);
+				Variables.initizalizeVariables(config);
 				return;
 			}
 		} else {
 			config = new Config(plugin, "config.yml");
-			Variables.initizalizeVariables(this);
+			Variables.initizalizeVariables(config);
 		}
-		if (Variables.isUpdateCheck()) {
+		if (Variables.isUpdateCheck())
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					plugin.checkForUpdates();
 				}
 			}.runTaskTimer(plugin, 0, 360000);
-		}
 	}
 
 	private void loadUsers() {

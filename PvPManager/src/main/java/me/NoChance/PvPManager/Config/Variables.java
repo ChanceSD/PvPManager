@@ -9,8 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import me.NoChance.PvPManager.Managers.ConfigManager;
-
 public final class Variables {
 
 	public enum DropMode {
@@ -21,7 +19,7 @@ public final class Variables {
 	private static boolean blockEnderPearl;
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocks;
-	private static ConfigManager cm;
+	private static Config config;
 	private static List<String> commandsAllowed = Collections.singletonList("tag");
 	private static List<String> commandsOnKill = Collections.singletonList("heal <player>");
 	private static List<String> commandsOnPvPLog = new ArrayList<>();
@@ -34,14 +32,15 @@ public final class Variables {
 	private static boolean disableFly;
 	private static boolean disableGamemode;
 	private static boolean disableInvisibility;
+	private static boolean disableGodMode;
 	private static boolean dropArmor;
 	private static boolean dropExp;
 	private static boolean dropInventory;
 	private static DropMode dropMode;
 	private static double fineAmount;
-	private static boolean fineEnabled;
 	private static boolean ignoreNoDamageHits;
 	private static boolean inCombatEnabled;
+	private static boolean useNameTag;
 	private static List<String> killAbuseCommands = Collections.singletonList("kick <player> Kill Abuse Is Not Allowed!");
 	private static boolean killAbuseEnabled;
 	private static int killAbuseMaxKills;
@@ -68,7 +67,6 @@ public final class Variables {
 	private static boolean update = false;
 	private static boolean updateCheck;
 	private static String updateLocation;
-	private static boolean disableGodMode;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection DISABLE;
@@ -83,19 +81,19 @@ public final class Variables {
 	}
 
 	public static void assignSections() {
-		GENERAL = cm.getConfig().getConfigurationSection("General");
-		DISABLE = cm.getConfig().getConfigurationSection("Disable");
-		TAGGEDCOMBAT = cm.getConfig().getConfigurationSection("Tagged ");
-		NEWBIEPROTECTION = cm.getConfig().getConfigurationSection("Newbie Protection");
-		KILLABUSE = cm.getConfig().getConfigurationSection("Kill Abuse");
-		PLAYERKILLS = cm.getConfig().getConfigurationSection("Player Kills");
-		PVPTOGGLE = cm.getConfig().getConfigurationSection("PvP Toggle");
-		UPDATECHECK = cm.getConfig().getConfigurationSection("Update Check");
+		GENERAL = config.getConfigurationSection("General");
+		DISABLE = config.getConfigurationSection("Disable");
+		TAGGEDCOMBAT = config.getConfigurationSection("Tagged ");
+		NEWBIEPROTECTION = config.getConfigurationSection("Newbie Protection");
+		KILLABUSE = config.getConfigurationSection("Kill Abuse");
+		PLAYERKILLS = config.getConfigurationSection("Player Kills");
+		PVPTOGGLE = config.getConfigurationSection("PvP Toggle");
+		UPDATECHECK = config.getConfigurationSection("Update Check");
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void initizalizeVariables(final ConfigManager configManager) {
-		cm = configManager;
+	public static void initizalizeVariables(final Config c) {
+		config = c;
 		assignSections();
 
 		locale = GENERAL.getString("Locale", "en").toUpperCase();
@@ -115,6 +113,7 @@ public final class Variables {
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
+		useNameTag = nameTagPrefix == "none" || nameTagPrefix.isEmpty() ? false : true;
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
 		stopCommands = TAGGEDCOMBAT.getBoolean("Commands.Enabled", true);
@@ -154,6 +153,64 @@ public final class Variables {
 		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
 		updateLocation = UPDATECHECK.getString("Update Location", "Bukkit");
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
+	}
+
+	public static void updateDefaultConfig() {
+		config.set("General.Default PvP", Variables.isDefaultPvp());
+		config.set("General.PvP Blood", Variables.isPvpBlood());
+		config.set("General.Stop Border Hopping", Variables.isStopBorderHopping());
+		config.set("General.Ignore No Damage Hits", Variables.isIgnoreNoDamageHits());
+
+		config.set("Disable.Fly", Variables.isDisableFly());
+		config.set("Disable.GameMode", Variables.isDisableGamemode());
+		config.set("Disable.Disguise", Variables.isDisableDisguise());
+		config.set("Disable.Invisibility", Variables.isDisableInvisibility());
+
+		config.set("Tagged In Combat.Enabled", Variables.isInCombatEnabled());
+		config.set("Tagged In Combat.Time", Variables.getTimeInCombat());
+		config.set("Tagged In Combat.NameTag Prefix", Variables.getNameTagColor());
+		config.set("Tagged In Combat.Block.EnderPearls", Variables.isBlockEnderPearl());
+		config.set("Tagged In Combat.Bloc.Place Blocks", Variables.isBlockPlaceBlocks());
+		config.set("Tagged In Combat.Stop Commands.Enabled", Variables.isStopCommands());
+		config.set("Tagged In Combat.Stop Commands.Whitelist", Variables.isCommandsWhitelist());
+		config.set("Tagged In Combat.Stop Commands.Command List", Variables.getCommandsAllowed());
+		config.set("Tagged In Combat.Punishments.Punish On Kick", Variables.punishOnKick());
+		config.set("Tagged In Combat.Punishments.Commands On PvPLog", Variables.getCommandsOnPvPLog());
+		config.set("Tagged In Combat.Punishments.Log To File", Variables.isLogToFile());
+		config.set("Tagged In Combat.Punishments.Kill on Logout.Enabled", Variables.isKillOnLogout());
+		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Inventory", Variables.isDropInventory());
+		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Experience", Variables.isDropExp());
+		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Armor", Variables.isDropArmor());
+		config.set("Tagged In Combat.Punishments.Money Penalty", Variables.getFineAmount());
+
+		config.set("Player Kills.Money Reward", Variables.getMoneyReward());
+		config.set("Player Kills.Money Penalty", Variables.getMoneyPenalty());
+		config.set("Player Kills.Commands On Kill.Commands", Variables.getCommandsOnKill());
+
+		config.set("PvP Toggle.Cooldown(seconds)", Variables.getToggleCooldown());
+		config.set("PvP Toggle.NameTags.Enabled", Variables.isToggleNametagsEnabled());
+		config.set("PvP Toggle.NameTags.Color On", Variables.getToggleColorOn());
+		config.set("PvP Toggle.NameTags.Color Off", Variables.getToggleColorOff());
+		config.set("PvP Toggle.NameTags.Commands PvP On", Variables.getCommandsPvPOn());
+		config.set("PvP Toggle.NameTags.Commands PvP Off", Variables.getCommandsPvPOff());
+
+		config.set("Kill Abuse.Enabled", Variables.isKillAbuseEnabled());
+		config.set("Kill Abuse.Max Kills", Variables.getKillAbuseMaxKills());
+		config.set("Kill Abuse.Time Limit", Variables.getKillAbuseTime());
+		config.set("Kill Abuse.Commands on Abuse", Variables.getKillAbuseCommands());
+		config.set("Kill Abuse.Respawn Protection", Variables.getRespawnProtection());
+
+		config.set("Newbie Protection.Enabled", Variables.isNewbieProtectionEnabled());
+		config.set("Newbie Protection.Time(minutes)", Variables.getNewbieProtectionTime());
+		config.set("Newbie Protection.Block Pick Items", Variables.isBlockPickNewbies());
+		config.set("Newbie Protection.Protect From Everything", Variables.isNewbieGodMode());
+
+		config.set("Update Check.Enabled", Variables.isUpdateCheck());
+		config.set("Update Check.Update Location", Variables.getUpdateLocation());
+		config.set("Update Check.Auto Update", Variables.isUpdate());
+
+		config.set("World Exclusions", Variables.getWorldsExcluded());
+		config.saveConfig();
 	}
 
 	public static void helpMenu(final Player player) {
@@ -196,6 +253,10 @@ public final class Variables {
 
 	public static double getFineAmount() {
 		return fineAmount;
+	}
+
+	public static void setFineAmount(final double fineAmount) {
+		Variables.fineAmount = fineAmount;
 	}
 
 	public static List<String> getKillAbuseCommands() {
@@ -314,10 +375,6 @@ public final class Variables {
 		return dropInventory;
 	}
 
-	public static boolean isFineEnabled() {
-		return fineEnabled;
-	}
-
 	public static boolean isIgnoreNoDamageHits() {
 		return ignoreNoDamageHits;
 	}
@@ -382,10 +439,6 @@ public final class Variables {
 		Variables.configUpdated = configUpdated;
 	}
 
-	public static void setFineEnabled(final boolean fineEnabled) {
-		Variables.fineEnabled = fineEnabled;
-	}
-
 	public static void setMoneyPenalty(final double moneyPenalty) {
 		Variables.moneyPenalty = moneyPenalty;
 	}
@@ -400,6 +453,14 @@ public final class Variables {
 
 	public static void setUpdate(final boolean update) {
 		Variables.update = update;
+	}
+
+	public static boolean isUseNameTag() {
+		return useNameTag;
+	}
+
+	public static void setUseNameTag(final boolean useNameTag) {
+		Variables.useNameTag = useNameTag;
 	}
 
 }

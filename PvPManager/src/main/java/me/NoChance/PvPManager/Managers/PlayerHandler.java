@@ -73,9 +73,8 @@ public class PlayerHandler {
 	}
 
 	private void addOnlinePlayers() {
-		for (final Player p : plugin.getServer().getOnlinePlayers()) {
+		for (final Player p : plugin.getServer().getOnlinePlayers())
 			get(p);
-		}
 	}
 
 	public final PvPlayer get(final Player player) {
@@ -104,9 +103,8 @@ public class PlayerHandler {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (!player.isOnline()) {
+				if (!player.isOnline())
 					players.remove(player.getUUID());
-				}
 			}
 		}.runTaskLater(plugin, 1200);
 		if (player.hasPvPLogged()) {
@@ -138,7 +136,7 @@ public class PlayerHandler {
 			player.setPvpLogged(true);
 			p.setHealth(0);
 		}
-		if (Variables.isFineEnabled())
+		if (Variables.getFineAmount() != 0)
 			player.applyFine();
 	}
 
