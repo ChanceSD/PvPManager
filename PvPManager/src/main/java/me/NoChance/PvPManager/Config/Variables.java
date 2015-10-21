@@ -187,12 +187,12 @@ public final class Variables {
 		config.set("Player Kills.Money Penalty", Variables.getMoneyPenalty());
 		config.set("Player Kills.Commands On Kill.Commands", Variables.getCommandsOnKill());
 
-		config.set("PvP Toggle.Cooldown(seconds)", Variables.getToggleCooldown());
+		config.set("PvP Toggle.Cooldown", Variables.getToggleCooldown());
 		config.set("PvP Toggle.NameTags.Enabled", Variables.isToggleNametagsEnabled());
-		config.set("PvP Toggle.NameTags.Color On", Variables.getToggleColorOn());
-		config.set("PvP Toggle.NameTags.Color Off", Variables.getToggleColorOff());
-		config.set("PvP Toggle.NameTags.Commands PvP On", Variables.getCommandsPvPOn());
-		config.set("PvP Toggle.NameTags.Commands PvP Off", Variables.getCommandsPvPOff());
+		config.set("PvP Toggle.NameTags.Prefix On", Variables.getToggleColorOn());
+		config.set("PvP Toggle.NameTags.Prefix Off", Variables.getToggleColorOff());
+		config.set("PvP Toggle.Commands PvP On", Variables.getCommandsPvPOn());
+		config.set("PvP Toggle.Commands PvP Off", Variables.getCommandsPvPOff());
 
 		config.set("Kill Abuse.Enabled", Variables.isKillAbuseEnabled());
 		config.set("Kill Abuse.Max Kills", Variables.getKillAbuseMaxKills());
