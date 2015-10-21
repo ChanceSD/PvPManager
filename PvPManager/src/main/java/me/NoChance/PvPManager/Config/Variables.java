@@ -42,7 +42,6 @@ public final class Variables {
 	private static boolean fineEnabled;
 	private static boolean ignoreNoDamageHits;
 	private static boolean inCombatEnabled;
-	private static boolean inCombatSilent;
 	private static List<String> killAbuseCommands = Collections.singletonList("kick <player> Kill Abuse Is Not Allowed!");
 	private static boolean killAbuseEnabled;
 	private static int killAbuseMaxKills;
@@ -52,11 +51,10 @@ public final class Variables {
 	private static boolean logToFile;
 	private static double moneyPenalty;
 	private static double moneyReward;
-	private static String nameTagColor;
+	private static String nameTagPrefix;
 	private static boolean newbieGodMode;
 	private static boolean newbieProtectionEnabled;
 	private static int newbieProtectionTime;
-	private static boolean punishmentsEnabled;
 	private static boolean punishOnKick;
 	private static boolean pvpBlood;
 	private static int respawnProtection;
@@ -70,6 +68,7 @@ public final class Variables {
 	private static boolean update = false;
 	private static boolean updateCheck;
 	private static String updateLocation;
+	private static boolean disableGodMode;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection DISABLE;
@@ -78,13 +77,97 @@ public final class Variables {
 	private static ConfigurationSection KILLABUSE;
 	private static ConfigurationSection PLAYERKILLS;
 	private static ConfigurationSection PVPTOGGLE;
-	private static boolean disableGodMode;
+	private static ConfigurationSection UPDATECHECK;
 
 	private Variables() {
 	}
 
-	private static boolean getBoolean(final String message, final boolean defaultValue) {
-		return cm.getConfig().getBoolean(message, defaultValue);
+	public static void assignSections() {
+		GENERAL = cm.getConfig().getConfigurationSection("General");
+		DISABLE = cm.getConfig().getConfigurationSection("Disable");
+		TAGGEDCOMBAT = cm.getConfig().getConfigurationSection("Tagged ");
+		NEWBIEPROTECTION = cm.getConfig().getConfigurationSection("Newbie Protection");
+		KILLABUSE = cm.getConfig().getConfigurationSection("Kill Abuse");
+		PLAYERKILLS = cm.getConfig().getConfigurationSection("Player Kills");
+		PVPTOGGLE = cm.getConfig().getConfigurationSection("PvP Toggle");
+		UPDATECHECK = cm.getConfig().getConfigurationSection("Update Check");
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void initizalizeVariables(final ConfigManager configManager) {
+		cm = configManager;
+		assignSections();
+
+		locale = GENERAL.getString("Locale", "en").toUpperCase();
+		defaultPvp = GENERAL.getBoolean("Default PvP", true);
+		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
+		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
+		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
+		stopBorderHopping = GENERAL.getBoolean("Stop Border Hopping", true);
+		worldsExcluded = (List<String>) GENERAL.getList("World Exclusions", worldsExcluded);
+
+		disableFly = DISABLE.getBoolean("Fly", true);
+		disableGamemode = DISABLE.getBoolean("GameMode", true);
+		disableDisguise = DISABLE.getBoolean("Disguise", true);
+		disableGodMode = DISABLE.getBoolean("GodMode", true);
+		disableInvisibility = DISABLE.getBoolean("Invisibility", false);
+
+		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
+		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
+		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
+		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
+		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
+		stopCommands = TAGGEDCOMBAT.getBoolean("Commands.Enabled", true);
+		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Commands.Whitelist", true);
+		commandsAllowed = (List<String>) TAGGEDCOMBAT.getList("Commands.Command List", commandsAllowed);
+		punishOnKick = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick", true);
+		fineAmount = TAGGEDCOMBAT.getDouble("Punishments.Money Penalty", 10.00);
+		logToFile = TAGGEDCOMBAT.getBoolean("Punishments.Log To File", true);
+		killOnLogout = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Enabled", true);
+		dropInventory = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Inventory", true);
+		dropExp = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Experience", true);
+		dropArmor = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Armor", true);
+		commandsOnPvPLog = (List<String>) TAGGEDCOMBAT.getList("Punishments.Commands On PvPLog", new ArrayList<>());
+
+		newbieProtectionEnabled = NEWBIEPROTECTION.getBoolean("Enabled", true);
+		newbieProtectionTime = NEWBIEPROTECTION.getInt("Time(minutes)", 5);
+		blockPickNewbies = NEWBIEPROTECTION.getBoolean("Block Pick Items", false);
+		newbieGodMode = NEWBIEPROTECTION.getBoolean("Protect From Everything", false);
+
+		killAbuseEnabled = KILLABUSE.getBoolean("Enabled", true);
+		killAbuseMaxKills = KILLABUSE.getInt("Max Kills", 5);
+		killAbuseTime = KILLABUSE.getInt("Time Limit", 60);
+		killAbuseCommands = (List<String>) KILLABUSE.getList("Commands on Abuse", killAbuseCommands);
+		respawnProtection = KILLABUSE.getInt("Respawn Protection", 5);
+
+		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 10));
+		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 10));
+		commandsOnKill = (List<String>) PLAYERKILLS.getList("Commands On Kill", commandsOnKill);
+
+		toggleCooldown = PVPTOGGLE.getInt("Cooldown", 15);
+		setToggleNametagsEnabled(PVPTOGGLE.getBoolean("NameTags.Enabled", false));
+		toggleColorOn = PVPTOGGLE.getString("NameTags.Prefix On", "&1");
+		toggleColorOff = PVPTOGGLE.getString("NameTags.Prefix Off", "&2");
+		commandsPvPOn = (List<String>) PVPTOGGLE.getList("Commands PvP On", new ArrayList<>());
+		commandsPvPOff = (List<String>) PVPTOGGLE.getList("Commands PvP Off", new ArrayList<>());
+
+		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
+		updateLocation = UPDATECHECK.getString("Update Location", "Bukkit");
+		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
+	}
+
+	public static void helpMenu(final Player player) {
+		player.sendMessage(ChatColor.GOLD + "-------------- PvPManager Help Page --------------");
+		player.sendMessage(ChatColor.GOLD + "/pvp [player] " + ChatColor.WHITE + "| Set PvP Enabled or Disabled");
+		player.sendMessage(ChatColor.GOLD + "/pvpinfo [player] " + ChatColor.WHITE + "| Check your or other player info");
+		player.sendMessage(ChatColor.GOLD + "/pvplist " + ChatColor.WHITE + "| List all players with PvP enabled");
+		player.sendMessage(ChatColor.GOLD + "/pvpo " + ChatColor.WHITE + "| Override all PvP protections");
+		player.sendMessage(ChatColor.GOLD + "/pvpstatus [player] " + ChatColor.WHITE + "| Check yours or other player PvP status");
+		player.sendMessage(ChatColor.GOLD + "/pvp disable " + ChatColor.WHITE + "| Disable Newbie Protection");
+		player.sendMessage(ChatColor.GOLD + "/pm " + ChatColor.WHITE + "| Show This Help Page");
+		player.sendMessage(ChatColor.GOLD + "/pm update " + ChatColor.WHITE + "| Update to Latest Version");
+		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");
+		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
 	}
 
 	public static List<String> getCommandsAllowed() {
@@ -140,7 +223,7 @@ public final class Variables {
 	}
 
 	public static String getNameTagColor() {
-		return nameTagColor;
+		return nameTagPrefix;
 	}
 
 	public static int getNewbieProtectionTime() {
@@ -149,10 +232,6 @@ public final class Variables {
 
 	public static int getRespawnProtection() {
 		return respawnProtection;
-	}
-
-	private static String getString(final String message, final String defaultValue) {
-		return cm.getConfig().getString(message, defaultValue);
 	}
 
 	public static int getTimeInCombat() {
@@ -177,95 +256,6 @@ public final class Variables {
 
 	public static List<String> getWorldsExcluded() {
 		return worldsExcluded;
-	}
-
-	public static void helpMenu(final Player player) {
-		player.sendMessage(ChatColor.GOLD + "-------------- PvPManager Help Page --------------");
-		player.sendMessage(ChatColor.GOLD + "/pvp [player] " + ChatColor.WHITE + "| Set PvP Enabled or Disabled");
-		player.sendMessage(ChatColor.GOLD + "/pvpinfo [player] " + ChatColor.WHITE + "| Check your or other player info");
-		player.sendMessage(ChatColor.GOLD + "/pvplist " + ChatColor.WHITE + "| List all players with PvP enabled");
-		player.sendMessage(ChatColor.GOLD + "/pvpo " + ChatColor.WHITE + "| Override all PvP protections");
-		player.sendMessage(ChatColor.GOLD + "/pvpstatus [player] " + ChatColor.WHITE + "| Check yours or other player PvP status");
-		player.sendMessage(ChatColor.GOLD + "/pvp disable " + ChatColor.WHITE + "| Disable Newbie Protection");
-		player.sendMessage(ChatColor.GOLD + "/pm " + ChatColor.WHITE + "| Show This Help Page");
-		player.sendMessage(ChatColor.GOLD + "/pm update " + ChatColor.WHITE + "| Update to Latest Version");
-		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");
-		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
-	}
-
-	public static void assignSections() {
-		GENERAL = cm.getConfig().getConfigurationSection("General.");
-		DISABLE = cm.getConfig().getConfigurationSection("Disable.");
-		TAGGEDCOMBAT = cm.getConfig().getConfigurationSection("Tagged ");
-		NEWBIEPROTECTION = cm.getConfig().getConfigurationSection("Newbie Protection.");
-		KILLABUSE = cm.getConfig().getConfigurationSection("Kill Abuse.");
-		PLAYERKILLS = cm.getConfig().getConfigurationSection("Player Kills.");
-		PVPTOGGLE = cm.getConfig().getConfigurationSection("PvP Toggle.");
-	}
-
-	@SuppressWarnings("unchecked")
-	public static void initizalizeVariables(final ConfigManager configManager) {
-		cm = configManager;
-		assignSections();
-
-		locale = GENERAL.getString("Locale", "en").toUpperCase();
-		defaultPvp = GENERAL.getBoolean("Default PvP", true);
-		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
-		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
-		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
-		stopBorderHopping = GENERAL.getBoolean("Stop Border Hopping", true);
-		worldsExcluded = (List<String>) GENERAL.getList("World Exclusions", worldsExcluded);
-
-		disableFly = DISABLE.getBoolean("Fly", true);
-		disableGamemode = DISABLE.getBoolean("GameMode", true);
-		disableDisguise = DISABLE.getBoolean("Disguise", true);
-		disableGodMode = DISABLE.getBoolean("GodMode", true);
-		disableInvisibility = DISABLE.getBoolean("Invisibility", false);
-
-		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
-		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
-		nameTagColor = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
-		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
-		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
-		stopCommands = TAGGEDCOMBAT.getBoolean("Stop Commands.Enabled", true);
-		commandsWhitelist = getBoolean("Stop Commands.Whitelist", true);
-		commandsAllowed = (List<String>) cm.getConfig().getList("Stop Commands.Commands", commandsAllowed);
-		punishmentsEnabled = getBoolean("Punishments.Enabled", true);
-		punishOnKick = getBoolean("Punishments.Punish On Kick", true);
-		fineAmount = cm.getConfig().getDouble("Punishments.Fine.Amount", 10.00);
-		logToFile = getBoolean("Punishments.Log To File", true);
-		killOnLogout = getBoolean("Punishments.Kill on Logout.Enabled", true);
-		dropInventory = getBoolean("Punishments.Kill on Logout.Drops.Inventory", true);
-		dropExp = getBoolean("Punishments.Kill on Logout.Drops.Experience", true);
-		dropArmor = getBoolean("Punishments.Kill on Logout.Drops.Armor", true);
-		commandsOnPvPLog = (List<String>) cm.getConfig().getList("Punishments.Commands On PvPLog", new ArrayList<>());
-
-		newbieProtectionEnabled = getBoolean("Newbie Protection.Enabled", true);
-		newbieProtectionTime = cm.getConfig().getInt("Newbie Protection.Time(minutes)", 5);
-		blockPickNewbies = getBoolean("Newbie Protection.Block Pick Items", false);
-		newbieGodMode = getBoolean("Newbie Protection.Protect From Everything", false);
-
-		killAbuseEnabled = getBoolean("Kill Abuse.Enabled", true);
-		killAbuseMaxKills = cm.getConfig().getInt("Kill Abuse.Max Kills", 5);
-		killAbuseTime = cm.getConfig().getInt("Kill Abuse.Time Limit", 60);
-		killAbuseCommands = (List<String>) cm.getConfig().getList("Kill Abuse.Commands on Abuse", killAbuseCommands);
-		respawnProtection = cm.getConfig().getInt("Kill Abuse.Respawn Protection", 5);
-
-		setMoneyReward(cm.getConfig().getDouble("Player Kills.Money Reward", 10));
-		setMoneyPenalty(cm.getConfig().getDouble("Player Kills.Money Penalty", 10));
-		commandsOnKill = (List<String>) cm.getConfig().getList("Player Kills.Commands On Kill.Commands", commandsOnKill);
-
-		toggleCooldown = cm.getConfig().getInt("PvP Toggle.Cooldown(seconds)", 15);
-		setToggleNametagsEnabled(getBoolean("PvP Toggle.NameTags.Enabled", false));
-		toggleColorOn = getString("PvP Toggle.NameTags.Color On", "&1");
-		toggleColorOff = getString("PvP Toggle.NameTags.Color Off", "&2");
-		commandsPvPOn = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP On", new ArrayList<>());
-		commandsPvPOff = (List<String>) cm.getConfig().getList("PvP Toggle.NameTags.Commands PvP Off", new ArrayList<>());
-
-		updateCheck = getBoolean("Update Check.Enabled", true);
-		updateLocation = getString("Update Check.Update Location", "Bukkit");
-		autoUpdate = getBoolean("Update Check.Auto Update", true);
-
 	}
 
 	public static boolean isAutoUpdate() {
@@ -336,10 +326,6 @@ public final class Variables {
 		return inCombatEnabled;
 	}
 
-	public static boolean isInCombatSilent() {
-		return inCombatSilent;
-	}
-
 	public static boolean isKillAbuseEnabled() {
 		return killAbuseEnabled;
 	}
@@ -358,10 +344,6 @@ public final class Variables {
 
 	public static boolean isNewbieProtectionEnabled() {
 		return newbieProtectionEnabled;
-	}
-
-	public static boolean isPunishmentsEnabled() {
-		return punishmentsEnabled;
 	}
 
 	public static boolean isPvpBlood() {
@@ -390,6 +372,10 @@ public final class Variables {
 
 	public static boolean punishOnKick() {
 		return punishOnKick;
+	}
+
+	public static boolean isDisableGodMode() {
+		return disableGodMode;
 	}
 
 	public static void setConfigUpdated(final boolean configUpdated) {
