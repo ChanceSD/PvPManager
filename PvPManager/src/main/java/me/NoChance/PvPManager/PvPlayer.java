@@ -109,14 +109,11 @@ public class PvPlayer extends EcoPlayer {
 			message(Messages.getNewbieProtection().replace("%", Integer.toString(Variables.getNewbieProtectionTime())));
 			this.newbieTask = new NewbieTask(this);
 			newbieTask.runTaskLater(plugin, Variables.getNewbieProtectionTime() * 1200);
-		} else {
-			if (Bukkit.getServer().getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
-				message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
-				newbieTask.cancel();
-			} else {
-				message(Messages.getNewbieProtectionEnd());
-			}
-		}
+		} else if (Bukkit.getServer().getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
+			message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
+			newbieTask.cancel();
+		} else
+			message(Messages.getNewbieProtectionEnd());
 		this.newbie = newbie;
 	}
 
@@ -132,11 +129,10 @@ public class PvPlayer extends EcoPlayer {
 		if (Variables.isUseNameTag())
 			teamProfile.setInCombat();
 
-		if (!Variables.isInCombatSilent())
-			if (attacker)
-				message(Messages.getTaggedAttacker().replace("%p", tagger));
-			else
-				message(Messages.getTaggedDefender().replace("%p", tagger));
+		if (attacker)
+			message(Messages.getTaggedAttacker().replace("%p", tagger));
+		else
+			message(Messages.getTaggedDefender().replace("%p", tagger));
 
 		this.tagged = true;
 		plugin.getPlayerHandler().tag(this);
@@ -147,8 +143,7 @@ public class PvPlayer extends EcoPlayer {
 			if (Variables.isUseNameTag())
 				teamProfile.restoreTeam();
 
-			if (!Variables.isInCombatSilent())
-				message(Messages.getOutOfCombat());
+			message(Messages.getOutOfCombat());
 		}
 
 		this.tagged = false;
@@ -171,19 +166,17 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void addVictim(final String victimName) {
-		if (!victim.containsKey(victimName)) {
+		if (!victim.containsKey(victimName))
 			victim.put(victimName, 1);
-		} else if (victim.containsKey(victimName)) {
+		else if (victim.containsKey(victimName)) {
 			int totalKills = victim.get(victimName);
 			if (totalKills < Variables.getKillAbuseMaxKills()) {
 				totalKills++;
 				victim.put(victimName, totalKills);
 			}
-			if (totalKills >= Variables.getKillAbuseMaxKills()) {
-				for (final String command : Variables.getKillAbuseCommands()) {
+			if (totalKills >= Variables.getKillAbuseMaxKills())
+				for (final String command : Variables.getKillAbuseCommands())
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", getName()));
-				}
-			}
 		}
 	}
 

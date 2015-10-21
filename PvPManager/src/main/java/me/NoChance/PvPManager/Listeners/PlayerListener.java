@@ -50,11 +50,10 @@ public class PlayerListener implements Listener {
 		final PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer.isInCombat()) {
 			if (Variables.isLogToFile())
-				ph.getPlugin().getLog().log(player.getName() + " tried to escape combat and got punished!");
+				ph.getPlugin().getLog().log(player.getName() + " tried to escape combat!");
 			for (final String s : Variables.getCommandsOnPvPLog())
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", player.getName())));
-			if (Variables.isPunishmentsEnabled())
-				ph.applyPunishments(pvPlayer);
+			ph.applyPunishments(pvPlayer);
 		}
 		ph.remove(pvPlayer);
 	}
@@ -99,10 +98,8 @@ public class PlayerListener implements Listener {
 				pKiller.giveReward(player);
 			if (Variables.getMoneyPenalty() > 0)
 				pvPlayer.applyPenalty();
-			if (Variables.isCommandsOnKillEnabled())
-				for (final String command : Variables.getCommandsOnKill()) {
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
-				}
+			for (final String command : Variables.getCommandsOnKill())
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
 		}
 		if (!pvPlayer.hasPvPLogged()) {
 			final DropMode mode = Variables.getDropMode();
@@ -135,7 +132,7 @@ public class PlayerListener implements Listener {
 		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			final ItemStack i = player.getItemInHand();
 			final PvPlayer pvplayer = ph.get(player);
-			if ((i.getType().equals(Material.FLINT_AND_STEEL) || i.getType().equals(Material.LAVA_BUCKET)) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			if ((i.getType().equals(Material.FLINT_AND_STEEL) || i.getType().equals(Material.LAVA_BUCKET)) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
 					if (e.getPlayer().equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()))
 						continue;
@@ -146,7 +143,6 @@ public class PlayerListener implements Listener {
 						return;
 					}
 				}
-			}
 		}
 	}
 
@@ -174,33 +170,30 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerKick(final PlayerKickEvent event) {
 		final PvPlayer pvPlayer = ph.get(event.getPlayer());
-		if (pvPlayer.isInCombat() && Variables.isPunishmentsEnabled() && !Variables.punishOnKick()) {
+		if (pvPlayer.isInCombat() && !Variables.punishOnKick())
 			ph.untag(pvPlayer);
-		}
 	}
 
 	@EventHandler
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
 		final PvPlayer player = ph.get(event.getPlayer());
-		if (player != null && Variables.isInCombatEnabled() && player.isInCombat()) {
+		if (player != null && Variables.isInCombatEnabled() && player.isInCombat())
 			if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Variables.isBlockEnderPearl()) {
 				event.setCancelled(true);
 				player.message(Messages.getEnderpearlBlockedIncombat());
 			}
-		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public final void onCommand(final PlayerCommandPreprocessEvent event) { // NO_UCD
-		if (Variables.isStopCommands() && Variables.isInCombatEnabled()) {
+	public final void onCommand(final PlayerCommandPreprocessEvent event) {
+		if (Variables.isStopCommands() && Variables.isInCombatEnabled())
 			if (ph.get(event.getPlayer()).isInCombat()) {
 				boolean contains = false;
 				final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
 				for (int i = 0; i < givenCommand.length; i++) {
 					String args = givenCommand[0];
-					for (int j = 1; j <= i; j++) {
+					for (int j = 1; j <= i; j++)
 						args += " " + givenCommand[j];
-					}
 					if (Variables.getCommandsAllowed().contains(args.toLowerCase())) {
 						contains = true;
 						break;
@@ -211,19 +204,17 @@ public class PlayerListener implements Listener {
 					event.getPlayer().sendMessage(Messages.getCommandDeniedIncombat());
 				}
 			}
-		}
 	}
 
 	@EventHandler
-	public final void onPlayerRespawn(final PlayerRespawnEvent event) { // NO_UCD
-		if (CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName())) {
+	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
+		if (CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName()))
 			if (Variables.isKillAbuseEnabled() && Variables.getRespawnProtection() != 0) {
 				final PvPlayer player = ph.get(event.getPlayer());
 				if (player == null)
 					return;
 				player.setRespawnTime(System.currentTimeMillis());
 			}
-		}
 	}
 
 }
