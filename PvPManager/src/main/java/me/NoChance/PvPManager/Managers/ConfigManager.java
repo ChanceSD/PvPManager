@@ -2,6 +2,8 @@ package me.NoChance.PvPManager.Managers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,26 +35,34 @@ public class ConfigManager {
 	}
 
 	private void loadConfig() {
-		if (getConfigVersion() < Integer.parseInt(Version.getConfigVersion())) {
-			final File configFile = new File(plugin.getDataFolder(), "config.yml");
+		final File configFile = new File(plugin.getDataFolder(), "config.yml");
+		// This version can't be auto updated, so let's backup
+		if (getConfigVersion() < 38) {
 			if (configFile.exists()) {
-				config = new Config(plugin, "config.yml");
-				Variables.initizalizeVariables(config);
+				try {
+					Files.move(configFile.toPath(), configFile.toPath().resolveSibling("config.old.yml"), StandardCopyOption.REPLACE_EXISTING);
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+				initConfig();
+				Variables.setConfigUpdated(true);
+				configVersion = config.getInt("Config Version");
+			} else {
+				Log.info("New Config File Created Successfully!");
+				initConfig();
+				return;
+			}
+		} else if (getConfigVersion() < Integer.parseInt(Version.getConfigVersion())) {
+			if (configFile.exists()) {
+				initConfig();
 				configFile.delete();
 				config = new Config(plugin, "config.yml");
 				Variables.updateDefaultConfig();
 				Variables.setConfigUpdated(true);
 				configVersion = config.getInt("Config Version");
-			} else {
-				Log.info("New Config File Created Successfully!");
-				config = new Config(plugin, "config.yml");
-				Variables.initizalizeVariables(config);
-				return;
 			}
-		} else {
-			config = new Config(plugin, "config.yml");
-			Variables.initizalizeVariables(config);
-		}
+		} else
+			initConfig();
 		if (Variables.isUpdateCheck())
 			new BukkitRunnable() {
 				@Override
@@ -60,6 +70,11 @@ public class ConfigManager {
 					plugin.checkForUpdates();
 				}
 			}.runTaskTimer(plugin, 0, 360000);
+	}
+
+	private void initConfig() {
+		config = new Config(plugin, "config.yml");
+		Variables.initizalizeVariables(config);
 	}
 
 	private void loadUsers() {
