@@ -67,6 +67,7 @@ public final class Variables {
 	private static boolean update = false;
 	private static boolean updateCheck;
 	private static String updateLocation;
+	private static boolean optOutMetrics;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection DISABLE;
@@ -153,6 +154,8 @@ public final class Variables {
 		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
 		updateLocation = UPDATECHECK.getString("Update Location", "Bukkit");
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
+
+		optOutMetrics = config.getBoolean("Metrics.Opt-out", false);
 	}
 
 	public static void updateDefaultConfig() {
@@ -425,6 +428,10 @@ public final class Variables {
 
 	public static boolean isUpdateCheck() {
 		return updateCheck;
+	}
+
+	public static boolean isOptOutMetrics() {
+		return optOutMetrics;
 	}
 
 	public static boolean punishOnKick() {

@@ -51,12 +51,13 @@ import java.util.zip.GZIPOutputStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
+
+import me.NoChance.PvPManager.Config.Variables;
 
 public class Metrics {
 
@@ -109,11 +110,6 @@ public class Metrics {
 	 * Debug mode
 	 */
 	private final boolean debug;
-
-	/**
-	 * Lock for synchronization
-	 */
-	private final Object optOutLock = new Object();
 
 	/**
 	 * The scheduled task
@@ -192,54 +188,49 @@ public class Metrics {
 	 * @return True if statistics measuring is running, otherwise false.
 	 */
 	public boolean start() {
-		synchronized (optOutLock) {
-			// Did we opt out?
-			if (isOptOut())
-				return false;
+		// Did we opt out?
+		if (isOptOut())
+			return false;
 
-			// Is metrics already running?
-			if (task != null)
-				return true;
-
-			// Begin hitting the server with glorious data
-			task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
-
-				private boolean firstPost = true;
-
-				@Override
-				public void run() {
-					try {
-						// This has to be synchronized or it can collide with the disable method.
-						synchronized (optOutLock) {
-							// Disable Task, if it is running and the server owner decided to
-			                // opt-out
-							if (isOptOut() && task != null) {
-								task.cancel();
-								task = null;
-								// Tell all plotters to stop gathering information.
-								for (final Graph graph : graphs)
-									graph.onOptOut();
-							}
-						}
-
-						// We use the inverse of firstPost because if it is the first time we are
-			            // posting,
-			            // it is not a interval ping, so it evaluates to FALSE
-			            // Each time thereafter it will evaluate to TRUE, i.e PING!
-						postPlugin(!firstPost);
-
-						// After the first post we set firstPost to false
-			            // Each post thereafter will be a ping
-						firstPost = false;
-					} catch (final IOException e) {
-						if (debug)
-							Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
-					}
-				}
-			}, 0, PING_INTERVAL * 1200);
-
+		// Is metrics already running?
+		if (task != null)
 			return true;
-		}
+
+		// Begin hitting the server with glorious data
+		task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+
+			private boolean firstPost = true;
+
+			@Override
+			public void run() {
+				try {
+					// Disable Task, if it is running and the server owner decided to
+		            // opt-out
+					if (isOptOut() && task != null) {
+						task.cancel();
+						task = null;
+						// Tell all plotters to stop gathering information.
+						for (final Graph graph : graphs)
+							graph.onOptOut();
+					}
+
+					// We use the inverse of firstPost because if it is the first time we are
+		            // posting,
+		            // it is not a interval ping, so it evaluates to FALSE
+		            // Each time thereafter it will evaluate to TRUE, i.e PING!
+					postPlugin(!firstPost);
+
+					// After the first post we set firstPost to false
+		            // Each post thereafter will be a ping
+					firstPost = false;
+				} catch (final IOException e) {
+					if (debug)
+						Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+				}
+			}
+		}, 0, PING_INTERVAL * 1200);
+
+		return true;
 	}
 
 	/**
@@ -248,65 +239,7 @@ public class Metrics {
 	 * @return true if metrics should be opted out of it
 	 */
 	public boolean isOptOut() {
-		synchronized (optOutLock) {
-			try {
-				// Reload the metrics file
-				configuration.load(getConfigFile());
-			} catch (final IOException ex) {
-				if (debug)
-					Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
-				return true;
-			} catch (final InvalidConfigurationException ex) {
-				if (debug)
-					Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
-				return true;
-			}
-			return configuration.getBoolean("opt-out", false);
-		}
-	}
-
-	/**
-	 * Enables metrics for the server by setting "opt-out" to false in the config file and starting
-	 * the metrics task.
-	 *
-	 * @throws java.io.IOException
-	 */
-	public void enable() throws IOException {
-		// This has to be synchronized or it can collide with the check in the task.
-		synchronized (optOutLock) {
-			// Check if the server owner has already set opt-out, if not, set it.
-			if (isOptOut()) {
-				configuration.set("opt-out", false);
-				configuration.save(configurationFile);
-			}
-
-			// Enable Task, if it is not running
-			if (task == null)
-				start();
-		}
-	}
-
-	/**
-	 * Disables metrics for the server by setting "opt-out" to true in the config file and canceling
-	 * the metrics task.
-	 *
-	 * @throws java.io.IOException
-	 */
-	public void disable() throws IOException {
-		// This has to be synchronized or it can collide with the check in the task.
-		synchronized (optOutLock) {
-			// Check if the server owner has already set opt-out, if not, set it.
-			if (!isOptOut()) {
-				configuration.set("opt-out", true);
-				configuration.save(configurationFile);
-			}
-
-			// Disable Task, if it is running
-			if (task != null) {
-				task.cancel();
-				task = null;
-			}
-		}
+		return Variables.isOptOutMetrics();
 	}
 
 	/**
@@ -351,6 +284,7 @@ public class Metrics {
 	/**
 	 * Generic method that posts a plugin to the metrics website
 	 */
+	@SuppressWarnings("resource")
 	private void postPlugin(final boolean isPing) throws IOException {
 		// Server software specific section
 		final PluginDescriptionFile description = plugin.getDescription();
@@ -642,7 +576,7 @@ public class Metrics {
 		/**
 		 * The set of plotters that are contained within this graph
 		 */
-		private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
+		private final Set<Plotter> plotters = new LinkedHashSet<>();
 
 		private Graph(final String name) {
 			this.name = name;
