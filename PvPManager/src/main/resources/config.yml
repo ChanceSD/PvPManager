@@ -131,5 +131,8 @@ Update Check:
   Update Location: Bukkit
   Auto Update: true
 
+Metrics:
+  Opt-out: false
+
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
 Config Version: ${config.version}
