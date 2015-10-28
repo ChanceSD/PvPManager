@@ -25,7 +25,11 @@ class TeamProfile {
 
 	private void setupScoreboard() {
 		final Scoreboard board = pvPlayer.getPlayer().getScoreboard();
-		scoreboard = board != null ? board : Bukkit.getScoreboardManager().getMainScoreboard();
+		if (board == null) {
+			scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+			pvPlayer.getPlayer().setScoreboard(board);
+		} else
+			scoreboard = board;
 	}
 
 	private void setupTeams() {
@@ -74,7 +78,7 @@ class TeamProfile {
 			else
 				inCombat.removeEntry(pvPlayer.getName());
 		} catch (final IllegalStateException e) {
-			System.out.println("[PvPManager] Error restoring nametag for: " + pvPlayer.getName());
+			Log.severe("Error restoring nametag for: " + pvPlayer.getName());
 			inCombat.removeEntry(pvPlayer.getName());
 		}
 	}
