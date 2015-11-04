@@ -90,8 +90,6 @@ public class PlayerListener implements Listener {
 		// Player died in combat, process that
 		if (pvpDeath && !killer.equals(player)) {
 			final PvPlayer pKiller = ph.get(killer);
-			if (pKiller == null)
-				return;
 			if (Variables.isKillAbuseEnabled())
 				pKiller.addVictim(player.getName());
 			if (Variables.getMoneyReward() > 0)
