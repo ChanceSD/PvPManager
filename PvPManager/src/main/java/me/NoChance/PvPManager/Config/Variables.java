@@ -25,7 +25,6 @@ public final class Variables {
 	private static List<String> commandsPvPOff = new ArrayList<>();
 	private static List<String> commandsPvPOn = new ArrayList<>();
 	private static boolean commandsWhitelist;
-	private static boolean configUpdated;
 	private static boolean defaultPvp;
 	private static boolean disableDisguise;
 	private static boolean disableFly;
@@ -342,10 +341,6 @@ public final class Variables {
 		return commandsWhitelist;
 	}
 
-	public static boolean isConfigUpdated() {
-		return configUpdated;
-	}
-
 	public static boolean isDefaultPvp() {
 		return defaultPvp;
 	}
@@ -440,10 +435,6 @@ public final class Variables {
 
 	public static boolean isDisableGodMode() {
 		return disableGodMode;
-	}
-
-	public static void setConfigUpdated(final boolean configUpdated) {
-		Variables.configUpdated = configUpdated;
 	}
 
 	public static void setMoneyPenalty(final double moneyPenalty) {
