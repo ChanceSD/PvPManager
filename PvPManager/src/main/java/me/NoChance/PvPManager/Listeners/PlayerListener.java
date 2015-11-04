@@ -65,8 +65,6 @@ public class PlayerListener implements Listener {
 		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()))
 			return;
 		final PvPlayer pvPlayer = ph.get(player);
-		if (pvPlayer.isInCombat())
-			ph.untag(pvPlayer);
 
 		// Let's process player's inventory/exp according to config file
 		if (pvPlayer.hasPvPLogged()) {
@@ -103,11 +101,11 @@ public class PlayerListener implements Listener {
 			final DropMode mode = Variables.getDropMode();
 			switch (mode) {
 			case DROP:
-				if (!pvpDeath)
+				if (!pvpDeath && !pvPlayer.isInCombat())
 					event.setKeepInventory(true);
 				break;
 			case KEEP:
-				if (pvpDeath)
+				if (pvpDeath || pvPlayer.isInCombat())
 					event.setKeepInventory(true);
 				break;
 			case TRANSFER:
@@ -122,6 +120,8 @@ public class PlayerListener implements Listener {
 				break;
 			}
 		}
+		if (pvPlayer.isInCombat())
+			ph.untag(pvPlayer);
 	}
 
 	@EventHandler
