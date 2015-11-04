@@ -1,7 +1,10 @@
 package me.NoChance.PvPManager;
 
-import me.NoChance.PvPManager.Listeners.PlayerListener;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -14,8 +17,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import me.NoChance.PvPManager.Listeners.PlayerListener;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class OnDeathTest {
 
@@ -28,8 +31,8 @@ public class OnDeathTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		PluginTest pt = AllTests.getPt();
-		PvPManager plugin = pt.getPlugin();
+		final PluginTest pt = AllTests.getPt();
+		final PvPManager plugin = pt.getPlugin();
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
 		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Matchers.anyObject())).thenCallRealMethod();
@@ -41,6 +44,9 @@ public class OnDeathTest {
 		MockitoAnnotations.initMocks(this);
 		when(attacker.hasMetadata(Matchers.anyString())).thenReturn(false);
 		when(defender.hasMetadata(Matchers.anyString())).thenReturn(false);
+		when(attacker.getUniqueId()).thenReturn(UUID.randomUUID());
+		when(defender.getUniqueId()).thenReturn(UUID.randomUUID());
+		when(defender.getKiller()).thenReturn(attacker);
 		event = new PlayerDeathEvent(defender, null, 0, null);
 	}
 
