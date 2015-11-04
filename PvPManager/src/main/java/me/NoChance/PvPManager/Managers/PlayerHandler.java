@@ -103,8 +103,10 @@ public class PlayerHandler {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (!player.isOnline())
+				if (!player.isOnline()) {
 					players.remove(player.getUUID());
+					player.removeCombatTeam();
+				}
 			}
 		}.runTaskLater(plugin, 1200);
 		if (player.hasPvPLogged()) {
@@ -116,9 +118,6 @@ public class PlayerHandler {
 
 	public final void removeTeams() {
 		final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-		if (scoreboard.getTeam("InCombat") != null)
-			scoreboard.getTeam("InCombat").unregister();
-
 		if (scoreboard.getTeam("PvPOn") != null)
 			scoreboard.getTeam("PvPOn").unregister();
 
