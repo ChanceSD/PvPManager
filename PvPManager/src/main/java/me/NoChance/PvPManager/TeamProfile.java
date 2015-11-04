@@ -33,12 +33,12 @@ class TeamProfile {
 	}
 
 	private void setupTeams() {
-		if (scoreboard.getTeam("InCombat") != null)
-			inCombat = scoreboard.getTeam("InCombat");
+		final String id = pvPlayer.getUUID().toString().replaceAll("-", "").substring(0, 16);
+		if (scoreboard.getTeam(id) != null)
+			inCombat = scoreboard.getTeam(id);
 		else {
-			inCombat = scoreboard.registerNewTeam("InCombat");
+			inCombat = scoreboard.registerNewTeam(id);
 			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()));
-			inCombat.setCanSeeFriendlyInvisibles(false);
 		}
 		if (!Variables.getToggleColorOn().equalsIgnoreCase("none"))
 			if (scoreboard.getTeam("PvPOn") != null)
@@ -93,5 +93,9 @@ class TeamProfile {
 			restoreTeam();
 		else
 			pvpOff.addEntry(pvPlayer.getName());
+	}
+
+	public void removeCombatTeam() {
+		inCombat.unregister();
 	}
 }

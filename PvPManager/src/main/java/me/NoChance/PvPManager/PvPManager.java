@@ -1,6 +1,18 @@
 package me.NoChance.PvPManager;
 
-import me.NoChance.PvPManager.Commands.*;
+import java.io.File;
+
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import me.NoChance.PvPManager.Commands.Announce;
+import me.NoChance.PvPManager.Commands.PM;
+import me.NoChance.PvPManager.Commands.PvP;
+import me.NoChance.PvPManager.Commands.PvPInfo;
+import me.NoChance.PvPManager.Commands.PvPList;
+import me.NoChance.PvPManager.Commands.PvPOverride;
+import me.NoChance.PvPManager.Commands.PvPStatus;
+import me.NoChance.PvPManager.Commands.Tag;
 import me.NoChance.PvPManager.Config.LogFile;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
@@ -17,10 +29,6 @@ import me.NoChance.PvPManager.Updater.Updater;
 import me.NoChance.PvPManager.Updater.Updater.UpdateResult;
 import me.NoChance.PvPManager.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Utils.Log;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
 
 public final class PvPManager extends JavaPlugin {
 
@@ -53,6 +61,7 @@ public final class PvPManager extends JavaPlugin {
 		playerHandler.getTagTask().cancel();
 		for (final PvPlayer p : playerHandler.getPlayers().values()) {
 			playerHandler.savePvPState(p.getUUID(), p.hasPvPEnabled());
+			p.removeCombatTeam();
 		}
 		playerHandler.removeTeams();
 	}
@@ -77,9 +86,9 @@ public final class PvPManager extends JavaPlugin {
 
 	public void checkForUpdates() {
 		Log.info("Checking for updates...");
-		if (Variables.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
+		if (Variables.getUpdateLocation().equalsIgnoreCase("Bukkit"))
 			updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
-		} else
+		else
 			updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
