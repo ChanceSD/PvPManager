@@ -1,13 +1,23 @@
 package me.NoChance.PvPManager.Config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.Properties;
+import java.util.Queue;
+
+import org.bukkit.ChatColor;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Utils.Log;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
-import java.io.*;
-import java.util.Enumeration;
-import java.util.Properties;
 
 public class Messages {
 
@@ -37,10 +47,10 @@ public class Messages {
 	private static String enderpearlBlockedIncombat;
 	private static String errorCommand;
 	private static String currentVersion;
-	private static String newVersion;
 	private static String moneyReward;
 	private static String moneyPenalty;
 	private static Locale locale;
+	private static Queue<String> messageQueue = new LinkedList<>();
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -59,11 +69,9 @@ public class Messages {
 		if (!messagesFile.exists()) {
 			int readBytes;
 			final byte[] buffer = new byte[4096];
-			try (InputStream input = plugin.getResource("locale/" + locale.toString());
-					OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()))) {
-				while ((readBytes = input.read(buffer)) != -1) {
+			try (InputStream input = plugin.getResource("locale/" + locale.toString()); OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()))) {
+				while ((readBytes = input.read(buffer)) != -1)
 					resStreamOut.write(buffer, 0, readBytes);
-				}
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -93,7 +101,7 @@ public class Messages {
 			message = new String(LANG.getProperty(key).getBytes("ISO-8859-1"), "UTF-8");
 		} catch (final UnsupportedEncodingException e1) {
 			e1.printStackTrace();
-			return "Encoding error! Please report to the developer";
+			return "Encoding error! Please report this bug!";
 		}
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
@@ -148,19 +156,6 @@ public class Messages {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static void updateMessage(final Player player) {
-		player.sendMessage("§6[§fPvPManager§6] " + "§2An update is available: §e" + getNewVersion());
-		player.sendMessage("§6[§fPvPManager§6] " + "§2Your current version is: §ePvPManager v" + currentVersion);
-		player.sendMessage("§2Go to this page to download the latest version:");
-		player.sendMessage("§2Link: §ehttp://dev.bukkit.org/bukkit-plugins/pvpmanager/");
-		player.sendMessage("§2Use §e/pm update §2to update automatically");
-	}
-
-	public static void configUpdated(final Player player) {
-		player.sendMessage("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + plugin.getConfigM().getConfigVersion());
-		player.sendMessage("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust the file to your liking");
 	}
 
 	public static String getErrorPermission() {
@@ -255,10 +250,6 @@ public class Messages {
 		return currentVersion;
 	}
 
-	public static String getNewversion() {
-		return getNewVersion();
-	}
-
 	public static String getMoneyReward() {
 		return moneyReward;
 	}
@@ -271,6 +262,14 @@ public class Messages {
 		return locale;
 	}
 
+	public static String getTagTimeLeft() {
+		return tagTimeLeft;
+	}
+
+	public static String getTagNotInCombat() {
+		return tagNotInCombat;
+	}
+
 	private static String getNewVersion() {
 		return newVersion;
 	}
@@ -278,4 +277,8 @@ public class Messages {
 	public static void setNewVersion(final String newVersion) {
 		Messages.newVersion = newVersion;
 	}
+	public static Queue<String> getMessageQueue() {
+		return messageQueue;
+	}
+
 }

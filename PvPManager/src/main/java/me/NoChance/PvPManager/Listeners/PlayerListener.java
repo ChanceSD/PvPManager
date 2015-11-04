@@ -167,8 +167,9 @@ public class PlayerListener implements Listener {
 		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
 			if (Variables.isUpdate())
 				Messages.updateMessage(player);
-			if (Variables.isConfigUpdated())
-				Messages.configUpdated(player);
+			if (!Messages.getMessageQueue().isEmpty())
+				for (final String s : Messages.getMessageQueue())
+					player.sendMessage(s);
 		}
 	}
 
