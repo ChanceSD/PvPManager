@@ -187,7 +187,7 @@ public class PlayerListener implements Listener {
 			}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public final void onCommand(final PlayerCommandPreprocessEvent event) {
 		if (Variables.isStopCommands() && Variables.isInCombatEnabled())
 			if (ph.get(event.getPlayer()).isInCombat()) {
