@@ -19,9 +19,8 @@ public final class Variables {
 	private static boolean blockEnderPearl;
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocks;
-	private static Config config;
 	private static List<String> commandsAllowed = Collections.singletonList("tag");
-	private static List<String> commandsOnKill = Collections.singletonList("heal <player>");
+	private static List<String> commandsOnKill = new ArrayList<>();
 	private static List<String> commandsOnPvPLog = new ArrayList<>();
 	private static List<String> commandsPvPOff = new ArrayList<>();
 	private static List<String> commandsPvPOn = new ArrayList<>();
@@ -82,7 +81,7 @@ public final class Variables {
 	private Variables() {
 	}
 
-	public static void assignSections() {
+	private static void assignSections(final Config config) {
 		GENERAL = config.getConfigurationSection("General");
 		DISABLE = config.getConfigurationSection("Disable");
 		TAGGEDCOMBAT = config.getConfigurationSection("Tagged In Combat");
@@ -95,8 +94,7 @@ public final class Variables {
 
 	@SuppressWarnings("unchecked")
 	public static void initizalizeVariables(final Config c) {
-		config = c;
-		assignSections();
+		assignSections(c);
 
 		locale = GENERAL.getString("Locale", "en").toUpperCase();
 		defaultPvp = GENERAL.getBoolean("Default PvP", true);
@@ -160,7 +158,7 @@ public final class Variables {
 		optOutMetrics = config.getBoolean("Metrics.Opt-out", false);
 	}
 
-	public static void updateDefaultConfig() {
+	public static void updateDefaultConfig(final Config config, final int newVersion) {
 		config.set("General.Default PvP", Variables.isDefaultPvp());
 		config.set("General.PvP Blood", Variables.isPvpBlood());
 		config.set("General.Stop Border Hopping", Variables.isStopBorderHopping());
@@ -211,11 +209,10 @@ public final class Variables {
 		config.set("Newbie Protection.Block Pick Items", Variables.isBlockPickNewbies());
 		config.set("Newbie Protection.Protect From Everything", Variables.isNewbieGodMode());
 
+		config.set("Config Version", newVersion);
 		config.set("Update Check.Enabled", Variables.isUpdateCheck());
 		config.set("Update Check.Update Location", Variables.getUpdateLocation());
 		config.set("Update Check.Auto Update", Variables.isUpdate());
-
-		config.set("World Exclusions", Variables.getWorldsExcluded());
 		config.saveConfig();
 	}
 
