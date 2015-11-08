@@ -68,6 +68,7 @@ public final class Variables {
 	private static boolean updateCheck;
 	private static String updateLocation;
 	private static boolean optOutMetrics;
+	private static double soupHealth;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection DISABLE;
@@ -103,6 +104,7 @@ public final class Variables {
 		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
 		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
 		stopBorderHopping = GENERAL.getBoolean("Stop Border Hopping", true);
+		soupHealth = GENERAL.getDouble("Auto Soup Health", 0);
 		worldsExcluded = (List<String>) GENERAL.getList("World Exclusions", worldsExcluded);
 
 		disableFly = DISABLE.getBoolean("Fly", true);
@@ -163,6 +165,7 @@ public final class Variables {
 		config.set("General.PvP Blood", Variables.isPvpBlood());
 		config.set("General.Stop Border Hopping", Variables.isStopBorderHopping());
 		config.set("General.Ignore No Damage Hits", Variables.isIgnoreNoDamageHits());
+		config.set("General.Auto Soup Health", Variables.getSoupHealth());
 
 		config.set("Disable.Fly", Variables.isDisableFly());
 		config.set("Disable.GameMode", Variables.isDisableGamemode());
@@ -468,6 +471,14 @@ public final class Variables {
 
 	public static void setUseNameTag(final boolean useNameTag) {
 		Variables.useNameTag = useNameTag;
+	}
+
+	public static boolean isAutoSoupEnabled() {
+		return getSoupHealth() > 0;
+	}
+
+	public static double getSoupHealth() {
+		return soupHealth;
 	}
 
 }
