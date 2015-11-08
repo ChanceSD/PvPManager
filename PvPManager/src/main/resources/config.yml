@@ -16,6 +16,7 @@
 # Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
 # Stop Border Hopping -> Players are vulnerable in safezones after getting tagged
 # This prevents players from doing a hit and run between zone borders
+# Auto Soup Health -> How much health does soup heal, use 0 to disable
 # World Exclusions -> List of worlds where PvPManager will have no effect
 General:
   Locale: en
@@ -24,6 +25,7 @@ General:
   Player Drop Mode: ALWAYS
   Ignore No Damage Hits: false
   Stop Border Hopping: true
+  Auto Soup Health: 0
   World Exclusions:
     - Example
 

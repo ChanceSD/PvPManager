@@ -125,12 +125,19 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public final void onPlayerInteract(final PlayerInteractEvent e) { // NO_UCD
+	public final void onPlayerInteract(final PlayerInteractEvent e) {
 		final Player player = e.getPlayer();
 		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			final ItemStack i = player.getItemInHand();
 			final PvPlayer pvplayer = ph.get(player);
-			if ((i.getType().equals(Material.FLINT_AND_STEEL) || i.getType().equals(Material.LAVA_BUCKET)) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+			if (Variables.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
+				if (player.getHealth() == player.getMaxHealth())
+					return;
+				player.setHealth(player.getHealth() + Variables.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Variables.getSoupHealth());
+				i.setType(Material.BOWL);
+				return;
+			}
+			if ((i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
 					if (e.getPlayer().equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()))
 						continue;
@@ -145,7 +152,7 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public final void onPlayerPickup(final PlayerPickupItemEvent e) { // NO_UCD
+	public final void onPlayerPickup(final PlayerPickupItemEvent e) {
 		if (Variables.isNewbieProtectionEnabled() && Variables.isBlockPickNewbies()) {
 			final PvPlayer player = ph.get(e.getPlayer());
 			if (player.isNewbie())
