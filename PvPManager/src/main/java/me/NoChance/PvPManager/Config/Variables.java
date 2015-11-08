@@ -119,9 +119,9 @@ public final class Variables {
 		useNameTag = nameTagPrefix == "none" || nameTagPrefix.isEmpty() ? false : true;
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
-		stopCommands = TAGGEDCOMBAT.getBoolean("Commands.Enabled", true);
-		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Commands.Whitelist", true);
-		commandsAllowed = (List<String>) TAGGEDCOMBAT.getList("Commands.Command List", commandsAllowed);
+		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
+		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
+		commandsAllowed = (List<String>) TAGGEDCOMBAT.getList("Block.Commands.Command List", commandsAllowed);
 		punishOnKick = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick", true);
 		fineAmount = TAGGEDCOMBAT.getDouble("Punishments.Money Penalty", 10.00);
 		logToFile = TAGGEDCOMBAT.getBoolean("Punishments.Log To File", true);
@@ -176,10 +176,10 @@ public final class Variables {
 		config.set("Tagged In Combat.Time", Variables.getTimeInCombat());
 		config.set("Tagged In Combat.NameTag Prefix", Variables.getNameTagColor());
 		config.set("Tagged In Combat.Block.EnderPearls", Variables.isBlockEnderPearl());
-		config.set("Tagged In Combat.Bloc.Place Blocks", Variables.isBlockPlaceBlocks());
-		config.set("Tagged In Combat.Stop Commands.Enabled", Variables.isStopCommands());
-		config.set("Tagged In Combat.Stop Commands.Whitelist", Variables.isCommandsWhitelist());
-		config.set("Tagged In Combat.Stop Commands.Command List", Variables.getCommandsAllowed());
+		config.set("Tagged In Combat.Block.Place Blocks", Variables.isBlockPlaceBlocks());
+		config.set("Tagged In Combat.Block.Commands.Enabled", Variables.isStopCommands());
+		config.set("Tagged In Combat.Block.Commands.Whitelist", Variables.isCommandsWhitelist());
+		config.set("Tagged In Combat.Block.Commands.Command List", Variables.getCommandsAllowed());
 		config.set("Tagged In Combat.Punishments.Punish On Kick", Variables.punishOnKick());
 		config.set("Tagged In Combat.Punishments.Commands On PvPLog", Variables.getCommandsOnPvPLog());
 		config.set("Tagged In Combat.Punishments.Log To File", Variables.isLogToFile());
@@ -191,7 +191,7 @@ public final class Variables {
 
 		config.set("Player Kills.Money Reward", Variables.getMoneyReward());
 		config.set("Player Kills.Money Penalty", Variables.getMoneyPenalty());
-		config.set("Player Kills.Commands On Kill.Commands", Variables.getCommandsOnKill());
+		config.set("Player Kills.Commands On Kill", Variables.getCommandsOnKill());
 
 		config.set("PvP Toggle.Cooldown", Variables.getToggleCooldown());
 		config.set("PvP Toggle.NameTags.Enabled", Variables.isToggleNametagsEnabled());
