@@ -57,9 +57,11 @@ public class ConfigManager {
 				initConfig();
 				configFile.delete();
 				config = new Config(plugin, "config.yml");
-				Variables.updateDefaultConfig();
 				Variables.setConfigUpdated(true);
 				configVersion = config.getInt("Config Version");
+				Variables.updateDefaultConfig(config, configVersion);
+				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + configVersion);
+				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust them");
 			}
 		} else
 			initConfig();
