@@ -57,7 +57,8 @@ class TeamProfile {
 				pvpOff.setCanSeeFriendlyInvisibles(false);
 			}
 		try {
-			previousTeam = scoreboard.getEntryTeam(pvPlayer.getName());
+			if (!inCombat.equals(scoreboard.getEntryTeam(pvPlayer.getName())))
+				previousTeam = scoreboard.getEntryTeam(pvPlayer.getName());
 		} catch (final NoSuchMethodError e) {
 			Variables.setUseNameTag(false);
 			Variables.setToggleNametagsEnabled(false);
