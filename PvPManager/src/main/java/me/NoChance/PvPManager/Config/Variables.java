@@ -154,7 +154,7 @@ public final class Variables {
 		updateLocation = UPDATECHECK.getString("Update Location", "Bukkit");
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
 
-		optOutMetrics = config.getBoolean("Metrics.Opt-out", false);
+		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
 	}
 
 	public static void updateDefaultConfig(final Config config, final int newVersion) {

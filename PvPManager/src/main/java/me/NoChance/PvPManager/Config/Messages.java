@@ -51,6 +51,7 @@ public class Messages {
 	private static String moneyPenalty;
 	private static Locale locale;
 	private static Queue<String> messageQueue = new LinkedList<>();
+	private static String newVersion;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -262,21 +263,14 @@ public class Messages {
 		return locale;
 	}
 
-	public static String getTagTimeLeft() {
-		return tagTimeLeft;
-	}
-
-	public static String getTagNotInCombat() {
-		return tagNotInCombat;
-	}
-
-	private static String getNewVersion() {
+	public static String getNewVersion() {
 		return newVersion;
 	}
 
 	public static void setNewVersion(final String newVersion) {
 		Messages.newVersion = newVersion;
 	}
+
 	public static Queue<String> getMessageQueue() {
 		return messageQueue;
 	}

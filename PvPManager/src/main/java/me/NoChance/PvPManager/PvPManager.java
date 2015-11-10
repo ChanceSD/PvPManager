@@ -92,7 +92,7 @@ public final class PvPManager extends JavaPlugin {
 			updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
-			Log.info("Update Available: " + Messages.getNewversion());
+			Log.info("Update Available: " + Messages.getNewVersion());
 			if (Variables.isAutoUpdate()) {
 				downloadUpdate();
 				Log.info("Version Downloaded To Your Update Folder");
