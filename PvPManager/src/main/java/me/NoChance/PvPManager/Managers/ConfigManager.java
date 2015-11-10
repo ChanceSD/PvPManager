@@ -38,7 +38,7 @@ public class ConfigManager {
 	private void loadConfig() {
 		final File configFile = new File(plugin.getDataFolder(), "config.yml");
 		// This version can't be auto updated, so let's backup
-		if (getConfigVersion() < 43) {
+		if (getConfigVersion() < 38) {
 			if (configFile.exists()) {
 				try {
 					Files.move(configFile.toPath(), configFile.toPath().resolveSibling("config.old.yml"), StandardCopyOption.REPLACE_EXISTING);
@@ -46,10 +46,10 @@ public class ConfigManager {
 					e.printStackTrace();
 				}
 				initConfig();
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + plugin.getConfigM().getConfigVersion());
+				configVersion = config.getInt("Config Version");
+				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + configVersion);
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Due to big changes, your config file was renamed to config.old.yml");
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Please copy your settings manually to the new config file");
-				configVersion = config.getInt("Config Version");
 			} else {
 				Log.info("New Config File Created Successfully!");
 				initConfig();
@@ -60,8 +60,6 @@ public class ConfigManager {
 				initConfig();
 				configFile.delete();
 				config = new Config(plugin, "config.yml");
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + plugin.getConfigM().getConfigVersion());
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust them");
 				configVersion = config.getInt("Config Version");
 				Variables.updateDefaultConfig(config, configVersion);
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + configVersion);
