@@ -184,7 +184,7 @@ public class PlayerListener implements Listener {
 			if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Variables.isBlockEnderPearl()) {
 				event.setCancelled(true);
 				player.message(Messages.getEnderpearlBlockedIncombat());
-			} else if (event.getCause().equals(TeleportCause.COMMAND)) {
+			} else if (event.getCause().equals(TeleportCause.COMMAND) && Variables.isBlockTeleport()) {
 				event.setCancelled(true);
 				player.message("§cYou can't teleport while in combat!");
 			}

@@ -17,6 +17,7 @@ public final class Variables {
 
 	private static boolean autoUpdate;
 	private static boolean blockEnderPearl;
+	private static boolean blockTeleport;
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocks;
 	private static List<String> commandsAllowed = Collections.singletonList("tag");
@@ -115,6 +116,7 @@ public final class Variables {
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
 		useNameTag = nameTagPrefix == "none" || nameTagPrefix.isEmpty() ? false : true;
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
+		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
 		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
@@ -173,6 +175,7 @@ public final class Variables {
 		config.set("Tagged In Combat.Time", Variables.getTimeInCombat());
 		config.set("Tagged In Combat.NameTag Prefix", Variables.getNameTagColor());
 		config.set("Tagged In Combat.Block.EnderPearls", Variables.isBlockEnderPearl());
+		config.set("Tagged In Combat.Block.Teleport", Variables.isBlockEnderPearl());
 		config.set("Tagged In Combat.Block.Place Blocks", Variables.isBlockPlaceBlocks());
 		config.set("Tagged In Combat.Block.Commands.Enabled", Variables.isStopCommands());
 		config.set("Tagged In Combat.Block.Commands.Whitelist", Variables.isCommandsWhitelist());
@@ -467,6 +470,10 @@ public final class Variables {
 
 	public static double getSoupHealth() {
 		return soupHealth;
+	}
+
+	public static boolean isBlockTeleport() {
+		return blockTeleport;
 	}
 
 }

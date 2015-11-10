@@ -59,6 +59,7 @@ Tagged In Combat:
   NameTag Prefix: '&c'
   Block:
     EnderPearls: true
+    Teleport: true
     Place Blocks: false
     Commands:
       Enabled: true
