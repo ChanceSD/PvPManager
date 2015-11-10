@@ -24,12 +24,11 @@ class TeamProfile {
 	}
 
 	private void setupScoreboard() {
-		final Scoreboard board = pvPlayer.getPlayer().getScoreboard();
-		if (board == null) {
+		scoreboard = pvPlayer.getPlayer().getScoreboard();
+		if (scoreboard == null) {
 			scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-			pvPlayer.getPlayer().setScoreboard(board);
-		} else
-			scoreboard = board;
+			pvPlayer.getPlayer().setScoreboard(scoreboard);
+		}
 	}
 
 	private void setupTeams() {
