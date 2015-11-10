@@ -121,10 +121,12 @@ public class EntityListener implements Listener {
 			}
 			if (Variables.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY))
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
-			if (gc != null && gc.hasGodMode(attacker))
-				gc.disableGodMode(attacker);
-			if (ess != null && ess.getUser(attacker).isGodModeEnabled())
-				ess.getUser(attacker).setGodModeEnabled(false);
+			if (Variables.isDisableGodMode()) {
+				if (gc != null && gc.hasGodMode(attacker))
+					gc.disableGodMode(attacker);
+				if (ess != null && ess.getUser(attacker).isGodModeEnabled())
+					ess.getUser(attacker).setGodModeEnabled(false);
+			}
 		}
 		if (Variables.isInCombatEnabled()) {
 			pvpAttacker.setTagged(true, pvpDefender.getName());
@@ -138,16 +140,13 @@ public class EntityListener implements Listener {
 		if (event.getAffectedEntities().isEmpty() || !(potion.getShooter() instanceof Player))
 			return;
 
-		for (final PotionEffect effect : potion.getEffects()) {
+		for (final PotionEffect effect : potion.getEffects())
 			if (effect.getType().equals(PotionEffectType.POISON)) {
-				for (final LivingEntity e : event.getAffectedEntities()) {
-					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled()) {
+				for (final LivingEntity e : event.getAffectedEntities())
+					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled())
 						event.setIntensity(e, 0);
-					}
-				}
 				return;
 			}
-		}
 	}
 
 	private Player getAttacker(final EntityDamageByEntityEvent event) {
