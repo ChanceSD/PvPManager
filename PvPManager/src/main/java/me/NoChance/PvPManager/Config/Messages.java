@@ -50,7 +50,7 @@ public class Messages {
 	private static String moneyReward;
 	private static String moneyPenalty;
 	private static Locale locale;
-	private final static Queue<String> messageQueue = new LinkedList<>();
+	private static final Queue<String> messageQueue = new LinkedList<>();
 	private static String newVersion;
 
 	public static void setup(final PvPManager plugin) {

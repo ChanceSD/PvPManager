@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 public class Announce implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 		Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', StringUtils.join(args, " ")));
 		return true;
 	}

@@ -64,7 +64,7 @@ public class Metrics {
 	/**
 	 * The current revision number
 	 */
-	private final static int REVISION = 7;
+	private static final int REVISION = 7;
 
 	/**
 	 * The base url of the metrics domain
@@ -151,7 +151,7 @@ public class Metrics {
 	 * @return Graph object created. Will never return NULL under normal circumstances unless bad
 	 *         parameters are given
 	 */
-	public Graph createGraph(final String name) {
+	public final Graph createGraph(final String name) {
 		if (name == null)
 			throw new IllegalArgumentException("Graph name cannot be null");
 
@@ -171,7 +171,7 @@ public class Metrics {
 	 *
 	 * @param graph The name of the graph
 	 */
-	public void addGraph(final Graph graph) {
+	public final void addGraph(final Graph graph) {
 		if (graph == null)
 			throw new IllegalArgumentException("Graph cannot be null");
 
@@ -187,7 +187,7 @@ public class Metrics {
 	 *
 	 * @return True if statistics measuring is running, otherwise false.
 	 */
-	public boolean start() {
+	public final boolean start() {
 		// Did we opt out?
 		if (isOptOut())
 			return false;
@@ -238,7 +238,7 @@ public class Metrics {
 	 *
 	 * @return true if metrics should be opted out of it
 	 */
-	public boolean isOptOut() {
+	public final boolean isOptOut() {
 		return Variables.isOptOutMetrics();
 	}
 
@@ -248,7 +248,7 @@ public class Metrics {
 	 *
 	 * @return the File object for the config file
 	 */
-	public File getConfigFile() {
+	public final File getConfigFile() {
 		// I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins
 		// to use
 		// is to abuse the plugin object we already have
@@ -564,7 +564,7 @@ public class Metrics {
 	/**
 	 * Represents a custom graph on the website
 	 */
-	public static class Graph {
+	public static final class Graph {
 
 		/**
 		 * The graph's name, alphanumeric and spaces only :) If it does not comply to the above when
@@ -643,7 +643,7 @@ public class Metrics {
 	/**
 	 * Interface used to collect custom data for a plugin
 	 */
-	public static abstract class Plotter {
+	public abstract static class Plotter {
 
 		/**
 		 * The plot's name
@@ -683,7 +683,7 @@ public class Metrics {
 		 *
 		 * @return the plotted point's column name
 		 */
-		public String getColumnName() {
+		public final String getColumnName() {
 			return name;
 		}
 
@@ -694,12 +694,12 @@ public class Metrics {
 		}
 
 		@Override
-		public int hashCode() {
+		public final int hashCode() {
 			return getColumnName().hashCode();
 		}
 
 		@Override
-		public boolean equals(final Object object) {
+		public final boolean equals(final Object object) {
 			if (!(object instanceof Plotter))
 				return false;
 

@@ -229,7 +229,7 @@ public class PvPlayer extends EcoPlayer {
 			player = new WeakReference<>(p);
 	}
 
-	public void removeCombatTeam() {
+	public final void removeCombatTeam() {
 		teamProfile.removeCombatTeam();
 	}
 

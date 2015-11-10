@@ -1,10 +1,14 @@
 package me.NoChance.PvPManager.Tasks;
 
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TimerTask;
 
-import java.util.*;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class TagTask extends TimerTask {
 
@@ -26,22 +30,21 @@ public class TagTask extends TimerTask {
 	}
 
 	@Override
-	public synchronized boolean cancel() throws IllegalStateException {
+	public final synchronized boolean cancel() throws IllegalStateException {
 		synchronized (tagged) {
-			for (PvPlayer pvPlayer : tagged) {
+			for (final PvPlayer pvPlayer : tagged)
 				if (pvPlayer.isInCombat())
 					pvPlayer.unTag();
-			}
 		}
 		tagged.clear();
 		return super.cancel();
 	}
 
-	public void addTagged(final PvPlayer p) {
+	public final void addTagged(final PvPlayer p) {
 		tagged.add(p);
 	}
 
-	public void untag(final PvPlayer p) {
+	public final void untag(final PvPlayer p) {
 		tagged.remove(p);
 		if (p.isInCombat())
 			p.unTag();
