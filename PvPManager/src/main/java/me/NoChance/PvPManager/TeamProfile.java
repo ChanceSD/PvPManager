@@ -17,7 +17,7 @@ class TeamProfile {
 	private final PvPlayer pvPlayer;
 	private Scoreboard scoreboard;
 
-	public TeamProfile(final PvPlayer p) {
+	TeamProfile(final PvPlayer p) {
 		this.pvPlayer = p;
 		setupScoreboard();
 		setupTeams();

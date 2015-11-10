@@ -1,15 +1,20 @@
 package me.NoChance.PvPManager.Updater;
 
-import me.NoChance.PvPManager.Utils.Log;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class BukkitUpdater extends Updater {
 
@@ -45,22 +50,18 @@ public class BukkitUpdater extends Updater {
 
 	@Override
 	protected final void runUpdater() {
-		if (this.url != null) {
-			if (this.read()) {
-				if (this.versionCheck(this.versionName)) {
-					if (this.versionLink != null && this.getType() == UpdateType.DOWNLOAD) {
+		if (this.url != null)
+			if (this.read())
+				if (this.versionCheck(this.versionName))
+					if (this.versionLink != null && this.getType() == UpdateType.DOWNLOAD)
 						try {
 							this.downloadFile();
-						} catch (Exception e) {
+						} catch (final Exception e) {
 							Log.warning("The auto-updater tried to download a new update, but was unsuccessful.");
 							this.setResult(UpdateResult.FAIL_DOWNLOAD);
 						}
-					} else {
+					else
 						this.setResult(UpdateResult.UPDATE_AVAILABLE);
-					}
-				}
-			}
-		}
 	}
 
 	@Override
@@ -89,17 +90,16 @@ public class BukkitUpdater extends Updater {
 		URL url1;
 		try {
 			url1 = new URL(this.versionLink);
-		} catch (MalformedURLException e1) {
+		} catch (final MalformedURLException e1) {
 			e1.printStackTrace();
 			return false;
 		}
 		try (FileOutputStream fout = new FileOutputStream(getFile()); BufferedInputStream in = new BufferedInputStream(url1.openStream())) {
 			final byte[] data = new byte[BYTE_SIZE];
 			int count;
-			while ((count = in.read(data, 0, BYTE_SIZE)) != -1) {
+			while ((count = in.read(data, 0, BYTE_SIZE)) != -1)
 				fout.write(data, 0, count);
-			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -111,8 +111,8 @@ public class BukkitUpdater extends Updater {
 		final String version = this.getPlugin().getDescription().getVersion();
 		if (title.split(" v").length == 2) {
 			final String remoteVersion = title.split(" v")[1].split(" ")[0];
-			String[] remote = getVersionArray(remoteVersion);
-			String[] local = getVersionArray(version);
+			final String[] remote = getVersionArray(remoteVersion);
+			final String[] local = getVersionArray(version);
 			final int length = Math.max(local.length, remote.length);
 			try {
 				for (int i = 0; i < length; i++) {
@@ -125,7 +125,7 @@ public class BukkitUpdater extends Updater {
 						return false;
 					}
 				}
-			} catch (NumberFormatException ex) {
+			} catch (final NumberFormatException ex) {
 				Log.warning("Error reading version number!");
 			}
 		} else {
@@ -165,7 +165,7 @@ public class BukkitUpdater extends Updater {
 			try {
 				if (reader != null)
 					reader.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 		}

@@ -1,10 +1,17 @@
 package me.NoChance.PvPManager;
 
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Listeners.EntityListener;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Utils.CancelResult;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.UUID;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -19,11 +26,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Listeners.EntityListener;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Utils.CancelResult;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class DamageListenerTest {
 
@@ -38,8 +45,8 @@ public class DamageListenerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		PluginTest pt = AllTests.getPt();
-		PvPManager plugin = pt.getPlugin();
+		final PluginTest pt = AllTests.getPt();
+		final PvPManager plugin = pt.getPlugin();
 		ph = plugin.getPlayerHandler();
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
