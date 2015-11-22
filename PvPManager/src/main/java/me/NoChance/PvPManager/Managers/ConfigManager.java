@@ -24,13 +24,11 @@ public class ConfigManager {
 	private final File usersFile;
 	private final YamlConfiguration users;
 	private Config config;
-	private final int configVersion;
 
 	public ConfigManager(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
-		configVersion = plugin.getConfig().getInt("Config Version", 0);
 		loadConfig();
 		loadUsers();
 	}
@@ -46,7 +44,7 @@ public class ConfigManager {
 					e.printStackTrace();
 				}
 				initConfig();
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + configVersion);
+				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + getConfigVersion());
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Due to big changes, your config file was renamed to config.old.yml");
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Please copy your settings manually to the new config file");
 			} else {
@@ -59,8 +57,8 @@ public class ConfigManager {
 				initConfig();
 				configFile.delete();
 				config = new Config(plugin, "config.yml");
-				Variables.updateDefaultConfig(config, configVersion);
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + configVersion);
+				Variables.updateDefaultConfig(config, getConfigVersion());
+				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file was updated to version §e" + getConfigVersion());
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2It's recommended that you check for changes and adjust them");
 			}
 		} else
