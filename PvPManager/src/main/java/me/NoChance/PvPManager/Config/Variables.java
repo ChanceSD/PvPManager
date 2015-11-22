@@ -114,7 +114,7 @@ public final class Variables {
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
-		useNameTag = nameTagPrefix == "none" || nameTagPrefix.isEmpty() ? false : true;
+		useNameTag = nameTagPrefix.equalsIgnoreCase("none") || nameTagPrefix.isEmpty() ? false : true;
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
