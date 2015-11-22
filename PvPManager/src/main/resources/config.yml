@@ -45,7 +45,7 @@ Disable:
 # Section about the tag system
 # Time -> How long should the tag last in seconds
 # NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color his name red
-# while 'none' will disable this feature completely
+# while 'none' or empty quotes '' will disable this feature completely
 # Block -> Section is self-explanatory, what to block in combat
 # Command whitelist is recursive, allowing 'tell' will allow 'tell' with any number of arguments
 # Punish On Kick -> Punish the player even if he gets kicked by other plugin while tagged
