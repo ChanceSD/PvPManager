@@ -78,8 +78,8 @@ class TeamProfile {
 			else
 				inCombat.removeEntry(pvPlayer.getName());
 		} catch (final IllegalStateException e) {
+			// Some plugin is unregistering teams when it shouldn't
 			Log.severe("Error restoring nametag for: " + pvPlayer.getName());
-			inCombat.removeEntry(pvPlayer.getName());
 		}
 	}
 
