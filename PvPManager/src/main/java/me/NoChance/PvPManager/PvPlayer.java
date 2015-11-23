@@ -230,7 +230,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void removeCombatTeam() {
-		teamProfile.removeCombatTeam();
+		if (teamProfile != null)
+			teamProfile.removeCombatTeam();
 	}
 
 }
