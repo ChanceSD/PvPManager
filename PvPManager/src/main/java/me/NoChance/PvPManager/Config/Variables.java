@@ -15,6 +15,7 @@ public final class Variables {
 		ALWAYS, DROP, KEEP, TRANSFER
 	}
 
+	private static int configVersion;
 	private static boolean autoUpdate;
 	private static boolean blockEnderPearl;
 	private static boolean blockTeleport;
@@ -157,6 +158,8 @@ public final class Variables {
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
 
 		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
+		configVersion = c.getInt("Config Version");
+
 	}
 
 	public static void updateDefaultConfig(final Config config, final int newVersion) {
@@ -216,6 +219,7 @@ public final class Variables {
 		config.set("Update Check.Update Location", Variables.getUpdateLocation());
 		config.set("Update Check.Auto Update", Variables.isUpdate());
 		config.saveConfig();
+		initizalizeVariables(config);
 	}
 
 	public static void helpMenu(final Player player) {
@@ -462,6 +466,10 @@ public final class Variables {
 
 	public static void setUseNameTag(final boolean useNameTag) {
 		Variables.useNameTag = useNameTag;
+	}
+
+	public static int getConfigVersion() {
+		return configVersion;
 	}
 
 	public static boolean isAutoSoupEnabled() {
