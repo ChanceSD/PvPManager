@@ -21,6 +21,16 @@ class TeamProfile {
 		this.pvPlayer = p;
 		setupScoreboard();
 		setupTeams();
+		try {
+			final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
+			// player got stuck in this team somehow (server crash?)
+			if (team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor())))
+				team.removeEntry(pvPlayer.getName());
+		} catch (final NoSuchMethodError e) {
+			Variables.setUseNameTag(false);
+			Variables.setToggleNametagsEnabled(false);
+			Log.severe("Colored nametags disabled. Update your Spigot version.");
+		}
 	}
 
 	private void setupScoreboard() {
@@ -55,14 +65,6 @@ class TeamProfile {
 				pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
 				pvpOff.setCanSeeFriendlyInvisibles(false);
 			}
-		try {
-			if (!inCombat.equals(scoreboard.getEntryTeam(pvPlayer.getName())))
-				previousTeam = scoreboard.getEntryTeam(pvPlayer.getName());
-		} catch (final NoSuchMethodError e) {
-			Variables.setUseNameTag(false);
-			Variables.setToggleNametagsEnabled(false);
-			Log.severe("Colored nametags disabled. Update your Spigot version.");
-		}
 	}
 
 	public final void setInCombat() {
