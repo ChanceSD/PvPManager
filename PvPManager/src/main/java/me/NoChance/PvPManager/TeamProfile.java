@@ -24,7 +24,7 @@ class TeamProfile {
 		try {
 			final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
 			// player got stuck in this team somehow (server crash?)
-			if (team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor())))
+			if (team != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor())))
 				team.removeEntry(pvPlayer.getName());
 		} catch (final NoSuchMethodError e) {
 			Variables.setUseNameTag(false);
