@@ -103,12 +103,11 @@ public class PlayerHandler {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (!player.isOnline()) {
+				if (!player.isOnline())
 					players.remove(player.getUUID());
-					player.removeCombatTeam();
-				}
 			}
 		}.runTaskLater(plugin, 1200);
+		player.removeCombatTeam();
 		if (player.hasPvPLogged()) {
 			player.setPvpLogged(false);
 			untag(player);
