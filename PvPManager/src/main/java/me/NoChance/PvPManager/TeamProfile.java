@@ -98,6 +98,10 @@ class TeamProfile {
 	}
 
 	public void removeCombatTeam() {
-		inCombat.unregister();
+		try {
+			inCombat.unregister();
+		} catch (final IllegalStateException e) {
+			Log.severe("Team was already unregistered for player: " + pvPlayer.getName());
+		}
 	}
 }
