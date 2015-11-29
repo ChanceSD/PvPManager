@@ -225,8 +225,11 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void updatePlayer(final Player p) {
-		if (!p.equals(getPlayer()))
+		if (!p.equals(getPlayer())) {
 			player = new WeakReference<>(p);
+			if (teamProfile != null)
+				teamProfile = new TeamProfile(this);
+		}
 	}
 
 	public final void removeCombatTeam() {
