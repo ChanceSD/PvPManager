@@ -2,6 +2,7 @@ package me.NoChance.PvPManager;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -34,12 +35,11 @@ public class PvPlayer extends EcoPlayer {
 		super(plugin.getDependencyManager().getEconomy());
 		this.player = new WeakReference<>(player);
 		this.uuid = player.getUniqueId();
-		this.pvpState = true;
 		this.plugin = plugin;
-		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled())
+		loadPvPState();
+		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled()) {
 			this.teamProfile = new TeamProfile(this);
-		else
-			this.teamProfile = null;
+		}
 	}
 
 	public final String getName() {
@@ -112,8 +112,9 @@ public class PvPlayer extends EcoPlayer {
 		} else if (Bukkit.getServer().getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
 			message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
 			newbieTask.cancel();
-		} else
+		} else {
 			message(Messages.getNewbieProtectionEnd());
+		}
 		this.newbie = newbie;
 	}
 
@@ -126,13 +127,15 @@ public class PvPlayer extends EcoPlayer {
 		if (tagged)
 			return;
 
-		if (Variables.isUseNameTag())
+		if (Variables.isUseNameTag()) {
 			teamProfile.setInCombat();
+		}
 
-		if (attacker)
+		if (attacker) {
 			message(Messages.getTaggedAttacker().replace("%p", tagger));
-		else
+		} else {
 			message(Messages.getTaggedDefender().replace("%p", tagger));
+		}
 
 		this.tagged = true;
 		plugin.getPlayerHandler().tag(this);
@@ -140,8 +143,9 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void unTag() {
 		if (isOnline()) {
-			if (Variables.isUseNameTag())
+			if (Variables.isUseNameTag()) {
 				teamProfile.restoreTeam();
+			}
 
 			message(Messages.getOutOfCombat());
 		}
@@ -152,31 +156,36 @@ public class PvPlayer extends EcoPlayer {
 	public final void setPvP(final boolean pvpState) {
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
-		if (Variables.isToggleNametagsEnabled())
+		if (Variables.isToggleNametagsEnabled()) {
 			teamProfile.setPvP(pvpState);
+		}
 		if (!pvpState) {
 			message(Messages.getPvpDisabled());
-			for (final String s : Variables.getCommandsPvPOff())
+			for (final String s : Variables.getCommandsPvPOff()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", getName())));
+			}
 		} else {
 			message(Messages.getPvpEnabled());
-			for (final String s : Variables.getCommandsPvPOn())
+			for (final String s : Variables.getCommandsPvPOn()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", getName())));
+			}
 		}
 	}
 
 	public final void addVictim(final String victimName) {
-		if (!victim.containsKey(victimName))
+		if (!victim.containsKey(victimName)) {
 			victim.put(victimName, 1);
-		else if (victim.containsKey(victimName)) {
+		} else if (victim.containsKey(victimName)) {
 			int totalKills = victim.get(victimName);
 			if (totalKills < Variables.getKillAbuseMaxKills()) {
 				totalKills++;
 				victim.put(victimName, totalKills);
 			}
-			if (totalKills >= Variables.getKillAbuseMaxKills())
-				for (final String command : Variables.getKillAbuseCommands())
+			if (totalKills >= Variables.getKillAbuseMaxKills()) {
+				for (final String command : Variables.getKillAbuseCommands()) {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", getName()));
+				}
+			}
 		}
 	}
 
@@ -211,30 +220,35 @@ public class PvPlayer extends EcoPlayer {
 		return taggedTime;
 	}
 
-	public final void loadPvPState() {
-		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp"))
+	private final void loadPvPState() {
+		this.pvpState = Variables.isDefaultPvp();
+		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp")) {
 			this.pvpState = false;
-		else if (!getPlayer().hasPlayedBefore()) {
-			this.pvpState = Variables.isDefaultPvp();
-			if (Variables.isNewbieProtectionEnabled())
+		} else if (!getPlayer().hasPlayedBefore()) {
+			if (Variables.isNewbieProtectionEnabled()) {
 				setNewbie(true);
-		} else if (!plugin.getConfigM().getUserFile().getStringList("players").contains(getUUID().toString()))
-			this.pvpState = true;
-		if (Variables.isToggleNametagsEnabled())
-			teamProfile.setPvP(this.pvpState);
+			}
+		}
+	}
+
+	public void loadData(final Map<String, Object> userData) {
+		this.pvpState = (boolean) userData.get("pvpstatus");
+		this.toggleTime = (long) userData.get("toggletime");
 	}
 
 	public final void updatePlayer(final Player p) {
 		if (!p.equals(getPlayer())) {
 			player = new WeakReference<>(p);
-			if (teamProfile != null)
+			if (teamProfile != null) {
 				teamProfile = new TeamProfile(this);
+			}
 		}
 	}
 
 	public final void removeCombatTeam() {
-		if (teamProfile != null)
+		if (teamProfile != null) {
 			teamProfile.removeCombatTeam();
+		}
 	}
 
 }

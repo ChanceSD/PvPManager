@@ -58,7 +58,7 @@ public class PlayerListener implements Listener {
 			}
 			ph.applyPunishments(pvPlayer);
 		}
-		ph.remove(pvPlayer);
+		ph.removeUser(pvPlayer);
 	}
 
 	@SuppressWarnings("null")
