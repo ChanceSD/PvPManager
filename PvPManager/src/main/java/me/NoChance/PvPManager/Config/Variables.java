@@ -64,6 +64,7 @@ public final class Variables {
 	private static String toggleColorOn;
 	private static int toggleCooldown;
 	private static boolean toggleNametagsEnabled;
+	private static boolean forcePvPOnWorldChange;
 	private static boolean update = false;
 	private static boolean updateCheck;
 	private static String updateLocation;
@@ -152,6 +153,7 @@ public final class Variables {
 		toggleColorOff = PVPTOGGLE.getString("NameTags.Prefix Off", "&2");
 		commandsPvPOn = (List<String>) PVPTOGGLE.getList("Commands PvP On", new ArrayList<>());
 		commandsPvPOff = (List<String>) PVPTOGGLE.getList("Commands PvP Off", new ArrayList<>());
+		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 
 		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
 		updateLocation = UPDATECHECK.getString("Update Location", "Bukkit");
@@ -482,6 +484,10 @@ public final class Variables {
 
 	public static boolean isBlockTeleport() {
 		return blockTeleport;
+	}
+
+	public static boolean isForcePvPOnWorldChange() {
+		return forcePvPOnWorldChange;
 	}
 
 }
