@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -235,10 +236,17 @@ public class PlayerListener implements Listener {
 		if (CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName()))
 			if (Variables.isKillAbuseEnabled() && Variables.getRespawnProtection() != 0) {
 				final PvPlayer player = ph.get(event.getPlayer());
-				if (player == null)
-					return;
 				player.setRespawnTime(System.currentTimeMillis());
 			}
+	}
+
+	@EventHandler
+	public void onChangeWorld(final PlayerChangedWorldEvent event) {
+		if (!CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName()))
+			return;
+		if (Variables.isForcePvPOnWorldChange()) {
+			ph.get(event.getPlayer()).setPvP(Variables.isDefaultPvp());
+		}
 	}
 
 }

@@ -37,10 +37,12 @@ public class EntityListener implements Listener {
 
 	public EntityListener(final PlayerHandler ph) {
 		this.ph = ph;
-		if (Bukkit.getPluginManager().isPluginEnabled("CommandBook"))
+		if (Bukkit.getPluginManager().isPluginEnabled("CommandBook")) {
 			this.gc = (GodComponent) CommandBook.inst().getComponentManager().getComponent("god");
-		if (Bukkit.getPluginManager().isPluginEnabled("Essentials"))
+		}
+		if (Bukkit.getPluginManager().isPluginEnabled("Essentials")) {
 			this.ess = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -48,8 +50,9 @@ public class EntityListener implements Listener {
 		if (!CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
 			return;
 		if (!CombatUtils.isPvP(event)) {
-			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Variables.isNewbieGodMode())
+			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Variables.isNewbieGodMode()) {
 				event.setCancelled(true);
+			}
 			return;
 		}
 
@@ -57,8 +60,9 @@ public class EntityListener implements Listener {
 		final Player attacked = (Player) event.getEntity();
 		final CancelResult result = ph.tryCancel(attacker, attacked);
 
-		if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE)
+		if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
 			event.setCancelled(true);
+		}
 
 		switch (result) {
 		case FAIL_OVERRIDE:
@@ -80,8 +84,9 @@ public class EntityListener implements Listener {
 		if (!CombatUtils.isPvP(event) || !CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (ph.tryCancel(getAttacker(event), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE))
+		if (ph.tryCancel(getAttacker(event), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE)) {
 			event.setCancelled(false);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -93,8 +98,9 @@ public class EntityListener implements Listener {
 
 		final CancelResult result = ph.tryCancel(attacker, attacked);
 
-		if (result == CancelResult.FAIL || result == CancelResult.FAIL_OVERRIDE)
+		if (result == CancelResult.FAIL || result == CancelResult.FAIL_OVERRIDE) {
 			onDamageActions(attacker, attacked);
+		}
 	}
 
 	private void onDamageActions(final Player attacker, final Player defender) {
@@ -102,30 +108,39 @@ public class EntityListener implements Listener {
 		final PvPlayer pvpDefender = ph.get(defender);
 		if (pvpAttacker == null || pvpDefender == null)
 			return;
-		if (Variables.isPvpBlood())
+		if (Variables.isPvpBlood()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
+		}
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
 			if (Variables.isDisableFly()) {
-				if (attacker.isFlying() || attacker.getAllowFlight())
+				if (attacker.isFlying() || attacker.getAllowFlight()) {
 					pvpAttacker.disableFly();
-				if (!defender.hasPermission("pvpmanager.nodisable") && (defender.isFlying() || defender.getAllowFlight()))
+				}
+				if (!defender.hasPermission("pvpmanager.nodisable") && (defender.isFlying() || defender.getAllowFlight())) {
 					pvpDefender.disableFly();
+				}
 			}
-			if (Variables.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL))
+			if (Variables.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
 				attacker.setGameMode(GameMode.SURVIVAL);
-			if (Variables.isDisableDisguise()) {
-				if (Bukkit.getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker))
-					DisguiseCraft.getAPI().undisguisePlayer(attacker);
-				if (Bukkit.getPluginManager().isPluginEnabled("LibsDisguises") && DisguiseAPI.isDisguised(attacker))
-					DisguiseAPI.undisguiseToAll(attacker);
 			}
-			if (Variables.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY))
+			if (Variables.isDisableDisguise()) {
+				if (Bukkit.getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker)) {
+					DisguiseCraft.getAPI().undisguisePlayer(attacker);
+				}
+				if (Bukkit.getPluginManager().isPluginEnabled("LibsDisguises") && DisguiseAPI.isDisguised(attacker)) {
+					DisguiseAPI.undisguiseToAll(attacker);
+				}
+			}
+			if (Variables.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
+			}
 			if (Variables.isDisableGodMode()) {
-				if (gc != null && gc.hasGodMode(attacker))
+				if (gc != null && gc.hasGodMode(attacker)) {
 					gc.disableGodMode(attacker);
-				if (ess != null && ess.getUser(attacker).isGodModeEnabled())
+				}
+				if (ess != null && ess.getUser(attacker).isGodModeEnabled()) {
 					ess.getUser(attacker).setGodModeEnabled(false);
+				}
 			}
 		}
 		if (Variables.isInCombatEnabled()) {
@@ -135,7 +150,7 @@ public class EntityListener implements Listener {
 	}
 
 	@EventHandler
-	public final void onPotionSplash(final PotionSplashEvent event) { // NO_UCD (unused code)
+	public final void onPotionSplash(final PotionSplashEvent event) {
 		final ThrownPotion potion = event.getPotion();
 		if (event.getAffectedEntities().isEmpty() || !(potion.getShooter() instanceof Player))
 			return;
@@ -143,8 +158,9 @@ public class EntityListener implements Listener {
 		for (final PotionEffect effect : potion.getEffects())
 			if (effect.getType().equals(PotionEffectType.POISON)) {
 				for (final LivingEntity e : event.getAffectedEntities())
-					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled())
+					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled()) {
 						event.setIntensity(e, 0);
+					}
 				return;
 			}
 	}
