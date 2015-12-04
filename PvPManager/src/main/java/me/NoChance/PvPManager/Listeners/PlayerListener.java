@@ -40,8 +40,9 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public final void onBlockPlace(final BlockPlaceEvent event) {
-		if (Variables.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat())
+		if (Variables.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat()) {
 			event.setCancelled(true);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -49,10 +50,12 @@ public class PlayerListener implements Listener {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer.isInCombat()) {
-			if (Variables.isLogToFile())
+			if (Variables.isLogToFile()) {
 				ph.getPlugin().getLog().log(player.getName() + " tried to escape combat!");
-			for (final String s : Variables.getCommandsOnPvPLog())
+			}
+			for (final String s : Variables.getCommandsOnPvPLog()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", player.getName())));
+			}
 			ph.applyPunishments(pvPlayer);
 		}
 		ph.remove(pvPlayer);
@@ -79,8 +82,9 @@ public class PlayerListener implements Listener {
 				CombatUtils.fakeItemStackDrop(player, player.getInventory().getContents());
 				player.getInventory().clear();
 			}
-			if (!Variables.isDropInventory() || !Variables.isDropArmor())
+			if (!Variables.isDropInventory() || !Variables.isDropArmor()) {
 				event.setKeepInventory(true);
+			}
 		}
 
 		final Player killer = player.getKiller();
@@ -88,25 +92,31 @@ public class PlayerListener implements Listener {
 		// Player died in combat, process that
 		if (pvpDeath && !killer.equals(player)) {
 			final PvPlayer pKiller = ph.get(killer);
-			if (Variables.isKillAbuseEnabled())
+			if (Variables.isKillAbuseEnabled()) {
 				pKiller.addVictim(player.getName());
-			if (Variables.getMoneyReward() > 0)
+			}
+			if (Variables.getMoneyReward() > 0) {
 				pKiller.giveReward(player);
-			if (Variables.getMoneyPenalty() > 0)
+			}
+			if (Variables.getMoneyPenalty() > 0) {
 				pvPlayer.applyPenalty();
-			for (final String command : Variables.getCommandsOnKill())
+			}
+			for (final String command : Variables.getCommandsOnKill()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
+			}
 		}
 		if (!pvPlayer.hasPvPLogged()) {
 			final DropMode mode = Variables.getDropMode();
 			switch (mode) {
 			case DROP:
-				if (!pvpDeath && !pvPlayer.isInCombat())
+				if (!pvpDeath && !pvPlayer.isInCombat()) {
 					event.setKeepInventory(true);
+				}
 				break;
 			case KEEP:
-				if (pvpDeath || pvPlayer.isInCombat())
+				if (pvpDeath || pvPlayer.isInCombat()) {
 					event.setKeepInventory(true);
+				}
 				break;
 			case TRANSFER:
 				if (pvpDeath) {
@@ -120,8 +130,9 @@ public class PlayerListener implements Listener {
 				break;
 			}
 		}
-		if (pvPlayer.isInCombat())
+		if (pvPlayer.isInCombat()) {
 			ph.untag(pvPlayer);
+		}
 	}
 
 	@EventHandler
@@ -137,10 +148,11 @@ public class PlayerListener implements Listener {
 				i.setType(Material.BOWL);
 				return;
 			}
-			if ((i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+			if ((i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
-					if (e.getPlayer().equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()))
+					if (e.getPlayer().equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld())) {
 						continue;
+					}
 					final PvPlayer target = ph.get(p);
 					if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
 						pvplayer.message(Messages.pvpDisabledOther(target.getName()));
@@ -148,6 +160,7 @@ public class PlayerListener implements Listener {
 						return;
 					}
 				}
+			}
 		}
 	}
 
@@ -155,8 +168,9 @@ public class PlayerListener implements Listener {
 	public final void onPlayerPickup(final PlayerPickupItemEvent e) {
 		if (Variables.isNewbieProtectionEnabled() && Variables.isBlockPickNewbies()) {
 			final PvPlayer player = ph.get(e.getPlayer());
-			if (player.isNewbie())
+			if (player.isNewbie()) {
 				e.setCancelled(true);
+			}
 		}
 	}
 
@@ -165,16 +179,19 @@ public class PlayerListener implements Listener {
 		final Player player = event.getPlayer();
 		ph.get(player).updatePlayer(player);
 		if (player.isOp() || player.hasPermission("pvpmanager.admin"))
-			if (!Messages.getMessageQueue().isEmpty())
-				for (final String s : Messages.getMessageQueue())
+			if (!Messages.getMessageQueue().isEmpty()) {
+				for (final String s : Messages.getMessageQueue()) {
 					player.sendMessage(s);
+				}
+			}
 	}
 
 	@EventHandler
 	public final void onPlayerKick(final PlayerKickEvent event) {
 		final PvPlayer pvPlayer = ph.get(event.getPlayer());
-		if (pvPlayer.isInCombat() && !Variables.punishOnKick())
+		if (pvPlayer.isInCombat() && !Variables.punishOnKick()) {
 			ph.untag(pvPlayer);
+		}
 	}
 
 	@EventHandler
@@ -190,7 +207,7 @@ public class PlayerListener implements Listener {
 			}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public final void onCommand(final PlayerCommandPreprocessEvent event) {
 		if (Variables.isStopCommands() && Variables.isInCombatEnabled())
 			if (ph.get(event.getPlayer()).isInCombat()) {
@@ -198,8 +215,9 @@ public class PlayerListener implements Listener {
 				final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
 				for (int i = 0; i < givenCommand.length; i++) {
 					String args = givenCommand[0];
-					for (int j = 1; j <= i; j++)
+					for (int j = 1; j <= i; j++) {
 						args += " " + givenCommand[j];
+					}
 					if (Variables.getCommandsAllowed().contains(args.toLowerCase())) {
 						contains = true;
 						break;
