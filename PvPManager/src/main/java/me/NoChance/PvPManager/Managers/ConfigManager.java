@@ -4,18 +4,23 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Version;
 import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public class ConfigManager {
@@ -30,7 +35,7 @@ public class ConfigManager {
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		loadConfig();
-		loadUsers();
+		loadUsersFile();
 	}
 
 	private void loadConfig() {
@@ -67,15 +72,17 @@ public class ConfigManager {
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Variables.getConfigVersion());
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2It's recommended that you check the file and adjust the new settings");
 			}
-		} else
+		} else {
 			initConfig();
-		if (Variables.isUpdateCheck())
+		}
+		if (Variables.isUpdateCheck()) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					plugin.checkForUpdates();
 				}
 			}.runTaskTimer(plugin, 0, 360000);
+		}
 	}
 
 	private void initConfig() {
@@ -83,31 +90,44 @@ public class ConfigManager {
 		Variables.initizalizeVariables(config);
 	}
 
-	private void loadUsers() {
+	private void loadUsersFile() {
 		try {
 			if (!usersFile.exists()) {
 				plugin.saveResource("users.yml", false);
 				Log.info("New Users File Created Successfully!");
-				return;
 			}
 			users.load(usersFile);
+			// replace old users file
+			if (users.get("players") instanceof List) {
+				plugin.saveResource("users.yml", true);
+				users.load(usersFile);
+			}
 		} catch (final Exception e) {
 			Log.severe("Error loading users file! Error: ");
 			e.printStackTrace();
 		}
 	}
 
-	public final void saveUser(final UUID uuid, final boolean save) {
-		final String id = uuid.toString();
-		final List<String> userList = users.getStringList("players");
-		if (save && userList.contains(id) || !save && !userList.contains(id))
+	public final void saveUser(final PvPlayer player) {
+		// check if we really need to save this player
+		if (player.hasPvPEnabled() == Variables.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Variables.getToggleCooldown())) {
+			// clear entry for this user if there is one
+			if (getUserStorage().contains(player.getUUID().toString())) {
+				getUserStorage().set(player.getUUID().toString(), null);
+				saveUsersToDisk();
+			}
 			return;
-		if (!save && userList.contains(id))
-			userList.remove(id);
-		if (save && !userList.contains(id))
-			userList.add(id);
+		}
 
-		users.set("players", userList);
+		final Map<String, Object> userData = new HashMap<>();
+		userData.put("pvpstatus", player.hasPvPEnabled());
+		userData.put("toggletime", player.getToggleTime());
+
+		getUserStorage().set(player.getUUID().toString(), userData);
+		saveUsersToDisk();
+	}
+
+	private void saveUsersToDisk() {
 		try {
 			users.save(usersFile);
 		} catch (final IOException e) {
@@ -119,8 +139,12 @@ public class ConfigManager {
 		return config;
 	}
 
-	public final YamlConfiguration getUserFile() {
-		return users;
+	public Map<String, Object> getUserData(final UUID uuid) {
+		return getUserStorage().getConfigurationSection(uuid.toString()).getValues(false);
+	}
+
+	public ConfigurationSection getUserStorage() {
+		return users.getConfigurationSection("players");
 	}
 
 	public final int getConfigVersion() {

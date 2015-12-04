@@ -24,8 +24,9 @@ class TeamProfile {
 		try {
 			final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
 			// player got stuck in this team somehow (server crash?)
-			if (team != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor())))
+			if (team != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()))) {
 				team.removeEntry(pvPlayer.getName());
+			}
 		} catch (final NoSuchMethodError e) {
 			Variables.setUseNameTag(false);
 			Variables.setToggleNametagsEnabled(false);
@@ -43,42 +44,45 @@ class TeamProfile {
 
 	private void setupTeams() {
 		final String id = pvPlayer.getUUID().toString().replaceAll("-", "").substring(0, 16);
-		if (scoreboard.getTeam(id) != null)
+		if (scoreboard.getTeam(id) != null) {
 			inCombat = scoreboard.getTeam(id);
-		else {
+		} else {
 			inCombat = scoreboard.registerNewTeam(id);
 			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()));
 		}
 		if (!Variables.getToggleColorOn().equalsIgnoreCase("none"))
-			if (scoreboard.getTeam("PvPOn") != null)
+			if (scoreboard.getTeam("PvPOn") != null) {
 				pvpOn = scoreboard.getTeam("PvPOn");
-			else {
+			} else {
 				pvpOn = scoreboard.registerNewTeam("PvPOn");
 				pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOn()));
 				pvpOn.setCanSeeFriendlyInvisibles(false);
 			}
 		if (!Variables.getToggleColorOff().equalsIgnoreCase("none"))
-			if (scoreboard.getTeam("PvPOff") != null)
+			if (scoreboard.getTeam("PvPOff") != null) {
 				pvpOff = scoreboard.getTeam("PvPOff");
-			else {
+			} else {
 				pvpOff = scoreboard.registerNewTeam("PvPOff");
 				pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
 				pvpOff.setCanSeeFriendlyInvisibles(false);
 			}
+		setPvP(pvPlayer.hasPvPEnabled());
 	}
 
 	public final void setInCombat() {
-		if (pvpOn != null || pvpOff != null)
+		if (pvpOn != null || pvpOff != null) {
 			previousTeam = scoreboard.getEntryTeam(pvPlayer.getName());
+		}
 		inCombat.addEntry(pvPlayer.getName());
 	}
 
 	public final void restoreTeam() {
 		try {
-			if (previousTeam != null && scoreboard.getTeam(previousTeam.getName()) != null)
+			if (previousTeam != null && scoreboard.getTeam(previousTeam.getName()) != null) {
 				previousTeam.addEntry(pvPlayer.getName());
-			else
+			} else {
 				inCombat.removeEntry(pvPlayer.getName());
+			}
 		} catch (final IllegalStateException e) {
 			// Some plugin is unregistering teams when it shouldn't
 			Log.severe("Error restoring nametag for: " + pvPlayer.getName());
@@ -87,14 +91,16 @@ class TeamProfile {
 
 	public final void setPvP(final boolean state) {
 		if (state) {
-			if (pvpOn == null)
+			if (pvpOn == null) {
 				restoreTeam();
-			else
+			} else {
 				pvpOn.addEntry(pvPlayer.getName());
-		} else if (pvpOff == null)
+			}
+		} else if (pvpOff == null) {
 			restoreTeam();
-		else
+		} else {
 			pvpOff.addEntry(pvPlayer.getName());
+		}
 	}
 
 	public void removeCombatTeam() {

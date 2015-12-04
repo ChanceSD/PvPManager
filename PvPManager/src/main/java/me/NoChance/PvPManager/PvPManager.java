@@ -58,26 +58,23 @@ public final class PvPManager extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		playerHandler.getTagTask().cancel();
-		for (final PvPlayer p : playerHandler.getPlayers().values()) {
-			playerHandler.savePvPState(p.getUUID(), p.hasPvPEnabled());
-			p.removeCombatTeam();
-		}
-		playerHandler.removeTeams();
+		playerHandler.handlePluginDisable();
 	}
 
 	private void loadFiles() {
 		this.configM = new ConfigManager(this);
 		Messages.setup(this);
-		if (Variables.isLogToFile())
+		if (Variables.isLogToFile()) {
 			log = new LogFile(new File(getDataFolder(), "pvplog.txt"));
+		}
 	}
 
 	private void startListeners() {
 		registerListener(new EntityListener(playerHandler));
 		registerListener(new PlayerListener(playerHandler));
-		if (dependencyManager.useWG())
+		if (dependencyManager.useWG()) {
 			registerListener(new WGListener(playerHandler));
+		}
 	}
 
 	private void startMetrics() {
@@ -86,10 +83,11 @@ public final class PvPManager extends JavaPlugin {
 
 	public void checkForUpdates() {
 		Log.info("Checking for updates...");
-		if (Variables.getUpdateLocation().equalsIgnoreCase("Bukkit"))
+		if (Variables.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
 			updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
-		else
+		} else {
 			updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
+		}
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
 			Log.info("Update Available: " + Messages.getNewVersion());
@@ -100,8 +98,9 @@ public final class PvPManager extends JavaPlugin {
 			}
 			Variables.setUpdate(true);
 			Log.info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
-		} else
+		} else {
 			Log.info("No update found");
+		}
 	}
 
 	public boolean downloadUpdate() {

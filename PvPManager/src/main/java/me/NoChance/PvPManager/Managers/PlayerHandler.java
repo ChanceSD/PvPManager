@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
 import me.NoChance.PvPManager.PvPManager;
@@ -28,8 +27,9 @@ public class PlayerHandler {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
-		if (Variables.isKillAbuseEnabled())
+		if (Variables.isKillAbuseEnabled()) {
 			new CleanKillersTask(this).runTaskTimer(plugin, 0, Variables.getKillAbuseTime() * 20);
+		}
 
 		addOnlinePlayers();
 		new Timer(true).scheduleAtFixedRate(tagTask, 1000, 1000);
@@ -73,22 +73,66 @@ public class PlayerHandler {
 	}
 
 	private void addOnlinePlayers() {
-		for (final Player p : plugin.getServer().getOnlinePlayers())
+		for (final Player p : plugin.getServer().getOnlinePlayers()) {
 			get(p);
+		}
 	}
 
 	public final PvPlayer get(final Player player) {
 		final UUID uuid = player.getUniqueId();
-		return players.containsKey(uuid) ? players.get(uuid) : save(new PvPlayer(player, plugin));
+		return players.containsKey(uuid) ? players.get(uuid) : addUser(new PvPlayer(player, plugin));
 	}
 
-	private PvPlayer save(final PvPlayer p) {
+	private PvPlayer addUser(final PvPlayer p) {
 		// Save only if player actually exists
 		if (Bukkit.getPlayer(p.getUUID()) != null) {
 			players.put(p.getUUID(), p);
-			p.loadPvPState();
+			if (configManager.getUserStorage().contains(p.getUUID().toString())) {
+				p.loadData(configManager.getUserData(p.getUUID()));
+			}
 		}
 		return p;
+	}
+
+	public final void removeUser(final PvPlayer player) {
+		players.remove(player.getUUID());
+		player.removeCombatTeam();
+		if (player.hasPvPLogged()) {
+			player.setPvpLogged(false);
+			untag(player);
+		}
+		configManager.saveUser(player);
+	}
+
+	public final void applyPunishments(final PvPlayer player) {
+		final Player p = player.getPlayer();
+		if (Variables.isKillOnLogout()) {
+			player.setPvpLogged(true);
+			p.setHealth(0);
+		}
+		if (Variables.getFineAmount() != 0) {
+			player.applyFine();
+		}
+	}
+
+	public void handlePluginDisable() {
+		tagTask.cancel();
+		for (final PvPlayer p : players.values()) {
+			configManager.saveUser(p);
+			p.removeCombatTeam();
+		}
+		removeTeams();
+	}
+
+	private final void removeTeams() {
+		final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+		if (scoreboard.getTeam("PvPOn") != null) {
+			scoreboard.getTeam("PvPOn").unregister();
+		}
+
+		if (scoreboard.getTeam("PvPOff") != null) {
+			scoreboard.getTeam("PvPOff").unregister();
+		}
 	}
 
 	public final void untag(final PvPlayer p) {
@@ -99,51 +143,8 @@ public class PlayerHandler {
 		tagTask.addTagged(p);
 	}
 
-	public final void remove(final PvPlayer player) {
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				if (!player.isOnline())
-					players.remove(player.getUUID());
-			}
-		}.runTaskLater(plugin, 1200);
-		player.removeCombatTeam();
-		if (player.hasPvPLogged()) {
-			player.setPvpLogged(false);
-			untag(player);
-		}
-		savePvPState(player.getUUID(), player.hasPvPEnabled());
-	}
-
-	public final void removeTeams() {
-		final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-		if (scoreboard.getTeam("PvPOn") != null)
-			scoreboard.getTeam("PvPOn").unregister();
-
-		if (scoreboard.getTeam("PvPOff") != null)
-			scoreboard.getTeam("PvPOff").unregister();
-	}
-
-	public final void savePvPState(final UUID id, final boolean pvpState) {
-		configManager.saveUser(id, !pvpState);
-	}
-
-	public final void applyPunishments(final PvPlayer player) {
-		final Player p = player.getPlayer();
-		if (Variables.isKillOnLogout()) {
-			player.setPvpLogged(true);
-			p.setHealth(0);
-		}
-		if (Variables.getFineAmount() != 0)
-			player.applyFine();
-	}
-
 	public final HashMap<UUID, PvPlayer> getPlayers() {
 		return players;
-	}
-
-	public final TagTask getTagTask() {
-		return tagTask;
 	}
 
 	public final PvPManager getPlugin() {
