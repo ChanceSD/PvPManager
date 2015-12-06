@@ -37,6 +37,9 @@ public class PvPlayer extends EcoPlayer {
 		this.uuid = player.getUniqueId();
 		this.pvpState = Variables.isDefaultPvp();
 		this.plugin = plugin;
+		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled()) {
+			this.teamProfile = new TeamProfile(this);
+		}
 	}
 
 	public final String getName() {
@@ -224,9 +227,6 @@ public class PvPlayer extends EcoPlayer {
 			if (Variables.isNewbieProtectionEnabled()) {
 				setNewbie(true);
 			}
-		}
-		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled()) {
-			this.teamProfile = new TeamProfile(this);
 		}
 	}
 
