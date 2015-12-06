@@ -35,11 +35,8 @@ public class PvPlayer extends EcoPlayer {
 		super(plugin.getDependencyManager().getEconomy());
 		this.player = new WeakReference<>(player);
 		this.uuid = player.getUniqueId();
+		this.pvpState = Variables.isDefaultPvp();
 		this.plugin = plugin;
-		loadPvPState();
-		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled()) {
-			this.teamProfile = new TeamProfile(this);
-		}
 	}
 
 	public final String getName() {
@@ -220,14 +217,16 @@ public class PvPlayer extends EcoPlayer {
 		return taggedTime;
 	}
 
-	private final void loadPvPState() {
-		this.pvpState = Variables.isDefaultPvp();
+	public final void loadState() {
 		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp")) {
 			this.pvpState = false;
 		} else if (!getPlayer().hasPlayedBefore()) {
 			if (Variables.isNewbieProtectionEnabled()) {
 				setNewbie(true);
 			}
+		}
+		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled()) {
+			this.teamProfile = new TeamProfile(this);
 		}
 	}
 

@@ -87,6 +87,7 @@ public class PlayerHandler {
 		// Save only if player actually exists
 		if (Bukkit.getPlayer(p.getUUID()) != null) {
 			players.put(p.getUUID(), p);
+			p.loadState();
 			if (configManager.getUserStorage().contains(p.getUUID().toString())) {
 				p.loadData(configManager.getUserData(p.getUUID()));
 			}
