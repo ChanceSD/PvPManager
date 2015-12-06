@@ -139,8 +139,9 @@ public class ConfigManager {
 		return config;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getUserData(final UUID uuid) {
-		return getUserStorage().getConfigurationSection(uuid.toString()).getValues(false);
+		return (Map<String, Object>) getUserStorage().get(uuid.toString());
 	}
 
 	public ConfigurationSection getUserStorage() {
