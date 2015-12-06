@@ -50,22 +50,26 @@ class TeamProfile {
 			inCombat = scoreboard.registerNewTeam(id);
 			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()));
 		}
-		if (!Variables.getToggleColorOn().equalsIgnoreCase("none"))
-			if (scoreboard.getTeam("PvPOn") != null) {
-				pvpOn = scoreboard.getTeam("PvPOn");
-			} else {
-				pvpOn = scoreboard.registerNewTeam("PvPOn");
-				pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOn()));
-				pvpOn.setCanSeeFriendlyInvisibles(false);
+		if (Variables.isToggleNametagsEnabled()) {
+			if (!Variables.getToggleColorOn().equalsIgnoreCase("none")) {
+				if (scoreboard.getTeam("PvPOn") != null) {
+					pvpOn = scoreboard.getTeam("PvPOn");
+				} else {
+					pvpOn = scoreboard.registerNewTeam("PvPOn");
+					pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOn()));
+					pvpOn.setCanSeeFriendlyInvisibles(false);
+				}
 			}
-		if (!Variables.getToggleColorOff().equalsIgnoreCase("none"))
-			if (scoreboard.getTeam("PvPOff") != null) {
-				pvpOff = scoreboard.getTeam("PvPOff");
-			} else {
-				pvpOff = scoreboard.registerNewTeam("PvPOff");
-				pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
-				pvpOff.setCanSeeFriendlyInvisibles(false);
+			if (!Variables.getToggleColorOff().equalsIgnoreCase("none")) {
+				if (scoreboard.getTeam("PvPOff") != null) {
+					pvpOff = scoreboard.getTeam("PvPOff");
+				} else {
+					pvpOff = scoreboard.registerNewTeam("PvPOff");
+					pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
+					pvpOff.setCanSeeFriendlyInvisibles(false);
+				}
 			}
+		}
 		setPvP(pvPlayer.hasPvPEnabled());
 	}
 
