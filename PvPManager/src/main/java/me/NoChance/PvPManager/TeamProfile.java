@@ -74,8 +74,9 @@ class TeamProfile {
 	}
 
 	public final void setInCombat() {
-		if (pvpOn != null || pvpOff != null) {
-			previousTeam = scoreboard.getEntryTeam(pvPlayer.getName());
+		final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
+		if (team != null && !team.equals(inCombat)) {
+			previousTeam = team;
 		}
 		inCombat.addEntry(pvPlayer.getName());
 	}
