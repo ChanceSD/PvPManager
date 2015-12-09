@@ -123,7 +123,7 @@ public class ConfigManager {
 		userData.put("pvpstatus", player.hasPvPEnabled());
 		userData.put("toggletime", player.getToggleTime());
 
-		getUserStorage().set(player.getUUID().toString(), userData);
+		getUserStorage().createSection(player.getUUID().toString(), userData);
 		saveUsersToDisk();
 	}
 
@@ -139,9 +139,8 @@ public class ConfigManager {
 		return config;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getUserData(final UUID uuid) {
-		return (Map<String, Object>) getUserStorage().get(uuid.toString());
+		return getUserStorage().getConfigurationSection(uuid.toString()).getValues(false);
 	}
 
 	public ConfigurationSection getUserStorage() {
