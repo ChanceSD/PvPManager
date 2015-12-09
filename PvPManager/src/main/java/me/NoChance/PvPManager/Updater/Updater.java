@@ -1,9 +1,9 @@
 package me.NoChance.PvPManager.Updater;
 
+import java.io.File;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-
-import java.io.File;
 
 public abstract class Updater {
 
@@ -58,11 +58,10 @@ public abstract class Updater {
 		return versionArray;
 	}
 
-	private boolean hasTag(final String version) {
+	protected boolean hasTag(final String version) {
 		for (final String string : TAGS) {
-			if (version.contains(string)) {
+			if (version.contains(string))
 				return true;
-			}
 		}
 		return false;
 	}
