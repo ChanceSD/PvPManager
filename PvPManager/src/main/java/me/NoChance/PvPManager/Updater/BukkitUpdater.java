@@ -53,15 +53,16 @@ public class BukkitUpdater extends Updater {
 		if (this.url != null)
 			if (this.read())
 				if (this.versionCheck(this.versionName))
-					if (this.versionLink != null && this.getType() == UpdateType.DOWNLOAD)
+					if (this.versionLink != null && this.getType() == UpdateType.DOWNLOAD) {
 						try {
 							this.downloadFile();
 						} catch (final Exception e) {
 							Log.warning("The auto-updater tried to download a new update, but was unsuccessful.");
 							this.setResult(UpdateResult.FAIL_DOWNLOAD);
 						}
-					else
+					} else {
 						this.setResult(UpdateResult.UPDATE_AVAILABLE);
+					}
 	}
 
 	@Override
@@ -97,8 +98,9 @@ public class BukkitUpdater extends Updater {
 		try (FileOutputStream fout = new FileOutputStream(getFile()); BufferedInputStream in = new BufferedInputStream(url1.openStream())) {
 			final byte[] data = new byte[BYTE_SIZE];
 			int count;
-			while ((count = in.read(data, 0, BYTE_SIZE)) != -1)
+			while ((count = in.read(data, 0, BYTE_SIZE)) != -1) {
 				fout.write(data, 0, count);
+			}
 		} catch (final IOException e) {
 			e.printStackTrace();
 			return false;
@@ -111,6 +113,9 @@ public class BukkitUpdater extends Updater {
 		final String version = this.getPlugin().getDescription().getVersion();
 		if (title.split(" v").length == 2) {
 			final String remoteVersion = title.split(" v")[1].split(" ")[0];
+			if (hasTag(version) != hasTag(remoteVersion))
+				return handleDifferentReleases(remoteVersion, version);
+
 			final String[] remote = getVersionArray(remoteVersion);
 			final String[] local = getVersionArray(version);
 			final int length = Math.max(local.length, remote.length);
@@ -132,6 +137,14 @@ public class BukkitUpdater extends Updater {
 			this.setResult(UpdateResult.FAIL_NOVERSION);
 			return false;
 		}
+		return true;
+	}
+
+	private boolean handleDifferentReleases(final String remote, final String local) {
+		final String remoteCopy = remote.replaceAll("(-.+?\\d+)", "");
+		final String localCopy = local.replaceAll("(-.+?\\d+)", "");
+		if (remoteCopy.equalsIgnoreCase(localCopy))
+			return hasTag(local);
 		return true;
 	}
 
@@ -163,8 +176,9 @@ public class BukkitUpdater extends Updater {
 			return false;
 		} finally {
 			try {
-				if (reader != null)
+				if (reader != null) {
 					reader.close();
+				}
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
