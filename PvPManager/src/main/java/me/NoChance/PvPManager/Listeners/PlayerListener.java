@@ -210,8 +210,9 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public final void onCommand(final PlayerCommandPreprocessEvent event) {
-		if (Variables.isStopCommands() && Variables.isInCombatEnabled())
-			if (ph.get(event.getPlayer()).isInCombat()) {
+		if (Variables.isStopCommands() && Variables.isInCombatEnabled()) {
+			final PvPlayer player = ph.get(event.getPlayer());
+			if (player.isInCombat()) {
 				boolean contains = false;
 				final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
 				for (int i = 0; i < givenCommand.length; i++) {
@@ -226,9 +227,10 @@ public class PlayerListener implements Listener {
 				}
 				if (Variables.isCommandsWhitelist() ? !contains : contains) {
 					event.setCancelled(true);
-					event.getPlayer().sendMessage(Messages.getCommandDeniedIncombat());
+					player.message(Messages.getCommandDeniedIncombat());
 				}
 			}
+		}
 	}
 
 	@EventHandler
