@@ -231,8 +231,12 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public void loadData(final Map<String, Object> userData) {
-		this.pvpState = (boolean) userData.get("pvpstatus");
-		this.toggleTime = (long) userData.get("toggletime");
+		if (userData.get("pvpstatus") instanceof Boolean) {
+			this.pvpState = (boolean) userData.get("pvpstatus");
+		}
+		if (userData.get("toggletime") instanceof Long) {
+			this.toggleTime = (long) userData.get("toggletime");
+		}
 	}
 
 	public final void updatePlayer(final Player p) {
