@@ -229,6 +229,10 @@ public class PvPlayer extends EcoPlayer {
 				setNewbie(true);
 			}
 		}
+		// now that the state is definitely loaded, set player team
+		if (teamProfile != null) {
+			teamProfile.setPvP(pvpState);
+		}
 	}
 
 	public void loadData(final Map<String, Object> userData) {
