@@ -70,7 +70,6 @@ class TeamProfile {
 				}
 			}
 		}
-		setPvP(pvPlayer.hasPvPEnabled());
 	}
 
 	public final void setInCombat() {
