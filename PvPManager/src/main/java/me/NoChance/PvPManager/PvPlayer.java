@@ -182,6 +182,7 @@ public class PvPlayer extends EcoPlayer {
 				victim.put(victimName, totalKills);
 			}
 			if (totalKills >= Variables.getKillAbuseMaxKills()) {
+				unTag();
 				for (final String command : Variables.getKillAbuseCommands()) {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", getName()));
 				}
