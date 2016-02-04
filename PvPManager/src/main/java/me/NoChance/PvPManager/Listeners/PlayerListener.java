@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.NoChance.PvPManager.PvPlayer;
@@ -42,6 +43,13 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onBlockPlace(final BlockPlaceEvent event) {
 		if (Variables.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat()) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public final void onToggleFlight(final PlayerToggleFlightEvent event) {
+		if (Variables.isDisableFly() && event.isFlying() && ph.get(event.getPlayer()).isInCombat()) {
 			event.setCancelled(true);
 		}
 	}
