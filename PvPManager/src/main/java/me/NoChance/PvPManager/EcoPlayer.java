@@ -1,5 +1,7 @@
 package me.NoChance.PvPManager;
 
+import java.text.DecimalFormat;
+
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Config.Messages;
@@ -44,8 +46,18 @@ public abstract class EcoPlayer {
 	}
 
 	public final void giveReward(final Player victim) {
-		depositMoney(Variables.getMoneyReward() >= 1 ? Variables.getMoneyReward() : Variables.getMoneyReward() * economy.getBalance(getPlayer()));
-		message(Messages.getMoneyReward().replace("%m", Double.toString(Variables.getMoneyReward())).replace("%p", victim.getName()));
+		double moneyWon = Variables.getMoneyReward();
+		if (Variables.getMoneyReward() >= 1) {
+			depositMoney(Variables.getMoneyReward());
+		} else {
+			moneyWon = Variables.getMoneyReward() * economy.getBalance(victim);
+			depositMoney(moneyWon);
+			economy.withdrawPlayer(victim, moneyWon);
+			victim.sendMessage("§cPlayer " + getPlayer().getName() + " stole " + moneyWon + " coins from you!");
+		}
+		final DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		message(Messages.getMoneyReward().replace("%m", df.format(moneyWon)).replace("%p", victim.getName()));
 	}
 
 }
