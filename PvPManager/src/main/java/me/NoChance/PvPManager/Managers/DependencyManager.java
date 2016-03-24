@@ -8,24 +8,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Dependency;
 import me.NoChance.PvPManager.PvPlugin;
 import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Dependencies.Factions;
 import me.NoChance.PvPManager.Dependencies.FactionsUUID;
+import me.NoChance.PvPManager.Dependencies.Vault;
+import me.NoChance.PvPManager.Dependencies.WorldGuard;
 import me.NoChance.PvPManager.Utils.Log;
 import net.milkbowl.vault.economy.Economy;
 
 public class DependencyManager {
 
-	private final PvPManager plugin;
-	private boolean useWG;
-	private Economy economy;
-	private final HashMap<String, PvPlugin> dependencies = new HashMap<>();
+	private final HashMap<String, Dependency> dependencies = new HashMap<>();
 	private final HashSet<PvPlugin> attackChecks = new HashSet<>();
 
-	public DependencyManager(final PvPManager plugin) {
-		this.plugin = plugin;
+	public DependencyManager() {
 		checkForVault();
 		checkForWorldguard();
 		checkForFactions();
@@ -33,13 +31,17 @@ public class DependencyManager {
 
 	private void checkForVault() {
 		if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
-			final RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-			if (economyProvider != null)
+			final RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+			Economy economy = null;
+			if (economyProvider != null) {
 				economy = economyProvider.getProvider();
-			if (getEconomy() != null)
+			}
+			if (economy != null) {
 				Log.info("Vault Found! Using it for currency related features");
-			else
+				dependencies.put("Vault", new Vault(economy));
+			} else {
 				Log.severe("Error! No Economy plugin found");
+			}
 		} else {
 			Log.severe("Vault not found! Features requiring Vault won't work!");
 			Settings.setFineAmount(0);
@@ -50,7 +52,7 @@ public class DependencyManager {
 
 	private void checkForWorldguard() {
 		if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-			useWG = true;
+			dependencies.put("WorldGuard", new WorldGuard());
 			Log.info("WorldGuard Found! Enabling WorldGuard Support");
 		}
 	}
@@ -70,8 +72,9 @@ public class DependencyManager {
 					dependencies.put("Factions", factions);
 					attackChecks.add(factions);
 					Log.info("Factions Found! Hooked successfully");
-				} else
+				} else {
 					Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
+				}
 			}
 		} catch (final NumberFormatException e) {
 			Log.warning("Couldn't read Factions version, maybe it's yet another fork?");
@@ -85,12 +88,25 @@ public class DependencyManager {
 		return true;
 	}
 
-	public final boolean useWG() {
-		return useWG;
+	public boolean worldguardCanAttack(final Player p) {
+		final PvPlugin wg = (PvPlugin) dependencies.get("WorldGuard");
+		return wg.canAttack(null, p);
+	}
+
+	public final boolean isDependencyEnabled(final String s) {
+		return dependencies.containsKey(s);
+	}
+
+	public Object getDependency(final String s) {
+		if (isDependencyEnabled(s))
+			return dependencies.get(s).getMainClass();
+		return null;
 	}
 
 	public final Economy getEconomy() {
-		return economy;
+		if (isDependencyEnabled("Vault"))
+			return (Economy) dependencies.get("Vault").getMainClass();
+		return null;
 	}
 
 }
