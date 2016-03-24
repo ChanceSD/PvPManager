@@ -43,7 +43,7 @@ public final class PvPManager extends JavaPlugin {
 		instance = this;
 		Log.setup(getLogger());
 		loadFiles();
-		dependencyManager = new DependencyManager(this);
+		dependencyManager = new DependencyManager();
 		playerHandler = new PlayerHandler(this);
 		startListeners();
 		getCommand("pvp").setExecutor(new PvP(playerHandler));
@@ -74,7 +74,7 @@ public final class PvPManager extends JavaPlugin {
 	private void startListeners() {
 		registerListener(new EntityListener(playerHandler));
 		registerListener(new PlayerListener(playerHandler));
-		if (dependencyManager.useWG()) {
+		if (dependencyManager.isDependencyEnabled("WorldGuard")) {
 			registerListener(new WGListener(playerHandler));
 		}
 	}
