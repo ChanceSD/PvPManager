@@ -20,11 +20,15 @@ public abstract class Updater {
 	private final Thread thread;
 	private final Plugin plugin;
 	private final UpdateType type;
-	private final File file = new File(Bukkit.getUpdateFolderFile(), "PvPManager.jar");
+	private final File file;
 
 	Updater(final Plugin plugin, final UpdateType type) {
 		this.plugin = plugin;
 		this.type = type;
+		if (!Bukkit.getUpdateFolderFile().exists()) {
+			Bukkit.getUpdateFolderFile().mkdirs();
+		}
+		this.file = new File(Bukkit.getUpdateFolderFile(), "PvPManager.jar");
 		this.thread = new Thread() {
 			@Override
 			public void run() {
