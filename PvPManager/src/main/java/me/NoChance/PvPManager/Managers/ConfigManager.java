@@ -81,7 +81,7 @@ public class ConfigManager {
 				public void run() {
 					plugin.checkForUpdates();
 				}
-			}.runTaskTimer(plugin, 0, 360000);
+			}.runTaskTimerAsynchronously(plugin, 0, 360000);
 		}
 	}
 
