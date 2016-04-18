@@ -22,7 +22,7 @@ import com.sk89q.commandbook.GodComponent;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -50,7 +50,7 @@ public class EntityListener implements Listener {
 		if (!CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
 			return;
 		if (!CombatUtils.isPvP(event)) {
-			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Variables.isNewbieGodMode()) {
+			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Settings.isNewbieGodMode()) {
 				event.setCancelled(true);
 			}
 			return;
@@ -108,11 +108,11 @@ public class EntityListener implements Listener {
 		final PvPlayer pvpDefender = ph.get(defender);
 		if (pvpAttacker == null || pvpDefender == null)
 			return;
-		if (Variables.isPvpBlood()) {
+		if (Settings.isPvpBlood()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 		}
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
-			if (Variables.isDisableFly()) {
+			if (Settings.isDisableFly()) {
 				if (attacker.isFlying() || attacker.getAllowFlight()) {
 					pvpAttacker.disableFly();
 				}
@@ -120,10 +120,10 @@ public class EntityListener implements Listener {
 					pvpDefender.disableFly();
 				}
 			}
-			if (Variables.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
+			if (Settings.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
 				attacker.setGameMode(GameMode.SURVIVAL);
 			}
-			if (Variables.isDisableDisguise()) {
+			if (Settings.isDisableDisguise()) {
 				if (Bukkit.getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker)) {
 					DisguiseCraft.getAPI().undisguisePlayer(attacker);
 				}
@@ -131,10 +131,10 @@ public class EntityListener implements Listener {
 					DisguiseAPI.undisguiseToAll(attacker);
 				}
 			}
-			if (Variables.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+			if (Settings.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
 			}
-			if (Variables.isDisableGodMode()) {
+			if (Settings.isDisableGodMode()) {
 				if (gc != null && gc.hasGodMode(attacker)) {
 					gc.disableGodMode(attacker);
 				}
@@ -143,7 +143,7 @@ public class EntityListener implements Listener {
 				}
 			}
 		}
-		if (Variables.isInCombatEnabled()) {
+		if (Settings.isInCombatEnabled()) {
 			pvpAttacker.setTagged(true, pvpDefender.getName());
 			pvpDefender.setTagged(false, pvpAttacker.getName());
 		}

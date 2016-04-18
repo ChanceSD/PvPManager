@@ -7,12 +7,12 @@ import java.util.Set;
 import java.util.TimerTask;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class TagTask extends TimerTask {
 
-	private final int time = Variables.getTimeInCombat();
+	private final int time = Settings.getTimeInCombat();
 	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<PvPlayer>());
 
 	@Override

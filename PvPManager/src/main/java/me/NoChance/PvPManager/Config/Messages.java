@@ -57,9 +57,9 @@ public class Messages {
 		Messages.plugin = plugin;
 		currentVersion = plugin.getDescription().getVersion();
 		try {
-			locale = Locale.valueOf(Variables.getLocale());
+			locale = Locale.valueOf(Settings.getLocale());
 		} catch (final IllegalArgumentException e) {
-			Log.warning("Error! Locale '" + Variables.getLocale() + "' does not exist! Using default messages");
+			Log.warning("Error! Locale '" + Settings.getLocale() + "' does not exist! Using default messages");
 			locale = Locale.EN;
 		}
 		load();

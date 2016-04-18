@@ -10,7 +10,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlugin;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Dependencies.Factions;
 import me.NoChance.PvPManager.Dependencies.FactionsUUID;
 import me.NoChance.PvPManager.Utils.Log;
@@ -42,9 +42,9 @@ public class DependencyManager {
 				Log.severe("Error! No Economy plugin found");
 		} else {
 			Log.severe("Vault not found! Features requiring Vault won't work!");
-			Variables.setFineAmount(0);
-			Variables.setMoneyPenalty(0);
-			Variables.setMoneyReward(0);
+			Settings.setFineAmount(0);
+			Settings.setMoneyPenalty(0);
+			Settings.setMoneyReward(0);
 		}
 	}
 

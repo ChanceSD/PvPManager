@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PM implements CommandExecutor {
@@ -29,7 +29,7 @@ public class PM implements CommandExecutor {
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
 			if (args.length == 0 && player.hasPermission("pvpmanager.menu")) {
-				Variables.helpMenu(player);
+				Settings.helpMenu(player);
 				return true;
 			}
 		}
@@ -43,8 +43,8 @@ public class PM implements CommandExecutor {
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("update") && sender.hasPermission("pvpmanager.admin")) {
-				if (Variables.isUpdateCheck()) {
-					if (Variables.isUpdate()) {
+				if (Settings.isUpdateCheck()) {
+					if (Settings.isUpdate()) {
 						if (plugin.downloadUpdate())
 							sender.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewVersion());
 						else
@@ -85,7 +85,7 @@ public class PM implements CommandExecutor {
 	}
 
 	private void reload(final CommandSender player) {
-		Variables.setUpdate(false);
+		Settings.setUpdate(false);
 		Bukkit.getScheduler().cancelTasks(plugin);
 		HandlerList.unregisterAll(plugin);
 		plugin.onDisable();

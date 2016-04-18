@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Utils.Log;
 
 class TeamProfile {
@@ -24,12 +24,12 @@ class TeamProfile {
 		try {
 			final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
 			// player got stuck in this team somehow (server crash?)
-			if (team != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()))) {
+			if (team != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()))) {
 				team.removeEntry(pvPlayer.getName());
 			}
 		} catch (final NoSuchMethodError e) {
-			Variables.setUseNameTag(false);
-			Variables.setToggleNametagsEnabled(false);
+			Settings.setUseNameTag(false);
+			Settings.setToggleNametagsEnabled(false);
 			Log.severe("Colored nametags disabled. Update your Spigot version.");
 		}
 	}
@@ -48,24 +48,24 @@ class TeamProfile {
 			inCombat = scoreboard.getTeam(id);
 		} else {
 			inCombat = scoreboard.registerNewTeam(id);
-			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getNameTagColor()));
+			inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()));
 		}
-		if (Variables.isToggleNametagsEnabled()) {
-			if (!Variables.getToggleColorOn().equalsIgnoreCase("none")) {
+		if (Settings.isToggleNametagsEnabled()) {
+			if (!Settings.getToggleColorOn().equalsIgnoreCase("none")) {
 				if (scoreboard.getTeam("PvPOn") != null) {
 					pvpOn = scoreboard.getTeam("PvPOn");
 				} else {
 					pvpOn = scoreboard.registerNewTeam("PvPOn");
-					pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOn()));
+					pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getToggleColorOn()));
 					pvpOn.setCanSeeFriendlyInvisibles(false);
 				}
 			}
-			if (!Variables.getToggleColorOff().equalsIgnoreCase("none")) {
+			if (!Settings.getToggleColorOff().equalsIgnoreCase("none")) {
 				if (scoreboard.getTeam("PvPOff") != null) {
 					pvpOff = scoreboard.getTeam("PvPOff");
 				} else {
 					pvpOff = scoreboard.registerNewTeam("PvPOff");
-					pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Variables.getToggleColorOff()));
+					pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getToggleColorOff()));
 					pvpOff.setCanSeeFriendlyInvisibles(false);
 				}
 			}

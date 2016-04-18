@@ -10,7 +10,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CancelResult;
@@ -27,8 +27,8 @@ public class PlayerHandler {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
-		if (Variables.isKillAbuseEnabled()) {
-			new CleanKillersTask(this).runTaskTimer(plugin, 0, Variables.getKillAbuseTime() * 20);
+		if (Settings.isKillAbuseEnabled()) {
+			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20);
 		}
 
 		addOnlinePlayers();
@@ -38,7 +38,7 @@ public class PlayerHandler {
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
-		if (attacker.hasOverride() || Variables.isStopBorderHopping() && canAttackHooks(attacker, attacked))
+		if (attacker.hasOverride() || Settings.isStopBorderHopping() && canAttackHooks(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
 			return CancelResult.RESPAWN_PROTECTION;
@@ -107,11 +107,11 @@ public class PlayerHandler {
 
 	public final void applyPunishments(final PvPlayer player) {
 		final Player p = player.getPlayer();
-		if (Variables.isKillOnLogout()) {
+		if (Settings.isKillOnLogout()) {
 			player.setPvpLogged(true);
 			p.setHealth(0);
 		}
-		if (Variables.getFineAmount() != 0) {
+		if (Settings.getFineAmount() != 0) {
 			player.applyFine();
 		}
 	}

@@ -19,7 +19,7 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Version;
 import me.NoChance.PvPManager.Config.Config;
 import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
@@ -50,10 +50,10 @@ public class ConfigManager {
 					e.printStackTrace();
 				}
 				initConfig();
-				Log.warning("Configuration file updated to version: " + Variables.getConfigVersion());
+				Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
 				Log.warning("Due to big changes, your config file was renamed to config.old.yml");
 				Log.warning("Please copy your settings manually to the new config file");
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Variables.getConfigVersion());
+				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Due to big changes, your config file was renamed to config.old.yml");
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Please copy your settings manually to the new config file");
 			} else {
@@ -66,16 +66,16 @@ public class ConfigManager {
 				initConfig();
 				configFile.delete();
 				config = new Config(plugin, "config.yml");
-				Variables.updateDefaultConfig(config, Integer.parseInt(Version.getConfigVersion()));
-				Log.warning("Configuration file updated to version: " + Variables.getConfigVersion());
+				Settings.updateDefaultConfig(config, Integer.parseInt(Version.getConfigVersion()));
+				Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
 				Log.warning("It's recommended that you check the file and adjust the new settings");
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Variables.getConfigVersion());
+				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2It's recommended that you check the file and adjust the new settings");
 			}
 		} else {
 			initConfig();
 		}
-		if (Variables.isUpdateCheck()) {
+		if (Settings.isUpdateCheck()) {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
@@ -87,7 +87,7 @@ public class ConfigManager {
 
 	private void initConfig() {
 		config = new Config(plugin, "config.yml");
-		Variables.initizalizeVariables(config);
+		Settings.initizalizeVariables(config);
 	}
 
 	private void loadUsersFile() {
@@ -110,7 +110,7 @@ public class ConfigManager {
 
 	public final void saveUser(final PvPlayer player) {
 		// check if we really need to save this player
-		if (player.hasPvPEnabled() == Variables.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Variables.getToggleCooldown())) {
+		if (player.hasPvPEnabled() == Settings.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
 			// clear entry for this user if there is one
 			if (getUserStorage().contains(player.getUUID().toString())) {
 				getUserStorage().set(player.getUUID().toString(), null);

@@ -3,7 +3,7 @@ package me.NoChance.PvPManager.Lib;
 import java.io.IOException;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Lib.Metrics.Graph;
 
 public class CustomMetrics {
@@ -27,14 +27,14 @@ public class CustomMetrics {
 			blood.addPlotter(new Metrics.Plotter("Enabled") {
 				@Override
 				public int getValue() {
-					return Variables.isPvpBlood() ? 1 : 0;
+					return Settings.isPvpBlood() ? 1 : 0;
 				}
 
 			});
 			blood.addPlotter(new Metrics.Plotter("Disabled") {
 				@Override
 				public int getValue() {
-					return !Variables.isPvpBlood() ? 1 : 0;
+					return !Settings.isPvpBlood() ? 1 : 0;
 				}
 			});
 
@@ -42,7 +42,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.isKillAbuseEnabled())
+					if (Settings.isKillAbuseEnabled())
 						i++;
 
 					return i;
@@ -52,7 +52,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.isKillAbuseEnabled())
+					if (!Settings.isKillAbuseEnabled())
 						i++;
 
 					return i;
@@ -63,7 +63,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.isUpdateCheck() && Variables.isAutoUpdate())
+					if (Settings.isUpdateCheck() && Settings.isAutoUpdate())
 						i++;
 
 					return i;
@@ -73,7 +73,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.isUpdateCheck())
+					if (!Settings.isUpdateCheck())
 						i++;
 
 					return i;
@@ -83,7 +83,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.isUpdateCheck() && !Variables.isAutoUpdate())
+					if (Settings.isUpdateCheck() && !Settings.isAutoUpdate())
 						i++;
 
 					return i;
@@ -94,7 +94,7 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.isNewbieProtectionEnabled())
+					if (Settings.isNewbieProtectionEnabled())
 						i++;
 
 					return i;
@@ -104,18 +104,18 @@ public class CustomMetrics {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (!Variables.isNewbieProtectionEnabled())
+					if (!Settings.isNewbieProtectionEnabled())
 						i++;
 
 					return i;
 				}
 			});
 
-			inCombatTime.addPlotter(new Metrics.Plotter(Variables.getTimeInCombat() + " seconds") {
+			inCombatTime.addPlotter(new Metrics.Plotter(Settings.getTimeInCombat() + " seconds") {
 				@Override
 				public int getValue() {
 					int i = 0;
-					if (Variables.isInCombatEnabled())
+					if (Settings.isInCombatEnabled())
 						i++;
 
 					return i;

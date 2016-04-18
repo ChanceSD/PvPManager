@@ -57,7 +57,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 
 public class Metrics {
 
@@ -239,7 +239,7 @@ public class Metrics {
 	 * @return true if metrics should be opted out of it
 	 */
 	public final boolean isOptOut() {
-		return Variables.isOptOutMetrics();
+		return Settings.isOptOutMetrics();
 	}
 
 	/**

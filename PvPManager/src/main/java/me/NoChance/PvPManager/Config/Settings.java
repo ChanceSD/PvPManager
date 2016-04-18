@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-public final class Variables {
+public final class Settings {
 
 	public enum DropMode {
 		ALWAYS, DROP, KEEP, TRANSFER
@@ -80,7 +80,7 @@ public final class Variables {
 	private static ConfigurationSection PVPTOGGLE;
 	private static ConfigurationSection UPDATECHECK;
 
-	private Variables() {
+	private Settings() {
 	}
 
 	private static void assignSections(final Config config) {
@@ -165,61 +165,61 @@ public final class Variables {
 	}
 
 	public static void updateDefaultConfig(final Config config, final int newVersion) {
-		config.set("General.Default PvP", Variables.isDefaultPvp());
-		config.set("General.PvP Blood", Variables.isPvpBlood());
-		config.set("General.Stop Border Hopping", Variables.isStopBorderHopping());
-		config.set("General.Ignore No Damage Hits", Variables.isIgnoreNoDamageHits());
-		config.set("General.Auto Soup Health", Variables.getSoupHealth());
+		config.set("General.Default PvP", Settings.isDefaultPvp());
+		config.set("General.PvP Blood", Settings.isPvpBlood());
+		config.set("General.Stop Border Hopping", Settings.isStopBorderHopping());
+		config.set("General.Ignore No Damage Hits", Settings.isIgnoreNoDamageHits());
+		config.set("General.Auto Soup Health", Settings.getSoupHealth());
 
-		config.set("Disable.Fly", Variables.isDisableFly());
-		config.set("Disable.GameMode", Variables.isDisableGamemode());
-		config.set("Disable.Disguise", Variables.isDisableDisguise());
-		config.set("Disable.Invisibility", Variables.isDisableInvisibility());
+		config.set("Disable.Fly", Settings.isDisableFly());
+		config.set("Disable.GameMode", Settings.isDisableGamemode());
+		config.set("Disable.Disguise", Settings.isDisableDisguise());
+		config.set("Disable.Invisibility", Settings.isDisableInvisibility());
 
-		config.set("Tagged In Combat.Enabled", Variables.isInCombatEnabled());
-		config.set("Tagged In Combat.Time", Variables.getTimeInCombat());
-		config.set("Tagged In Combat.NameTag Prefix", Variables.getNameTagColor());
-		config.set("Tagged In Combat.Block.EnderPearls", Variables.isBlockEnderPearl());
-		config.set("Tagged In Combat.Block.Teleport", Variables.isBlockEnderPearl());
-		config.set("Tagged In Combat.Block.Place Blocks", Variables.isBlockPlaceBlocks());
-		config.set("Tagged In Combat.Block.Commands.Enabled", Variables.isStopCommands());
-		config.set("Tagged In Combat.Block.Commands.Whitelist", Variables.isCommandsWhitelist());
-		config.set("Tagged In Combat.Block.Commands.Command List", Variables.getCommandsAllowed());
-		config.set("Tagged In Combat.Punishments.Punish On Kick", Variables.punishOnKick());
-		config.set("Tagged In Combat.Punishments.Commands On PvPLog", Variables.getCommandsOnPvPLog());
-		config.set("Tagged In Combat.Punishments.Log To File", Variables.isLogToFile());
-		config.set("Tagged In Combat.Punishments.Kill on Logout.Enabled", Variables.isKillOnLogout());
-		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Inventory", Variables.isDropInventory());
-		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Experience", Variables.isDropExp());
-		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Armor", Variables.isDropArmor());
-		config.set("Tagged In Combat.Punishments.Money Penalty", Variables.getFineAmount());
+		config.set("Tagged In Combat.Enabled", Settings.isInCombatEnabled());
+		config.set("Tagged In Combat.Time", Settings.getTimeInCombat());
+		config.set("Tagged In Combat.NameTag Prefix", Settings.getNameTagColor());
+		config.set("Tagged In Combat.Block.EnderPearls", Settings.isBlockEnderPearl());
+		config.set("Tagged In Combat.Block.Teleport", Settings.isBlockEnderPearl());
+		config.set("Tagged In Combat.Block.Place Blocks", Settings.isBlockPlaceBlocks());
+		config.set("Tagged In Combat.Block.Commands.Enabled", Settings.isStopCommands());
+		config.set("Tagged In Combat.Block.Commands.Whitelist", Settings.isCommandsWhitelist());
+		config.set("Tagged In Combat.Block.Commands.Command List", Settings.getCommandsAllowed());
+		config.set("Tagged In Combat.Punishments.Punish On Kick", Settings.punishOnKick());
+		config.set("Tagged In Combat.Punishments.Commands On PvPLog", Settings.getCommandsOnPvPLog());
+		config.set("Tagged In Combat.Punishments.Log To File", Settings.isLogToFile());
+		config.set("Tagged In Combat.Punishments.Kill on Logout.Enabled", Settings.isKillOnLogout());
+		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Inventory", Settings.isDropInventory());
+		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Experience", Settings.isDropExp());
+		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Armor", Settings.isDropArmor());
+		config.set("Tagged In Combat.Punishments.Money Penalty", Settings.getFineAmount());
 
-		config.set("Player Kills.Money Reward", Variables.getMoneyReward());
-		config.set("Player Kills.Money Penalty", Variables.getMoneyPenalty());
-		config.set("Player Kills.Commands On Kill", Variables.getCommandsOnKill());
+		config.set("Player Kills.Money Reward", Settings.getMoneyReward());
+		config.set("Player Kills.Money Penalty", Settings.getMoneyPenalty());
+		config.set("Player Kills.Commands On Kill", Settings.getCommandsOnKill());
 
-		config.set("PvP Toggle.Cooldown", Variables.getToggleCooldown());
-		config.set("PvP Toggle.NameTags.Enabled", Variables.isToggleNametagsEnabled());
-		config.set("PvP Toggle.NameTags.Prefix On", Variables.getToggleColorOn());
-		config.set("PvP Toggle.NameTags.Prefix Off", Variables.getToggleColorOff());
-		config.set("PvP Toggle.Commands PvP On", Variables.getCommandsPvPOn());
-		config.set("PvP Toggle.Commands PvP Off", Variables.getCommandsPvPOff());
+		config.set("PvP Toggle.Cooldown", Settings.getToggleCooldown());
+		config.set("PvP Toggle.NameTags.Enabled", Settings.isToggleNametagsEnabled());
+		config.set("PvP Toggle.NameTags.Prefix On", Settings.getToggleColorOn());
+		config.set("PvP Toggle.NameTags.Prefix Off", Settings.getToggleColorOff());
+		config.set("PvP Toggle.Commands PvP On", Settings.getCommandsPvPOn());
+		config.set("PvP Toggle.Commands PvP Off", Settings.getCommandsPvPOff());
 
-		config.set("Kill Abuse.Enabled", Variables.isKillAbuseEnabled());
-		config.set("Kill Abuse.Max Kills", Variables.getKillAbuseMaxKills());
-		config.set("Kill Abuse.Time Limit", Variables.getKillAbuseTime());
-		config.set("Kill Abuse.Commands on Abuse", Variables.getKillAbuseCommands());
-		config.set("Kill Abuse.Respawn Protection", Variables.getRespawnProtection());
+		config.set("Kill Abuse.Enabled", Settings.isKillAbuseEnabled());
+		config.set("Kill Abuse.Max Kills", Settings.getKillAbuseMaxKills());
+		config.set("Kill Abuse.Time Limit", Settings.getKillAbuseTime());
+		config.set("Kill Abuse.Commands on Abuse", Settings.getKillAbuseCommands());
+		config.set("Kill Abuse.Respawn Protection", Settings.getRespawnProtection());
 
-		config.set("Newbie Protection.Enabled", Variables.isNewbieProtectionEnabled());
-		config.set("Newbie Protection.Time(minutes)", Variables.getNewbieProtectionTime());
-		config.set("Newbie Protection.Block Pick Items", Variables.isBlockPickNewbies());
-		config.set("Newbie Protection.Protect From Everything", Variables.isNewbieGodMode());
+		config.set("Newbie Protection.Enabled", Settings.isNewbieProtectionEnabled());
+		config.set("Newbie Protection.Time(minutes)", Settings.getNewbieProtectionTime());
+		config.set("Newbie Protection.Block Pick Items", Settings.isBlockPickNewbies());
+		config.set("Newbie Protection.Protect From Everything", Settings.isNewbieGodMode());
 
 		config.set("Config Version", newVersion);
-		config.set("Update Check.Enabled", Variables.isUpdateCheck());
-		config.set("Update Check.Update Location", Variables.getUpdateLocation());
-		config.set("Update Check.Auto Update", Variables.isUpdate());
+		config.set("Update Check.Enabled", Settings.isUpdateCheck());
+		config.set("Update Check.Update Location", Settings.getUpdateLocation());
+		config.set("Update Check.Auto Update", Settings.isUpdate());
 		config.saveConfig();
 		initizalizeVariables(config);
 	}
@@ -267,7 +267,7 @@ public final class Variables {
 	}
 
 	public static void setFineAmount(final double fineAmount) {
-		Variables.fineAmount = fineAmount;
+		Settings.fineAmount = fineAmount;
 	}
 
 	public static List<String> getKillAbuseCommands() {
@@ -447,19 +447,19 @@ public final class Variables {
 	}
 
 	public static void setMoneyPenalty(final double moneyPenalty) {
-		Variables.moneyPenalty = moneyPenalty;
+		Settings.moneyPenalty = moneyPenalty;
 	}
 
 	public static void setMoneyReward(final double moneyReward) {
-		Variables.moneyReward = moneyReward;
+		Settings.moneyReward = moneyReward;
 	}
 
 	public static void setToggleNametagsEnabled(final boolean toggleNametagsEnabled) {
-		Variables.toggleNametagsEnabled = toggleNametagsEnabled;
+		Settings.toggleNametagsEnabled = toggleNametagsEnabled;
 	}
 
 	public static void setUpdate(final boolean update) {
-		Variables.update = update;
+		Settings.update = update;
 	}
 
 	public static boolean isUseNameTag() {
@@ -467,7 +467,7 @@ public final class Variables {
 	}
 
 	public static void setUseNameTag(final boolean useNameTag) {
-		Variables.useNameTag = useNameTag;
+		Settings.useNameTag = useNameTag;
 	}
 
 	public static int getConfigVersion() {
