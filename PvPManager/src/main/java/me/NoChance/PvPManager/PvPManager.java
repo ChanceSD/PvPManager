@@ -37,9 +37,11 @@ public final class PvPManager extends JavaPlugin {
 	private Updater updater;
 	private LogFile log;
 	private DependencyManager dependencyManager;
+	private static PvPManager instance;
 
 	@Override
 	public void onEnable() {
+		instance = this;
 		Log.setup(getLogger());
 		loadFiles();
 		dependencyManager = new DependencyManager(this);
@@ -125,6 +127,10 @@ public final class PvPManager extends JavaPlugin {
 
 	public DependencyManager getDependencyManager() {
 		return dependencyManager;
+	}
+
+	public static PvPManager getInstance() {
+		return instance;
 	}
 
 }
