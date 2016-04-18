@@ -24,7 +24,6 @@ import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Updater.BukkitUpdater;
-import me.NoChance.PvPManager.Updater.SpigotUpdater;
 import me.NoChance.PvPManager.Updater.Updater;
 import me.NoChance.PvPManager.Updater.Updater.UpdateResult;
 import me.NoChance.PvPManager.Updater.Updater.UpdateType;
@@ -86,11 +85,13 @@ public final class PvPManager extends JavaPlugin {
 
 	public void checkForUpdates() {
 		Log.info("Checking for updates...");
-		if (Settings.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
-			updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
-		} else {
-			updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
-		}
+		// disable spigot updater for now
+		// if (Settings.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
+		updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
+		// }
+		// else {
+		// updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
+		// }
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
 			Log.info("Update Available: " + Messages.getNewVersion());
