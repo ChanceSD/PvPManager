@@ -27,8 +27,8 @@ import org.bukkit.inventory.ItemStack;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Config.Variables.DropMode;
+import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Config.Settings.DropMode;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
@@ -42,14 +42,14 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public final void onBlockPlace(final BlockPlaceEvent event) {
-		if (Variables.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat()) {
+		if (Settings.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat()) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public final void onToggleFlight(final PlayerToggleFlightEvent event) {
-		if (Variables.isDisableFly() && event.isFlying() && ph.get(event.getPlayer()).isInCombat()) {
+		if (Settings.isDisableFly() && event.isFlying() && ph.get(event.getPlayer()).isInCombat()) {
 			event.setCancelled(true);
 		}
 	}
@@ -59,10 +59,10 @@ public class PlayerListener implements Listener {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer.isInCombat()) {
-			if (Variables.isLogToFile()) {
+			if (Settings.isLogToFile()) {
 				ph.getPlugin().getLog().log(player.getName() + " tried to escape combat!");
 			}
-			for (final String s : Variables.getCommandsOnPvPLog()) {
+			for (final String s : Settings.getCommandsOnPvPLog()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", player.getName())));
 			}
 			ph.applyPunishments(pvPlayer);
@@ -80,18 +80,18 @@ public class PlayerListener implements Listener {
 
 		// Let's process player's inventory/exp according to config file
 		if (pvPlayer.hasPvPLogged()) {
-			if (!Variables.isDropExp()) {
+			if (!Settings.isDropExp()) {
 				event.setKeepLevel(true);
 				event.setDroppedExp(0);
 			}
-			if (!Variables.isDropInventory() && Variables.isDropArmor()) {
+			if (!Settings.isDropInventory() && Settings.isDropArmor()) {
 				CombatUtils.fakeItemStackDrop(player, player.getInventory().getArmorContents());
 				player.getInventory().setArmorContents(null);
-			} else if (Variables.isDropInventory() && !Variables.isDropArmor()) {
+			} else if (Settings.isDropInventory() && !Settings.isDropArmor()) {
 				CombatUtils.fakeItemStackDrop(player, player.getInventory().getContents());
 				player.getInventory().clear();
 			}
-			if (!Variables.isDropInventory() || !Variables.isDropArmor()) {
+			if (!Settings.isDropInventory() || !Settings.isDropArmor()) {
 				event.setKeepInventory(true);
 			}
 		}
@@ -101,21 +101,21 @@ public class PlayerListener implements Listener {
 		// Player died in combat, process that
 		if (pvpDeath && !killer.equals(player)) {
 			final PvPlayer pKiller = ph.get(killer);
-			if (Variables.isKillAbuseEnabled()) {
+			if (Settings.isKillAbuseEnabled()) {
 				pKiller.addVictim(player.getName());
 			}
-			if (Variables.getMoneyReward() > 0) {
+			if (Settings.getMoneyReward() > 0) {
 				pKiller.giveReward(player);
 			}
-			if (Variables.getMoneyPenalty() > 0) {
+			if (Settings.getMoneyPenalty() > 0) {
 				pvPlayer.applyPenalty();
 			}
-			for (final String command : Variables.getCommandsOnKill()) {
+			for (final String command : Settings.getCommandsOnKill()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
 			}
 		}
 		if (!pvPlayer.hasPvPLogged()) {
-			final DropMode mode = Variables.getDropMode();
+			final DropMode mode = Settings.getDropMode();
 			switch (mode) {
 			case DROP:
 				if (!pvpDeath && !pvPlayer.isInCombat()) {
@@ -150,10 +150,10 @@ public class PlayerListener implements Listener {
 		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			final ItemStack i = player.getItemInHand();
 			final PvPlayer pvplayer = ph.get(player);
-			if (Variables.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
+			if (Settings.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
 				if (player.getHealth() == player.getMaxHealth())
 					return;
-				player.setHealth(player.getHealth() + Variables.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Variables.getSoupHealth());
+				player.setHealth(player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());
 				i.setType(Material.BOWL);
 				return;
 			}
@@ -175,7 +175,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public final void onPlayerPickup(final PlayerPickupItemEvent e) {
-		if (Variables.isNewbieProtectionEnabled() && Variables.isBlockPickNewbies()) {
+		if (Settings.isNewbieProtectionEnabled() && Settings.isBlockPickNewbies()) {
 			final PvPlayer player = ph.get(e.getPlayer());
 			if (player.isNewbie()) {
 				e.setCancelled(true);
@@ -198,7 +198,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerKick(final PlayerKickEvent event) {
 		final PvPlayer pvPlayer = ph.get(event.getPlayer());
-		if (pvPlayer.isInCombat() && !Variables.punishOnKick()) {
+		if (pvPlayer.isInCombat() && !Settings.punishOnKick()) {
 			ph.untag(pvPlayer);
 		}
 	}
@@ -206,11 +206,11 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
 		final PvPlayer player = ph.get(event.getPlayer());
-		if (player != null && Variables.isInCombatEnabled() && player.isInCombat())
-			if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Variables.isBlockEnderPearl()) {
+		if (player != null && Settings.isInCombatEnabled() && player.isInCombat())
+			if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
 				event.setCancelled(true);
 				player.message(Messages.getEnderpearlBlockedIncombat());
-			} else if (event.getCause().equals(TeleportCause.COMMAND) && Variables.isBlockTeleport()) {
+			} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
 				event.setCancelled(true);
 				player.message("§cYou can't teleport while in combat!");
 			}
@@ -218,7 +218,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public final void onCommand(final PlayerCommandPreprocessEvent event) {
-		if (Variables.isStopCommands() && Variables.isInCombatEnabled()) {
+		if (Settings.isStopCommands() && Settings.isInCombatEnabled()) {
 			final PvPlayer player = ph.get(event.getPlayer());
 			if (player.isInCombat()) {
 				boolean contains = false;
@@ -228,12 +228,12 @@ public class PlayerListener implements Listener {
 					for (int j = 1; j <= i; j++) {
 						args += " " + givenCommand[j];
 					}
-					if (Variables.getCommandsAllowed().contains(args.toLowerCase())) {
+					if (Settings.getCommandsAllowed().contains(args.toLowerCase())) {
 						contains = true;
 						break;
 					}
 				}
-				if (Variables.isCommandsWhitelist() ? !contains : contains) {
+				if (Settings.isCommandsWhitelist() ? !contains : contains) {
 					event.setCancelled(true);
 					player.message(Messages.getCommandDeniedIncombat());
 				}
@@ -244,7 +244,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
 		if (CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName()))
-			if (Variables.isKillAbuseEnabled() && Variables.getRespawnProtection() != 0) {
+			if (Settings.isKillAbuseEnabled() && Settings.getRespawnProtection() != 0) {
 				final PvPlayer player = ph.get(event.getPlayer());
 				player.setRespawnTime(System.currentTimeMillis());
 			}
@@ -254,8 +254,8 @@ public class PlayerListener implements Listener {
 	public void onChangeWorld(final PlayerChangedWorldEvent event) {
 		if (!CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName()))
 			return;
-		if (Variables.isForcePvPOnWorldChange()) {
-			ph.get(event.getPlayer()).setPvP(Variables.isDefaultPvp());
+		if (Settings.isForcePvPOnWorldChange()) {
+			ph.get(event.getPlayer()).setPvP(Settings.isDefaultPvp());
 		}
 	}
 

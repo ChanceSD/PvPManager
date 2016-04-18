@@ -10,7 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
@@ -35,9 +35,9 @@ public class PvPlayer extends EcoPlayer {
 		super(plugin.getDependencyManager().getEconomy());
 		this.player = new WeakReference<>(player);
 		this.uuid = player.getUniqueId();
-		this.pvpState = Variables.isDefaultPvp();
+		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
-		if (Variables.isUseNameTag() || Variables.isToggleNametagsEnabled()) {
+		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled()) {
 			this.teamProfile = new TeamProfile(this);
 		}
 	}
@@ -71,8 +71,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final boolean hasToggleCooldownPassed() {
-		if (!CombatUtils.hasTimePassed(toggleTime, Variables.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
-			final long secondsLeft = (toggleTime + Variables.getToggleCooldown() * 1000 - System.currentTimeMillis()) / 1000;
+		if (!CombatUtils.hasTimePassed(toggleTime, Settings.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
+			final long secondsLeft = (toggleTime + Settings.getToggleCooldown() * 1000 - System.currentTimeMillis()) / 1000;
 			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft / 60)));
 			return false;
 		}
@@ -106,9 +106,9 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
-			message(Messages.getNewbieProtection().replace("%", Integer.toString(Variables.getNewbieProtectionTime())));
+			message(Messages.getNewbieProtection().replace("%", Integer.toString(Settings.getNewbieProtectionTime())));
 			this.newbieTask = new NewbieTask(this);
-			newbieTask.runTaskLater(plugin, Variables.getNewbieProtectionTime() * 1200);
+			newbieTask.runTaskLater(plugin, Settings.getNewbieProtectionTime() * 1200);
 		} else if (Bukkit.getServer().getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
 			message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
 			newbieTask.cancel();
@@ -127,7 +127,7 @@ public class PvPlayer extends EcoPlayer {
 		if (tagged)
 			return;
 
-		if (Variables.isUseNameTag()) {
+		if (Settings.isUseNameTag()) {
 			teamProfile.setInCombat();
 		}
 
@@ -143,7 +143,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void unTag() {
 		if (isOnline()) {
-			if (Variables.isUseNameTag()) {
+			if (Settings.isUseNameTag()) {
 				teamProfile.restoreTeam();
 			}
 
@@ -156,17 +156,17 @@ public class PvPlayer extends EcoPlayer {
 	public final void setPvP(final boolean pvpState) {
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
-		if (Variables.isToggleNametagsEnabled()) {
+		if (Settings.isToggleNametagsEnabled()) {
 			teamProfile.setPvP(pvpState);
 		}
 		if (!pvpState) {
 			message(Messages.getPvpDisabled());
-			for (final String s : Variables.getCommandsPvPOff()) {
+			for (final String s : Settings.getCommandsPvPOff()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", getName())));
 			}
 		} else {
 			message(Messages.getPvpEnabled());
-			for (final String s : Variables.getCommandsPvPOn()) {
+			for (final String s : Settings.getCommandsPvPOn()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", getName())));
 			}
 		}
@@ -177,13 +177,13 @@ public class PvPlayer extends EcoPlayer {
 			victim.put(victimName, 1);
 		} else if (victim.containsKey(victimName)) {
 			int totalKills = victim.get(victimName);
-			if (totalKills < Variables.getKillAbuseMaxKills()) {
+			if (totalKills < Settings.getKillAbuseMaxKills()) {
 				totalKills++;
 				victim.put(victimName, totalKills);
 			}
-			if (totalKills >= Variables.getKillAbuseMaxKills()) {
+			if (totalKills >= Settings.getKillAbuseMaxKills()) {
 				unTag();
-				for (final String command : Variables.getKillAbuseCommands()) {
+				for (final String command : Settings.getKillAbuseCommands()) {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", getName()));
 				}
 			}
@@ -201,7 +201,7 @@ public class PvPlayer extends EcoPlayer {
 	public final boolean hasRespawnProtection() {
 		if (respawnTime == 0)
 			return false;
-		if (CombatUtils.hasTimePassed(respawnTime, Variables.getRespawnProtection())) {
+		if (CombatUtils.hasTimePassed(respawnTime, Settings.getRespawnProtection())) {
 			respawnTime = 0;
 			return false;
 		}
@@ -225,7 +225,7 @@ public class PvPlayer extends EcoPlayer {
 		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp")) {
 			this.pvpState = false;
 		} else if (!getPlayer().hasPlayedBefore()) {
-			if (Variables.isNewbieProtectionEnabled()) {
+			if (Settings.isNewbieProtectionEnabled()) {
 				setNewbie(true);
 			}
 		}

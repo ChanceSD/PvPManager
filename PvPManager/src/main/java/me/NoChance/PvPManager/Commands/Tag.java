@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 
 public class Tag implements CommandExecutor {
@@ -24,7 +24,7 @@ public class Tag implements CommandExecutor {
 			if (!pvPlayer.isInCombat())
 				pvPlayer.message("§cYou are not in combat");
 			else {
-				final long timeLeft = (pvPlayer.getTaggedTime() + Variables.getTimeInCombat() * 1000 - System.currentTimeMillis()) / 1000;
+				final long timeLeft = (pvPlayer.getTaggedTime() + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis()) / 1000;
 				pvPlayer.message(String.format("§8You are in combat for another %d seconds", timeLeft));
 			}
 			return true;

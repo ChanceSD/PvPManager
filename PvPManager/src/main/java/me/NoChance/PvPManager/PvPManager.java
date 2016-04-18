@@ -15,7 +15,7 @@ import me.NoChance.PvPManager.Commands.PvPStatus;
 import me.NoChance.PvPManager.Commands.Tag;
 import me.NoChance.PvPManager.Config.LogFile;
 import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Lib.CustomMetrics;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
@@ -66,7 +66,7 @@ public final class PvPManager extends JavaPlugin {
 	private void loadFiles() {
 		this.configM = new ConfigManager(this);
 		Messages.setup(this);
-		if (Variables.isLogToFile()) {
+		if (Settings.isLogToFile()) {
 			log = new LogFile(new File(getDataFolder(), "pvplog.txt"));
 		}
 	}
@@ -85,7 +85,7 @@ public final class PvPManager extends JavaPlugin {
 
 	public void checkForUpdates() {
 		Log.info("Checking for updates...");
-		if (Variables.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
+		if (Settings.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
 			updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
 		} else {
 			updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
@@ -93,12 +93,12 @@ public final class PvPManager extends JavaPlugin {
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
 			Log.info("Update Available: " + Messages.getNewVersion());
-			if (Variables.isAutoUpdate()) {
+			if (Settings.isAutoUpdate()) {
 				downloadUpdate();
 				Log.info("Version Downloaded To Your Update Folder");
 				return;
 			}
-			Variables.setUpdate(true);
+			Settings.setUpdate(true);
 			Log.info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
 		} else {
 			Log.info("No update found");

@@ -1,6 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
-import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Config.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,7 +33,7 @@ public final class CombatUtils {
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
 					if (!shooter.equals(defender) && !shooter.hasMetadata("NPC")) {
-						return !(Variables.isIgnoreNoDamageHits() && event.getDamage() == 0);
+						return !(Settings.isIgnoreNoDamageHits() && event.getDamage() == 0);
 					}
 				}
 			}
@@ -56,6 +56,6 @@ public final class CombatUtils {
 	}
 
 	public static boolean isWorldAllowed(final String worldName) {
-		return !Variables.getWorldsExcluded().contains(worldName);
+		return !Settings.getWorldsExcluded().contains(worldName);
 	}
 }
