@@ -61,6 +61,7 @@ public final class PvPManager extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		playerHandler.handlePluginDisable();
+		instance = null;
 	}
 
 	private void loadFiles() {

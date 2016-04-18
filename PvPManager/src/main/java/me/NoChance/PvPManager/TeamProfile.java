@@ -30,7 +30,7 @@ class TeamProfile {
 		} catch (final NoSuchMethodError e) {
 			Settings.setUseNameTag(false);
 			Settings.setToggleNametagsEnabled(false);
-			Log.severe("Colored nametags disabled. Update your Spigot version.");
+			Log.severe("Colored nametags disabled. You need to update your Spigot version.");
 		}
 	}
 
