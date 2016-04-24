@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.NoChance.PvPManager</groupId>
 	<artifactId>PvPManager-parent</artifactId>
@@ -14,7 +13,7 @@
 	</properties>
 
 	<prerequisites>
-		<maven>3.3.3</maven>
+		<maven>3.3.9</maven>
 	</prerequisites>
 
 	<modules>
@@ -31,13 +30,20 @@
 					<execution>
 						<configuration>
 							<excludeReactor>false</excludeReactor>
+							<autoLinkItems>true</autoLinkItems>
+							<allowMajorUpdates>true</allowMajorUpdates>
+							<allowMinorUpdates>true</allowMinorUpdates>
+							<allowSnapshots>true</allowSnapshots>
 						</configuration>
 						<phase>pre-clean</phase>
 						<goals>
-							<goal>update-child-modules</goal>
 							<goal>display-plugin-updates</goal>
+							<goal>display-dependency-updates</goal>
+							<goal>display-parent-updates</goal>
 							<goal>use-latest-versions</goal>
+							<goal>update-child-modules</goal>
 							<goal>update-properties</goal>
+							<goal>update-parent</goal>
 							<goal>commit</goal>
 						</goals>
 					</execution>
