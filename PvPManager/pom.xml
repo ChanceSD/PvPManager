@@ -27,10 +27,6 @@
 			<url>http://build.yu8.me:8080/plugin/repository/everything/</url>
 		</repository>
 		<repository>
-			<id>libsdisguises-repo</id>
-			<url>http://repo.md-5.net/content/groups/public/</url>
-		</repository>
-		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
