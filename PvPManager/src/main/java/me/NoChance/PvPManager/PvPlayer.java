@@ -259,8 +259,12 @@ public class PvPlayer extends EcoPlayer {
 		}
 	}
 
-	public static PvPlayer get(final Player p) {
-		return PvPManager.getInstance().getPlayerHandler().get(p);
+	/**
+	 * @param player
+	 * @return PvPlayer instance for the provided player
+	 */
+	public static PvPlayer get(final Player player) {
+		return PvPManager.getInstance().getPlayerHandler().get(player);
 	}
 
 }
