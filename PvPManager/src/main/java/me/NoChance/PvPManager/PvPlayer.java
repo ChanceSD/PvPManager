@@ -242,6 +242,9 @@ public class PvPlayer extends EcoPlayer {
 		if (userData.get("toggletime") instanceof Long) {
 			this.toggleTime = (long) userData.get("toggletime");
 		}
+		if (userData.get("newbie") instanceof Boolean) {
+			this.newbie = (boolean) userData.get("newbie");
+		}
 	}
 
 	public final void updatePlayer(final Player p) {
