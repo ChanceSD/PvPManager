@@ -110,7 +110,7 @@ public class ConfigManager {
 
 	public final void saveUser(final PvPlayer player) {
 		// check if we really need to save this player
-		if (player.hasPvPEnabled() == Settings.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
+		if (player.isNewbie() == false && player.hasPvPEnabled() == Settings.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
 			// clear entry for this user if there is one
 			if (getUserStorage().contains(player.getUUID().toString())) {
 				getUserStorage().set(player.getUUID().toString(), null);
@@ -122,6 +122,7 @@ public class ConfigManager {
 		final Map<String, Object> userData = new HashMap<>();
 		userData.put("pvpstatus", player.hasPvPEnabled());
 		userData.put("toggletime", player.getToggleTime());
+		userData.put("newbie", player.isNewbie());
 
 		getUserStorage().createSection(player.getUUID().toString(), userData);
 		saveUsersToDisk();
