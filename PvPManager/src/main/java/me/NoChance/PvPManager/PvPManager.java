@@ -131,6 +131,9 @@ public final class PvPManager extends JavaPlugin {
 		return dependencyManager;
 	}
 
+	/**
+	 * @return instance of PvPManager
+	 */
 	public static PvPManager getInstance() {
 		return instance;
 	}
