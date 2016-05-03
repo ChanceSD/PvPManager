@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -119,12 +118,7 @@ public class ConfigManager {
 			return;
 		}
 
-		final Map<String, Object> userData = new HashMap<>();
-		userData.put("pvpstatus", player.hasPvPEnabled());
-		userData.put("toggletime", player.getToggleTime());
-		userData.put("newbie", player.isNewbie());
-
-		getUserStorage().createSection(player.getUUID().toString(), userData);
+		getUserStorage().createSection(player.getUUID().toString(), player.getUserData());
 		saveUsersToDisk();
 	}
 

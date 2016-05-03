@@ -108,7 +108,7 @@ public class PvPlayer extends EcoPlayer {
 		if (newbie) {
 			message(Messages.getNewbieProtection().replace("%", Integer.toString(Settings.getNewbieProtectionTime())));
 			this.newbieTask = new NewbieTask(this);
-			newbieTask.runTaskLater(plugin, Settings.getNewbieProtectionTime() * 1200);
+			newbieTask.runTaskLater(plugin, newbieTask.getTimeleft() / 50);
 		} else if (Bukkit.getServer().getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
 			message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
 			newbieTask.cancel();
@@ -235,16 +235,32 @@ public class PvPlayer extends EcoPlayer {
 		}
 	}
 
-	public void loadData(final Map<String, Object> userData) {
-		if (userData.get("pvpstatus") instanceof Boolean) {
-			this.pvpState = (boolean) userData.get("pvpstatus");
+	public void loadUserData(final Map<String, Object> userData) {
+		if (userData.get(UserDataFields.PVP_STATUS) instanceof Boolean) {
+			this.pvpState = (boolean) userData.get(UserDataFields.PVP_STATUS);
 		}
-		if (userData.get("toggletime") instanceof Long) {
-			this.toggleTime = (long) userData.get("toggletime");
+		if (userData.get(UserDataFields.TOGGLE_TIME) instanceof Long) {
+			this.toggleTime = (long) userData.get(UserDataFields.TOGGLE_TIME);
 		}
-		if (userData.get("newbie") instanceof Boolean) {
-			this.newbie = (boolean) userData.get("newbie");
+		if (userData.get(UserDataFields.NEWBIE) instanceof Boolean) {
+			this.newbie = (boolean) userData.get(UserDataFields.NEWBIE);
+			if (this.newbie) {
+				if (userData.get(UserDataFields.NEWBIE_TIMELEFT) instanceof Long) {
+					final long timeleft = (long) userData.get(UserDataFields.NEWBIE_TIMELEFT);
+					this.newbieTask = new NewbieTask(this);
+					newbieTask.runTaskLater(plugin, timeleft / 50);
+				}
+			}
 		}
+	}
+
+	public final Map<String, Object> getUserData() {
+		final Map<String, Object> userData = new HashMap<>();
+		userData.put(UserDataFields.PVP_STATUS, hasPvPEnabled());
+		userData.put(UserDataFields.TOGGLE_TIME, getToggleTime());
+		userData.put(UserDataFields.NEWBIE, isNewbie());
+		userData.put(UserDataFields.NEWBIE_TIMELEFT, newbieTask.getTimeleft());
+		return userData;
 	}
 
 	public final void updatePlayer(final Player p) {
