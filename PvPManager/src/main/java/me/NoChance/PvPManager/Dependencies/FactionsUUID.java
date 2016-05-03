@@ -4,17 +4,17 @@ import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.Factions;
+import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Relation;
 
 import me.NoChance.PvPManager.PvPlugin;
 
 public class FactionsUUID implements PvPlugin {
 
-	private final Factions factions;
+	private final P factions;
 
 	public FactionsUUID() {
-		factions = Factions.get();
+		factions = P.p;
 	}
 
 	@Override
