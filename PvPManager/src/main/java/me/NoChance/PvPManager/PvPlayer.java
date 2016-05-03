@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Config.Settings;
@@ -129,6 +131,9 @@ public class PvPlayer extends EcoPlayer {
 
 		if (Settings.isUseNameTag()) {
 			teamProfile.setInCombat();
+		}
+		if (Bukkit.getBukkitVersion().startsWith("1.9")) {
+			getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Settings.getTimeInCombat(), 1));
 		}
 
 		if (attacker) {
