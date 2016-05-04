@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.permissions.PermissionAttachment;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
@@ -45,23 +46,26 @@ public class PM implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("update") && sender.hasPermission("pvpmanager.admin")) {
 				if (Settings.isUpdateCheck()) {
 					if (Settings.isUpdate()) {
-						if (plugin.downloadUpdate())
+						if (plugin.downloadUpdate()) {
 							sender.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewVersion());
-						else
+						} else {
 							sender.sendMessage("§4An error ocurred while updating, please report to the developer");
-					} else
+						}
+					} else {
 						sender.sendMessage("§2You have the latest version: §ePvPManager v" + Messages.getCurrentversion());
-				} else
+					}
+				} else {
 					sender.sendMessage("§4Update Checking is disabled, enable it in the Config file");
+				}
 				return true;
 			}
 			sender.sendMessage(Messages.getErrorPermission());
 			return true;
 		} else if (args.length > 1 && args[0].equalsIgnoreCase("debug") && sender.hasPermission("pvpmanager.debug")) {
 			PvPlayer p = null;
-			if (args.length == 2 && sender instanceof Player)
+			if (args.length == 2 && sender instanceof Player) {
 				p = plugin.getPlayerHandler().get((Player) sender);
-			else if (args.length == 3) {
+			} else if (args.length == 3) {
 				if (!CombatUtils.isOnline(args[2])) {
 					sender.sendMessage("§4Player not online!");
 					return true;
@@ -70,14 +74,17 @@ public class PM implements CommandExecutor {
 			}
 			if (p == null)
 				return true;
-			if (args[1].equalsIgnoreCase("tag"))
+			final PermissionAttachment attachment = sender.addAttachment(plugin, 1200);
+			attachment.setPermission("pvpmanager.nocombat", false);
+			if (args[1].equalsIgnoreCase("tag")) {
 				p.setTagged(true, "Debug");
-			else if (args[1].equalsIgnoreCase("ct"))
+			} else if (args[1].equalsIgnoreCase("ct")) {
 				p.message("Tagged: " + p.isInCombat());
-			else if (args[1].equalsIgnoreCase("newbie"))
+			} else if (args[1].equalsIgnoreCase("newbie")) {
 				p.setNewbie(true);
-			else if (args[1].equalsIgnoreCase("attack"))
+			} else if (args[1].equalsIgnoreCase("attack")) {
 				plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
+			}
 			return true;
 		}
 		sender.sendMessage(Messages.getErrorCommand());
