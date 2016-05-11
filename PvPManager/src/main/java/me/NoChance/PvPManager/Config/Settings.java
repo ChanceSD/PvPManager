@@ -70,6 +70,7 @@ public final class Settings {
 	private static String updateLocation;
 	private static boolean optOutMetrics;
 	private static double soupHealth;
+	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection DISABLE;
@@ -136,6 +137,7 @@ public final class Settings {
 		newbieProtectionTime = NEWBIEPROTECTION.getInt("Time(minutes)", 5);
 		blockPickNewbies = NEWBIEPROTECTION.getBoolean("Block Pick Items", false);
 		newbieGodMode = NEWBIEPROTECTION.getBoolean("Protect From Everything", false);
+		newbieBlacklist = (List<String>) NEWBIEPROTECTION.getList("Command Blacklist", new ArrayList<>());
 
 		killAbuseEnabled = KILLABUSE.getBoolean("Enabled", true);
 		killAbuseMaxKills = KILLABUSE.getInt("Max Kills", 5);
@@ -236,6 +238,10 @@ public final class Settings {
 		player.sendMessage(ChatColor.GOLD + "/pm update " + ChatColor.WHITE + "| Update to Latest Version");
 		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");
 		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
+	}
+
+	public static List<String> getNewbieBlacklist() {
+		return newbieBlacklist;
 	}
 
 	public static List<String> getCommandsAllowed() {
