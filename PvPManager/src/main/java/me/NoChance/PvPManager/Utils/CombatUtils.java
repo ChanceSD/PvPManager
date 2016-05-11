@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Utils;
 
-import me.NoChance.PvPManager.Config.Settings;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,6 +12,8 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
+
+import me.NoChance.PvPManager.Config.Settings;
 
 public final class CombatUtils {
 
@@ -32,9 +35,8 @@ public final class CombatUtils {
 				final ProjectileSource projSource = ((Projectile) attacker).getShooter();
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					if (!shooter.equals(defender) && !shooter.hasMetadata("NPC")) {
+					if (!shooter.equals(defender) && !shooter.hasMetadata("NPC"))
 						return !(Settings.isIgnoreNoDamageHits() && event.getDamage() == 0);
-					}
 				}
 			}
 		}
@@ -46,8 +48,9 @@ public final class CombatUtils {
 		final Location playerLocation = player.getLocation();
 		final World playerWorld = player.getWorld();
 		for (final ItemStack itemstack : inventory) {
-			if (itemstack != null && !itemstack.getType().equals(Material.AIR))
+			if (itemstack != null && !itemstack.getType().equals(Material.AIR)) {
 				playerWorld.dropItemNaturally(playerLocation, itemstack);
+			}
 		}
 	}
 
@@ -57,5 +60,20 @@ public final class CombatUtils {
 
 	public static boolean isWorldAllowed(final String worldName) {
 		return !Settings.getWorldsExcluded().contains(worldName);
+	}
+
+	public static boolean recursiveContainsCommand(final String[] givenCommand, final List<String> list) {
+		boolean contains = false;
+		for (int i = 0; i < givenCommand.length; i++) {
+			String args = givenCommand[0];
+			for (int j = 1; j <= i; j++) {
+				args += " " + givenCommand[j];
+			}
+			if (list.contains(args.toLowerCase())) {
+				contains = true;
+				break;
+			}
+		}
+		return contains;
 	}
 }

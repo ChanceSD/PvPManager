@@ -219,27 +219,24 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public final void onCommand(final PlayerCommandPreprocessEvent event) {
-		if (Settings.isStopCommands() && Settings.isInCombatEnabled()) {
+		if (Settings.isInCombatEnabled() && Settings.isStopCommands() || Settings.isNewbieProtectionEnabled()) {
 			final PvPlayer player = ph.get(event.getPlayer());
+			final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
+
 			if (player.isInCombat()) {
-				boolean contains = false;
-				final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
-				for (int i = 0; i < givenCommand.length; i++) {
-					String args = givenCommand[0];
-					for (int j = 1; j <= i; j++) {
-						args += " " + givenCommand[j];
-					}
-					if (Settings.getCommandsAllowed().contains(args.toLowerCase())) {
-						contains = true;
-						break;
-					}
-				}
+				final boolean contains = CombatUtils.recursiveContainsCommand(givenCommand, Settings.getCommandsAllowed());
 				if (Settings.isCommandsWhitelist() ? !contains : contains) {
 					event.setCancelled(true);
 					player.message(Messages.getCommandDeniedIncombat());
 				}
 			}
+			if (player.isNewbie() && CombatUtils.recursiveContainsCommand(givenCommand, Settings.getNewbieBlacklist())) {
+				event.setCancelled(true);
+				// TODO Make configurable
+				player.message("§cYou cannot use this command while you have PvP protection!");
+			}
 		}
+
 	}
 
 	@EventHandler

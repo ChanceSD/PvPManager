@@ -89,6 +89,7 @@ Newbie Protection:
   Time(minutes): 5
   Block Pick Items: false
   Protect From Everything: false
+  Command Blacklist: []
 
 # Prevent player abuse by killing the same player several times to rise in rank or even just grief
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
