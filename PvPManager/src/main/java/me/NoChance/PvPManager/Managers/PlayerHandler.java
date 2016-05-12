@@ -50,8 +50,10 @@ public class PlayerHandler {
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
 		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
 			if (worldguard != null && worldguard.hasAllowPvPFlag(defender)) {
-				attacker.setPvP(true);
+				attacker.setPvP(true); // TODO Make messages configurable
+				attacker.message("§cYour PvP was enabled because you entered a PvP allowed region");
 				attacked.setPvP(true);
+				attacked.message("§cYour PvP was enabled because you entered a PvP allowed region");
 			}
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 		}
