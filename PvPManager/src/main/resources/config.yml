@@ -23,13 +23,12 @@ General:
   PvP Blood: true
   Player Drop Mode: ALWAYS
   Ignore No Damage Hits: false
-  : true
   Auto Soup Health: 0
   World Exclusions:
     - Example
     
 # Here you can choose which methods to use to stop 'border hopping' while players are tagged
-# 'Border hopping' is when a player gets in PvP and tries to run into a safe zone to escape
+# Border hopping is when a player gets in PvP and tries to run into a safe zone to escape
 # Vulnerable -> Makes players still vulnerable to PvP in safe zones
 # Push Back -> Players will be launched back when trying to enter a safe zone (Disabling this might improve performance)  
 Anti Border Hopping:
