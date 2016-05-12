@@ -14,7 +14,6 @@
 # mode 'KEEP' - (Players keep items when killed in PvP but not in PvE) and
 # mode 'TRANSFER' - (Same as 'DROP' but transfer items directly to killer without drops)
 # Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
-# Stop Border Hopping -> Players are vulnerable in safezones after getting tagged
 # This prevents players from doing a hit and run between zone borders
 # Auto Soup Health -> How much health does soup heal, use 0 to disable
 # World Exclusions -> List of worlds where PvPManager will have no effect
@@ -24,10 +23,18 @@ General:
   PvP Blood: true
   Player Drop Mode: ALWAYS
   Ignore No Damage Hits: false
-  Stop Border Hopping: true
+  : true
   Auto Soup Health: 0
   World Exclusions:
     - Example
+    
+# Here you can choose which methods to use to stop 'border hopping' while players are tagged
+# 'Border hopping' is when a player gets in PvP and tries to run into a safe zone to escape
+# Vulnerable -> Makes players still vulnerable to PvP in safe zones
+# Push Back -> Players will be launched back when trying to enter a safe zone (Disabling this might improve performance)  
+Anti Border Hopping:
+  Vulnerable: true
+  Push Back: true
 
 # What should be disabled when a player(except operators) enters PvP
 # Fly -> Disable any kind of fly mode

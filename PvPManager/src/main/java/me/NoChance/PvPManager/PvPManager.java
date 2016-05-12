@@ -77,7 +77,9 @@ public final class PvPManager extends JavaPlugin {
 		registerListener(new EntityListener(playerHandler));
 		registerListener(new PlayerListener(playerHandler));
 		if (dependencyManager.isDependencyEnabled(Hook.WORLDGUARD)) {
-			registerListener(new WGListener(playerHandler));
+			if (Settings.borderHoppingPushback()) {
+				registerListener(new WGListener(playerHandler));
+			}
 			registerListener(new PlayerMoveListener(playerHandler));
 		}
 	}
