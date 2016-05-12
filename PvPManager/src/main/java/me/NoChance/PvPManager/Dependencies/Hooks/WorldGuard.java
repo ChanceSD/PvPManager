@@ -2,6 +2,7 @@ package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -31,7 +32,7 @@ public class WorldGuard implements PvPlugin {
 	}
 
 	@Override
-	public Object getMainClass() {
+	public JavaPlugin getMainClass() {
 		return inst;
 	}
 

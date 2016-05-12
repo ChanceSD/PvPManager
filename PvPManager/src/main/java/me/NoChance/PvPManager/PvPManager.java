@@ -13,6 +13,7 @@ import me.NoChance.PvPManager.Commands.PvPList;
 import me.NoChance.PvPManager.Commands.PvPOverride;
 import me.NoChance.PvPManager.Commands.PvPStatus;
 import me.NoChance.PvPManager.Commands.Tag;
+import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Libraries.Metrics.CustomMetrics;
 import me.NoChance.PvPManager.Libraries.Updater.BukkitUpdater;
 import me.NoChance.PvPManager.Libraries.Updater.Updater;
@@ -75,7 +76,7 @@ public final class PvPManager extends JavaPlugin {
 	private void startListeners() {
 		registerListener(new EntityListener(playerHandler));
 		registerListener(new PlayerListener(playerHandler));
-		if (dependencyManager.isDependencyEnabled("WorldGuard")) {
+		if (dependencyManager.isDependencyEnabled(Hook.WORLDGUARD)) {
 			registerListener(new WGListener(playerHandler));
 			registerListener(new PlayerMoveListener(playerHandler));
 		}

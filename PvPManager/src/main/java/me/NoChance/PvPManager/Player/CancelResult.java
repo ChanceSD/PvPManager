@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Utils;
+package me.NoChance.PvPManager.Player;
 
 public enum CancelResult {
 	NEWBIE, PVPDISABLED, RESPAWN_PROTECTION, FAIL, FAIL_OVERRIDE;

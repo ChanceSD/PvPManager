@@ -9,6 +9,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import me.NoChance.PvPManager.Dependencies.Dependency;
+import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPlugin;
 import me.NoChance.PvPManager.Dependencies.Hooks.Factions;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUID;
@@ -20,7 +21,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class DependencyManager {
 
-	private final HashMap<String, Dependency> dependencies = new HashMap<>();
+	private final HashMap<Hook, Dependency> dependencies = new HashMap<>();
 	private final HashSet<PvPlugin> attackChecks = new HashSet<>();
 
 	public DependencyManager() {
@@ -38,7 +39,7 @@ public class DependencyManager {
 			}
 			if (economy != null) {
 				Log.info("Vault Found! Using it for currency related features");
-				dependencies.put("Vault", new Vault(economy));
+				dependencies.put(Hook.VAULT, new Vault(economy));
 			} else {
 				Log.severe("Error! No Economy plugin found");
 			}
@@ -52,7 +53,7 @@ public class DependencyManager {
 
 	private void checkForWorldguard() {
 		if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-			dependencies.put("WorldGuard", new WorldGuard());
+			dependencies.put(Hook.WORLDGUARD, new WorldGuard());
 			Log.info("WorldGuard Found! Enabling WorldGuard Support");
 		}
 	}
@@ -64,12 +65,12 @@ public class DependencyManager {
 				final String fVersion = factionsPlugin.getDescription().getVersion();
 				if (fVersion.contains("U")) {
 					final FactionsUUID factionsU = new FactionsUUID();
-					dependencies.put("Factions", factionsU);
+					dependencies.put(Hook.FACTIONS, factionsU);
 					attackChecks.add(factionsU);
 					Log.info("FactionsUUID Found! Hooked successfully");
 				} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
 					final Factions factions = new Factions();
-					dependencies.put("Factions", factions);
+					dependencies.put(Hook.FACTIONS, factions);
 					attackChecks.add(factions);
 					Log.info("Factions Found! Hooked successfully");
 				} else {
@@ -89,22 +90,22 @@ public class DependencyManager {
 	}
 
 	public boolean worldguardCanAttack(final Player p) {
-		return ((PvPlugin) dependencies.get("WorldGuard")).canAttack(null, p);
+		return ((PvPlugin) dependencies.get(Hook.WORLDGUARD)).canAttack(null, p);
 	}
 
-	public final boolean isDependencyEnabled(final String s) {
-		return dependencies.containsKey(s);
+	public final boolean isDependencyEnabled(final Hook d) {
+		return dependencies.containsKey(d);
 	}
 
-	public Object getDependency(final String s) {
-		if (isDependencyEnabled(s))
-			return dependencies.get(s).getMainClass();
+	public Object getDependency(final Hook d) {
+		if (isDependencyEnabled(d))
+			return dependencies.get(d).getMainClass();
 		return null;
 	}
 
 	public final Economy getEconomy() {
-		if (isDependencyEnabled("Vault"))
-			return (Economy) dependencies.get("Vault").getMainClass();
+		if (isDependencyEnabled(Hook.VAULT))
+			return ((Vault) dependencies.get(Hook.VAULT)).getEconomy();
 		return null;
 	}
 

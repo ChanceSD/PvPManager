@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import com.sk89q.worldguard.protection.events.DisallowedPVPEvent;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Utils.CancelResult;
+import me.NoChance.PvPManager.Player.CancelResult;
 
 public class WGListener implements Listener {
 
