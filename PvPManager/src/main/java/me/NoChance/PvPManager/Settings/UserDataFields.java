@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Settings;
 
 public class UserDataFields {
 

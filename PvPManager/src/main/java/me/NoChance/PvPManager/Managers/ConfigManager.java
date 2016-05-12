@@ -16,9 +16,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Version;
-import me.NoChance.PvPManager.Config.Config;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Settings.Config;
+import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 

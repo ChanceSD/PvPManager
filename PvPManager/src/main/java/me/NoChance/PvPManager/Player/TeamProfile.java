@@ -1,14 +1,15 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.Log;
 
-class TeamProfile {
+public class TeamProfile {
 
 	private Team inCombat;
 	private Team pvpOn;
@@ -17,7 +18,7 @@ class TeamProfile {
 	private final PvPlayer pvPlayer;
 	private Scoreboard scoreboard;
 
-	TeamProfile(final PvPlayer p) {
+	public TeamProfile(final PvPlayer p) {
 		this.pvPlayer = p;
 		setupScoreboard();
 		setupTeams();

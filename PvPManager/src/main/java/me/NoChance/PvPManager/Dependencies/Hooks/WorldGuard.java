@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Dependencies;
+package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -8,7 +8,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import me.NoChance.PvPManager.PvPlugin;
+import me.NoChance.PvPManager.Dependencies.PvPlugin;
 
 public class WorldGuard implements PvPlugin {
 

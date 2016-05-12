@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Settings;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Settings.Settings;
 
 public class Tag implements CommandExecutor {
 

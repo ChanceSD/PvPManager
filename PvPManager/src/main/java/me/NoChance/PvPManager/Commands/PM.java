@@ -12,8 +12,8 @@ import org.bukkit.permissions.PermissionAttachment;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PM implements CommandExecutor {

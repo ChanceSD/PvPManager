@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Updater;
+package me.NoChance.PvPManager.Libraries.Updater;
 
 import java.io.File;
 

@@ -1,6 +1,6 @@
-package me.NoChance.PvPManager.Dependencies;
+package me.NoChance.PvPManager.Dependencies.Hooks;
 
-import me.NoChance.PvPManager.Dependency;
+import me.NoChance.PvPManager.Dependencies.Dependency;
 import net.milkbowl.vault.economy.Economy;
 
 public class Vault implements Dependency {

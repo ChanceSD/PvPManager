@@ -11,8 +11,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Player.EcoPlayer;
+import me.NoChance.PvPManager.Player.TeamProfile;
+import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Settings.UserDataFields;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 

@@ -26,10 +26,10 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Settings;
-import me.NoChance.PvPManager.Config.Settings.DropMode;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Settings.Settings.DropMode;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PlayerListener implements Listener {

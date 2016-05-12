@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Settings.Settings;
 
 public final class CombatUtils {
 
