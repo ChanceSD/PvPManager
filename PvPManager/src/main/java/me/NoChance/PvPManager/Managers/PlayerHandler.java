@@ -47,10 +47,15 @@ public class PlayerHandler {
 			return CancelResult.RESPAWN_PROTECTION;
 		if (attacked.isNewbie() || attacker.isNewbie())
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
-		if ((!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) && !worldguard.hasAllowPvPFlag(defender.getLocation()))
+		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
+			if (worldguard.hasAllowPvPFlag(defender.getLocation())) {
+				attacker.setPvP(true);
+				attacked.setPvP(true);
+			}
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
-
+		}
 		return CancelResult.FAIL;
+
 	}
 
 	/**
