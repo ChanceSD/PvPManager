@@ -49,7 +49,7 @@ public class PlayerHandler {
 		if (attacked.isNewbie() || attacker.isNewbie())
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
 		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
-			if (worldguard != null && worldguard.hasAllowPvPFlag(defender.getLocation())) {
+			if (worldguard != null && worldguard.hasAllowPvPFlag(defender)) {
 				attacker.setPvP(true);
 				attacked.setPvP(true);
 			}
