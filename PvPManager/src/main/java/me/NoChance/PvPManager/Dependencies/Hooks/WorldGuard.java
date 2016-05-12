@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,8 +26,8 @@ public class WorldGuard implements PvPlugin {
 		return state == null || !state.equals(State.DENY);
 	}
 
-	public boolean hasAllowPvPFlag(final Location l) {
-		return regionQuery.queryState(l, inst.wrapPlayer(null), DefaultFlag.PVP).equals(State.ALLOW);
+	public boolean hasAllowPvPFlag(final Player defender) {
+		return regionQuery.queryState(defender.getLocation(), defender, DefaultFlag.PVP) == State.ALLOW;
 	}
 
 	@Override
