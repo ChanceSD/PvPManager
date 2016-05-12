@@ -1,15 +1,15 @@
 package me.NoChance.PvPManager.Commands;
 
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PvPStatus implements CommandExecutor {
 
@@ -40,7 +40,7 @@ public class PvPStatus implements CommandExecutor {
 				sender.sendMessage(Messages.getOtherStatusEnabled().replace("%p", args[0]));
 				return true;
 			}
-			sender.sendMessage(ChatColor.DARK_RED + args[0] + " Does Not Exist or is Offline");
+			sender.sendMessage(Messages.getErrorPlayerNotFound().replace("%p", args[0]));
 			return true;
 		}
 		return false;

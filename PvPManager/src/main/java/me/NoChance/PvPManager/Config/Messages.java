@@ -52,6 +52,8 @@ public class Messages {
 	private static Locale locale;
 	private static final Queue<String> messageQueue = new LinkedList<>();
 	private static String newVersion;
+	private static String pvpListNoResults;
+	private static String errorPlayerNotFound;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -71,20 +73,23 @@ public class Messages {
 			int readBytes;
 			final byte[] buffer = new byte[4096];
 			try (InputStream input = plugin.getResource("locale/" + locale.toString()); OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()))) {
-				while ((readBytes = input.read(buffer)) != -1)
+				while ((readBytes = input.read(buffer)) != -1) {
 					resStreamOut.write(buffer, 0, readBytes);
+				}
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 			Log.info("New Messages File Created Successfully!");
 		}
 		final File[] listFiles = plugin.getDataFolder().listFiles();
-		if (listFiles != null)
+		if (listFiles != null) {
 			for (final File file : listFiles) {
 				final String fileName = file.getName();
-				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.toString()))
+				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.toString())) {
 					file.delete();
+				}
 			}
+		}
 		try (FileInputStream in = new FileInputStream(messagesFile)) {
 			if (messagesFile.exists()) {
 				LANG.load(in);
@@ -132,6 +137,8 @@ public class Messages {
 		errorPermission = getString("Error_Permission");
 		moneyReward = getString("Money_Reward");
 		moneyPenalty = getString("Money_Penalty");
+		pvpListNoResults = getString("PvPList_Nothing_Found");
+		errorPlayerNotFound = getString("Error_Player_Not_Found");
 	}
 
 	private static void checkChanges() {
@@ -157,6 +164,14 @@ public class Messages {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String getErrorPlayerNotFound() {
+		return errorPlayerNotFound;
+	}
+
+	public static String getPvpListNoResults() {
+		return pvpListNoResults;
 	}
 
 	public static String getErrorPermission() {

@@ -1,15 +1,16 @@
 package me.NoChance.PvPManager.Commands;
 
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class PvP implements CommandExecutor {
 
@@ -55,19 +56,19 @@ public class PvP implements CommandExecutor {
 					return true;
 				} else if (sender.hasPermission("pvpmanager.admin")) {
 					if (!CombatUtils.isOnline(args[0])) {
-						sender.sendMessage("§4Player not online!");
+						sender.sendMessage(Messages.getErrorPlayerNotFound().replace("%p", args[0]));
 						return true;
 					}
 					final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(args[0]));
 					final boolean enable;
-					if (args.length == 1)
+					if (args.length == 1) {
 						enable = !specifiedPlayer.hasPvPEnabled();
-					else {
-						if (args[1].equalsIgnoreCase("off"))
+					} else {
+						if (args[1].equalsIgnoreCase("off")) {
 							enable = false;
-						else if (args[1].equalsIgnoreCase("on"))
+						} else if (args[1].equalsIgnoreCase("on")) {
 							enable = true;
-						else
+						} else
 							return false;
 					}
 					specifiedPlayer.setPvP(enable);
