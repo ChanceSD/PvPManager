@@ -42,7 +42,7 @@ public class PlayerHandler {
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
-		if (attacker.hasOverride() || Settings.isStopBorderHopping() && canAttackHooks(attacker, attacked))
+		if (attacker.hasOverride() || Settings.borderHoppingVulnerable() && canAttackHooks(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
 			return CancelResult.RESPAWN_PROTECTION;

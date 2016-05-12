@@ -57,7 +57,6 @@ public final class Settings {
 	private static boolean punishOnKick;
 	private static boolean pvpBlood;
 	private static int respawnProtection;
-	private static boolean stopBorderHopping;
 	private static boolean stopCommands;
 	private static int timeInCombat;
 	private static String toggleColorOff;
@@ -70,9 +69,12 @@ public final class Settings {
 	private static String updateLocation;
 	private static boolean optOutMetrics;
 	private static double soupHealth;
+	private static boolean borderHoppingVulnerable;
+	private static boolean borderHoppingPushback;
 	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
+	private static ConfigurationSection BORDERHOPPING;
 	private static ConfigurationSection DISABLE;
 	private static ConfigurationSection TAGGEDCOMBAT;
 	private static ConfigurationSection NEWBIEPROTECTION;
@@ -86,6 +88,7 @@ public final class Settings {
 
 	private static void assignSections(final Config config) {
 		GENERAL = config.getConfigurationSection("General");
+		BORDERHOPPING = config.getConfigurationSection("Anti Border Hopping");
 		DISABLE = config.getConfigurationSection("Disable");
 		TAGGEDCOMBAT = config.getConfigurationSection("Tagged In Combat");
 		NEWBIEPROTECTION = config.getConfigurationSection("Newbie Protection");
@@ -104,9 +107,11 @@ public final class Settings {
 		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
 		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
 		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
-		stopBorderHopping = GENERAL.getBoolean("Stop Border Hopping", true);
 		soupHealth = GENERAL.getDouble("Auto Soup Health", 0);
 		worldsExcluded = (List<String>) GENERAL.getList("World Exclusions", worldsExcluded);
+
+		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
+		borderHoppingPushback = BORDERHOPPING.getBoolean("Push Back", true);
 
 		disableFly = DISABLE.getBoolean("Fly", true);
 		disableGamemode = DISABLE.getBoolean("GameMode", true);
@@ -169,9 +174,11 @@ public final class Settings {
 	public static void updateDefaultConfig(final Config config, final int newVersion) {
 		config.set("General.Default PvP", Settings.isDefaultPvp());
 		config.set("General.PvP Blood", Settings.isPvpBlood());
-		config.set("General.Stop Border Hopping", Settings.isStopBorderHopping());
 		config.set("General.Ignore No Damage Hits", Settings.isIgnoreNoDamageHits());
 		config.set("General.Auto Soup Health", Settings.getSoupHealth());
+
+		config.set("Anti Border Hopping.Vulnerable", Settings.borderHoppingVulnerable());
+		config.set("Anti Border Hopping.Push Back", Settings.borderHoppingPushback());
 
 		config.set("Disable.Fly", Settings.isDisableFly());
 		config.set("Disable.GameMode", Settings.isDisableGamemode());
@@ -217,6 +224,7 @@ public final class Settings {
 		config.set("Newbie Protection.Time(minutes)", Settings.getNewbieProtectionTime());
 		config.set("Newbie Protection.Block Pick Items", Settings.isBlockPickNewbies());
 		config.set("Newbie Protection.Protect From Everything", Settings.isNewbieGodMode());
+		config.set("Newbie Protection.Command Blacklist", Settings.getNewbieBlacklist());
 
 		config.set("Config Version", newVersion);
 		config.set("Update Check.Enabled", Settings.isUpdateCheck());
@@ -420,8 +428,12 @@ public final class Settings {
 		return pvpBlood;
 	}
 
-	public static boolean isStopBorderHopping() {
-		return stopBorderHopping;
+	public static boolean borderHoppingVulnerable() {
+		return borderHoppingVulnerable;
+	}
+
+	public static boolean borderHoppingPushback() {
+		return borderHoppingPushback;
 	}
 
 	public static boolean isStopCommands() {
