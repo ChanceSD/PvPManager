@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
@@ -25,7 +26,7 @@ public class FactionsUUID implements PvPlugin {
 	}
 
 	@Override
-	public Object getMainClass() {
+	public JavaPlugin getMainClass() {
 		return factions;
 	}
 

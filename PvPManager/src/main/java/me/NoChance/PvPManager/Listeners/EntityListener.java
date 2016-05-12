@@ -22,9 +22,9 @@ import com.sk89q.commandbook.GodComponent;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.libraryaddict.disguise.DisguiseAPI;
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
