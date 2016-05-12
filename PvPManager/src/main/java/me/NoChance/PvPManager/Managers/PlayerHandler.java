@@ -11,6 +11,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Dependencies.WorldGuard;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CancelResult;
@@ -22,11 +23,13 @@ public class PlayerHandler {
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
 	private final TagTask tagTask = new TagTask();
+	private final WorldGuard worldguard;
 
 	public PlayerHandler(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
+		worldguard = (WorldGuard) dependencyManager.getDependency("WorldGuard");
 		if (Settings.isKillAbuseEnabled()) {
 			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20);
 		}
@@ -44,7 +47,7 @@ public class PlayerHandler {
 			return CancelResult.RESPAWN_PROTECTION;
 		if (attacked.isNewbie() || attacker.isNewbie())
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
-		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled())
+		if ((!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) && !worldguard.hasAllowPvPFlag(defender.getLocation()))
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 
 		return CancelResult.FAIL;
