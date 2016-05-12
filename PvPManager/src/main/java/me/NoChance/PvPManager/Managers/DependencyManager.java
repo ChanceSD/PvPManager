@@ -8,13 +8,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import me.NoChance.PvPManager.Dependency;
-import me.NoChance.PvPManager.PvPlugin;
-import me.NoChance.PvPManager.Config.Settings;
-import me.NoChance.PvPManager.Dependencies.Factions;
-import me.NoChance.PvPManager.Dependencies.FactionsUUID;
-import me.NoChance.PvPManager.Dependencies.Vault;
-import me.NoChance.PvPManager.Dependencies.WorldGuard;
+import me.NoChance.PvPManager.Dependencies.Dependency;
+import me.NoChance.PvPManager.Dependencies.PvPlugin;
+import me.NoChance.PvPManager.Dependencies.Hooks.Factions;
+import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUID;
+import me.NoChance.PvPManager.Dependencies.Hooks.Vault;
+import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuard;
+import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.Log;
 import net.milkbowl.vault.economy.Economy;
 
@@ -89,8 +89,7 @@ public class DependencyManager {
 	}
 
 	public boolean worldguardCanAttack(final Player p) {
-		final PvPlugin wg = (PvPlugin) dependencies.get("WorldGuard");
-		return wg.canAttack(null, p);
+		return ((PvPlugin) dependencies.get("WorldGuard")).canAttack(null, p);
 	}
 
 	public final boolean isDependencyEnabled(final String s) {

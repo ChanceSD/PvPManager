@@ -25,7 +25,7 @@
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
-package me.NoChance.PvPManager.Lib;
+package me.NoChance.PvPManager.Libraries.Metrics;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -57,7 +57,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Settings.Settings;
 
 public class Metrics {
 

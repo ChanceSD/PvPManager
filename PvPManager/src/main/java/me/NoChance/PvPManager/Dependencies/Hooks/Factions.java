@@ -1,11 +1,11 @@
-package me.NoChance.PvPManager.Dependencies;
+package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.Rel;
 import com.massivecraft.factions.entity.MPlayer;
 
-import me.NoChance.PvPManager.PvPlugin;
+import me.NoChance.PvPManager.Dependencies.PvPlugin;
 
 
 public class Factions implements PvPlugin {

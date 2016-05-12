@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.TimerTask;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class TagTask extends TimerTask {

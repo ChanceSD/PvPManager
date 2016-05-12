@@ -26,9 +26,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 
-import me.NoChance.PvPManager.Config.Messages;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Utils.CancelResult;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 

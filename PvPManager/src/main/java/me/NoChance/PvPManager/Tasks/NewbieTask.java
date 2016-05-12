@@ -3,7 +3,7 @@ package me.NoChance.PvPManager.Tasks;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Settings.Settings;
 
 public class NewbieTask extends BukkitRunnable {
 

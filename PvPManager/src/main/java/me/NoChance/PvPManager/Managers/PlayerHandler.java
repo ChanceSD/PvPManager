@@ -10,8 +10,8 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Config.Settings;
-import me.NoChance.PvPManager.Dependencies.WorldGuard;
+import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuard;
+import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CancelResult;
@@ -48,7 +48,7 @@ public class PlayerHandler {
 		if (attacked.isNewbie() || attacker.isNewbie())
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
 		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
-			if (worldguard.hasAllowPvPFlag(defender.getLocation())) {
+			if (worldguard != null && worldguard.hasAllowPvPFlag(defender.getLocation())) {
 				attacker.setPvP(true);
 				attacked.setPvP(true);
 			}

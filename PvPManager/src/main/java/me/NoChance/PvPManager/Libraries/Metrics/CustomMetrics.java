@@ -1,10 +1,10 @@
-package me.NoChance.PvPManager.Lib;
+package me.NoChance.PvPManager.Libraries.Metrics;
 
 import java.io.IOException;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Config.Settings;
-import me.NoChance.PvPManager.Lib.Metrics.Graph;
+import me.NoChance.PvPManager.Libraries.Metrics.Metrics.Graph;
+import me.NoChance.PvPManager.Settings.Settings;
 
 public class CustomMetrics {
 

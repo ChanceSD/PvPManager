@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Config;
+package me.NoChance.PvPManager.Settings;
 
 import java.util.ArrayList;
 import java.util.Arrays;

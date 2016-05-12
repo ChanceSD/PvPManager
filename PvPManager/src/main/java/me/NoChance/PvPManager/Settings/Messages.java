@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Config;
+package me.NoChance.PvPManager.Settings;
 
 import java.io.File;
 import java.io.FileInputStream;

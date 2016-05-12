@@ -1,18 +1,18 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Player;
 
 import java.text.DecimalFormat;
 
 import org.bukkit.entity.Player;
 
-import me.NoChance.PvPManager.Config.Messages;
-import me.NoChance.PvPManager.Config.Settings;
+import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Settings.Settings;
 import net.milkbowl.vault.economy.Economy;
 
 public abstract class EcoPlayer {
 
 	private final Economy economy;
 
-	EcoPlayer(final Economy economy) {
+	protected EcoPlayer(final Economy economy) {
 		this.economy = economy;
 	}
 
