@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import me.NoChance.PvPManager.Dependencies.Dependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
@@ -97,9 +98,13 @@ public class DependencyManager {
 		return dependencies.containsKey(d);
 	}
 
-	public Object getDependency(final Hook d) {
-		if (isDependencyEnabled(d))
-			return dependencies.get(d).getMainClass();
+	public Dependency getDependency(final Hook h) {
+		return dependencies.get(h);
+	}
+
+	public JavaPlugin getDepencyMainClass(final Hook h) {
+		if (isDependencyEnabled(h))
+			return dependencies.get(h).getMainClass();
 		return null;
 	}
 
