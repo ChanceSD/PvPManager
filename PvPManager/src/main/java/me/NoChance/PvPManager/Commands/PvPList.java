@@ -2,6 +2,8 @@ package me.NoChance.PvPManager.Commands;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Config.Messages;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,7 +32,7 @@ public class PvPList implements CommandExecutor {
 			}
 		}
 		if (list.toString().isEmpty())
-			return "No Players with PvP Enabled";
+			return Messages.getPvpListNoResults();
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
 	}
