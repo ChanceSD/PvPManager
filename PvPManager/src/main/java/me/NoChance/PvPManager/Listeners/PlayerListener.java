@@ -71,7 +71,7 @@ public class PlayerListener implements Listener {
 	}
 
 	@SuppressWarnings("null")
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public final void onPlayerDeath(final PlayerDeathEvent event) {
 		final Player player = event.getEntity();
 		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()))

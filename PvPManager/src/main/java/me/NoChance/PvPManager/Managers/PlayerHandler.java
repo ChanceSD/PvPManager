@@ -58,7 +58,6 @@ public class PlayerHandler {
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 		}
 		return CancelResult.FAIL;
-
 	}
 
 	/**
