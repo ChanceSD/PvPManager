@@ -267,7 +267,7 @@ public class PvPlayer extends EcoPlayer {
 		userData.put(UserDataFields.PVP_STATUS, hasPvPEnabled());
 		userData.put(UserDataFields.TOGGLE_TIME, getToggleTime());
 		userData.put(UserDataFields.NEWBIE, isNewbie());
-		userData.put(UserDataFields.NEWBIE_TIMELEFT, newbieTask.getTimeleft());
+		userData.put(UserDataFields.NEWBIE_TIMELEFT, newbieTask != null ? newbieTask.getTimeleft() : 0);
 		return userData;
 	}
 
