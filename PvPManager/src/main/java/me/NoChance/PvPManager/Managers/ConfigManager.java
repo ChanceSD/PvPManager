@@ -123,10 +123,17 @@ public class ConfigManager {
 	}
 
 	private void saveUsersToDisk() {
-		try {
-			users.save(usersFile);
-		} catch (final IOException e) {
-			e.printStackTrace();
+		synchronized (users) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					try {
+						users.save(usersFile);
+					} catch (final IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}.runTaskAsynchronously(plugin);
 		}
 	}
 
