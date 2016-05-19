@@ -29,8 +29,9 @@ public class Config extends YamlConfiguration {
 	public Config(final PvPManager plugin, final String name) {
 		this.plugin = plugin;
 		final File file1 = new File(plugin.getDataFolder(), name);
-		if (!file1.exists())
+		if (!file1.exists()) {
 			this.prepareFile(file1, name);
+		}
 		this.file = file1;
 		this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file1));
 	}
@@ -72,6 +73,8 @@ public class Config extends YamlConfiguration {
 
 	@Override
 	public final ConfigurationSection getConfigurationSection(final String path) {
+		if (!config.isConfigurationSection(path))
+			return config.createSection(path);
 		return this.config.getConfigurationSection(path);
 	}
 
@@ -110,8 +113,9 @@ public class Config extends YamlConfiguration {
 					whole.append(addLine).append("\n");
 					commentNum++;
 
-				} else
+				} else {
 					whole.append(currentLine).append("\n");
+				}
 			return new ByteArrayInputStream(whole.toString().getBytes(Charset.forName("UTF-8")));
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -123,8 +127,9 @@ public class Config extends YamlConfiguration {
 		try {
 			file1.getParentFile().mkdirs();
 			file1.createNewFile();
-			if (resource != null && !resource.isEmpty())
+			if (resource != null && !resource.isEmpty()) {
 				this.copyResource(plugin.getResource(resource), file1);
+			}
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
@@ -135,8 +140,9 @@ public class Config extends YamlConfiguration {
 			int lenght;
 			final byte[] buf = new byte[1024];
 
-			while ((lenght = resource.read(buf)) > 0)
+			while ((lenght = resource.read(buf)) > 0) {
 				out.write(buf, 0, lenght);
+			}
 			resource.close();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -178,14 +184,16 @@ public class Config extends YamlConfiguration {
 					}
 				} else {
 					String normalComment;
-					if (comment.startsWith("# ' "))
+					if (comment.startsWith("# ' ")) {
 						normalComment = comment.substring(0, comment.length() - 1).replaceFirst("# ' ", "# ");
-					else
+					} else {
 						normalComment = comment;
-					if (lastLine == 0)
+					}
+					if (lastLine == 0) {
 						config1.append(normalComment).append("\n");
-					else
+					} else {
 						config1.append("\n").append(normalComment).append("\n");
+					}
 					lastLine = 0;
 				}
 			} else {
