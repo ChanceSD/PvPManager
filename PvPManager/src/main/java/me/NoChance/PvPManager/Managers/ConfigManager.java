@@ -97,7 +97,7 @@ public class ConfigManager {
 			}
 			users.load(usersFile);
 			// replace old users file
-			if (users.get("players") instanceof List) {
+			if (users.get("players") == null || users.get("players") instanceof List) {
 				plugin.saveResource("users.yml", true);
 				users.load(usersFile);
 			}
