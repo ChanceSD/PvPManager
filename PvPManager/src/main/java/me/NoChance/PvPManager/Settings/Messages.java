@@ -144,11 +144,12 @@ public class Messages {
 	private static void checkChanges() {
 		final Properties original = new Properties();
 		try {
-			original.load(plugin.getResource("locale/" + locale.toString()));
+			original.load(plugin.getResource("locale/" + Locale.EN.toString()));
 			final Enumeration<Object> originalKeys = original.keys();
 			while (originalKeys.hasMoreElements()) {
 				final String a = (String) originalKeys.nextElement();
 				if (!LANG.containsKey(a)) {
+					Log.info("Added missing '" + a + "' key to messages file.");
 					addMessage(a + " = " + new String(original.getProperty(a).getBytes("ISO-8859-1"), "UTF-8"));
 					LANG.setProperty(a, original.getProperty(a));
 				}
