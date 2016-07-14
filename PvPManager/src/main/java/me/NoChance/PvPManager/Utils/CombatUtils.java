@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
@@ -37,6 +38,26 @@ public final class CombatUtils {
 					final Entity shooter = (Entity) projSource;
 					if (!shooter.equals(defender) && !shooter.hasMetadata("NPC"))
 						return !(Settings.isIgnoreNoDamageHits() && event.getDamage() == 0);
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public static boolean isPvP(final EntityCombustByEntityEvent event) {
+		final Entity attacker = event.getCombuster();
+		final Entity defender = event.getEntity();
+
+		if (defender instanceof Player && !defender.hasMetadata("NPC")) {
+			if (attacker instanceof Player && !attacker.hasMetadata("NPC"))
+				return true;
+			if (attacker instanceof Projectile) {
+				final ProjectileSource projSource = ((Projectile) attacker).getShooter();
+				if (projSource instanceof Player) {
+					final Entity shooter = (Entity) projSource;
+					if (!shooter.equals(defender) && !shooter.hasMetadata("NPC"))
+						return true;
 				}
 			}
 		}

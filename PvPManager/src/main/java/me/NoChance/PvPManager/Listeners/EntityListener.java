@@ -11,6 +11,7 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.potion.PotionEffect;
@@ -103,6 +104,25 @@ public class EntityListener implements Listener {
 		}
 	}
 
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public final void onEntityCombust(final EntityCombustByEntityEvent event) {
+		if (!CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
+			return;
+		if (!CombatUtils.isPvP(event)) {
+			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Settings.isNewbieGodMode()) {
+				event.setCancelled(true);
+			}
+			return;
+		}
+
+		final Player attacker = getAttackerCombust(event);
+		final Player attacked = (Player) event.getEntity();
+
+		if (!ph.canAttack(attacker, attacked)) {
+			event.setCancelled(true);
+		}
+	}
+
 	private void onDamageActions(final Player attacker, final Player defender) {
 		final PvPlayer pvpAttacker = ph.get(attacker);
 		final PvPlayer pvpDefender = ph.get(defender);
@@ -169,5 +189,11 @@ public class EntityListener implements Listener {
 		if (event.getDamager() instanceof Projectile)
 			return (Player) ((Projectile) event.getDamager()).getShooter();
 		return (Player) event.getDamager();
+	}
+
+	private Player getAttackerCombust(final EntityCombustByEntityEvent event) {
+		if (event.getCombuster() instanceof Projectile)
+			return (Player) ((Projectile) event.getCombuster()).getShooter();
+		return (Player) event.getCombuster();
 	}
 }
