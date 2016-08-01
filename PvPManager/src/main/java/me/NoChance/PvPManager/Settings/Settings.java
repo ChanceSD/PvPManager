@@ -71,6 +71,7 @@ public final class Settings {
 	private static double soupHealth;
 	private static boolean borderHoppingVulnerable;
 	private static boolean borderHoppingPushback;
+	private static boolean worldguardOverrides;
 	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
@@ -161,6 +162,7 @@ public final class Settings {
 		commandsPvPOn = (List<String>) PVPTOGGLE.getList("Commands PvP On", new ArrayList<>());
 		commandsPvPOff = (List<String>) PVPTOGGLE.getList("Commands PvP Off", new ArrayList<>());
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
+		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 
 		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
 		updateLocation = UPDATECHECK.getString("Update Location", "Bukkit");
@@ -213,6 +215,7 @@ public final class Settings {
 		config.set("PvP Toggle.NameTags.Prefix Off", Settings.getToggleColorOff());
 		config.set("PvP Toggle.Commands PvP On", Settings.getCommandsPvPOn());
 		config.set("PvP Toggle.Commands PvP Off", Settings.getCommandsPvPOff());
+		config.set("PvP Toggle.WorldGuard Overrides", Settings.isWorldguardOverrides());
 
 		config.set("Kill Abuse.Enabled", Settings.isKillAbuseEnabled());
 		config.set("Kill Abuse.Max Kills", Settings.getKillAbuseMaxKills());
@@ -506,6 +509,10 @@ public final class Settings {
 
 	public static boolean isForcePvPOnWorldChange() {
 		return forcePvPOnWorldChange;
+	}
+
+	public static boolean isWorldguardOverrides() {
+		return worldguardOverrides;
 	}
 
 }

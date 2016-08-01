@@ -49,7 +49,7 @@ public class PlayerHandler {
 		if (attacked.isNewbie() || attacker.isNewbie())
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
 		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
-			if (worldguard != null && worldguard.hasAllowPvPFlag(defender)) {
+			if (Settings.isWorldguardOverrides() && worldguard != null && worldguard.hasAllowPvPFlag(defender)) {
 				attacker.setPvP(true); // TODO Make messages configurable
 				attacker.message("§cYour PvP was enabled because you entered a PvP allowed region");
 				attacked.setPvP(true);
