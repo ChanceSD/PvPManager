@@ -160,7 +160,7 @@ public class PlayerListener implements Listener {
 			}
 			if ((i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
-					if (e.getPlayer().equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld())) {
+					if (player.equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()) || !player.canSee(p)) {
 						continue;
 					}
 					final PvPlayer target = ph.get(p);
