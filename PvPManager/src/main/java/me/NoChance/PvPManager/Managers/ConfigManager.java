@@ -124,7 +124,7 @@ public class ConfigManager {
 
 	private void saveUsersToDisk() {
 		synchronized (users) {
-			new Thread(new BukkitRunnable() {
+			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -133,7 +133,7 @@ public class ConfigManager {
 						e.printStackTrace();
 					}
 				}
-			}).start();;
+			}).start();
 		}
 	}
 
