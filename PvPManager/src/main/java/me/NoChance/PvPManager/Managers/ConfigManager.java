@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -98,11 +99,23 @@ public class ConfigManager {
 			users.load(usersFile);
 			// replace old users file
 			if (users.get("players") == null || users.get("players") instanceof List) {
-				plugin.saveResource("users.yml", true);
-				users.load(usersFile);
+				resetUsersFile();
 			}
 		} catch (final Exception e) {
 			Log.severe("Error loading users file! Error: ");
+			e.printStackTrace();
+			resetUsersFile();
+		}
+	}
+
+	private void resetUsersFile() {
+		try {
+			Files.move(usersFile.toPath(), usersFile.toPath().resolveSibling("users_error.yml"), StandardCopyOption.REPLACE_EXISTING);
+			plugin.saveResource("users.yml", true);
+			users.load(usersFile);
+			Log.info("Users file was reset due to corruption. A backup was saved as 'users_error.yml'");
+		} catch (IOException | InvalidConfigurationException e) {
+			Log.severe("Error loading users file after reset! Error: ");
 			e.printStackTrace();
 		}
 	}
