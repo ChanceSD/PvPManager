@@ -72,6 +72,7 @@ public final class Settings {
 	private static boolean borderHoppingVulnerable;
 	private static boolean borderHoppingPushback;
 	private static boolean worldguardOverrides;
+	private static boolean glowingInCombat;
 	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
@@ -123,6 +124,7 @@ public final class Settings {
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
+		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		useNameTag = nameTagPrefix.equalsIgnoreCase("none") || nameTagPrefix.isEmpty() ? false : true;
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
@@ -190,6 +192,7 @@ public final class Settings {
 		config.set("Tagged In Combat.Enabled", Settings.isInCombatEnabled());
 		config.set("Tagged In Combat.Time", Settings.getTimeInCombat());
 		config.set("Tagged In Combat.NameTag Prefix", Settings.getNameTagColor());
+		config.set("Tagged In Combat.Glowing", Settings.isGlowingInCombat());
 		config.set("Tagged In Combat.Block.EnderPearls", Settings.isBlockEnderPearl());
 		config.set("Tagged In Combat.Block.Teleport", Settings.isBlockEnderPearl());
 		config.set("Tagged In Combat.Block.Place Blocks", Settings.isBlockPlaceBlocks());
@@ -515,4 +518,7 @@ public final class Settings {
 		return worldguardOverrides;
 	}
 
+	public static boolean isGlowingInCombat() {
+		return glowingInCombat;
+	}
 }
