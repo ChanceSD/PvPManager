@@ -140,6 +140,13 @@
 			<groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
 			<artifactId>SimpleClans</artifactId>
 			<version>2.6.1</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.getspout</groupId>
+					<artifactId>spoutplugin</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
@@ -186,7 +193,7 @@
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>MassiveCore</artifactId>
-			<version>7.3.0</version>
+			<version>7.4.0</version>
 			<optional>true</optional>
 			<scope>provided</scope>
 		</dependency>
@@ -200,14 +207,14 @@
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
-			<version>LATEST</version>
+			<version>1.6.6</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>LibsDisguises</groupId>
 			<artifactId>LibsDisguises</artifactId>
-			<version>8.2.6</version>
+			<version>9.0.9</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -238,9 +245,9 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>worldguard</artifactId>
-			<version>6.1.1-SNAPSHOT</version>
+			<groupId>com.sk89q.worldguard</groupId>
+			<artifactId>worldguard-legacy</artifactId>
+			<version>6.1.3-SNAPSHOT</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -294,6 +301,30 @@
 				<exclusion>
 					<artifactId>commandbook</artifactId>
 					<groupId>com.sk89q</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>dummypermscompat</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q.worldedit</groupId>
+					<artifactId>worldedit-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q.worldedit</groupId>
+					<artifactId>worldedit-bukkit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>guavabackport</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.flywaydb</groupId>
+					<artifactId>flyway-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>squirrelid</artifactId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
