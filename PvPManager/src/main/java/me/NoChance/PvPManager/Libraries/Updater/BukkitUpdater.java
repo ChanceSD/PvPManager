@@ -1,13 +1,14 @@
 package me.NoChance.PvPManager.Libraries.Updater;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONArray;
@@ -23,7 +24,7 @@ public class BukkitUpdater extends Updater {
 	private String versionType;
 	private String versionGameVersion;
 
-	private URL url; // NO_UCD (use final)
+	private URL url;
 
 	private final int id;
 	private static final String TITLE_VALUE = "name";
@@ -32,8 +33,6 @@ public class BukkitUpdater extends Updater {
 	private static final String VERSION_VALUE = "gameVersion";
 	private static final String QUERY = "/servermods/files?projectIds=";
 	private static final String HOST = "https://api.curseforge.com";
-
-	private static final int BYTE_SIZE = 1024;
 
 	public BukkitUpdater(final Plugin plugin, final int id, final UpdateType type) {
 		super(plugin, type);
@@ -88,23 +87,22 @@ public class BukkitUpdater extends Updater {
 
 	@Override
 	public final boolean downloadFile() {
-		URL url1;
 		try {
-			url1 = new URL(this.versionLink);
-		} catch (final MalformedURLException e1) {
-			e1.printStackTrace();
-			return false;
-		}
-		try (FileOutputStream fout = new FileOutputStream(getFile()); BufferedInputStream in = new BufferedInputStream(url1.openStream())) {
-			final byte[] data = new byte[BYTE_SIZE];
-			int count;
-			while ((count = in.read(data, 0, BYTE_SIZE)) != -1) {
-				fout.write(data, 0, count);
+			HttpURLConnection httpConn = (HttpURLConnection) new URL(versionLink).openConnection();
+			// curse has a redirect
+			switch (httpConn.getResponseCode()) {
+			case HttpURLConnection.HTTP_MOVED_PERM:
+			case HttpURLConnection.HTTP_MOVED_TEMP:
+				final String location = httpConn.getHeaderField("Location");
+				httpConn = (HttpURLConnection) new URL(location).openConnection();
 			}
+
+			Files.copy(httpConn.getInputStream(), getFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (final IOException e) {
 			e.printStackTrace();
 			return false;
 		}
+
 		return true;
 	}
 
