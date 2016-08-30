@@ -6,6 +6,9 @@ PvPManager
 Development Builds
 http://ci.md-5.net/job/PvPManager/
 
+Hit Counter
+[![ghit.me](https://ghit.me/badge.svg?repo=NoChanceSD/PvPManager)](https://ghit.me/repo/NoChanceSD/PvPManager)
+
 Travis
 [![Build Status](https://travis-ci.org/NoChanceSD/PvPManager.svg)](https://travis-ci.org/NoChanceSD/PvPManager)
 
