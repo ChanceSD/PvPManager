@@ -23,16 +23,16 @@
 			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
 		</repository>
 		<repository>
-			<id>disguisecraft-repo</id>
-			<url>http://build.yu8.me:8080/plugin/repository/everything/</url>
-		</repository>
-		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 		<repository>
 			<id>simpleclans-repo</id>
 			<url>http://104.236.246.108:8081/artifactory/remote-repos</url>
+		</repository>
+		<repository>
+			<id>disguisecraft-repo</id>
+			<url>http://build.yu8.me:8080/plugin/repository/everything/</url>
 		</repository>
 	</repositories>
 

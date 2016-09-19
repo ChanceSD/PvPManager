@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,14 +21,23 @@ public class WorldGuard implements PvPlugin {
 		regionQuery = inst.getRegionContainer().createQuery();
 	}
 
+	// This method has no use, use canBeAttacked() instead
 	@Override
 	public boolean canAttack(final Player attacker, final Player defender) {
-		final State state = regionQuery.queryState(defender.getLocation(), defender, DefaultFlag.PVP);
-		return state == null || !state.equals(State.DENY);
+		return true;
+	}
+
+	@Override
+	public boolean canBeAttacked(final Player player, final Location l) {
+		return getPvPState(player, l) != State.DENY;
 	}
 
 	public boolean hasAllowPvPFlag(final Player defender) {
-		return regionQuery.queryState(defender.getLocation(), defender, DefaultFlag.PVP) == State.ALLOW;
+		return getPvPState(defender, defender.getLocation()) == State.ALLOW;
+	}
+
+	private State getPvPState(final Player p, final Location l) {
+		return regionQuery.queryState(l, p, DefaultFlag.PVP);
 	}
 
 	@Override
