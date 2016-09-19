@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,6 +22,12 @@ public class Factions implements PvPlugin {
 		final MPlayer fAttacker = MPlayer.get(attacker);
 		final MPlayer fDefender = MPlayer.get(defender);
 		return !fAttacker.getRelationTo(fDefender).isAtLeast(Rel.TRUCE);
+	}
+
+	@Override
+	public boolean canBeAttacked(final Player player, final Location l) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override

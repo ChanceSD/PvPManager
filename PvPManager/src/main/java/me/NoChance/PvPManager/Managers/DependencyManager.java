@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -101,8 +102,8 @@ public class DependencyManager {
 		return true;
 	}
 
-	public boolean worldguardCanAttack(final Player p) {
-		return ((PvPlugin) dependencies.get(Hook.WORLDGUARD)).canAttack(null, p);
+	public boolean worldguardCanAttack(final Location l) {
+		return ((PvPlugin) dependencies.get(Hook.WORLDGUARD)).canBeAttacked(null, l);
 	}
 
 	public final boolean isDependencyEnabled(final Hook d) {
