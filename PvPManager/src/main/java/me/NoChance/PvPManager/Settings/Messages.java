@@ -43,7 +43,7 @@ public class Messages {
 	private static String newbieProtection;
 	private static String newbieProtectionEnd;
 	private static String newbieProtectionOnHit;
-	private static String newbieProtectionAtacker;
+	private static String newbieProtectionAttacker;
 	private static String enderpearlBlockedIncombat;
 	private static String errorCommand;
 	private static String currentVersion;
@@ -130,7 +130,7 @@ public class Messages {
 		newbieProtection = getString("Newbie_Protection");
 		newbieProtectionEnd = getString("Newbie_Protection_End");
 		newbieProtectionOnHit = getString("Newbie_Protection_On_Hit");
-		newbieProtectionAtacker = getString("Newbie_Protection_Atacker");
+		newbieProtectionAttacker = getString("Newbie_Protection_Atacker");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
 		errorCommand = getString("Error_Command");
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
@@ -252,7 +252,7 @@ public class Messages {
 	}
 
 	public static String newbieBlockedOther(final String name) {
-		return newbieProtectionAtacker.replace("%p", name);
+		return newbieProtectionAttacker.replace("%p", name);
 	}
 
 	public static String getEnderpearlBlockedIncombat() {
