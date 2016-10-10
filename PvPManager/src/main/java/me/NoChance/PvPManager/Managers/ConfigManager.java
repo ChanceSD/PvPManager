@@ -136,18 +136,18 @@ public class ConfigManager {
 	}
 
 	private void saveUsersToDisk() {
-		synchronized (users) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					synchronized (users) {
 						users.save(usersFile);
-					} catch (final IOException e) {
-						e.printStackTrace();
 					}
+				} catch (final IOException e) {
+					e.printStackTrace();
 				}
-			}).start();
-		}
+			}
+		}).start();
 	}
 
 	public final FileConfiguration getConfig() {
