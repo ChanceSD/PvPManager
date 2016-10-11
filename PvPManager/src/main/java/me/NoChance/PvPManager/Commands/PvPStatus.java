@@ -24,11 +24,12 @@ public class PvPStatus implements CommandExecutor {
 		PvPlayer target;
 		if (args.length == 0 && sender instanceof Player) {
 			final Player player = (Player) sender;
-			if (!ph.get(player).hasPvPEnabled()) {
-				player.sendMessage(Messages.getSelfStatusDisabled());
+			final PvPlayer pvpPlayer = ph.get(player);
+			if (!pvpPlayer.hasPvPEnabled()) {
+				pvpPlayer.message(Messages.getSelfStatusDisabled());
 				return true;
 			}
-			player.sendMessage(Messages.getSelfStatusEnabled());
+			pvpPlayer.message(Messages.getSelfStatusEnabled());
 			return true;
 		} else if (args.length == 1 && sender.hasPermission("pvpmanager.pvpstatus.others")) {
 			if (CombatUtils.isOnline(args[0])) {

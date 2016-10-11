@@ -70,10 +70,10 @@ public class EntityListener implements Listener {
 		case FAIL:
 			break;
 		case NEWBIE:
-			attacker.sendMessage(result.attackerCaused() ? Messages.newbieBlocked() : Messages.newbieBlockedOther(attacked.getName()));
+			ph.get(attacker).message(result.attackerCaused() ? Messages.newbieBlocked() : Messages.newbieBlockedOther(attacked.getName()));
 			break;
 		case PVPDISABLED:
-			attacker.sendMessage(result.attackerCaused() ? Messages.pvpDisabled() : Messages.pvpDisabledOther(attacked.getName()));
+			ph.get(attacker).message(result.attackerCaused() ? Messages.pvpDisabled() : Messages.pvpDisabledOther(attacked.getName()));
 			break;
 		default:
 			break;

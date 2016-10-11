@@ -39,7 +39,7 @@ public class PvP implements CommandExecutor {
 					pvpPlayer.setNewbie(false);
 					return true;
 				}
-				sender.sendMessage(ChatColor.DARK_RED + "You are not protected!");
+				pvpPlayer.message(ChatColor.DARK_RED + "You are not protected!");
 				return true;
 			} else if (sender.hasPermission("pvpmanager.pvpstatus.change")) {
 				if ((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && sender instanceof Player) {
@@ -50,7 +50,7 @@ public class PvP implements CommandExecutor {
 							pvpPlayer.setPvP(enable);
 							return true;
 						}
-						sender.sendMessage(enable ? Messages.getAlreadyEnabled() : Messages.getAlreadyDisabled());
+						pvpPlayer.message(enable ? Messages.getAlreadyEnabled() : Messages.getAlreadyDisabled());
 						return true;
 					}
 					return true;
