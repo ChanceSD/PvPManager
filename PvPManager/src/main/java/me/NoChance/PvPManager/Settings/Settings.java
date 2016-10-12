@@ -73,6 +73,7 @@ public final class Settings {
 	private static boolean borderHoppingPushback;
 	private static boolean worldguardOverrides;
 	private static boolean glowingInCombat;
+	private static boolean blockInteractInCombat;
 	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static ConfigurationSection GENERAL;
@@ -129,6 +130,7 @@ public final class Settings {
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
+		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact", false);
 		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
 		commandsAllowed = (List<String>) TAGGEDCOMBAT.getList("Block.Commands.Command List", commandsAllowed);
@@ -196,6 +198,7 @@ public final class Settings {
 		config.set("Tagged In Combat.Block.EnderPearls", Settings.isBlockEnderPearl());
 		config.set("Tagged In Combat.Block.Teleport", Settings.isBlockEnderPearl());
 		config.set("Tagged In Combat.Block.Place Blocks", Settings.isBlockPlaceBlocks());
+		config.set("Tagged In Combat.Block.Interact", Settings.blockInteract());
 		config.set("Tagged In Combat.Block.Commands.Enabled", Settings.isStopCommands());
 		config.set("Tagged In Combat.Block.Commands.Whitelist", Settings.isCommandsWhitelist());
 		config.set("Tagged In Combat.Block.Commands.Command List", Settings.getCommandsAllowed());
@@ -520,5 +523,9 @@ public final class Settings {
 
 	public static boolean isGlowingInCombat() {
 		return glowingInCombat;
+	}
+
+	public static boolean blockInteract() {
+		return blockInteractInCombat;
 	}
 }

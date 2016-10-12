@@ -158,17 +158,22 @@ public class PlayerListener implements Listener {
 				i.setType(Material.BOWL);
 				return;
 			}
-			if ((i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
-					if (player.equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()) || !player.canSee(p)) {
-						continue;
+			if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				if (i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) {
+					for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
+						if (player.equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()) || !player.canSee(p)) {
+							continue;
+						}
+						final PvPlayer target = ph.get(p);
+						if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
+							pvplayer.message(Messages.pvpDisabledOther(target.getName()));
+							e.setCancelled(true);
+							return;
+						}
 					}
-					final PvPlayer target = ph.get(p);
-					if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
-						pvplayer.message(Messages.pvpDisabledOther(target.getName()));
-						e.setCancelled(true);
-						return;
-					}
+				}
+				if (Settings.blockInteract() && pvplayer.isInCombat()) {
+					e.setCancelled(true);
 				}
 			}
 		}

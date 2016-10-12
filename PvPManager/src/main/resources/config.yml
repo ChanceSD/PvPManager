@@ -69,6 +69,7 @@ Tagged In Combat:
     EnderPearls: true
     Teleport: true
     Place Blocks: false
+    Interact: false
     Commands:
       Enabled: true
       Whitelist: true
