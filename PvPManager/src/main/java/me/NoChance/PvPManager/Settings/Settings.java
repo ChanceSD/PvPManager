@@ -107,7 +107,8 @@ public final class Settings {
 	public static void initizalizeVariables(final Config c) {
 		assignSections(c);
 
-		minecraftVersion = Double.parseDouble(Bukkit.getVersion().split("\\d+.\\d+")[0]);
+		final String version = Bukkit.getBukkitVersion().isEmpty() ? "1.7" : Bukkit.getBukkitVersion().replaceAll("-.+", "");
+		minecraftVersion = Double.parseDouble(version);
 		locale = GENERAL.getString("Locale", "en").toUpperCase();
 		defaultPvp = GENERAL.getBoolean("Default PvP", true);
 		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
