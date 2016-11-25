@@ -29,6 +29,7 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.LogFile;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public final class PvPManager extends JavaPlugin {
@@ -78,7 +79,12 @@ public final class PvPManager extends JavaPlugin {
 		registerListener(new PlayerListener(playerHandler));
 		if (dependencyManager.isDependencyEnabled(Hook.WORLDGUARD)) {
 			if (Settings.borderHoppingPushback()) {
-				registerListener(new PlayerMoveListener(playerHandler));
+				if (!CombatUtils.isVersionSuperior(Settings.getMinecraftVersion(), "1.7.10")) {
+					Log.severe("Pushback on border hopping not available for 1.7.10 or below! Feature disabled!");
+					Settings.setBorderHoppingPushback(false);
+				} else {
+					registerListener(new PlayerMoveListener(playerHandler));
+				}
 			}
 			registerListener(new WGListener(playerHandler));
 		}
