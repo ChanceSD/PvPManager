@@ -22,16 +22,10 @@ public class TeamProfile {
 		this.pvPlayer = p;
 		setupScoreboard();
 		setupTeams();
-		try {
-			final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
-			// player got stuck in this team somehow (server crash?)
-			if (team != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()))) {
-				team.removeEntry(pvPlayer.getName());
-			}
-		} catch (final NoSuchMethodError e) {
-			Settings.setUseNameTag(false);
-			Settings.setToggleNametagsEnabled(false);
-			Log.severe("Colored nametags disabled. You need to update your Spigot version.");
+		final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
+		// player got stuck in this team somehow (server crash?)
+		if (team != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()))) {
+			team.removeEntry(pvPlayer.getName());
 		}
 	}
 

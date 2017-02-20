@@ -18,6 +18,7 @@ import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Settings.UserDataFields;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class PvPlayer extends EcoPlayer {
 
@@ -43,7 +44,14 @@ public class PvPlayer extends EcoPlayer {
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
 		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled()) {
-			this.teamProfile = new TeamProfile(this);
+			try {
+				this.teamProfile = new TeamProfile(this);
+			} catch (final NoSuchMethodError e) {
+				Settings.setUseNameTag(false);
+				Settings.setToggleNametagsEnabled(false);
+				this.teamProfile = null;
+				Log.severe("Colored nametags disabled. You need to update your Spigot version.");
+			}
 		}
 	}
 
