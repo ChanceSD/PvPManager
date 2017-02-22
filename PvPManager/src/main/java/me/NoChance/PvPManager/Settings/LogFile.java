@@ -5,6 +5,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.bukkit.scheduler.BukkitRunnable;
+
+import me.NoChance.PvPManager.PvPManager;
+
 public class LogFile {
 
 	private final File file;
@@ -12,7 +16,7 @@ public class LogFile {
 	public LogFile(final File file) {
 		this.file = file;
 
-		if (!file.exists())
+		if (!file.exists()) {
 			try {
 				file.createNewFile();
 				log("This file logs all players that disconnected during combat");
@@ -20,15 +24,21 @@ public class LogFile {
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
+		}
 	}
 
 	public final void log(final String line) {
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
-			bw.write(line);
-			bw.newLine();
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
+					bw.write(line);
+					bw.newLine();
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}.runTaskAsynchronously(PvPManager.getInstance());
 	}
 
 }
