@@ -19,6 +19,7 @@ All this features have Multi-World support and don't conflict with plugins like 
 Bukkit Page: [PvPManager] (http://dev.bukkit.org/bukkit-plugins/pvpmanager/)
 
 EVERYTHING BELOW IS OUTDATED
+-----------
 
 Commands and Permissions
 -----------
