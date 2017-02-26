@@ -21,7 +21,8 @@ public class Factions implements PvPlugin {
 	public final boolean canAttack(final Player attacker, final Player defender) {
 		final MPlayer fAttacker = MPlayer.get(attacker);
 		final MPlayer fDefender = MPlayer.get(defender);
-		return !fAttacker.getRelationTo(fDefender).isAtLeast(Rel.TRUCE);
+		final Rel rel = fAttacker.getRelationTo(fDefender);
+		return !rel.isAtLeast(Rel.TRUCE) || rel == Rel.RECRUIT;
 	}
 
 	@Override
