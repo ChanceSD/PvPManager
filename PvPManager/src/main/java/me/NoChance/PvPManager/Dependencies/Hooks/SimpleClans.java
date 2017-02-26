@@ -21,7 +21,7 @@ public class SimpleClans implements PvPlugin {
 	@Override
 	public final boolean canAttack(final Player attacker, final Player defender) {
 		final ClanPlayer cAttacker = clanManager.getClanPlayer(attacker);
-		return cAttacker != null && !cAttacker.getClan().isMember(defender) && !cAttacker.isAlly(defender);
+		return cAttacker == null || !cAttacker.getClan().isMember(defender) && !cAttacker.isAlly(defender);
 	}
 
 	@Override
