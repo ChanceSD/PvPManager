@@ -19,6 +19,7 @@ import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
@@ -58,10 +59,10 @@ public class PlayerHandler {
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
 		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
 			if (Settings.isWorldguardOverrides() && worldguard != null && worldguard.hasAllowPvPFlag(defender)) {
-				attacker.setPvP(true); // TODO Make messages configurable
-				attacker.message("§cYour PvP was enabled because you entered a PvP allowed region");
+				attacker.setPvP(true);
+				attacker.message(Messages.getPvpForceEnabledWG());
 				attacked.setPvP(true);
-				attacked.message("§cYour PvP was enabled because you entered a PvP allowed region");
+				attacked.message(Messages.getPvpForceEnabledWG()));
 			} else if (dependencyManager.shouldDisableProtection(damager, defender))
 				return CancelResult.FAIL;
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());

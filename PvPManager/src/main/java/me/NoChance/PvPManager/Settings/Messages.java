@@ -49,6 +49,7 @@ public class Messages {
 	private static String newbieProtectionEnd;
 	private static String newbieProtectionOnHit;
 	private static String newbieProtectionAttacker;
+	private static String newbieCommandBlocked;
 	private static String enderpearlBlockedIncombat;
 	private static String pushbackWarning;
 	private static String errorCommand;
@@ -70,6 +71,7 @@ public class Messages {
 	private static String newbieProtectionRemoved;
 	private static String respawnProtectionSelf;
 	private static String respawnProtectionOther;
+	private static String pvpForceEnabledWG;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -154,6 +156,7 @@ public class Messages {
 		newbieProtectionAttacker = getString("Newbie_Protection_Atacker");
 		newbieTimeCheck = getString("Newbie_Time_Check");
 		newbieTimeCheckOther = getString("Newbie_Time_Check_Other");
+		newbieCommandBlocked = getString("Newbie_Command_Blocked");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
 		pushbackWarning = getString("Pushback_Warning");
 		errorCommand = getString("Error_Command");
@@ -170,6 +173,7 @@ public class Messages {
 		errorPlayerNotFound = getString("Error_Player_Not_Found");
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
+		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorlGuard");
 	}
 
 	private static void checkChanges() {
@@ -356,6 +360,14 @@ public class Messages {
 
 	public static void setNewVersion(final String newVersion) {
 		Messages.newVersion = newVersion;
+	}
+
+	public static String getNewbieCommandBlocked() {
+		return newbieCommandBlocked;
+	}
+
+	public static String getPvpForceEnabledWG() {
+		return pvpForceEnabledWG;
 	}
 
 	public static Queue<String> getMessageQueue() {

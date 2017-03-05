@@ -243,8 +243,7 @@ public class PlayerListener implements Listener {
 			}
 			if (player.isNewbie() && CombatUtils.recursiveContainsCommand(givenCommand, Settings.getNewbieBlacklist())) {
 				event.setCancelled(true);
-				// TODO Make configurable
-				player.message("§cYou cannot use this command while you have PvP protection!");
+				player.message(Messages.getNewbieCommandBlocked());
 			}
 		}
 
