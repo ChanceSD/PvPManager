@@ -33,7 +33,8 @@ public class Config extends YamlConfiguration {
 			this.prepareFile(file1, name);
 		}
 		this.file = file1;
-		this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file1));
+		// this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file1));
+		this.config = YamlConfiguration.loadConfiguration(file1);
 	}
 
 	@Override
