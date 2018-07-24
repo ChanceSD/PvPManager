@@ -11,11 +11,6 @@
 	<packaging>jar</packaging>
 
 	<repositories>
-		<!-- <repository> <id>pvpmanager-repo</id> <url>http://pvpmanager.servegame.com/repo/</url> </repository> -->
-		<repository>
-			<id>sk89q-repo</id>
-			<url>http://maven.sk89q.com/repo/</url>
-		</repository>
 		<repository>
 			<id>vault-repo</id>
 			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
@@ -28,12 +23,15 @@
 			<id>simpleclans-repo</id>
 			<url>http://104.236.246.108:8081/artifactory/remote-repos</url>
 		</repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+        </repository>
 		<!-- Factions temporary repo as they don't have one -->
 		<repository>
 			<id>factions-repo</id>
 			<url>https://repo.dustplanet.de/artifactory/ext-release-local/</url>
 		</repository>
-		<!-- <repository> <id>disguisecraft-repo</id> <url>http://build.yu8.me:8080/plugin/repository/everything/</url> </repository> -->
 	</repositories>
 
 	<build>
@@ -47,27 +45,17 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-artifact</id>
-						<phase>install</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>${project.artifactId}</artifactId>
-									<version>${project.version}</version>
-									<outputDirectory>../target</outputDirectory>
-									<destFileName>${project.artifactId}.${project.packaging}</destFileName>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+				<configuration>
+					<includes>
+						<include>**/*AllTests.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/*DamageListenerTest.java</exclude>
+						<exclude>**/*onDeathTest.java</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -81,20 +69,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
-				<configuration>
-					<includes>
-						<include>**/*AllTests.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/*DamageListenerTest.java</exclude>
-						<exclude>**/*onDeathTest.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
+			<!-- No compile dependencies atm
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -112,6 +87,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 
@@ -119,7 +95,8 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.12.2-R0.1-SNAPSHOT</version>
+			<version>1.13-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<artifactId>gson</artifactId>
@@ -134,7 +111,6 @@
 					<groupId>net.md-5</groupId>
 				</exclusion>
 			</exclusions>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
@@ -143,8 +119,8 @@
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
-					<groupId>org.getspout</groupId>
-					<artifactId>spoutplugin</artifactId>
+					<groupId>com.googlecode.json-simple</groupId>
+					<artifactId>json-simple</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -247,6 +223,87 @@
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard-legacy</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
+					<artifactId>bukkit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q.intake</groupId>
+					<artifactId>intake</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>squirrelid</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.flywaydb</groupId>
+					<artifactId>flyway-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.khelekore</groupId>
+					<artifactId>prtree</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.googlecode.json-simple</groupId>
+					<artifactId>json-simple</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.sf.opencsv</groupId>
+					<artifactId>opencsv</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>commandbook</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>de.schlichtherle</groupId>
+					<artifactId>truezip</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>rhino</groupId>
+					<artifactId>js</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.yaml</groupId>
+					<artifactId>snakeyaml</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>jchronic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.code.findbugs</groupId>
+					<artifactId>jsr305</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.thoughtworks.paranamer</groupId>
+					<artifactId>paranamer</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.code.gson</groupId>
+					<artifactId>gson</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q.lib</groupId>
+					<artifactId>jlibnoise</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>dummypermscompat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>com.sk89q.worldguard</groupId>
+			<artifactId>worldguard-legacy</artifactId>
 			<version>6.2</version>
 			<scope>provided</scope>
 			<exclusions>
@@ -329,6 +386,7 @@
 			</exclusions>
 			<optional>true</optional>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>

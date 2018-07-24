@@ -151,7 +151,7 @@ public class PlayerListener implements Listener {
 		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			final ItemStack i = player.getItemInHand();
 			final PvPlayer pvplayer = ph.get(player);
-			if (Settings.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
+			if (Settings.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_STEW) {
 				if (player.getHealth() == player.getMaxHealth())
 					return;
 				player.setHealth(player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());
@@ -230,7 +230,7 @@ public class PlayerListener implements Listener {
 
 			if (player.isInCombat()) {
 				final boolean contains = CombatUtils.recursiveContainsCommand(givenCommand, Settings.getCommandsAllowed());
-				if (Settings.isCommandsWhitelist() ? !contains : contains) {
+				if (Settings.isCommandsWhitelist() != contains) {
 					event.setCancelled(true);
 					player.message(Messages.getCommandDeniedIncombat());
 				}

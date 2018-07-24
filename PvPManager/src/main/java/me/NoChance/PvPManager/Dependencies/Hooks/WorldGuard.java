@@ -1,24 +1,22 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
-import org.bukkit.Location;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
+import me.NoChance.PvPManager.Dependencies.PvPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldguard.bukkit.RegionQuery;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag.State;
-
-import me.NoChance.PvPManager.Dependencies.PvPlugin;
-
 public class WorldGuard implements PvPlugin {
 
-	private final WorldGuardPlugin inst;
+	private final com.sk89q.worldguard.WorldGuard instance;
 	private final RegionQuery regionQuery;
 
 	public WorldGuard() {
-		inst = WorldGuardPlugin.inst();
-		regionQuery = inst.getRegionContainer().createQuery();
+		instance = com.sk89q.worldguard.WorldGuard.getInstance();
+		regionQuery = instance.getPlatform().getRegionContainer().createQuery();
 	}
 
 	// This method has no use, use canBeAttacked() instead
@@ -28,21 +26,21 @@ public class WorldGuard implements PvPlugin {
 	}
 
 	@Override
-	public boolean canBeAttacked(final Player player, final Location l) {
-		return getPvPState(player, l) != State.DENY;
+	public boolean canBeAttacked(final Player player, final org.bukkit.Location l) {
+		return getPvPState(player, l) != StateFlag.State.DENY;
 	}
 
 	public boolean hasAllowPvPFlag(final Player defender) {
-		return getPvPState(defender, defender.getLocation()) == State.ALLOW;
+		return getPvPState(defender, defender.getLocation()) == StateFlag.State.ALLOW;
 	}
 
-	private State getPvPState(final Player p, final Location l) {
-		return regionQuery.queryState(l, p, DefaultFlag.PVP);
+	private StateFlag.State getPvPState(final Player p, final org.bukkit.Location l) {
+		return regionQuery.queryState(BukkitAdapter.adapt(l), WorldGuardPlugin.inst().wrapPlayer(p), Flags.PVP);
 	}
 
 	@Override
 	public JavaPlugin getMainClass() {
-		return inst;
+		return WorldGuardPlugin.inst();
 	}
 
 }

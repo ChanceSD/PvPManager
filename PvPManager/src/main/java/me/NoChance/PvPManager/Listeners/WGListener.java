@@ -1,9 +1,8 @@
 package me.NoChance.PvPManager.Listeners;
 
+import com.sk89q.worldguard.bukkit.protection.events.DisallowedPVPEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import com.sk89q.worldguard.protection.events.DisallowedPVPEvent;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
