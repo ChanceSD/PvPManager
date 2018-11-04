@@ -151,7 +151,7 @@ public class PlayerListener implements Listener {
 		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			final ItemStack i = player.getItemInHand();
 			final PvPlayer pvplayer = ph.get(player);
-			if (Settings.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_STEW) {
+			if (Settings.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
 				if (player.getHealth() == player.getMaxHealth())
 					return;
 				player.setHealth(player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());

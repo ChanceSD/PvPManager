@@ -1,11 +1,11 @@
 package me.NoChance.PvPManager.Listeners;
 
-import com.sk89q.worldguard.bukkit.protection.events.DisallowedPVPEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
+import org.codemc.worldguardwrapper.event.DisallowedPVPEvent;
 
 public class WGListener implements Listener {
 

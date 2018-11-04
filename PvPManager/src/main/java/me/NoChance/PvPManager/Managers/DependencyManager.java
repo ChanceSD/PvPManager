@@ -15,7 +15,7 @@ import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPlugin;
 import me.NoChance.PvPManager.Dependencies.Hooks.Factions;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUID;
-import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClans;
+//import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClans;
 import me.NoChance.PvPManager.Dependencies.Hooks.Vault;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuard;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -87,12 +87,14 @@ public class DependencyManager {
 	}
 
 	private void checkForSimpleClans() {
+		/*
 		if (Bukkit.getPluginManager().isPluginEnabled("SimpleClans")) {
 			final SimpleClans simpleClans = new SimpleClans();
 			dependencies.put(Hook.SIMPLECLANS, simpleClans);
 			attackChecks.add(simpleClans);
 			Log.info("SimpleClans Found! Hooked successfully");
 		}
+		*/
 	}
 
 	public final boolean canAttack(final Player attacker, final Player defender) {

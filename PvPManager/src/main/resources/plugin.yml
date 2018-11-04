@@ -4,7 +4,6 @@ version: ${pvpmanager.version}
 author: NoChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, EZRanksLite, Essentials]
-api-version: 1.13
 
 commands:
    pvpmanager:

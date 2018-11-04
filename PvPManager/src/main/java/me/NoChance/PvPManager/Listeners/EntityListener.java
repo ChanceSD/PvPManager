@@ -28,7 +28,7 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.libraryaddict.disguise.DisguiseAPI;
-import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
+//import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 
 public class EntityListener implements Listener {
 
@@ -144,9 +144,11 @@ public class EntityListener implements Listener {
 				attacker.setGameMode(GameMode.SURVIVAL);
 			}
 			if (Settings.isDisableDisguise()) {
+				/*
 				if (Bukkit.getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker)) {
 					DisguiseCraft.getAPI().undisguisePlayer(attacker);
 				}
+				*/
 				if (Bukkit.getPluginManager().isPluginEnabled("LibsDisguises") && DisguiseAPI.isDisguised(attacker)) {
 					DisguiseAPI.undisguiseToAll(attacker);
 				}
