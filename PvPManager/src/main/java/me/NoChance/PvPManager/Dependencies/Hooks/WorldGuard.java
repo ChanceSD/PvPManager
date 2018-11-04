@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import me.NoChance.PvPManager.Dependencies.PvPlugin;
+import me.NoChance.PvPManager.PvPManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.codemc.worldguardwrapper.WorldGuardWrapper;
@@ -11,6 +12,7 @@ public class WorldGuard implements PvPlugin {
 
 	public WorldGuard() {
 		wrapper = WorldGuardWrapper.getInstance();
+		wrapper.registerEvents(PvPManager.getInstance());
 	}
 
 	// This method has no use, use canBeAttacked() instead
