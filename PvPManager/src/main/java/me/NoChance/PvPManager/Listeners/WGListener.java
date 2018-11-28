@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
-import org.codemc.worldguardwrapper.event.DisallowedPVPEvent;
+import org.codemc.worldguardwrapper.event.WrappedDisallowedPVPEvent;
 
 public class WGListener implements Listener {
 
@@ -16,7 +16,7 @@ public class WGListener implements Listener {
 	}
 
 	@EventHandler
-	public final void onWGPvPCancel(final DisallowedPVPEvent event) { // NO_UCD
+	public final void onWGPvPCancel(final WrappedDisallowedPVPEvent event) { // NO_UCD
 		if (event.getAttacker().hasMetadata("NPC") || event.getDefender().hasMetadata("NPC"))
 			return;
 		if (ph.tryCancel(event.getAttacker(), event.getDefender()) == CancelResult.FAIL_OVERRIDE) {
