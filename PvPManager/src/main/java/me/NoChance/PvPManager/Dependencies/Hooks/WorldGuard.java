@@ -33,9 +33,8 @@ public class WorldGuard implements PvPlugin {
 		return getPvPState(defender, defender.getLocation());
 	}
 
-	@SuppressWarnings("unchecked")
 	private boolean getPvPState(final Player player, final Location location) {
-		IWrappedFlag<WrappedState> flag = (IWrappedFlag<WrappedState>) wrapper.getFlag("pvp").orElse(null);
+		IWrappedFlag<WrappedState> flag = wrapper.getFlag("pvp", WrappedState.class).orElse(null);
 		return wrapper.queryFlag(player, location, flag).map(state -> state == WrappedState.ALLOW).orElse(true);
 	}
 
