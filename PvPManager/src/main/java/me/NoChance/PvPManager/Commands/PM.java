@@ -43,22 +43,6 @@ public class PM implements CommandExecutor {
 				sender.sendMessage(Messages.getErrorPermission());
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("update") && sender.hasPermission("pvpmanager.admin")) {
-				if (Settings.isUpdateCheck()) {
-					if (Settings.isUpdate()) {
-						if (plugin.downloadUpdate()) {
-							sender.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewVersion());
-						} else {
-							sender.sendMessage("§4An error ocurred while updating, please report to the developer");
-						}
-					} else {
-						sender.sendMessage("§2You have the latest version: §ePvPManager v" + Messages.getCurrentversion());
-					}
-				} else {
-					sender.sendMessage("§4Update Checking is disabled, enable it in the Config file");
-				}
-				return true;
-			}
 			sender.sendMessage(Messages.getErrorPermission());
 			return true;
 		} else if (args.length > 1 && args[0].equalsIgnoreCase("debug") && sender.hasPermission("pvpmanager.debug")) {
@@ -92,7 +76,6 @@ public class PM implements CommandExecutor {
 	}
 
 	private void reload(final CommandSender player) {
-		Settings.setUpdate(false);
 		Bukkit.getScheduler().cancelTasks(plugin);
 		HandlerList.unregisterAll(plugin);
 		plugin.onDisable();

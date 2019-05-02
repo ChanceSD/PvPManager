@@ -14,11 +14,6 @@ import me.NoChance.PvPManager.Commands.PvPOverride;
 import me.NoChance.PvPManager.Commands.PvPStatus;
 import me.NoChance.PvPManager.Commands.Tag;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Libraries.Metrics.CustomMetrics;
-import me.NoChance.PvPManager.Libraries.Updater.BukkitUpdater;
-import me.NoChance.PvPManager.Libraries.Updater.Updater;
-import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateResult;
-import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Listeners.PlayerMoveListener;
@@ -36,7 +31,6 @@ public final class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
 	private PlayerHandler playerHandler;
-	private Updater updater;
 	private LogFile log;
 	private DependencyManager dependencyManager;
 	private static PvPManager instance;
@@ -57,7 +51,6 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvpstatus").setExecutor(new PvPStatus(playerHandler));
 		getCommand("tag").setExecutor(new Tag(playerHandler));
 		getCommand("announce").setExecutor(new Announce());
-		startMetrics();
 	}
 
 	@Override
@@ -88,38 +81,6 @@ public final class PvPManager extends JavaPlugin {
 			}
 			registerListener(new WGListener(playerHandler));
 		}
-	}
-
-	private void startMetrics() {
-		new CustomMetrics(this);
-	}
-
-	public void checkForUpdates() {
-		Log.info("Checking for updates...");
-		// disable spigot updater for now
-		// if (Settings.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
-		updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
-		// }
-		// else {
-		// updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
-		// }
-		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
-			Messages.setNewVersion(updater.getLatestName());
-			Log.info("Update Available: " + Messages.getNewVersion());
-			if (Settings.isAutoUpdate()) {
-				downloadUpdate();
-				Log.info("Version Downloaded To Your Update Folder");
-				return;
-			}
-			Settings.setUpdate(true);
-			Log.info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
-		} else {
-			Log.info("No update found");
-		}
-	}
-
-	public boolean downloadUpdate() {
-		return updater.downloadFile();
 	}
 
 	private void registerListener(final Listener listener) {

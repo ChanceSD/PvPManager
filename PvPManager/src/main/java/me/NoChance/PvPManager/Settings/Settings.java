@@ -18,7 +18,6 @@ public final class Settings {
 
 	private static int configVersion;
 	private static String minecraftVersion;
-	private static boolean autoUpdate;
 	private static boolean blockEnderPearl;
 	private static boolean blockTeleport;
 	private static boolean blockPickNewbies;
@@ -66,10 +65,6 @@ public final class Settings {
 	private static int toggleCooldown;
 	private static boolean toggleNametagsEnabled;
 	private static boolean forcePvPOnWorldChange;
-	private static boolean update = false;
-	private static boolean updateCheck;
-	private static String updateLocation;
-	private static boolean optOutMetrics;
 	private static double soupHealth;
 	private static boolean borderHoppingVulnerable;
 	private static boolean borderHoppingPushback;
@@ -86,7 +81,6 @@ public final class Settings {
 	private static ConfigurationSection KILLABUSE;
 	private static ConfigurationSection PLAYERKILLS;
 	private static ConfigurationSection PVPTOGGLE;
-	private static ConfigurationSection UPDATECHECK;
 
 	private Settings() {
 	}
@@ -100,7 +94,6 @@ public final class Settings {
 		KILLABUSE = config.getConfigurationSection("Kill Abuse");
 		PLAYERKILLS = config.getConfigurationSection("Player Kills");
 		PVPTOGGLE = config.getConfigurationSection("PvP Toggle");
-		UPDATECHECK = config.getConfigurationSection("Update Check");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -171,11 +164,6 @@ public final class Settings {
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 
-		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
-		updateLocation = UPDATECHECK.getString("Update Location", "Bukkit");
-		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
-
-		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
 		configVersion = c.getInt("Config Version");
 
 	}
@@ -239,9 +227,6 @@ public final class Settings {
 		config.set("Newbie Protection.Command Blacklist", Settings.getNewbieBlacklist());
 
 		config.set("Config Version", newVersion);
-		config.set("Update Check.Enabled", Settings.isUpdateCheck());
-		config.set("Update Check.Update Location", Settings.getUpdateLocation());
-		config.set("Update Check.Auto Update", Settings.isUpdate());
 		config.saveConfig();
 		initizalizeVariables(config);
 	}
@@ -348,16 +333,8 @@ public final class Settings {
 		return toggleCooldown;
 	}
 
-	public static String getUpdateLocation() {
-		return updateLocation;
-	}
-
 	public static List<String> getWorldsExcluded() {
 		return worldsExcluded;
-	}
-
-	public static boolean isAutoUpdate() {
-		return autoUpdate;
 	}
 
 	public static boolean isBlockEnderPearl() {
@@ -460,18 +437,6 @@ public final class Settings {
 		return toggleNametagsEnabled;
 	}
 
-	public static boolean isUpdate() {
-		return update;
-	}
-
-	public static boolean isUpdateCheck() {
-		return updateCheck;
-	}
-
-	public static boolean isOptOutMetrics() {
-		return optOutMetrics;
-	}
-
 	public static boolean punishOnKick() {
 		return punishOnKick;
 	}
@@ -490,10 +455,6 @@ public final class Settings {
 
 	public static void setToggleNametagsEnabled(final boolean toggleNametagsEnabled) {
 		Settings.toggleNametagsEnabled = toggleNametagsEnabled;
-	}
-
-	public static void setUpdate(final boolean update) {
-		Settings.update = update;
 	}
 
 	public static boolean isUseNameTag() {

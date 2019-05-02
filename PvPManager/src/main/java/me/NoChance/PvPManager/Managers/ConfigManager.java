@@ -75,14 +75,6 @@ public class ConfigManager {
 		} else {
 			initConfig();
 		}
-		if (Settings.isUpdateCheck()) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					plugin.checkForUpdates();
-				}
-			}.runTaskTimerAsynchronously(plugin, 0, 360000);
-		}
 	}
 
 	private void initConfig() {

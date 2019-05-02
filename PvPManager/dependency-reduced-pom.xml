@@ -3,7 +3,7 @@
   <parent>
     <artifactId>PvPManager-parent</artifactId>
     <groupId>me.NoChance.PvPManager</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.5.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>PvPManager</artifactId>
@@ -134,22 +134,54 @@
     <dependency>
       <groupId>net.ess3</groupId>
       <artifactId>EssentialsX</artifactId>
-      <version>2.15.0</version>
+      <version>2.16.1</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>paperlib</artifactId>
+          <groupId>io.papermc</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>NMSProvider</artifactId>
+          <groupId>net.ess3</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>UpdatedMetaProvider</artifactId>
+          <groupId>net.ess3</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>1_8_R1Provider</artifactId>
+          <groupId>net.ess3</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>1_8_R2Provider</artifactId>
+          <groupId>net.ess3</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>LegacyProvider</artifactId>
+          <groupId>net.ess3</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>ReflectionProvider</artifactId>
+          <groupId>net.ess3</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>FlattenedProvider</artifactId>
+          <groupId>net.ess3</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.massivecraft.factions</groupId>
       <artifactId>Factions</artifactId>
       <version>2.14.0</version>
       <scope>provided</scope>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.massivecraft.massivecore</groupId>
       <artifactId>MassiveCore</artifactId>
       <version>2.14.0</version>
       <scope>provided</scope>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.massivecraft</groupId>
@@ -200,7 +232,6 @@
           <groupId>org.spigotmc</groupId>
         </exclusion>
       </exclusions>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.powermock</groupId>
