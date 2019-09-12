@@ -27,7 +27,6 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 
 public class EntityListener implements Listener {
 
@@ -141,11 +140,6 @@ public class EntityListener implements Listener {
 			}
 			if (Settings.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
 				attacker.setGameMode(GameMode.SURVIVAL);
-			}
-			if (Settings.isDisableDisguise()) {
-				if (Bukkit.getPluginManager().isPluginEnabled("DisguiseCraft") && DisguiseCraft.getAPI().isDisguised(attacker)) {
-					DisguiseCraft.getAPI().undisguisePlayer(attacker);
-				}
 			}
 			if (Settings.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
