@@ -207,19 +207,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>pgDev</groupId>
-			<artifactId>DisguiseCraft</artifactId>
-			<version>5.1</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>craftbukkit</artifactId>
-					<groupId>org.bukkit</groupId>
-				</exclusion>
-			</exclusions>
-			<optional>true</optional>
-		</dependency>
 		
 		<!-- MassiveCore and Factions -->
 		<dependency>
