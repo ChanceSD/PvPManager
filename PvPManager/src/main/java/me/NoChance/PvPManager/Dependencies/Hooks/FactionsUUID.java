@@ -6,17 +6,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.P;
-import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.FactionsPlugin;
+import com.massivecraft.factions.perms.Relation;
 
 import me.NoChance.PvPManager.Dependencies.PvPlugin;
 
 public class FactionsUUID implements PvPlugin {
 
-	private final P factions;
+	private final FactionsPlugin factions;
 
 	public FactionsUUID() {
-		factions = P.p;
+		factions = FactionsPlugin.getInstance();
 	}
 
 	@Override
@@ -28,7 +28,6 @@ public class FactionsUUID implements PvPlugin {
 
 	@Override
 	public boolean canBeAttacked(final Player player, final Location l) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
