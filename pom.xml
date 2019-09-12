@@ -3,7 +3,7 @@
 	<groupId>me.NoChance.PvPManager</groupId>
 	<artifactId>PvPManager-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>3.4</version>
+	<version>3.5-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -11,10 +11,6 @@
 		<config.version>46</config.version>
 		<powermock.version>1.7.4</powermock.version>
 	</properties>
-
-	<prerequisites>
-		<maven>3.3.9</maven>
-	</prerequisites>
 
 	<modules>
 		<module>PvPManager</module>
