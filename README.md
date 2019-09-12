@@ -6,9 +6,6 @@ PvPManager
 Development Builds
 http://ci.md-5.net/job/PvPManager/
 
-Hit Counter
-[![ghit.me](https://ghit.me/badge.svg?repo=NoChanceSD/PvPManager)](https://ghit.me/repo/NoChanceSD/PvPManager)
-
 Travis
 [![Build Status](https://travis-ci.org/NoChanceSD/PvPManager.svg)](https://travis-ci.org/NoChanceSD/PvPManager)
 
@@ -16,7 +13,9 @@ There are multiple PvP plugins, but PvPManager aims to be All in One. Meaning th
 The features include allowing players to toggle PvP easily, which is a nice feature for donors, block commands for players in combat, detecting and applying defined punishments on PvP logging and a timer feature that toggles PvP for a world automatically! 
 All this features have Multi-World support and don't conflict with plugins like WorldGuard!
 
-Bukkit Page: [PvPManager] (http://dev.bukkit.org/bukkit-plugins/pvpmanager/)
+Spigot Page: https://www.spigotmc.org/resources/free-pvpmanager.845/
+
+Bukkit Page: http://dev.bukkit.org/bukkit-plugins/pvpmanager/
 
 EVERYTHING BELOW IS OUTDATED
 -----------
@@ -49,6 +48,6 @@ pvpmanager.pvpstatus.nocooldown - Bypass PvP toggle cooldown period
 
 License
 -----------
-Copyright (c) 2015 , NoChanceSD
+Copyright (c) 2019 , NoChanceSD
 
 All rights reserved
