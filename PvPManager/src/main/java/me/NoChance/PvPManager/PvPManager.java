@@ -14,7 +14,6 @@ import me.NoChance.PvPManager.Commands.PvPOverride;
 import me.NoChance.PvPManager.Commands.PvPStatus;
 import me.NoChance.PvPManager.Commands.Tag;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Libraries.Metrics.CustomMetrics;
 import me.NoChance.PvPManager.Libraries.Updater.BukkitUpdater;
 import me.NoChance.PvPManager.Libraries.Updater.Updater;
 import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateResult;
@@ -91,7 +90,7 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void startMetrics() {
-		new CustomMetrics(this);
+		// new CustomMetrics(this);
 	}
 
 	public void checkForUpdates() {
