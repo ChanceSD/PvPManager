@@ -125,10 +125,6 @@
 			<version>1.12.2-R0.1-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>gson</artifactId>
-					<groupId>com.google.code.gson</groupId>
-				</exclusion>
-				<exclusion>
 					<artifactId>persistence-api</artifactId>
 					<groupId>javax.persistence</groupId>
 				</exclusion>

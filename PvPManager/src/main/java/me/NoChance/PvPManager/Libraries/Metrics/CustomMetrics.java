@@ -1,9 +1,8 @@
 package me.NoChance.PvPManager.Libraries.Metrics;
 
-import java.io.IOException;
+import java.util.concurrent.Callable;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Libraries.Metrics.Metrics.Graph;
 import me.NoChance.PvPManager.Settings.Settings;
 
 public class CustomMetrics {
@@ -16,114 +15,50 @@ public class CustomMetrics {
 	}
 
 	private void initMetrics() {
-		try {
-			final Metrics metrics = new Metrics(plugin);
-			final Graph inCombatTime = metrics.createGraph("Time in Combat");
-			final Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
-			final Graph updateCheck = metrics.createGraph("Update Check Usage");
-			final Graph killAbuse = metrics.createGraph("Kill Abuse Usage");
-			final Graph blood = metrics.createGraph("Blood Usage");
 
-			blood.addPlotter(new Metrics.Plotter("Enabled") {
-				@Override
-				public int getValue() {
-					return Settings.isPvpBlood() ? 1 : 0;
-				}
+		final Metrics metrics = new Metrics(plugin);
+//		final Graph inCombatTime = metrics.createGraph("Time in Combat");
+//		final Graph newbieProtection = metrics.createGraph("Newbie Protection Usage");
+//		final Graph updateCheck = metrics.createGraph("Update Check Usage");
+//		final Graph killAbuse = metrics.createGraph("Kill Abuse Usage");
+//		final Graph blood = metrics.createGraph("Blood Usage");
 
-			});
-			blood.addPlotter(new Metrics.Plotter("Disabled") {
-				@Override
-				public int getValue() {
-					return !Settings.isPvpBlood() ? 1 : 0;
-				}
-			});
+		metrics.addCustomChart(new Metrics.SimplePie("number_of_servers", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return Settings.isInCombatEnabled() ? Settings.getTimeInCombat() + " seconds" : "Disabled";
+			}
+		}));
 
-			killAbuse.addPlotter(new Metrics.Plotter("Enabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Settings.isKillAbuseEnabled())
-						i++;
+		metrics.addCustomChart(new Metrics.SimplePie("number_of_servers", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return Settings.isNewbieProtectionEnabled() ? "Enabled" : "Disabled";
+			}
+		}));
 
-					return i;
-				}
-			});
-			killAbuse.addPlotter(new Metrics.Plotter("Disabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Settings.isKillAbuseEnabled())
-						i++;
+		metrics.addCustomChart(new Metrics.SimplePie("number_of_servers", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				if (!Settings.isUpdateCheck())
+					return "Disabled";
+				return !Settings.isAutoUpdate() ? "Update Check" : "Auto Update";
+			}
+		}));
 
-					return i;
-				}
-			});
+		metrics.addCustomChart(new Metrics.SimplePie("number_of_servers", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return Settings.isKillAbuseEnabled() ? "Enabled" : "Disabled";
+			}
+		}));
 
-			updateCheck.addPlotter(new Metrics.Plotter("Auto Update") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Settings.isUpdateCheck() && Settings.isAutoUpdate())
-						i++;
+		metrics.addCustomChart(new Metrics.SimplePie("number_of_servers", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return Settings.isPvpBlood() ? "Enabled" : "Disabled";
+			}
+		}));
 
-					return i;
-				}
-			});
-			updateCheck.addPlotter(new Metrics.Plotter("Disabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Settings.isUpdateCheck())
-						i++;
-
-					return i;
-				}
-			});
-			updateCheck.addPlotter(new Metrics.Plotter("Update Check") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Settings.isUpdateCheck() && !Settings.isAutoUpdate())
-						i++;
-
-					return i;
-				}
-			});
-
-			newbieProtection.addPlotter(new Metrics.Plotter("Enabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Settings.isNewbieProtectionEnabled())
-						i++;
-
-					return i;
-				}
-			});
-			newbieProtection.addPlotter(new Metrics.Plotter("Disabled") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (!Settings.isNewbieProtectionEnabled())
-						i++;
-
-					return i;
-				}
-			});
-
-			inCombatTime.addPlotter(new Metrics.Plotter(Settings.getTimeInCombat() + " seconds") {
-				@Override
-				public int getValue() {
-					int i = 0;
-					if (Settings.isInCombatEnabled())
-						i++;
-
-					return i;
-				}
-			});
-
-			metrics.start();
-		} catch (final IOException ignored) {
-		}
 	}
 }
