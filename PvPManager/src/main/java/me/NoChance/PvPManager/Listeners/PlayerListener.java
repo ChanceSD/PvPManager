@@ -93,6 +93,7 @@ public class PlayerListener implements Listener {
 			}
 			if (!Settings.isDropInventory() || !Settings.isDropArmor()) {
 				event.setKeepInventory(true);
+				event.getDrops().clear();
 			}
 		}
 
@@ -120,11 +121,13 @@ public class PlayerListener implements Listener {
 			case DROP:
 				if (!pvpDeath && !pvPlayer.isInCombat()) {
 					event.setKeepInventory(true);
+					event.getDrops().clear();
 				}
 				break;
 			case KEEP:
 				if (pvpDeath || pvPlayer.isInCombat()) {
 					event.setKeepInventory(true);
+					event.getDrops().clear();
 				}
 				break;
 			case TRANSFER:
