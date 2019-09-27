@@ -37,6 +37,12 @@
 			<id>enderzone-repo</id>
 			<url>https://ci.ender.zone/plugin/repository/everything</url>
 		</repository>
+
+		<!-- SavageFactions -->
+		<repository>
+			<id>illyria</id>
+			<url>https://nexus.illyria.io/repository/maven-public/</url>
+		</repository>
 	</repositories>
 
 	<build>
@@ -257,6 +263,15 @@
 					<artifactId>particleeffect</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		
+		<!-- SavageFactions -->
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>SavageFactions</artifactId>
+			<version>1.6.9.5-U0.2.1-RC-1.6.2-RC-2.5-RC-6</version>
+			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>

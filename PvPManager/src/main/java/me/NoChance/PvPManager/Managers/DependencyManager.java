@@ -15,6 +15,7 @@ import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPlugin;
 import me.NoChance.PvPManager.Dependencies.Hooks.Factions;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUID;
+import me.NoChance.PvPManager.Dependencies.Hooks.SavageFactions;
 import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClans;
 import me.NoChance.PvPManager.Dependencies.Hooks.Vault;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuard;
@@ -100,19 +101,26 @@ public class DependencyManager {
 			return;
 
 		try {
-			final String fVersion = plugin.getDescription().getVersion();
-			if (fVersion.contains("U")) {
-				final FactionsUUID factionsU = new FactionsUUID();
-				dependencies.put(Hook.FACTIONS, factionsU);
-				attackChecks.add(factionsU);
-				Log.info("FactionsUUID Found! Hooked successfully");
-			} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
-				final Factions factions = new Factions();
-				dependencies.put(Hook.FACTIONS, factions);
-				attackChecks.add(factions);
-				Log.info("Factions Found! Hooked successfully");
-			} else {
-				Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
+			if (factionsPlugin != null) {
+				final String fVersion = factionsPlugin.getDescription().getVersion();
+				if (fVersion.contains("U")) {
+					final FactionsUUID factionsU = new FactionsUUID();
+					dependencies.put(Hook.FACTIONS, factionsU);
+					attackChecks.add(factionsU);
+					Log.info("FactionsUUID Found! Hooked successfully");
+				} else if (fVersion.contains("RC")) {
+					final SavageFactions savageFactions = new SavageFactions();
+					dependencies.put(Hook.FACTIONS, savageFactions);
+					attackChecks.add(savageFactions);
+					Log.info("SavageFactions Found! Hooked successfully");
+				} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
+					final Factions factions = new Factions();
+					dependencies.put(Hook.FACTIONS, factions);
+					attackChecks.add(factions);
+					Log.info("Factions Found! Hooked successfully");
+				} else {
+					Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
+				}
 			}
 		} catch (final NumberFormatException e) {
 			Log.warning("Couldn't read Factions version, maybe it's yet another fork?");
