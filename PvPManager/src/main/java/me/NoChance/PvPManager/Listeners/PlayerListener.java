@@ -32,22 +32,29 @@ import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Settings.Settings.DropMode;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
+@SuppressWarnings("deprecation")
 public class PlayerListener implements Listener {
 
 	private final PlayerHandler ph;
+	private Material mushroomSoup;
 
 	public PlayerListener(final PlayerHandler ph) {
 		this.ph = ph;
+		if (CombatUtils.isVersionSuperior(Settings.getMinecraftVersion(), "1.12.2")) {
+			mushroomSoup = Material.getMaterial("MUSHROOM_STEW");
+		} else {
+			mushroomSoup = Material.getMaterial("MUSHROOM_SOUP");
+		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public final void onBlockPlace(final BlockPlaceEvent event) {
 		if (Settings.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat()) {
 			event.setCancelled(true);
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public final void onToggleFlight(final PlayerToggleFlightEvent event) {
 		if (Settings.isDisableFly() && event.isFlying() && ph.get(event.getPlayer()).isInCombat()) {
 			event.setCancelled(true);
@@ -70,7 +77,6 @@ public class PlayerListener implements Listener {
 		ph.removeUser(pvPlayer);
 	}
 
-	@SuppressWarnings("null")
 	@EventHandler(priority = EventPriority.HIGH)
 	public final void onPlayerDeath(final PlayerDeathEvent event) {
 		final Player player = event.getEntity();
@@ -147,14 +153,13 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerInteract(final PlayerInteractEvent e) {
 		final Player player = e.getPlayer();
 		if (CombatUtils.isWorldAllowed(player.getWorld().getName())) {
 			final ItemStack i = player.getItemInHand();
 			final PvPlayer pvplayer = ph.get(player);
-			if (Settings.isAutoSoupEnabled() && i.getType() == Material.MUSHROOM_SOUP) {
+			if (Settings.isAutoSoupEnabled() && i.getType() == mushroomSoup) {
 				if (player.getHealth() == player.getMaxHealth())
 					return;
 				player.setHealth(player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());
@@ -182,7 +187,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerPickup(final PlayerPickupItemEvent e) {
 		if (Settings.isNewbieProtectionEnabled() && Settings.isBlockPickNewbies()) {
 			final PvPlayer player = ph.get(e.getPlayer());
