@@ -70,7 +70,6 @@ public class DamageListenerTest {
 		ph.get(defender);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void createAttack(final boolean cancelled) {
 		mockEvent = spy(new EntityDamageByEntityEvent(attacker, defender, DamageCause.ENTITY_ATTACK, 5));
 		when(mockEvent.isCancelled()).thenReturn(cancelled);
