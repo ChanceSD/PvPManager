@@ -100,40 +100,38 @@ public class DependencyManager {
 		if (plugin == null)
 			return;
 
+		final String fVersion = plugin.getDescription().getVersion();
 		try {
-			if (factionsPlugin != null) {
-				final String fVersion = factionsPlugin.getDescription().getVersion();
-				if (fVersion.contains("U")) {
-					final FactionsUUID factionsU = new FactionsUUID();
-					dependencies.put(Hook.FACTIONS, factionsU);
-					attackChecks.add(factionsU);
-					Log.info("FactionsUUID Found! Hooked successfully");
-				} else if (fVersion.contains("RC")) {
-					final SavageFactions savageFactions = new SavageFactions();
-					dependencies.put(Hook.FACTIONS, savageFactions);
-					attackChecks.add(savageFactions);
-					Log.info("SavageFactions Found! Hooked successfully");
-				} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
-					final Factions factions = new Factions();
-					dependencies.put(Hook.FACTIONS, factions);
-					attackChecks.add(factions);
-					Log.info("Factions Found! Hooked successfully");
-				} else {
-					Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
-				}
+			if (fVersion.contains("RC")) {
+				addPvPlugin(Hook.FACTIONS, new SavageFactions());
+				Log.info("SavageFactions Found! Hooked successfully");
+			} else if (fVersion.contains("U")) {
+				addPvPlugin(Hook.FACTIONS, new FactionsUUID());
+				Log.info("FactionsUUID Found! Hooked successfully");
+			} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
+				addPvPlugin(Hook.FACTIONS, new Factions());
+				Log.info("Factions Found! Hooked successfully");
+			} else {
+				Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
 			}
 		} catch (final NumberFormatException e) {
-			Log.warning("Couldn't read Factions version, maybe it's yet another fork?");
+			Log.warning("Couldn't read Factions version, maybe it's yet another fork? Plugin: " + plugin.getDescription().getFullName());
+		} catch (final NoClassDefFoundError e) {
+			Log.severe("Error checking Factions: " + plugin.getDescription().getFullName() + " - Message: " + e.getMessage());
+			Log.severe("Found an unsupported Factions fork. Factions support is disabled");
 		}
 	}
 
 	private void checkForSimpleClans(final Plugin plugin) {
 		if (plugin == null)
 			return;
-		final SimpleClans simpleClans = new SimpleClans();
-		dependencies.put(Hook.SIMPLECLANS, simpleClans);
-		attackChecks.add(simpleClans);
+		addPvPlugin(Hook.SIMPLECLANS, new SimpleClans());
 		Log.info("SimpleClans Found! Hooked successfully");
+	}
+
+	private void addPvPlugin(final Hook h, final PvPlugin plugin) {
+		dependencies.put(h, plugin);
+		attackChecks.add(plugin);
 	}
 
 	public final boolean canAttack(final Player attacker, final Player defender) {
