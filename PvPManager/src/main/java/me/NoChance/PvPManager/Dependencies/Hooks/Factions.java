@@ -27,7 +27,6 @@ public class Factions implements PvPlugin {
 
 	@Override
 	public boolean canBeAttacked(final Player player, final Location l) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
