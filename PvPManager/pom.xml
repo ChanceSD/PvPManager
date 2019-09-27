@@ -140,12 +140,6 @@
 			<artifactId>SimpleClans</artifactId>
 			<version>v2.7.25</version>
 			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.googlecode.json-simple</groupId>
-					<artifactId>json-simple</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
