@@ -22,7 +22,7 @@ public class Factions implements PvPlugin {
 		final MPlayer fAttacker = MPlayer.get(attacker);
 		final MPlayer fDefender = MPlayer.get(defender);
 		final Rel rel = fAttacker.getRelationTo(fDefender);
-		return !rel.isAtLeast(Rel.TRUCE) || rel == Rel.RECRUIT;
+		return rel.isLessThan(Rel.TRUCE) || rel == Rel.RECRUIT; // Two players without faction are RECRUIT to each other for some weird reason
 	}
 
 	@Override
