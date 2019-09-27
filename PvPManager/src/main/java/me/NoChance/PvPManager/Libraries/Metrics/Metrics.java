@@ -123,7 +123,7 @@ public class Metrics {
 		}
 
 		// Load the data
-		enabled = !Settings.isOptOutMetrics();
+		enabled = !Settings.isOptOutMetrics() || config.getBoolean("enabled", true);
 		serverUUID = config.getString("serverUuid");
 		logFailedRequests = config.getBoolean("logFailedRequests", false);
 		logSentData = config.getBoolean("logSentData", false);
