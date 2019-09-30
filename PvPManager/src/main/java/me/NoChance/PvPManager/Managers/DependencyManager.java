@@ -57,8 +57,14 @@ public class DependencyManager {
 
 	private void checkForWorldguard() {
 		if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-			dependencies.put(Hook.WORLDGUARD, new WorldGuard());
-			Log.info("WorldGuard Found! Enabling WorldGuard Support");
+			try {
+				dependencies.put(Hook.WORLDGUARD, new WorldGuard());
+				Log.info("WorldGuard Found! Enabling WorldGuard Support");
+			} catch (final NoSuchMethodError e) {
+				final String version = Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getFullName();
+				Log.severe("Your version of WorldGuard is currently not supported: " + version);
+				Log.warning("WorldGuard support disabled");
+			}
 		}
 	}
 
