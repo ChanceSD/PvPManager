@@ -28,14 +28,39 @@ public class DependencyManager {
 	private final HashSet<PvPlugin> attackChecks = new HashSet<>();
 
 	public DependencyManager() {
-		checkForVault();
-		checkForWorldguard();
-		checkForFactions();
-		checkForSimpleClans();
+		checkPlugin(Hook.FACTIONS, "Factions");
+		checkPlugin(Hook.SIMPLECLANS, "SimpleClans");
+		checkPlugin(Hook.VAULT, "Vault");
+		checkPlugin(Hook.WORLDGUARD, "WorldGuard");
 	}
 
-	private void checkForVault() {
-		if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
+	private void checkPlugin(final Hook hook, final String pluginName) {
+		final Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
+		try {
+			switch (hook) {
+			case FACTIONS:
+				checkForFactions(plugin);
+				break;
+			case SIMPLECLANS:
+				checkForSimpleClans(plugin);
+				break;
+			case VAULT:
+				checkForVault(plugin);
+				break;
+			case WORLDGUARD:
+				checkForWorldguard(plugin);
+				break;
+			default:
+				break;
+			}
+		} catch (final NoSuchMethodError e) {
+			Log.warning("Your " + pluginName + " version is currently unsupported: " + plugin.getDescription().getFullName());
+			Log.warning(pluginName + " support disabled");
+		}
+	}
+
+	private void checkForVault(final Plugin plugin) {
+		if (plugin != null) {
 			final RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 			Economy economy = null;
 			if (economyProvider != null) {
@@ -55,50 +80,45 @@ public class DependencyManager {
 		}
 	}
 
-	private void checkForWorldguard() {
-		if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-			try {
-				dependencies.put(Hook.WORLDGUARD, new WorldGuard());
-				Log.info("WorldGuard Found! Enabling WorldGuard Support");
-			} catch (final NoSuchMethodError e) {
-				final String version = Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getFullName();
-				Log.severe("Your version of WorldGuard is currently not supported: " + version);
-				Log.warning("WorldGuard support disabled");
-			}
-		}
+	private void checkForWorldguard(final Plugin plugin) {
+		if (plugin == null)
+			return;
+
+		dependencies.put(Hook.WORLDGUARD, new WorldGuard());
+		Log.info("WorldGuard Found! Enabling WorldGuard Support");
 	}
 
-	private void checkForFactions() {
-		final Plugin factionsPlugin = Bukkit.getPluginManager().getPlugin("Factions");
+	private void checkForFactions(final Plugin plugin) {
+		if (plugin == null)
+			return;
+
 		try {
-			if (factionsPlugin != null) {
-				final String fVersion = factionsPlugin.getDescription().getVersion();
-				if (fVersion.contains("U")) {
-					final FactionsUUID factionsU = new FactionsUUID();
-					dependencies.put(Hook.FACTIONS, factionsU);
-					attackChecks.add(factionsU);
-					Log.info("FactionsUUID Found! Hooked successfully");
-				} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
-					final Factions factions = new Factions();
-					dependencies.put(Hook.FACTIONS, factions);
-					attackChecks.add(factions);
-					Log.info("Factions Found! Hooked successfully");
-				} else {
-					Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
-				}
+			final String fVersion = plugin.getDescription().getVersion();
+			if (fVersion.contains("U")) {
+				final FactionsUUID factionsU = new FactionsUUID();
+				dependencies.put(Hook.FACTIONS, factionsU);
+				attackChecks.add(factionsU);
+				Log.info("FactionsUUID Found! Hooked successfully");
+			} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
+				final Factions factions = new Factions();
+				dependencies.put(Hook.FACTIONS, factions);
+				attackChecks.add(factions);
+				Log.info("Factions Found! Hooked successfully");
+			} else {
+				Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
 			}
 		} catch (final NumberFormatException e) {
 			Log.warning("Couldn't read Factions version, maybe it's yet another fork?");
 		}
 	}
 
-	private void checkForSimpleClans() {
-		if (Bukkit.getPluginManager().isPluginEnabled("SimpleClans")) {
-			final SimpleClans simpleClans = new SimpleClans();
-			dependencies.put(Hook.SIMPLECLANS, simpleClans);
-			attackChecks.add(simpleClans);
-			Log.info("SimpleClans Found! Hooked successfully");
-		}
+	private void checkForSimpleClans(final Plugin plugin) {
+		if (plugin == null)
+			return;
+		final SimpleClans simpleClans = new SimpleClans();
+		dependencies.put(Hook.SIMPLECLANS, simpleClans);
+		attackChecks.add(simpleClans);
+		Log.info("SimpleClans Found! Hooked successfully");
 	}
 
 	public final boolean canAttack(final Player attacker, final Player defender) {
