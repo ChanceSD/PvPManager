@@ -11,9 +11,13 @@ There are multiple PvP plugins, but PvPManager aims to be All in One. Meaning th
 The features include allowing players to toggle PvP easily, which is a nice feature for donors, block commands for players in combat, detecting and applying defined punishments on PvP logging and a timer feature that toggles PvP for a world automatically! 
 All this features have Multi-World support and don't conflict with plugins like WorldGuard!
 
-Spigot Page: https://www.spigotmc.org/resources/free-pvpmanager.845/
+Spigot Page: https://www.spigotmc.org/resources/pvpmanager-lite.845/
 
 Bukkit Page: http://dev.bukkit.org/bukkit-plugins/pvpmanager/
+
+**bStats**
+
+[![bStats](https://bstats.org/signatures/bukkit/PvPManager.svg "bStats")](https://bstats.org/plugin/bukkit/PvPManager/ "bStats")
 
 EVERYTHING BELOW IS OUTDATED
 -----------
