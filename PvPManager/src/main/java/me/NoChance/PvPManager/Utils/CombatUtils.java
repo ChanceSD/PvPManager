@@ -115,8 +115,9 @@ public final class CombatUtils {
 					return false;
 			}
 		} catch (final NumberFormatException ex) {
-			Log.warning("Error reading version number!");
+			Log.severe("Error reading version number! Comparing " + v1 + " to " + v2);
 		}
 		return true;
 	}
+
 }

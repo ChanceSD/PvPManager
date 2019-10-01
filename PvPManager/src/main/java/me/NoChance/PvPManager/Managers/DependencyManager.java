@@ -18,7 +18,9 @@ import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUID;
 import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClans;
 import me.NoChance.PvPManager.Dependencies.Hooks.Vault;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuard;
+import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacy;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 import net.milkbowl.vault.economy.Economy;
 
@@ -84,7 +86,11 @@ public class DependencyManager {
 		if (plugin == null)
 			return;
 
-		dependencies.put(Hook.WORLDGUARD, new WorldGuard());
+		if (CombatUtils.isVersionSuperior(plugin.getDescription().getVersion(), "6.2")) {
+			dependencies.put(Hook.WORLDGUARD, new WorldGuard());
+		} else {
+			dependencies.put(Hook.WORLDGUARD, new WorldGuardLegacy());
+		}
 		Log.info("WorldGuard Found! Enabling WorldGuard Support");
 	}
 
