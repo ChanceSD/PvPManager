@@ -4,23 +4,21 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.NoChance.PvPManager.Dependencies.PvPlugin;
 
-public class WorldGuard implements PvPlugin {
+public class WorldGuardLegacy implements PvPlugin {
 
 	private final WorldGuardPlugin inst;
 	private final RegionQuery regionQuery;
-	private final StateFlag pvp = new StateFlag("pvp", false);
 
-	public WorldGuard() {
+	public WorldGuardLegacy() {
 		inst = WorldGuardPlugin.inst();
-		regionQuery = com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
+		regionQuery = inst.getRegionContainer().createQuery();
 	}
 
 	// This method has no use in free version, use canBeAttacked() instead
@@ -32,21 +30,19 @@ public class WorldGuard implements PvPlugin {
 
 	@Override
 	public boolean canBeAttacked(final Player player, final Location l) {
-		// State has to be != DENY because you can pvp on ALLOW and on no state
-		return getWGPvPState(l) != State.DENY;
+		return getPvPState(player, l) != State.DENY;
 	}
 
 	public boolean hasAllowPvPFlag(final Player defender) {
-		return getWGPvPState(defender.getLocation()) == State.ALLOW;
+		return getPvPState(defender, defender.getLocation()) == State.ALLOW;
 	}
 
-	public State getWGPvPState(final Location l) {
-		return regionQuery.queryState(BukkitAdapter.adapt(l), null, pvp);
+	private State getPvPState(final Player p, final Location l) {
+		return regionQuery.queryState(l, p, DefaultFlag.PVP);
 	}
 
 	@Override
 	public JavaPlugin getMainClass() {
 		return inst;
 	}
-
 }
