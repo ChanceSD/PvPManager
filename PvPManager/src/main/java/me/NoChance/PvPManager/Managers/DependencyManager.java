@@ -146,7 +146,14 @@ public class DependencyManager {
 		return dependencies.get(h);
 	}
 
-	public JavaPlugin getDepencyMainClass(final Hook h) {
+	public String getDependencyVersion(final Hook h) {
+		final JavaPlugin plugin = getDependencyMainClass(h);
+		if (plugin != null)
+			return plugin.getDescription().getVersion();
+		return null;
+	}
+
+	public JavaPlugin getDependencyMainClass(final Hook h) {
 		if (isDependencyEnabled(h))
 			return dependencies.get(h).getMainClass();
 		return null;

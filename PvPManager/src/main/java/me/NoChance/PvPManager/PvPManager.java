@@ -23,6 +23,7 @@ import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Listeners.PlayerMoveListener;
 import me.NoChance.PvPManager.Listeners.WGListener;
+import me.NoChance.PvPManager.Listeners.WGListenerLegacy;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
@@ -86,7 +87,11 @@ public final class PvPManager extends JavaPlugin {
 					registerListener(new PlayerMoveListener(playerHandler));
 				}
 			}
-			registerListener(new WGListener(playerHandler));
+			if (CombatUtils.isVersionSuperior(dependencyManager.getDependencyVersion(Hook.WORLDGUARD), "6.2")) {
+				registerListener(new WGListener(playerHandler));
+			} else {
+				registerListener(new WGListenerLegacy(playerHandler));
+			}
 		}
 	}
 
