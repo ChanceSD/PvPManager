@@ -55,7 +55,7 @@ public class DependencyManager {
 			default:
 				break;
 			}
-		} catch (final NoSuchMethodError e) {
+		} catch (final NoClassDefFoundError | NoSuchMethodError e) {
 			Log.warning("Your " + pluginName + " version is currently unsupported: " + plugin.getDescription().getFullName());
 			Log.warning(pluginName + " support disabled");
 		}
