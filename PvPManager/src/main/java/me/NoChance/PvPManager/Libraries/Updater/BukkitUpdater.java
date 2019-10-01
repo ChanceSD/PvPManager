@@ -139,11 +139,11 @@ public class BukkitUpdater extends Updater {
 	}
 
 	private boolean handleDifferentReleases(final String remote, final String local) {
-		final String remoteCopy = remote.replaceAll("(-.+?\\d+)", "");
-		final String localCopy = local.replaceAll("(-.+?\\d+)", "");
+		final String remoteCopy = remote.replaceAll("(-.+)", "");
+		final String localCopy = local.replaceAll("(-.+)", "");
 		if (remoteCopy.equalsIgnoreCase(localCopy))
 			return hasTag(local);
-		return true;
+		return false;
 	}
 
 	private boolean read() {
