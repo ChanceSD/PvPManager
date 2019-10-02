@@ -87,7 +87,8 @@ public final class PvPManager extends JavaPlugin {
 					registerListener(new PlayerMoveListener(playerHandler));
 				}
 			}
-			if (CombatUtils.isVersionSuperior(dependencyManager.getDependencyVersion(Hook.WORLDGUARD), "6.2")) {
+			final String wgVersion = dependencyManager.getDependencyVersion(Hook.WORLDGUARD).replaceAll("(-.+)", "");
+			if (CombatUtils.isVersionSuperior(wgVersion, "6.2.2")) {
 				registerListener(new WGListener(playerHandler));
 			} else {
 				registerListener(new WGListenerLegacy(playerHandler));

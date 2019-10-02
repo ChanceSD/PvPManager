@@ -197,7 +197,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- MassiveCore and Factions -->
 		<dependency>
 			<groupId>com.massivecraft</groupId>
@@ -268,15 +268,15 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
-			<artifactId>worldguard-legacy</artifactId>
-			<version>6.2</version>
+			<artifactId>worldguard-bukkit</artifactId>
+			<version>7.0.0</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
-			<artifactId>worldguard-bukkit</artifactId>
-			<version>7.0.0</version>
+			<artifactId>worldguard-legacy</artifactId>
+			<version>6.2</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
