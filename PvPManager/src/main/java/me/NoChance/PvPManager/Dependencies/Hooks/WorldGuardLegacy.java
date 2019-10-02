@@ -1,24 +1,33 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
+import java.lang.reflect.Method;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import me.NoChance.PvPManager.Dependencies.PvPlugin;
+import me.NoChance.PvPManager.Dependencies.IWorldGuard;
 
-public class WorldGuardLegacy implements PvPlugin {
+public class WorldGuardLegacy implements IWorldGuard {
 
 	private final WorldGuardPlugin inst;
-	private final RegionQuery regionQuery;
+	private RegionQuery regionQuery;
 
 	public WorldGuardLegacy() {
 		inst = WorldGuardPlugin.inst();
-		regionQuery = inst.getRegionContainer().createQuery();
+		try {
+			final Method method = inst.getClass().getMethod("getRegionContainer");
+			regionQuery = ((RegionContainer) method.invoke(inst)).createQuery();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			regionQuery = null;
+		}
 	}
 
 	// This method has no use in free version, use canBeAttacked() instead
@@ -33,6 +42,7 @@ public class WorldGuardLegacy implements PvPlugin {
 		return getPvPState(player, l) != State.DENY;
 	}
 
+	@Override
 	public boolean hasAllowPvPFlag(final Player defender) {
 		return getPvPState(defender, defender.getLocation()) == State.ALLOW;
 	}

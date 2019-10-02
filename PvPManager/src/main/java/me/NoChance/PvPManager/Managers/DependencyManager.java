@@ -86,7 +86,8 @@ public class DependencyManager {
 		if (plugin == null)
 			return;
 
-		if (CombatUtils.isVersionSuperior(plugin.getDescription().getVersion(), "6.2")) {
+		final String wgVersion = plugin.getDescription().getVersion().replaceAll("(-.+)", "");
+		if (CombatUtils.isVersionSuperior(wgVersion, "6.2.2")) {
 			dependencies.put(Hook.WORLDGUARD, new WorldGuard());
 		} else {
 			dependencies.put(Hook.WORLDGUARD, new WorldGuardLegacy());
