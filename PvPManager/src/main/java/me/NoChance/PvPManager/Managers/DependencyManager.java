@@ -116,9 +116,6 @@ public class DependencyManager {
 			}
 		} catch (final NumberFormatException e) {
 			Log.warning("Couldn't read Factions version, maybe it's yet another fork? Plugin: " + plugin.getDescription().getFullName());
-		} catch (final NoClassDefFoundError e) {
-			Log.severe("Error checking Factions: " + plugin.getDescription().getFullName() + " - Message: " + e.getMessage());
-			Log.severe("Found an unsupported Factions fork. Factions support is disabled");
 		}
 	}
 
