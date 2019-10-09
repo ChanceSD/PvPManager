@@ -73,7 +73,7 @@ public class CustomMetrics {
 			public Map<String, Integer> call() {
 				final Map<String, Integer> valueMap = new HashMap<>();
 				for (final Entry<Hook, Dependency> entry : plugin.getDependencyManager().getDependencies().entrySet()) {
-					valueMap.put(entry.getValue().getClass().getSimpleName(), 1);
+					valueMap.put(entry.getValue().getName(), 1);
 				}
 				return valueMap;
 			}

@@ -2,30 +2,32 @@ package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
-import me.NoChance.PvPManager.Dependencies.IWorldGuard;
+import me.NoChance.PvPManager.Dependencies.BaseDependency;
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Listeners.WGListener;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
 
-public class WorldGuard implements IWorldGuard {
+public class WorldGuardModernHook extends BaseDependency implements WorldGuardHook {
 
-	private final WorldGuardPlugin inst;
 	private final RegionQuery regionQuery;
 
-	public WorldGuard() {
-		inst = WorldGuardPlugin.inst();
+	public WorldGuardModernHook(final Hook hook) {
+		super(hook);
 		regionQuery = com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
 	}
 
-	// This method has no use in free version, use canBeAttacked() instead
+	// This method has no use in free version, use canAttackAt() instead
 	// Exclusions for vulnerable anti border hopping
 	@Override
 	public boolean canAttack(final Player attacker, final Player defender) {
@@ -33,7 +35,7 @@ public class WorldGuard implements IWorldGuard {
 	}
 
 	@Override
-	public boolean canBeAttacked(final Player player, final Location l) {
+	public boolean canAttackAt(final Location l) {
 		// State has to be != DENY because you can pvp on ALLOW and on no state
 		return getWGPvPState(l) != State.DENY;
 	}
@@ -57,13 +59,14 @@ public class WorldGuard implements IWorldGuard {
 		return false;
 	}
 
+	@Override
 	public State getWGPvPState(final Location l) {
 		return regionQuery.queryState(BukkitAdapter.adapt(l), null, Flags.PVP);
 	}
 
 	@Override
-	public JavaPlugin getMainClass() {
-		return inst;
+	public void startListener(final PlayerHandler ph) {
+		Bukkit.getPluginManager().registerEvents(new WGListener(ph), ph.getPlugin());
 	}
 
 }

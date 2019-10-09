@@ -5,14 +5,21 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-public interface IWorldGuard extends PvPlugin {
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+
+public interface WorldGuardHook extends RegionPvPDependency {
 
 	public boolean hasAllowPvPFlag(Player player);
+
+	public State getWGPvPState(final Location l);
 
 	public Set<ProtectedRegion> getRegionsAt(final Location l);
 
 	public boolean containsRegionsAt(final Location l, final Set<String> regionIDs);
+
+	public void startListener(PlayerHandler ph);
 
 }

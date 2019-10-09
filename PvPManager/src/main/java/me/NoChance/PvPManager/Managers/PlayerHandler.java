@@ -11,7 +11,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.IWorldGuard;
+import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
@@ -24,13 +24,13 @@ public class PlayerHandler {
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
 	private final TagTask tagTask = new TagTask();
-	private final IWorldGuard worldguard;
+	private final WorldGuardHook worldguard;
 
 	public PlayerHandler(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
-		worldguard = (IWorldGuard) dependencyManager.getDependency(Hook.WORLDGUARD);
+		worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
 		if (Settings.isKillAbuseEnabled()) {
 			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20);
 		}

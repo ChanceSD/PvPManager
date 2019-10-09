@@ -93,6 +93,7 @@ public class ConfigManager {
 			if (users.get("players") == null || users.get("players") instanceof List) {
 				resetUsersFile();
 			}
+			Log.info("Loaded " + getUserStorage().getKeys(false).size() + " players from users file");
 		} catch (final Exception e) {
 			Log.severe("Error loading users file! Error: ");
 			e.printStackTrace();
@@ -120,7 +121,8 @@ public class ConfigManager {
 			Files.move(usersFile.toPath(), usersFile.toPath().resolveSibling("users_error.yml"), StandardCopyOption.REPLACE_EXISTING);
 			plugin.saveResource("users.yml", true);
 			users.load(usersFile);
-			Log.info("Users file was reset due to corruption. A backup was saved as 'users_error.yml'");
+			Log.warning("Users file was reset due to corruption. A backup was saved as 'users_error.yml'");
+			Log.warning("If you believe this error wasn't caused by you please report it on github");
 		} catch (IOException | InvalidConfigurationException e) {
 			Log.severe("Error loading users file after reset! Error: ");
 			e.printStackTrace();
