@@ -25,6 +25,7 @@ import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
+import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.LogFile;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -38,6 +39,7 @@ public final class PvPManager extends JavaPlugin {
 	private Updater updater;
 	private LogFile log;
 	private DependencyManager dependencyManager;
+	private DisplayManager displayManager;
 	private static PvPManager instance;
 
 	@Override
@@ -48,6 +50,7 @@ public final class PvPManager extends JavaPlugin {
 		loadFiles();
 		dependencyManager = new DependencyManager();
 		playerHandler = new PlayerHandler(this);
+		displayManager = new DisplayManager(this);
 		startListeners();
 		getCommand("pvp").setExecutor(new PvP(playerHandler));
 		getCommand("newbie").setExecutor(new Newbie(playerHandler));
@@ -132,6 +135,10 @@ public final class PvPManager extends JavaPlugin {
 
 	public Updater getUpdater() {
 		return updater;
+	}
+	
+	public DisplayManager getDisplayManager() {
+		return displayManager;
 	}
 
 	/**

@@ -135,10 +135,6 @@
 					<artifactId>persistence-api</artifactId>
 					<groupId>javax.persistence</groupId>
 				</exclusion>
-				<exclusion>
-					<artifactId>bungeecord-chat</artifactId>
-					<groupId>net.md-5</groupId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
