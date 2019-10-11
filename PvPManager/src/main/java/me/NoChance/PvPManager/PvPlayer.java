@@ -84,6 +84,10 @@ public class PvPlayer extends EcoPlayer {
 		setPvP(!pvpState);
 	}
 
+	public void sendActionBar(final String message) {
+		plugin.getDisplayManager().displayActionBar(getPlayer(), message);
+	}
+
 	public final boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Settings.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = CombatUtils.getTimeLeft(toggleTime, Settings.getToggleCooldown());
@@ -158,9 +162,13 @@ public class PvPlayer extends EcoPlayer {
 		}
 
 		if (attacker) {
-			message(Messages.getTaggedAttacker().replace("%p", tagger.getName()));
+			final String message = Messages.getTaggedAttacker().replace("%p", tagger.getName());
+			message(message);
+			sendActionBar(message);
 		} else {
-			message(Messages.getTaggedDefender().replace("%p", tagger.getName()));
+			final String message = Messages.getTaggedDefender().replace("%p", tagger.getName());
+			message(message);
+			sendActionBar(message);
 		}
 
 		this.tagged = true;
@@ -174,6 +182,7 @@ public class PvPlayer extends EcoPlayer {
 			}
 
 			message(Messages.getOutOfCombat());
+			sendActionBar(Messages.getOutOfCombat());
 		}
 
 		this.tagged = false;
@@ -249,6 +258,10 @@ public class PvPlayer extends EcoPlayer {
 
 	public final long getNewbieTimeLeft() {
 		return newbieTask.getTimeleft();
+	}
+	
+	public long getTagTimeLeft() {
+		return taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis();
 	}
 
 	public final void loadState() {

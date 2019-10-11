@@ -24,13 +24,15 @@ public class TagTask extends TimerTask {
 				if (CombatUtils.hasTimePassedMs(p.getTaggedTime(), time)) {
 					p.unTag();
 					iterator.remove();
+				} else {
+					p.sendActionBar(p.getTagTimeLeft() / 1000 + " seconds left");
 				}
 			}
 		}
 	}
 
 	@Override
-	public final synchronized boolean cancel() throws IllegalStateException {
+	public final boolean cancel() throws IllegalStateException {
 		synchronized (tagged) {
 			for (final PvPlayer pvPlayer : tagged)
 				if (pvPlayer.isInCombat()) {
