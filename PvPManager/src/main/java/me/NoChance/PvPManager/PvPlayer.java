@@ -33,6 +33,7 @@ public class PvPlayer extends EcoPlayer {
 	private long respawnTime;
 	private long taggedTime;
 	private NewbieTask newbieTask;
+	private PvPlayer enemy;
 	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
 	private TeamProfile teamProfile;
@@ -112,6 +113,10 @@ public class PvPlayer extends EcoPlayer {
 		return this.override;
 	}
 
+	public PvPlayer getEnemy() {
+		return this.enemy;
+	}
+
 	public final void disableFly() {
 		getPlayer().setFlying(false);
 		getPlayer().setAllowFlight(false);
@@ -135,11 +140,12 @@ public class PvPlayer extends EcoPlayer {
 		this.newbie = newbie;
 	}
 
-	public final void setTagged(final boolean attacker, final String tagger) {
+	public final void setTagged(final boolean attacker, final PvPlayer tagger) {
 		if (getPlayer().hasPermission("pvpmanager.nocombat"))
 			return;
 
-		taggedTime = System.currentTimeMillis();
+		this.taggedTime = System.currentTimeMillis();
+		this.enemy = tagger;
 
 		if (tagged)
 			return;
@@ -152,9 +158,9 @@ public class PvPlayer extends EcoPlayer {
 		}
 
 		if (attacker) {
-			message(Messages.getTaggedAttacker().replace("%p", tagger));
+			message(Messages.getTaggedAttacker().replace("%p", tagger.getName()));
 		} else {
-			message(Messages.getTaggedDefender().replace("%p", tagger));
+			message(Messages.getTaggedDefender().replace("%p", tagger.getName()));
 		}
 
 		this.tagged = true;
