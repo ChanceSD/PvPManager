@@ -154,8 +154,8 @@ public class EntityListener implements Listener {
 			}
 		}
 		if (Settings.isInCombatEnabled()) {
-			pvpAttacker.setTagged(true, pvpDefender.getName());
-			pvpDefender.setTagged(false, pvpAttacker.getName());
+			pvpAttacker.setTagged(true, pvpDefender);
+			pvpDefender.setTagged(false, pvpAttacker);
 		}
 	}
 

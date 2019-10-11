@@ -150,6 +150,10 @@ public class PlayerListener implements Listener {
 		}
 		if (pvPlayer.isInCombat()) {
 			ph.untag(pvPlayer);
+			final PvPlayer enemy = pvPlayer.getEnemy();
+			if (enemy != null && enemy.getEnemy().equals(pvPlayer)) {
+				ph.untag(enemy);
+			}
 		}
 	}
 

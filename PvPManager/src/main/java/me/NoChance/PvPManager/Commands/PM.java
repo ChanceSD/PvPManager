@@ -25,7 +25,6 @@ public class PM implements CommandExecutor {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
@@ -77,7 +76,7 @@ public class PM implements CommandExecutor {
 			final PermissionAttachment attachment = sender.addAttachment(plugin, 1200);
 			attachment.setPermission("pvpmanager.nocombat", false);
 			if (args[1].equalsIgnoreCase("tag")) {
-				p.setTagged(true, "Debug");
+				p.setTagged(true, p);
 			} else if (args[1].equalsIgnoreCase("ct")) {
 				p.message("Tagged: " + p.isInCombat());
 			} else if (args[1].equalsIgnoreCase("newbie")) {
