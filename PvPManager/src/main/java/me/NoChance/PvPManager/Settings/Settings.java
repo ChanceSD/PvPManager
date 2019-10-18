@@ -3,7 +3,9 @@ package me.NoChance.PvPManager.Settings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -78,6 +80,7 @@ public final class Settings {
 	private static boolean blockInteractInCombat;
 	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
+	private static Set<String> playerKillsWGExclusions = new HashSet<>();
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection BORDERHOPPING;
 	private static ConfigurationSection DISABLE;
@@ -161,6 +164,7 @@ public final class Settings {
 		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 10));
 		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 10));
 		commandsOnKill = (List<String>) PLAYERKILLS.getList("Commands On Kill", commandsOnKill);
+		playerKillsWGExclusions = new HashSet<>((List<String>) PLAYERKILLS.getList("WorldGuard Exclusions"));
 
 		toggleCooldown = PVPTOGGLE.getInt("Cooldown", 15);
 		setToggleNametagsEnabled(PVPTOGGLE.getBoolean("NameTags.Enabled", false));
@@ -534,6 +538,10 @@ public final class Settings {
 
 	public static boolean blockInteract() {
 		return blockInteractInCombat;
+	}
+
+	public static Set<String> getKillsWGExclusions() {
+		return playerKillsWGExclusions;
 	}
 
 	public static String getMinecraftVersion() {

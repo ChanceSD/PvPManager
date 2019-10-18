@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -11,6 +12,7 @@ import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import me.NoChance.PvPManager.Dependencies.IWorldGuard;
 
@@ -45,6 +47,20 @@ public class WorldGuardLegacy implements IWorldGuard {
 	@Override
 	public boolean hasAllowPvPFlag(final Player defender) {
 		return getPvPState(defender, defender.getLocation()) == State.ALLOW;
+	}
+
+	@Override
+	public Set<ProtectedRegion> getRegionsAt(final Location l) {
+		return regionQuery.getApplicableRegions(l).getRegions();
+	}
+
+	@Override
+	public boolean containsRegionsAt(final Location l, final Set<String> regionIDs) {
+		for (final ProtectedRegion r : getRegionsAt(l)) {
+			if (regionIDs.contains(r.getId()))
+				return true;
+		}
+		return false;
 	}
 
 	private State getPvPState(final Player p, final Location l) {
