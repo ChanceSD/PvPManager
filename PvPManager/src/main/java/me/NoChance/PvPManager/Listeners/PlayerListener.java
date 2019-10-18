@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Dependencies.IWorldGuard;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -36,6 +37,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 public class PlayerListener implements Listener {
 
 	private final PlayerHandler ph;
+	private IWorldGuard wg;
 	private Material mushroomSoup;
 
 	public PlayerListener(final PlayerHandler ph) {
@@ -111,14 +113,16 @@ public class PlayerListener implements Listener {
 			if (Settings.isKillAbuseEnabled()) {
 				pKiller.addVictim(player.getName());
 			}
-			if (Settings.getMoneyReward() > 0) {
-				pKiller.giveReward(player);
-			}
-			if (Settings.getMoneyPenalty() > 0) {
-				pvPlayer.applyPenalty();
-			}
-			for (final String command : Settings.getCommandsOnKill()) {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
+			if (wg == null || !wg.containsRegionsAt(killer.getLocation(), Settings.getKillsWGExclusions())) {
+				if (Settings.getMoneyReward() > 0) {
+					pKiller.giveReward(player);
+				}
+				if (Settings.getMoneyPenalty() > 0) {
+					pvPlayer.applyPenalty();
+				}
+				for (final String command : Settings.getCommandsOnKill()) {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
+				}
 			}
 		}
 		if (!pvPlayer.hasPvPLogged()) {

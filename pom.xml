@@ -3,12 +3,12 @@
 	<groupId>me.NoChance.PvPManager</groupId>
 	<artifactId>PvPManager-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>3.5-SNAPSHOT</version>
+	<version>3.5.1-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<pvpmanager.version>${project.version}</pvpmanager.version>
-		<config.version>46</config.version>
+		<config.version>47</config.version>
 		<powermock.version>1.7.4</powermock.version>
 	</properties>
 
