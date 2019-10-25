@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Version;
+import me.NoChance.PvPManager.Libraries.Config.ConfigUpdater;
 import me.NoChance.PvPManager.Settings.Config;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -26,6 +28,7 @@ import me.NoChance.PvPManager.Utils.Log;
 public class ConfigManager {
 
 	private final PvPManager plugin;
+	private final File configFile;
 	private final File usersFile;
 	private final YamlConfiguration users;
 	private Config config;
@@ -34,39 +37,28 @@ public class ConfigManager {
 		this.plugin = plugin;
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
+		this.configFile = new File(plugin.getDataFolder(), "config.yml");
 		loadConfig();
 		loadUsersFile();
 	}
 
 	private void loadConfig() {
-		final File configFile = new File(plugin.getDataFolder(), "config.yml");
 		plugin.reloadConfig();
 		// This version can't be auto updated, so let's backup
 		if (getConfigVersion() < 38) {
 			if (configFile.exists()) {
-				try {
-					Files.move(configFile.toPath(), configFile.toPath().resolveSibling("config.old.yml"), StandardCopyOption.REPLACE_EXISTING);
-				} catch (final IOException e) {
-					e.printStackTrace();
-				}
-				initConfig();
-				Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
-				Log.warning("Due to big changes, your config file was renamed to config.old.yml");
-				Log.warning("Please copy your settings manually to the new config file");
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Due to big changes, your config file was renamed to config.old.yml");
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Please copy your settings manually to the new config file");
+				resetConfig();
 			} else {
-				Log.info("New Config File Created Successfully!");
 				initConfig();
-				return;
 			}
 		} else if (getConfigVersion() < Integer.parseInt(Version.getConfigVersion())) {
 			if (configFile.exists()) {
-				initConfig();
-				configFile.delete();
-				config = new Config(plugin, "config.yml");
-				Settings.updateDefaultConfig(config, Integer.parseInt(Version.getConfigVersion()));
+				try {
+					ConfigUpdater.update(plugin, "config.yml", configFile, Arrays.asList("Config Version", "Metrics", "Update Check.Enabled"));
+					initConfig();
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
 				Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
 				Log.warning("It's recommended that you check the file and adjust the new settings");
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
@@ -108,6 +100,21 @@ public class ConfigManager {
 		}
 	}
 
+	private void resetConfig() {
+		try {
+			Files.move(configFile.toPath(), configFile.toPath().resolveSibling("config.old.yml"), StandardCopyOption.REPLACE_EXISTING);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		initConfig();
+		Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
+		Log.warning("Due to big changes, your config file was renamed to config.old.yml");
+		Log.warning("Please copy your settings manually to the new config file");
+		Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
+		Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Due to big changes, your config file was renamed to config.old.yml");
+		Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Please copy your settings manually to the new config file");
+	}
+
 	private void resetUsersFile() {
 		try {
 			Files.move(usersFile.toPath(), usersFile.toPath().resolveSibling("users_error.yml"), StandardCopyOption.REPLACE_EXISTING);
@@ -122,7 +129,7 @@ public class ConfigManager {
 
 	public final void saveUser(final PvPlayer player) {
 		// check if we really need to save this player
-		if (player.isNewbie() == false && player.hasPvPEnabled() == Settings.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
+		if (!player.isNewbie() && player.hasPvPEnabled() == Settings.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
 			// clear entry for this user if there is one
 			if (getUserStorage().contains(player.getUUID().toString())) {
 				getUserStorage().set(player.getUUID().toString(), null);

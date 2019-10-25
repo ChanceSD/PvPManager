@@ -1,12 +1,17 @@
 package me.NoChance.PvPManager.Settings;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,6 +19,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class Config extends YamlConfiguration {
 
@@ -26,10 +32,10 @@ public class Config extends YamlConfiguration {
 		final File file1 = new File(plugin.getDataFolder(), name);
 		if (!file1.exists()) {
 			this.prepareFile(file1, name);
+			Log.info("New Config File Created Successfully!");
 		}
 		this.file = file1;
-		// this.config = YamlConfiguration.loadConfiguration(this.getConfigContent(file1));
-		this.config = YamlConfiguration.loadConfiguration(file1);
+		this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(getConfigContent(file1)));
 	}
 
 	@Override
@@ -94,30 +100,30 @@ public class Config extends YamlConfiguration {
 		return this.config.getList(path, def);
 	}
 
-//	private InputStream getConfigContent(final File file1) {
-//		if (!file1.exists())
-//			return null;
-//		try (BufferedReader reader = new BufferedReader(new FileReader(file1))) {
-//			int commentNum = 0;
-//			String addLine;
-//			String currentLine;
-//			final String pluginName = this.getPluginName();
-//			final StringBuilder whole = new StringBuilder("");
-//			while ((currentLine = reader.readLine()) != null)
-//				if (currentLine.startsWith("#")) {
-//					addLine = currentLine.replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
-//					whole.append(addLine).append("\n");
-//					commentNum++;
-//
-//				} else {
-//					whole.append(currentLine).append("\n");
-//				}
-//			return new ByteArrayInputStream(whole.toString().getBytes(Charset.forName("UTF-8")));
-//		} catch (final IOException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
+	private InputStream getConfigContent(final File file1) {
+		if (!file1.exists())
+			return null;
+		try (BufferedReader reader = new BufferedReader(new FileReader(file1))) {
+			int commentNum = 0;
+			String addLine;
+			String currentLine;
+			final String pluginName = this.getPluginName();
+			final StringBuilder whole = new StringBuilder("");
+			while ((currentLine = reader.readLine()) != null) {
+				if (currentLine.startsWith("#")) {
+					addLine = currentLine.replaceFirst("#", pluginName + "_COMMENT_" + commentNum + ":");
+					whole.append(addLine).append("\n");
+					commentNum++;
+				} else {
+					whole.append(currentLine).append("\n");
+				}
+			}
+			return new ByteArrayInputStream(whole.toString().getBytes(Charset.forName("UTF-8")));
+		} catch (final IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	private void prepareFile(final File file1, final String resource) {
 		try {
