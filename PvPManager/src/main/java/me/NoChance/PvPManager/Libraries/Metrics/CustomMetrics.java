@@ -18,21 +18,21 @@ public class CustomMetrics {
 
 		metrics.addCustomChart(new Metrics.SimplePie("time_in_combat", new Callable<String>() {
 			@Override
-			public String call() throws Exception {
+			public String call() {
 				return Settings.isInCombatEnabled() ? Settings.getTimeInCombat() + " seconds" : "Disabled";
 			}
 		}));
 
 		metrics.addCustomChart(new Metrics.SimplePie("newbie_protection_usage", new Callable<String>() {
 			@Override
-			public String call() throws Exception {
+			public String call() {
 				return Settings.isNewbieProtectionEnabled() ? "Enabled" : "Disabled";
 			}
 		}));
 
 		metrics.addCustomChart(new Metrics.SimplePie("update_check_usage", new Callable<String>() {
 			@Override
-			public String call() throws Exception {
+			public String call() {
 				if (!Settings.isUpdateCheck())
 					return "Disabled";
 				return !Settings.isAutoUpdate() ? "Update Check" : "Auto Update";
@@ -41,14 +41,14 @@ public class CustomMetrics {
 
 		metrics.addCustomChart(new Metrics.SimplePie("kill_abuse_usage", new Callable<String>() {
 			@Override
-			public String call() throws Exception {
+			public String call() {
 				return Settings.isKillAbuseEnabled() ? "Enabled" : "Disabled";
 			}
 		}));
 
 		metrics.addCustomChart(new Metrics.SimplePie("blood_usage", new Callable<String>() {
 			@Override
-			public String call() throws Exception {
+			public String call() {
 				return Settings.isPvpBlood() ? "Enabled" : "Disabled";
 			}
 		}));
@@ -56,7 +56,7 @@ public class CustomMetrics {
 		if (Settings.isInCombatEnabled()) {
 			metrics.addCustomChart(new Metrics.SimplePie("player_drops_on_logout", new Callable<String>() {
 				@Override
-				public String call() throws Exception {
+				public String call() {
 					if (!Settings.isKillOnLogout())
 						return "Kill On Logout Disabled";
 					else if (!Settings.isDropInventory() && !Settings.isDropExp() && !Settings.isDropArmor())

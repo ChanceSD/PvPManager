@@ -56,8 +56,7 @@ public final class CombatUtils {
 				final ProjectileSource projSource = ((Projectile) attacker).getShooter();
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					if (!shooter.equals(defender) && !shooter.hasMetadata("NPC"))
-						return true;
+					return !shooter.equals(defender) && !shooter.hasMetadata("NPC");
 				}
 			}
 		}
