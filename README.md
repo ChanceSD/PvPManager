@@ -4,7 +4,10 @@ PvPManager
 [![Build Status](https://travis-ci.org/NoChanceSD/PvPManager.svg)](https://travis-ci.org/NoChanceSD/PvPManager)
 [![Join the chat at https://gitter.im/NoChanceSD/PvPManager](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NoChanceSD/PvPManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Development Builds
+Discord:
+https://discord.gg/QFTjs3g
+
+Development Builds:
 http://ci.md-5.net/job/PvPManager/
 
 There are multiple PvP plugins, but PvPManager aims to be All in One. Meaning that instead of using multiple plugins that change/customize PvP in your server you can use just PvPManager. 
