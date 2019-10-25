@@ -55,7 +55,7 @@ public abstract class Updater {
 	final String[] getVersionArray(final String version) {
 		String[] versionArray;
 		if (hasTag(version)) {
-			versionArray = version.replaceFirst("(-.+?)(?=\\d)", "\\.").split("\\.");
+			versionArray = version.replaceAll("(-.+)", "").split("\\.");
 		} else {
 			versionArray = version.split("\\.");
 		}

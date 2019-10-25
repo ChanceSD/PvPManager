@@ -39,7 +39,7 @@ public class PlayerListener implements Listener {
 
 	private final PlayerHandler ph;
 	private final IWorldGuard wg;
-	private Material mushroomSoup;
+	private final Material mushroomSoup;
 
 	public PlayerListener(final PlayerHandler ph) {
 		this.ph = ph;
@@ -248,7 +248,7 @@ public class PlayerListener implements Listener {
 
 			if (player.isInCombat()) {
 				final boolean contains = CombatUtils.recursiveContainsCommand(givenCommand, Settings.getCommandsAllowed());
-				if (Settings.isCommandsWhitelist() ? !contains : contains) {
+				if (Settings.isCommandsWhitelist() != contains) {
 					event.setCancelled(true);
 					player.message(Messages.getCommandDeniedIncombat());
 				}

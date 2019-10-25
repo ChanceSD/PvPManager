@@ -1,11 +1,6 @@
 package me.NoChance.PvPManager.Settings;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -132,7 +127,7 @@ public final class Settings {
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
-		useNameTag = nameTagPrefix.equalsIgnoreCase("none") || nameTagPrefix.isEmpty() ? false : true;
+		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
@@ -164,7 +159,7 @@ public final class Settings {
 		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 10));
 		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 10));
 		commandsOnKill = (List<String>) PLAYERKILLS.getList("Commands On Kill", commandsOnKill);
-		playerKillsWGExclusions = new HashSet<>((List<String>) PLAYERKILLS.getList("WorldGuard Exclusions"));
+		playerKillsWGExclusions = new HashSet<>((List<String>) PLAYERKILLS.getList("WorldGuard Exclusions", new ArrayList<>()));
 
 		toggleCooldown = PVPTOGGLE.getInt("Cooldown", 15);
 		setToggleNametagsEnabled(PVPTOGGLE.getBoolean("NameTags.Enabled", false));

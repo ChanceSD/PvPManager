@@ -13,7 +13,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 public class TagTask extends TimerTask {
 
 	private final int time = Settings.getTimeInCombat();
-	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<PvPlayer>());
+	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<>());
 
 	@Override
 	public final void run() {
