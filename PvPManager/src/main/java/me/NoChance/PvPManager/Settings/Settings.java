@@ -70,7 +70,6 @@ public final class Settings {
 	private static boolean forcePvPOnWorldChange;
 	private static boolean update = false;
 	private static boolean updateCheck;
-	private static String updateLocation;
 	private static boolean optOutMetrics;
 	private static double soupHealth;
 	private static boolean borderHoppingVulnerable;
@@ -176,7 +175,6 @@ public final class Settings {
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 
 		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
-		updateLocation = UPDATECHECK.getString("Update Location", "Bukkit");
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
 
 		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
@@ -244,7 +242,6 @@ public final class Settings {
 
 		config.set("Config Version", newVersion);
 		config.set("Update Check.Enabled", Settings.isUpdateCheck());
-		config.set("Update Check.Update Location", Settings.getUpdateLocation());
 		config.set("Update Check.Auto Update", Settings.isUpdate());
 		config.saveConfig();
 		initizalizeVariables(config);
@@ -350,10 +347,6 @@ public final class Settings {
 
 	public static int getToggleCooldown() {
 		return toggleCooldown;
-	}
-
-	public static String getUpdateLocation() {
-		return updateLocation;
 	}
 
 	public static List<String> getWorldsExcluded() {

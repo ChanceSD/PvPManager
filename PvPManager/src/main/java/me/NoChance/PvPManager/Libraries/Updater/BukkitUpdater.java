@@ -19,14 +19,8 @@ import me.NoChance.PvPManager.Utils.Log;
 
 public class BukkitUpdater extends Updater {
 
-	private String versionName;
-	private String versionLink;
-	private String versionType;
-	private String versionGameVersion;
-
 	private URL url;
 
-	private final int id;
 	private static final String TITLE_VALUE = "name";
 	private static final String LINK_VALUE = "downloadUrl";
 	private static final String TYPE_VALUE = "releaseType";
@@ -35,8 +29,7 @@ public class BukkitUpdater extends Updater {
 	private static final String HOST = "https://api.curseforge.com";
 
 	public BukkitUpdater(final Plugin plugin, final int id, final UpdateType type) {
-		super(plugin, type);
-		this.id = id;
+		super(plugin, id, type);
 		try {
 			this.url = new URL(HOST + QUERY + id);
 		} catch (final MalformedURLException e) {
@@ -45,44 +38,6 @@ public class BukkitUpdater extends Updater {
 			e.printStackTrace();
 		}
 		this.getThread().start();
-	}
-
-	@Override
-	protected final void runUpdater() {
-		if (this.url != null)
-			if (this.read())
-				if (this.versionCheck(this.versionName))
-					if (this.versionLink != null && this.getType() == UpdateType.DOWNLOAD) {
-						try {
-							this.downloadFile();
-						} catch (final Exception e) {
-							Log.warning("The auto-updater tried to download a new update, but was unsuccessful.");
-							this.setResult(UpdateResult.FAIL_DOWNLOAD);
-						}
-					} else {
-						this.setResult(UpdateResult.UPDATE_AVAILABLE);
-					}
-	}
-
-	@Override
-	public final String getLatestName() {
-		this.waitForThread();
-		return this.versionName;
-	}
-
-	public final String getLatestFileLink() {
-		this.waitForThread();
-		return this.versionLink;
-	}
-
-	public final String getLatestType() {
-		this.waitForThread();
-		return this.versionType;
-	}
-
-	public final String getLatestGameVersion() {
-		this.waitForThread();
-		return this.versionGameVersion;
 	}
 
 	@Override
@@ -107,46 +62,7 @@ public class BukkitUpdater extends Updater {
 	}
 
 	@Override
-	protected final boolean versionCheck(final String title) {
-		final String version = this.getPlugin().getDescription().getVersion();
-		if (title.split(" v").length == 2) {
-			final String remoteVersion = title.split(" v")[1].split(" ")[0];
-			if (hasTag(version) != hasTag(remoteVersion))
-				return handleDifferentReleases(remoteVersion, version);
-
-			final String[] remote = getVersionArray(remoteVersion);
-			final String[] local = getVersionArray(version);
-			final int length = Math.max(local.length, remote.length);
-			try {
-				for (int i = 0; i < length; i++) {
-					final int localNumber = i < local.length ? Integer.parseInt(local[i]) : 0;
-					final int remoteNumber = i < remote.length ? Integer.parseInt(remote[i]) : 0;
-					if (remoteNumber > localNumber)
-						return true;
-					if (remoteNumber < localNumber || remoteVersion.equalsIgnoreCase(version)) {
-						this.setResult(UpdateResult.NO_UPDATE);
-						return false;
-					}
-				}
-			} catch (final NumberFormatException ex) {
-				Log.warning("Error reading version number!");
-			}
-		} else {
-			this.setResult(UpdateResult.FAIL_NOVERSION);
-			return false;
-		}
-		return true;
-	}
-
-	private boolean handleDifferentReleases(final String remote, final String local) {
-		final String remoteCopy = remote.replaceAll("(-.+)", "");
-		final String localCopy = local.replaceAll("(-.+)", "");
-		if (remoteCopy.equalsIgnoreCase(localCopy))
-			return hasTag(local);
-		return false;
-	}
-
-	private boolean read() {
+	protected boolean read() {
 		BufferedReader reader = null;
 		try {
 			final URLConnection conn = this.url.openConnection();
@@ -157,7 +73,7 @@ public class BukkitUpdater extends Updater {
 			final String response = reader.readLine();
 			final JSONArray array = (JSONArray) JSONValue.parse(response);
 			if (array.size() == 0) {
-				Log.warning("The updater could not find any files for the project id " + this.id);
+				Log.warning("The updater could not find any files for the project id " + this.getId());
 				this.setResult(UpdateResult.FAIL_BADID);
 				return false;
 			}
@@ -165,10 +81,14 @@ public class BukkitUpdater extends Updater {
 			this.versionLink = (String) ((JSONObject) array.get(array.size() - 1)).get(LINK_VALUE);
 			this.versionType = (String) ((JSONObject) array.get(array.size() - 1)).get(TYPE_VALUE);
 			this.versionGameVersion = (String) ((JSONObject) array.get(array.size() - 1)).get(VERSION_VALUE);
+			if (this.versionName.split(" v").length == 2) {
+				this.versionName = this.versionName.split(" v")[1].split(" ")[0];
+			}
 			return true;
 		} catch (final IOException e) {
 			Log.warning("The updater could not contact dev.bukkit.org for updating.");
-			Log.warning("If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
+			Log.warning(
+			        "If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
 			this.setResult(UpdateResult.FAIL_DBO);
 			e.printStackTrace();
 			return false;

@@ -2,6 +2,7 @@ package me.NoChance.PvPManager;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +17,7 @@ import me.NoChance.PvPManager.Commands.Tag;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Libraries.Metrics.CustomMetrics;
 import me.NoChance.PvPManager.Libraries.Updater.BukkitUpdater;
+import me.NoChance.PvPManager.Libraries.Updater.SpigotUpdater;
 import me.NoChance.PvPManager.Libraries.Updater.Updater;
 import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateResult;
 import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
@@ -102,30 +104,29 @@ public final class PvPManager extends JavaPlugin {
 
 	public void checkForUpdates() {
 		Log.info("Checking for updates...");
-		// disable spigot updater for now
-		// if (Settings.getUpdateLocation().equalsIgnoreCase("Bukkit")) {
 		updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK);
-		// }
-		// else {
-		// updater = new SpigotUpdater(this, UpdateType.VERSION_CHECK);
-		// }
+		if (updater.getResult().name().startsWith("FAIL")) {
+			updater = new SpigotUpdater(this, 845, UpdateType.VERSION_CHECK);
+		}
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
 			Log.info("Update Available: " + Messages.getNewVersion());
+			Bukkit.broadcast("§6[§8PvPManager§6]§2 Update Available: §e" + Messages.getNewVersion(), "pvpmanager.admin");
 			if (Settings.isAutoUpdate()) {
-				downloadUpdate();
-				Log.info("Version Downloaded To Your Update Folder");
-				return;
+				if (updater.downloadFile()) {
+					Log.info("Version Downloaded To Your Update Folder");
+					return;
+				}
+				Log.info("Could not download latest update. Please update manually from one of the links below.");
 			}
 			Settings.setUpdate(true);
-			Log.info("Link: http://dev.bukkit.org/bukkit-plugins/pvpmanager/");
+			Bukkit.broadcast("§6Spigot Link: §8https://www.spigotmc.org/resources/pvpmanager.845/", "pvpmanager.admin");
+			Bukkit.broadcast("§6Bukkit Link: §8https://dev.bukkit.org/projects/pvpmanager", "pvpmanager.admin");
+			Log.info("Spigot Link: https://www.spigotmc.org/resources/pvpmanager.845/");
+			Log.info("Bukkit Link: https://dev.bukkit.org/projects/pvpmanager");
 		} else {
 			Log.info("No update found");
 		}
-	}
-
-	public boolean downloadUpdate() {
-		return updater.downloadFile();
 	}
 
 	private void registerListener(final Listener listener) {
@@ -146,6 +147,10 @@ public final class PvPManager extends JavaPlugin {
 
 	public DependencyManager getDependencyManager() {
 		return dependencyManager;
+	}
+
+	public Updater getUpdater() {
+		return updater;
 	}
 
 	/**
