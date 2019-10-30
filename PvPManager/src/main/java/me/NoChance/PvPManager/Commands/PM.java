@@ -45,7 +45,7 @@ public class PM implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("update") && sender.hasPermission("pvpmanager.admin")) {
 				if (Settings.isUpdateCheck()) {
 					if (Settings.isUpdate()) {
-						if (plugin.downloadUpdate()) {
+						if (plugin.getUpdater().downloadFile()) {
 							sender.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewVersion());
 						} else {
 							sender.sendMessage("§4An error ocurred while updating, please report to the developer");

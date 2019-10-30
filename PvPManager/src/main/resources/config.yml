@@ -145,11 +145,9 @@ PvP Toggle:
   WorldGuard Overrides: true
 
 # Should PvPManager be allowed to check for updates and tell you about them
-# Update Location - Check and download from Spigot or from Bukkit website
 # Auto Update - After checking should we download it automatically for you?
 Update Check:
   Enabled: true
-  Update Location: Bukkit
   Auto Update: true
 
 Metrics:

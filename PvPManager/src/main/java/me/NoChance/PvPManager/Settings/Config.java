@@ -29,13 +29,12 @@ public class Config extends YamlConfiguration {
 
 	public Config(final PvPManager plugin, final String name) {
 		this.plugin = plugin;
-		final File file1 = new File(plugin.getDataFolder(), name);
-		if (!file1.exists()) {
-			this.prepareFile(file1, name);
+		this.file = new File(plugin.getDataFolder(), name);
+		if (!file.exists()) {
+			this.prepareFile(name);
 			Log.info("New Config File Created Successfully!");
 		}
-		this.file = file1;
-		this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(getConfigContent(file1)));
+		this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(getConfigContent(file)));
 	}
 
 	@Override
@@ -125,12 +124,12 @@ public class Config extends YamlConfiguration {
 		}
 	}
 
-	private void prepareFile(final File file1, final String resource) {
+	private void prepareFile(final String resource) {
 		try {
-			file1.getParentFile().mkdirs();
-			file1.createNewFile();
+			file.getParentFile().mkdirs();
+			file.createNewFile();
 			if (resource != null && !resource.isEmpty()) {
-				this.copyResource(plugin.getResource(resource), file1);
+				this.copyResource(plugin.getResource(resource), file);
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
