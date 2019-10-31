@@ -2,6 +2,7 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -167,6 +168,11 @@ public class DependencyManager {
 		if (isDependencyEnabled(Hook.VAULT))
 			return ((Vault) dependencies.get(Hook.VAULT)).getEconomy();
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<Hook, Dependency> getDependencies() {
+		return (Map<Hook, Dependency>) dependencies.clone();
 	}
 
 }

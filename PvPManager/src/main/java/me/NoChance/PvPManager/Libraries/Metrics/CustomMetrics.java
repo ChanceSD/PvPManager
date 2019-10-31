@@ -1,18 +1,22 @@
 package me.NoChance.PvPManager.Libraries.Metrics;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Dependencies.Dependency;
+import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Settings.Settings;
 
 public class CustomMetrics {
 
-	public CustomMetrics(final JavaPlugin plugin) {
+	public CustomMetrics(final PvPManager plugin) {
 		initMetrics(plugin);
 	}
 
-	private void initMetrics(final JavaPlugin plugin) {
+	private void initMetrics(final PvPManager plugin) {
 
 		final Metrics metrics = new Metrics(plugin);
 
@@ -81,5 +85,15 @@ public class CustomMetrics {
 
 		}
 
+		metrics.addCustomChart(new Metrics.AdvancedPie("hooks", new Callable<Map<String, Integer>>() {
+			@Override
+			public Map<String, Integer> call() {
+				final Map<String, Integer> valueMap = new HashMap<>();
+				for (final Entry<Hook, Dependency> entry : plugin.getDependencyManager().getDependencies().entrySet()) {
+					valueMap.put(entry.getValue().getClass().getSimpleName(), 1);
+				}
+				return valueMap;
+			}
+		}));
 	}
 }
