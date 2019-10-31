@@ -4,24 +4,28 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.zcore.persist.MemoryFPlayer;
+import com.massivecraft.factions.zcore.persist.MemoryFPlayers;
 
 import me.NoChance.PvPManager.Dependencies.PvPlugin;
 
 public class SavageFactions implements PvPlugin {
 
 	private final com.massivecraft.factions.SavageFactions factions;
+	private final MemoryFPlayers fPlayers;
 
 	public SavageFactions() {
 		factions = com.massivecraft.factions.SavageFactions.plugin;
+		fPlayers = (MemoryFPlayers) FPlayers.getInstance();
 	}
 
 	@Override
 	public final boolean canAttack(final Player attacker, final Player defender) {
-		final FPlayer fAttacker = FPlayers.getInstance().getByPlayer(attacker);
-		final FPlayer fDefender = FPlayers.getInstance().getByPlayer(defender);
-		return fAttacker.getRelationTo(fDefender).value < 2; // Less than TRUCE
+		final MemoryFPlayer fAttacker = (MemoryFPlayer) fPlayers.getByPlayer(attacker);
+		final MemoryFPlayer fDefender = (MemoryFPlayer) fPlayers.getByPlayer(defender);
+		return fAttacker.getRelationTo(fDefender).isAtMost(Relation.NEUTRAL);
 	}
 
 	@Override
