@@ -27,33 +27,16 @@ public class CustomMetrics {
 			}
 		}));
 
-		metrics.addCustomChart(new Metrics.SimplePie("newbie_protection_usage", new Callable<String>() {
+		metrics.addCustomChart(new Metrics.DrilldownPie("features", new Callable<Map<String, Map<String, Integer>>>() {
 			@Override
-			public String call() {
-				return Settings.isNewbieProtectionEnabled() ? "Enabled" : "Disabled";
-			}
-		}));
+			public Map<String, Map<String, Integer>> call() throws Exception {
+				final Map<String, Map<String, Integer>> map = new HashMap<>();
 
-		metrics.addCustomChart(new Metrics.SimplePie("update_check_usage", new Callable<String>() {
-			@Override
-			public String call() {
-				if (!Settings.isUpdateCheck())
-					return "Disabled";
-				return !Settings.isAutoUpdate() ? "Update Check" : "Auto Update";
-			}
-		}));
-
-		metrics.addCustomChart(new Metrics.SimplePie("kill_abuse_usage", new Callable<String>() {
-			@Override
-			public String call() {
-				return Settings.isKillAbuseEnabled() ? "Enabled" : "Disabled";
-			}
-		}));
-
-		metrics.addCustomChart(new Metrics.SimplePie("blood_usage", new Callable<String>() {
-			@Override
-			public String call() {
-				return Settings.isPvpBlood() ? "Enabled" : "Disabled";
+				map.put("Newbie Protection", getMapEntry(Settings.isNewbieProtectionEnabled() ? "Enabled" : "Disabled"));
+				map.put("Kill Abuse", getMapEntry(Settings.isKillAbuseEnabled() ? "Enabled" : "Disabled"));
+				map.put("Update Check", getMapEntry(!Settings.isUpdateCheck() ? "Disabled" : !Settings.isAutoUpdate() ? "Update Check" : "Auto Update"));
+				map.put("PvP Blood", getMapEntry(Settings.isPvpBlood() ? "Enabled" : "Disabled"));
+				return map;
 			}
 		}));
 
@@ -96,4 +79,11 @@ public class CustomMetrics {
 			}
 		}));
 	}
+
+	private Map<String, Integer> getMapEntry(final String key) {
+		final HashMap<String, Integer> result = new HashMap<>();
+		result.put(key, 1);
+		return result;
+	}
+
 }

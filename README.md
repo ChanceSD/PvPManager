@@ -1,58 +1,38 @@
 PvPManager
 ===========
 
+[![Discord](https://discordapp.com/api/guilds/622559860705198108/widget.png)](https://discord.gg/QFTjs3g)
+[![Spiget Downloads](https://img.shields.io/spiget/downloads/845?label=spigot%20downloads)](https://www.spigotmc.org/resources/pvpmanager-lite.845/)
 [![Build Status](https://travis-ci.org/NoChanceSD/PvPManager.svg)](https://travis-ci.org/NoChanceSD/PvPManager)
-[![Join the chat at https://gitter.im/NoChanceSD/PvPManager](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NoChanceSD/PvPManager?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/nochancesd/pvpmanager/latest)](https://github.com/NoChanceSD/PvPManager/commits/master)
+![GitHub Releases](https://img.shields.io/github/downloads/nochancesd/pvpmanager/latest/total)
+***
+**Spigot:** https://www.spigotmc.org/resources/pvpmanager-lite.845/  
+**Bukkit:** http://dev.bukkit.org/bukkit-plugins/pvpmanager/  
+**Discord:** https://discord.gg/QFTjs3g  
+**Development Builds:** http://ci.md-5.net/job/PvPManager/
+***
+PvPManager aims to be an All in One PvP plugin. Meaning that instead of using multiple plugins that change/customize the PvP experience in your server you would just use PvPManager. 
 
-Discord:
-https://discord.gg/QFTjs3g
+**Some of the plugin's main features are:**
+- Toggle PvP for each player  
+- Stop combat logging by issuing punishments
+- Disable several actions while in combat such as fly, gamemode, blocking commands, etc
+- Stop what i named as "border hopping" which happens when a player attacks another and attempts to run away to a safezone
+- Protect new players from PvP
+- Stop spawn killing or KDR abuse by issuing a kick or other command you specify
+- Give money rewards, penalties or execute commands when a player kills another
+- Keep/Drop player inventory depending whether they died in PvP or transfer drops directly to the killer
 
-Development Builds:
-http://ci.md-5.net/job/PvPManager/
+You can find a more detailed description of all features on the plugin page.  
+All these features have multi world support and can be enabled/disabled according to your liking.
 
-There are multiple PvP plugins, but PvPManager aims to be All in One. Meaning that instead of using multiple plugins that change/customize PvP in your server you can use just PvPManager. 
-The features include allowing players to toggle PvP easily, which is a nice feature for donors, block commands for players in combat, detecting and applying defined punishments on PvP logging and a timer feature that toggles PvP for a world automatically! 
-All this features have Multi-World support and don't conflict with plugins like WorldGuard!
-
-Spigot Page: https://www.spigotmc.org/resources/pvpmanager-lite.845/
-
-Bukkit Page: http://dev.bukkit.org/bukkit-plugins/pvpmanager/
-
-**bStats**
+bStats
+-----------
 
 [![bStats](https://bstats.org/signatures/bukkit/PvPManager.svg "bStats")](https://bstats.org/plugin/bukkit/PvPManager/ "bStats")
 
-EVERYTHING BELOW IS OUTDATED
------------
-
-Commands and Permissions
------------
-
-* /pvp - Toggles PvP -> pvpmanager.pvpstatus.change
-* /pvp status	- Check your PvP status	-> pvpmanager.pvpstatus.self
-* /pvp status <player>	- Check other player PvP status	-> pvpmanager.pvpstatus.others
-* /pvp disable protection	- Disables Newbie protection -> No permission
-* /pm	- Shows PvPManager help page -> No permission
-* /pm update - Update PvPManager to latest version -> pvpmanager.admin
-* /pm reload - Reloads PvPManager -> pvpmanager.reload
-* /pm pvpstart <time> [world]	- Changes PvP start time on a world -> pvpmanager.pvptimer
-* /pm pvpend <time> [world] -	Changes PvP end time on a world -> pvpmanager.pvptimer
-
-Special Permissions:
------------
-
-pvpmanager.nodrop - Players/ranks don't drop items if killed in PvP
-
-pvpmanager.nocombat - Players/ranks are not placed in combat
-
-pvpmanager.nopvp - Players/ranks have PvP disabled
-
-pvpmanager.nodisable - Players/ranks don't get fly and gamemode disabled on PvP 
-
-pvpmanager.pvpstatus.nocooldown - Bypass PvP toggle cooldown period
-
 License
 -----------
-Copyright (c) 2019 , NoChanceSD
-
+Copyright (c) 2019 , NoChanceSD  
 All rights reserved
