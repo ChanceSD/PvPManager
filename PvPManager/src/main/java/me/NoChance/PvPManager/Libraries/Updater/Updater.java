@@ -30,7 +30,7 @@ public abstract class Updater {
 	private final UpdateType type;
 	private final File file;
 
-	Updater(final Plugin plugin, final int id, final UpdateType type) {
+	protected Updater(final Plugin plugin, final int id, final UpdateType type) {
 		this.plugin = plugin;
 		this.id = id;
 		this.type = type;
@@ -65,10 +65,11 @@ public abstract class Updater {
 					} else {
 						this.setResult(UpdateResult.UPDATE_AVAILABLE);
 					}
+				} else {
+					this.setResult(UpdateResult.NO_UPDATE);
 				}
 			} else {
 				this.setResult(UpdateResult.FAIL_NOVERSION);
-				return;
 			}
 		}
 	}
@@ -102,7 +103,9 @@ public abstract class Updater {
 	}
 
 	protected final boolean versionCheck(final String remoteVersion) {
-		final String version = this.getPlugin().getDescription().getVersion();
+		final String version = plugin.getDescription().getVersion();
+		if (remoteVersion.equalsIgnoreCase(version))
+			return false;
 
 		final String[] remote = getVersionArray(remoteVersion);
 		final String[] local = getVersionArray(version);
@@ -113,39 +116,37 @@ public abstract class Updater {
 				final int remoteNumber = i < remote.length ? Integer.parseInt(remote[i]) : 0;
 				if (remoteNumber > localNumber)
 					return true;
-				if (remoteNumber < localNumber || remoteVersion.equalsIgnoreCase(version)) {
-					this.setResult(UpdateResult.NO_UPDATE);
+				if (remoteNumber < localNumber)
 					return false;
-				}
 			}
 		} catch (final NumberFormatException ex) {
 			Log.warning("Error reading version number!");
 		}
 
-		return true;
+		return hasTag(version);
 	}
 
-	final Thread getThread() {
+	protected final Thread getThread() {
 		return thread;
 	}
 
-	final Plugin getPlugin() {
+	protected final Plugin getPlugin() {
 		return plugin;
 	}
 
-	final int getId() {
+	protected final int getId() {
 		return id;
 	}
 
-	final UpdateType getType() {
+	public final UpdateType getType() {
 		return type;
 	}
 
-	final File getFile() {
+	protected final File getFile() {
 		return file;
 	}
 
-	final void setResult(final UpdateResult result) {
+	protected final void setResult(final UpdateResult result) {
 		this.result = result;
 	}
 
