@@ -33,6 +33,7 @@ public class PluginTest {
 		pluginDirectory.mkdirs();
 		final Server server = mock(Server.class, Mockito.RETURNS_MOCKS);
 		Mockito.when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
+		Mockito.when(server.getUpdateFolderFile()).thenReturn(new File(filePath + "TestServer/plugins/update"));
 		Bukkit.setServer(server);
 		plugin = PowerMockito.mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
 		final PluginDescriptionFile pdf = new PluginDescriptionFile(PluginTest.class.getClassLoader().getResource("plugin.yml").openStream());
@@ -40,7 +41,7 @@ public class PluginTest {
 		Mockito.doReturn(logger).when(plugin).getLogger();
 		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(Matchers.anyString());
 		plugin.onEnable();
-		System.out.println(pdf.getVersion());
+		System.out.println(plugin.getDescription().getVersion());
 	}
 
 	public final void tearDown() {
