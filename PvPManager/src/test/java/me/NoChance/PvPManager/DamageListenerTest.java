@@ -30,6 +30,7 @@ import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class DamageListenerTest {
@@ -52,6 +53,7 @@ public class DamageListenerTest {
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
 		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Matchers.anyObject())).thenCallRealMethod();
 		damageListener = new EntityListener(ph);
+		Settings.setPvpBlood(false); // avoid loading Material class while testing
 	}
 
 	@Before

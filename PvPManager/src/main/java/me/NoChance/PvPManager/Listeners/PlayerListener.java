@@ -45,8 +45,8 @@ public class PlayerListener implements Listener {
 		this.ph = ph;
 		this.wg = (WorldGuardHook) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-			mushroomSoup = Material.getMaterial("MUSHROOM_STEW");
-		} else {
+			mushroomSoup = Material.MUSHROOM_STEM;
+		} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.0")) { // avoid loading Material class on unit tests
 			mushroomSoup = Material.getMaterial("MUSHROOM_SOUP");
 		}
 	}

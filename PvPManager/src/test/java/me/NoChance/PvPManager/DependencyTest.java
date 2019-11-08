@@ -8,7 +8,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -25,11 +24,6 @@ public class DependencyTest {
 		final PluginTest pt = AllTests.getPt();
 		server = pt.getServer();
 		when(server.getServicesManager()).thenReturn(mock(ServicesManager.class));
-	}
-
-	@Before
-	public void setup() {
-		when(server.getPluginManager().getPlugin(Matchers.anyString())).thenReturn(null);
 	}
 
 	@Test
