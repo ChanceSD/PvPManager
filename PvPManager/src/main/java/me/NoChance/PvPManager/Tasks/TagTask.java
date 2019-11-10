@@ -12,7 +12,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class TagTask extends TimerTask {
 
-	private final int time = Settings.getTimeInCombat();
+	private final long time = Settings.getTimeInCombat() * 1000;
 	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<>());
 
 	@Override
@@ -33,8 +33,9 @@ public class TagTask extends TimerTask {
 	public final synchronized boolean cancel() throws IllegalStateException {
 		synchronized (tagged) {
 			for (final PvPlayer pvPlayer : tagged)
-				if (pvPlayer.isInCombat())
+				if (pvPlayer.isInCombat()) {
 					pvPlayer.unTag();
+				}
 		}
 		tagged.clear();
 		return super.cancel();
@@ -46,8 +47,9 @@ public class TagTask extends TimerTask {
 
 	public final void untag(final PvPlayer p) {
 		tagged.remove(p);
-		if (p.isInCombat())
+		if (p.isInCombat()) {
 			p.unTag();
+		}
 	}
 
 }
