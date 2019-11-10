@@ -22,7 +22,11 @@ public final class CombatUtils {
 	}
 
 	public static boolean hasTimePassed(final long toggleTime, final int cooldown) {
-		return System.currentTimeMillis() - toggleTime >= cooldown * 1000;
+		return hasTimePassed(toggleTime, cooldown * 1000);
+	}
+
+	public static boolean hasTimePassed(final long toggleTime, final long cooldown) {
+		return System.currentTimeMillis() - toggleTime >= cooldown;
 	}
 
 	public static boolean isPvP(final EntityDamageByEntityEvent event) {
