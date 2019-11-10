@@ -14,6 +14,10 @@ commands:
       description: Change your PvP Status.
       aliases: [toggle, pvptoggle]
       usage: "Usage: /<command> [on|off] or /<command> [player] [on|off]"
+   newbie:
+      description: Check time left as a newbie or force disable newbie
+      aliases: [nt, newbietime]
+      usage: "Usage: /<command> [name] or /<command> disable"
    pvpoverride:
       description: Allows the player to attack everyone everywhere
       aliases: [pvpo, povd]

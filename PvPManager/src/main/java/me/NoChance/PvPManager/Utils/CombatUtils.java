@@ -29,6 +29,14 @@ public final class CombatUtils {
 		return System.currentTimeMillis() - toggleTime >= cooldown;
 	}
 
+	public static int getTimeLeft(final long startTime, final int time) {
+		return getTimeLeft(startTime, time * 1000) / 1000;
+	}
+
+	public static long getTimeLeft(final long startTime, final long time) {
+		return startTime + time - System.currentTimeMillis();
+	}
+
 	public static boolean isPvP(final EntityDamageByEntityEvent event) {
 		final Entity attacker = event.getDamager();
 		final Entity defender = event.getEntity();

@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,15 +32,7 @@ public class PvP implements CommandExecutor {
 			}
 		}
 		if (args.length >= 1) {
-			if (args[0].equalsIgnoreCase("disable") && sender instanceof Player) {
-				final PvPlayer pvpPlayer = ph.get((Player) sender);
-				if (pvpPlayer.isNewbie()) {
-					pvpPlayer.setNewbie(false);
-					return true;
-				}
-				pvpPlayer.message(ChatColor.DARK_RED + "You are not protected!");
-				return true;
-			} else if (sender.hasPermission("pvpmanager.pvpstatus.change")) {
+			if (sender.hasPermission("pvpmanager.pvpstatus.change")) {
 				if ((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && sender instanceof Player) {
 					final PvPlayer pvpPlayer = ph.get((Player) sender);
 					if (pvpPlayer.hasToggleCooldownPassed()) {

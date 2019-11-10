@@ -86,7 +86,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public final boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Settings.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
-			final long secondsLeft = (toggleTime + Settings.getToggleCooldown() * 1000 - System.currentTimeMillis()) / 1000;
+			final long secondsLeft = CombatUtils.getTimeLeft(toggleTime, Settings.getToggleCooldown());
 			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft / 60)));
 			return false;
 		}
@@ -245,6 +245,10 @@ public class PvPlayer extends EcoPlayer {
 
 	public final long getTaggedTime() {
 		return taggedTime;
+	}
+
+	public final long getNewbieTimeLeft() {
+		return newbieTask.getTimeleft();
 	}
 
 	public final void loadState() {
