@@ -22,7 +22,7 @@ public final class CombatUtils {
 	}
 
 	public static boolean hasTimePassed(final long toggleTime, final int cooldown) {
-		return hasTimePassed(toggleTime, cooldown * 1000);
+		return hasTimePassed(toggleTime, cooldown * 1000L);
 	}
 
 	public static boolean hasTimePassed(final long toggleTime, final long cooldown) {
