@@ -41,8 +41,9 @@ public abstract class EcoPlayer {
 	}
 
 	public final void applyPenalty() {
-		withdrawMoney(Settings.getMoneyPenalty() >= 1 ? Settings.getMoneyPenalty() : Settings.getMoneyPenalty() * economy.getBalance(getPlayer()));
-		message(Messages.getMoneyPenalty().replace("%m", Double.toString(Settings.getMoneyPenalty())));
+		final double penalty = Settings.getMoneyPenalty() >= 1 ? Settings.getMoneyPenalty() : Settings.getMoneyPenalty() * economy.getBalance(getPlayer());
+		withdrawMoney(penalty);
+		message(Messages.getMoneyPenalty().replace("%m", Double.toString(penalty)));
 	}
 
 	public final void giveReward(final Player victim) {
