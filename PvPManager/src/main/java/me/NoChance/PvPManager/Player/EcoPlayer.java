@@ -11,9 +11,11 @@ import net.milkbowl.vault.economy.Economy;
 public abstract class EcoPlayer {
 
 	private final Economy economy;
+	private final DecimalFormat df = new DecimalFormat();
 
 	protected EcoPlayer(final Economy economy) {
 		this.economy = economy;
+		df.setMaximumFractionDigits(2);
 	}
 
 	protected abstract Player getPlayer();
@@ -43,22 +45,20 @@ public abstract class EcoPlayer {
 	public final void applyPenalty() {
 		final double penalty = Settings.getMoneyPenalty() >= 1 ? Settings.getMoneyPenalty() : Settings.getMoneyPenalty() * economy.getBalance(getPlayer());
 		withdrawMoney(penalty);
-		message(Messages.getMoneyPenalty().replace("%m", Double.toString(penalty)));
+		message(Messages.getMoneyPenalty().replace("%m", df.format(penalty)));
 	}
 
-	public final void giveReward(final Player victim) {
-		double moneyWon = Settings.getMoneyReward();
-		if (Settings.getMoneyReward() >= 1) {
-			depositMoney(Settings.getMoneyReward());
-		} else {
-			moneyWon = Settings.getMoneyReward() * economy.getBalance(victim);
-			depositMoney(moneyWon);
-			economy.withdrawPlayer(victim, moneyWon);
-			victim.sendMessage("§cPlayer " + getPlayer().getName() + " stole " + moneyWon + " coins from you!");
+	public final void giveReward(final EcoPlayer victim) {
+		double moneyWon = Settings.getMoneyReward() >= 1 ? Settings.getMoneyReward() : Settings.getMoneyReward() * economy.getBalance(getPlayer());
+		if (Settings.isMoneySteal()) {
+			if (Settings.getMoneyReward() < 1) {
+				moneyWon = Settings.getMoneyReward() * economy.getBalance(victim.getPlayer());
+			}
+			economy.withdrawPlayer(victim.getPlayer(), moneyWon);
+			victim.message(Messages.getMoneySteal().replace("%p", getPlayer().getName()).replace("%m", df.format(moneyWon)));
 		}
-		final DecimalFormat df = new DecimalFormat();
-		df.setMaximumFractionDigits(2);
-		message(Messages.getMoneyReward().replace("%m", df.format(moneyWon)).replace("%p", victim.getName()));
+		depositMoney(moneyWon);
+		message(Messages.getMoneyReward().replace("%m", df.format(moneyWon)).replace("%p", victim.getPlayer().getName()));
 	}
 
 }

@@ -49,6 +49,7 @@ public class Messages {
 	private static String currentVersion;
 	private static String moneyReward;
 	private static String moneyPenalty;
+	private static String moneySteal;
 	private static Locale locale;
 	private static final Queue<String> messageQueue = new LinkedList<>();
 	private static String newVersion;
@@ -72,7 +73,8 @@ public class Messages {
 		if (!messagesFile.exists()) {
 			int readBytes;
 			final byte[] buffer = new byte[4096];
-			try (InputStream input = plugin.getResource("locale/" + locale.toString()); OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()))) {
+			try (InputStream input = plugin.getResource("locale/" + locale.toString());
+			        OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()))) {
 				while ((readBytes = input.read(buffer)) != -1) {
 					resStreamOut.write(buffer, 0, readBytes);
 				}
@@ -137,6 +139,7 @@ public class Messages {
 		errorPermission = getString("Error_Permission");
 		moneyReward = getString("Money_Reward");
 		moneyPenalty = getString("Money_Penalty");
+		moneySteal = getString("Money_Steal");
 		pvpListNoResults = getString("PvPList_Nothing_Found");
 		errorPlayerNotFound = getString("Error_Player_Not_Found");
 	}
@@ -273,6 +276,10 @@ public class Messages {
 
 	public static String getMoneyPenalty() {
 		return moneyPenalty;
+	}
+
+	public static String getMoneySteal() {
+		return moneySteal;
 	}
 
 	public final Locale getLocale() {

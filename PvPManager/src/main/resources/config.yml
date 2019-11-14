@@ -116,11 +116,13 @@ Kill Abuse:
 # Section with settings triggered when a player kills another player
 # Money Reward - Money won as reward, use less than 1 for percentage like 0.05 for 5% (0 to disable)
 # Money Penalty - Money lost on PvP death, use less than 1 for percentage like 0.1 for 10% (0 to disable)
+# Money Steal - Should the amount won from money reward be stolen from the dead player
 # Commands On Kill - Commands to execute on kill (<player> is the killer, <victim> is the victim)
 # WorldGuard Exclusions - WorldGuard regions where rewards, penalties and commands will not be executed
 Player Kills:
   Money Reward: 0
   Money Penalty: 0
+  Money Steal: false
   Commands On Kill: []
   WorldGuard Exclusions: []
 
