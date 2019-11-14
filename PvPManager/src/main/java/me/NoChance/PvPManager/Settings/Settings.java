@@ -54,6 +54,7 @@ public final class Settings {
 	private static boolean logToFile;
 	private static double moneyPenalty;
 	private static double moneyReward;
+	private static boolean moneySteal;
 	private static String nameTagPrefix;
 	private static boolean newbieGodMode;
 	private static boolean newbieProtectionEnabled;
@@ -162,6 +163,7 @@ public final class Settings {
 
 		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 10));
 		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 10));
+		moneySteal = PLAYERKILLS.getBoolean("Money Steal", false);
 		commandsOnKill = (List<String>) PLAYERKILLS.getList("Commands On Kill", commandsOnKill);
 		playerKillsWGExclusions = new HashSet<>((List<String>) PLAYERKILLS.getList("WorldGuard Exclusions", new ArrayList<>()));
 
@@ -435,6 +437,10 @@ public final class Settings {
 
 	public static boolean isPvpBlood() {
 		return pvpBlood;
+	}
+
+	public static boolean isMoneySteal() {
+		return moneySteal;
 	}
 
 	public static boolean borderHoppingVulnerable() {

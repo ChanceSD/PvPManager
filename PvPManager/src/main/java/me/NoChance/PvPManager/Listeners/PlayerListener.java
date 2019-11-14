@@ -117,7 +117,7 @@ public class PlayerListener implements Listener {
 			}
 			if (wg == null || !wg.containsRegionsAt(killer.getLocation(), Settings.getKillsWGExclusions())) {
 				if (Settings.getMoneyReward() > 0) {
-					pKiller.giveReward(player);
+					pKiller.giveReward(pvPlayer);
 				}
 				if (Settings.getMoneyPenalty() > 0) {
 					pvPlayer.applyPenalty();
