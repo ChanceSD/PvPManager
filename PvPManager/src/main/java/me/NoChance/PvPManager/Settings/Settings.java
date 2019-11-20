@@ -78,6 +78,7 @@ public final class Settings {
 	private static boolean worldguardOverrides;
 	private static boolean glowingInCombat;
 	private static boolean blockInteractInCombat;
+	private static boolean untagEnemy;
 	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static Set<String> playerKillsWGExclusions = new HashSet<>();
@@ -133,6 +134,7 @@ public final class Settings {
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
+		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", true);
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
@@ -441,6 +443,10 @@ public final class Settings {
 
 	public static boolean isMoneySteal() {
 		return moneySteal;
+	}
+
+	public static boolean isUntagEnemy() {
+		return untagEnemy;
 	}
 
 	public static boolean borderHoppingVulnerable() {
