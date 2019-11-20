@@ -54,6 +54,7 @@ Disable:
 # NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color his name red
 # while 'none' or empty quotes '' will disable this feature completely
 # Glowing -> For 1.9+ only, sets the player glowing while tagged
+# Untag Enemy -> When the player kills the enemy he was fighting he gets untagged
 # Block -> Section is self-explanatory, what to block in combat
 # Command whitelist is recursive, allowing 'tell' will allow 'tell' with any number of arguments
 # Punish On Kick -> Punish the player even if he gets kicked by other plugin while tagged
@@ -66,6 +67,7 @@ Tagged In Combat:
   Time: 10
   NameTag Prefix: '&c'
   Glowing: true
+  Untag Enemy: true
   Block:
     EnderPearls: true
     Teleport: true
