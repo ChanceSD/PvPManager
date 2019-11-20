@@ -131,11 +131,11 @@ public class PvPlayer extends EcoPlayer {
 			if (Bukkit.getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
 				message(Messages.getNewbieProtectionEnd());
 			} else {
-				message("§6[§8PvPManager§6] §eYou Removed Your PvP Protection! Be Careful");
+				message(Messages.getNewbieProtectionRemoved());
 				newbieTask.cancel();
 			}
 		} else {
-			message("§cYou don't have PvP protection!");
+			message(Messages.getErrorNotNewbie());
 		}
 		this.newbie = newbie;
 	}
