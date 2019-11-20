@@ -55,6 +55,9 @@ public class Messages {
 	private static String newVersion;
 	private static String pvpListNoResults;
 	private static String errorPlayerNotFound;
+	private static String errorNotNewbie;
+	private static String newbieTimeCheck;
+	private static String newbieProtectionRemoved;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -131,10 +134,13 @@ public class Messages {
 		outOfCombat = getString("Out_Of_Combat");
 		newbieProtection = getString("Newbie_Protection");
 		newbieProtectionEnd = getString("Newbie_Protection_End");
+		newbieProtectionRemoved = getString("Newbie_Protection_Removed");
 		newbieProtectionOnHit = getString("Newbie_Protection_On_Hit");
 		newbieProtectionAttacker = getString("Newbie_Protection_Atacker");
+		newbieTimeCheck = getString("Newbie_Time_Check");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
 		errorCommand = getString("Error_Command");
+		errorNotNewbie = getString("Error_Not_Newbie");
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
 		errorPermission = getString("Error_Permission");
 		moneyReward = getString("Money_Reward");
@@ -296,6 +302,18 @@ public class Messages {
 
 	public static Queue<String> getMessageQueue() {
 		return messageQueue;
+	}
+
+	public static String getErrorNotNewbie() {
+		return errorNotNewbie;
+	}
+
+	public static String getNewbieTimeCheck() {
+		return newbieTimeCheck;
+	}
+
+	public static String getNewbieProtectionRemoved() {
+		return newbieProtectionRemoved;
 	}
 
 }

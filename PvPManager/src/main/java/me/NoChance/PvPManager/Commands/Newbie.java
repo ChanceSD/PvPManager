@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,10 +23,10 @@ public class Newbie implements CommandExecutor {
 		if (args.length == 0 && sender instanceof Player) {
 			final PvPlayer pvPlayer = ph.get((Player) sender);
 			if (!pvPlayer.isNewbie()) {
-				pvPlayer.message("§cYou are not a newbie");
+				pvPlayer.message(Messages.getErrorNotNewbie());
 			} else {
 				final long timeLeft = pvPlayer.getNewbieTimeLeft() / 1000;
-				pvPlayer.message(String.format("§8You are protected from PvP for another %d seconds", timeLeft));
+				pvPlayer.message(String.format(Messages.getNewbieTimeCheck(), timeLeft));
 			}
 			return true;
 		} else if (args.length >= 1) {
@@ -37,7 +36,7 @@ public class Newbie implements CommandExecutor {
 					player.setNewbie(false);
 					return true;
 				}
-				player.message(ChatColor.DARK_RED + "You are not protected!");
+				player.message(Messages.getErrorNotNewbie());
 				return true;
 			} else if (sender.hasPermission("pvpmanager.admin")) {
 				if (!CombatUtils.isOnline(args[0])) {
@@ -46,7 +45,7 @@ public class Newbie implements CommandExecutor {
 				}
 				final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(args[0]));
 				final long timeLeft = specifiedPlayer.getNewbieTimeLeft() / 1000;
-				sender.sendMessage(String.format("§8%s is protected from PvP for another %d seconds", specifiedPlayer.getName(), timeLeft));
+				sender.sendMessage(String.format("&6[&8PvPManager&6]§8%s is protected from PvP for another %d seconds", specifiedPlayer.getName(), timeLeft));
 				return true;
 			}
 		} else if (!(sender instanceof Player)) {
