@@ -79,6 +79,7 @@ public final class Settings {
 	private static boolean glowingInCombat;
 	private static boolean blockInteractInCombat;
 	private static boolean untagEnemy;
+	private static String teamColor;
 	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static Set<String> playerKillsWGExclusions = new HashSet<>();
@@ -132,6 +133,7 @@ public final class Settings {
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
+		teamColor = TAGGEDCOMBAT.getString("Color", "&c").replace("&", "");
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", true);
@@ -543,6 +545,10 @@ public final class Settings {
 
 	public static boolean blockInteract() {
 		return blockInteractInCombat;
+	}
+
+	public static String getTeamColor() {
+		return teamColor;
 	}
 
 	public static Set<String> getKillsWGExclusions() {

@@ -53,6 +53,7 @@ Disable:
 # Time -> How long should the tag last in seconds
 # NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color his name red
 # while 'none' or empty quotes '' will disable this feature completely
+# Color -> Necessary on 1.13+, changes name color and glowing color, leave empty '' for no color
 # Glowing -> For 1.9+ only, sets the player glowing while tagged
 # Untag Enemy -> When the player kills the enemy he was fighting he gets untagged
 # Block -> Section is self-explanatory, what to block in combat
@@ -65,7 +66,8 @@ Disable:
 Tagged In Combat:
   Enabled: true
   Time: 10
-  NameTag Prefix: '&c'
+  NameTag Prefix: '&4&lCombat '
+  Color: '&c'
   Glowing: true
   Untag Enemy: true
   Block:

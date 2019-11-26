@@ -44,7 +44,7 @@ public class PvPlayer extends EcoPlayer {
 		this.uuid = player.getUniqueId();
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
-		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled()) {
+		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled() || !Settings.getTeamColor().isEmpty()) {
 			try {
 				this.teamProfile = new TeamProfile(this);
 			} catch (final NoSuchMethodError e) {

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>me.NoChance.PvPManager</groupId>
 		<artifactId>PvPManager-parent</artifactId>
-		<version>3.5.6</version>
+		<version>3.5.7</version>
 	</parent>
 
 	<artifactId>PvPManager</artifactId>
@@ -129,6 +129,7 @@
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
 			<version>1.14.4-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<artifactId>persistence-api</artifactId>
@@ -139,7 +140,6 @@
 					<groupId>net.md-5</groupId>
 				</exclusion>
 			</exclusions>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.marcelo-mason</groupId>
@@ -154,12 +154,8 @@
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
-					<artifactId>bukkit</artifactId>
-					<groupId>org.bukkit</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>worldedit</artifactId>
-					<groupId>com.sk89q</groupId>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -170,36 +166,8 @@
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
-					<groupId>net.ess3</groupId>
-					<artifactId>FlattenedProvider</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.ess3</groupId>
-					<artifactId>ReflectionProvider</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>io.papermc</groupId>
-					<artifactId>paperlib</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.ess3</groupId>
-					<artifactId>1_8_R2Provider</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.ess3</groupId>
-					<artifactId>NMSProvider</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.ess3</groupId>
-					<artifactId>UpdatedMetaProvider</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.ess3</groupId>
-					<artifactId>LegacyProvider</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.ess3</groupId>
-					<artifactId>1_8_R1Provider</artifactId>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -231,40 +199,12 @@
 			<optional>true</optional>
 			<exclusions>
 				<exclusion>
-					<groupId>com.massivecraft</groupId>
-					<artifactId>Factions-Legacy</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.spongepowered</groupId>
-					<artifactId>configurate-hocon</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.google.guava</groupId>
-					<artifactId>guava</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.kitteh</groupId>
-					<artifactId>paste-gg-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>mkremins</groupId>
-					<artifactId>fanciful</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.google.code.gson</groupId>
-					<artifactId>gson</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>me.lucko</groupId>
-					<artifactId>commodore</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.darkblade12</groupId>
-					<artifactId>particleeffect</artifactId>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- SavageFactions -->
 		<dependency>
 			<groupId>com.massivecraft</groupId>
@@ -287,6 +227,60 @@
 			<version>7.0.0</version>
 			<scope>provided</scope>
 			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
+					<artifactId>bukkit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bstats</groupId>
+					<artifactId>bstats-bukkit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q.intake</groupId>
+					<artifactId>intake</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.flywaydb</groupId>
+					<artifactId>flyway-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.khelekore</groupId>
+					<artifactId>prtree</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.code.findbugs</groupId>
+					<artifactId>jsr305</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>squirrelid</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>rhino</groupId>
+					<artifactId>js</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>de.schlichtherle</groupId>
+					<artifactId>truezip</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q.worldedit.worldedit-libs</groupId>
+					<artifactId>core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q.worldedit.worldedit-libs</groupId>
+					<artifactId>bukkit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-slf4j-impl</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
@@ -300,16 +294,6 @@
 			<artifactId>powermock-module-junit4</artifactId>
 			<version>${powermock.version}</version>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>powermock-core</artifactId>
-					<groupId>org.powermock</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>powermock-reflect</artifactId>
-					<groupId>org.powermock</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
