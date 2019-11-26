@@ -62,7 +62,8 @@ public class ConfigUpdater {
 
 	//Write method doing the work.
 	//It checks if key has a comment associated with it and writes comment then the key and value
-	private static void write(final FileConfiguration newConfig, final FileConfiguration oldConfig, final Map<String, String> comments, final List<String> ignoredSections, final BufferedWriter writer, final Yaml yaml) throws IOException {
+	private static void write(final FileConfiguration newConfig, final FileConfiguration oldConfig, final Map<String, String> comments, final List<String> ignoredSections,
+	        final BufferedWriter writer, final Yaml yaml) throws IOException {
 		outer: for (final String key : newConfig.getKeys(true)) {
 			final String[] keys = key.split("\\.");
 			final String actualKey = keys[keys.length - 1];
@@ -97,7 +98,7 @@ public class ConfigUpdater {
 			} else if (newObj instanceof ConfigurationSection) {
 				//write the new section, old value is no more
 				writeSection(writer, actualKey, prefixSpaces, (ConfigurationSection) newObj);
-			} else if (oldObj != null) {
+			} else if (oldObj != null && oldObj.getClass().equals(newObj.getClass())) {
 				//write the old object
 				write(oldObj, actualKey, prefixSpaces, yaml, writer);
 			} else {
@@ -230,10 +231,10 @@ public class ConfigUpdater {
 		if (keys.isEmpty()) {
 			builder.append(" {}\n");
 			return;
-		} else {
-			builder.append("\n");
-			prefixSpaces.append("  ");
 		}
+
+		builder.append("\n");
+		prefixSpaces.append("  ");
 
 		for (final String key : keys) {
 			final Object value = section.get(key);
@@ -241,6 +242,7 @@ public class ConfigUpdater {
 
 			if (value instanceof ConfigurationSection) {
 				appendSection(builder, (ConfigurationSection) value, prefixSpaces, yaml);
+				prefixSpaces.setLength(prefixSpaces.length() - 2);
 			} else if (value instanceof List) {
 				builder.append(getListAsString((List<?>) value, actualKey, prefixSpaces.toString(), yaml));
 			} else {
