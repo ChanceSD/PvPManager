@@ -1,5 +1,7 @@
 package me.NoChance.PvPManager;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -18,11 +20,13 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 
 import me.NoChance.PvPManager.Listeners.PlayerListener;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class OnDeathTest {
 
 	private static PlayerListener listener;
+	private static PlayerHandler ph;
 	private PlayerDeathEvent event;
 	@Mock(answer = Answers.RETURNS_MOCKS)
 	private Player attacker;
@@ -33,6 +37,7 @@ public class OnDeathTest {
 	public static void setupClass() {
 		final PluginTest pt = AllTests.getPt();
 		final PvPManager plugin = pt.getPlugin();
+		ph = plugin.getPlayerHandler();
 		PowerMockito.mockStatic(CombatUtils.class);
 		when(CombatUtils.isWorldAllowed(anyString())).thenReturn(true);
 		when(CombatUtils.isPvP((EntityDamageByEntityEvent) Matchers.anyObject())).thenCallRealMethod();
@@ -51,8 +56,27 @@ public class OnDeathTest {
 	}
 
 	@Test
-	public final void dropsEnabled() {
+	public final void regularDeath() {
 		listener.onPlayerDeath(event);
+	}
+
+	@Test
+	public final void inCombatDeath() {
+		final PvPlayer pAttacker = ph.get(attacker);
+		final PvPlayer pDefender = ph.get(defender);
+
+		pDefender.setTagged(false, pAttacker);
+		assertTrue(pDefender.isInCombat());
+		listener.onPlayerDeath(event);
+		assertFalse(pDefender.isInCombat());
+
+		pAttacker.setTagged(true, pDefender);
+		pDefender.setTagged(false, pAttacker);
+		assertTrue(pAttacker.isInCombat());
+		assertTrue(pDefender.isInCombat());
+		listener.onPlayerDeath(event);
+		assertFalse(pDefender.isInCombat());
+		assertFalse(pAttacker.isInCombat());
 	}
 
 }

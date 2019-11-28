@@ -16,7 +16,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ PvPManager.class, CombatUtils.class, DependencyManager.class, PluginCommand.class })
 @PowerMockRunnerDelegate(Suite.class)
-@SuiteClasses({ UpdaterTest.class, DamageListenerTest.class, OnDeathTest.class })
+@SuiteClasses({ UpdaterTest.class, DependencyTest.class, DamageListenerTest.class, OnDeathTest.class })
 public final class AllTests {
 
 	private static PluginTest pt;

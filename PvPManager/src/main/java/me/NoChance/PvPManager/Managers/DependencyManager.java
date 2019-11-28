@@ -1,26 +1,29 @@
 package me.NoChance.PvPManager.Managers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Dependency;
+import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.PvPlugin;
-import me.NoChance.PvPManager.Dependencies.Hooks.Factions;
-import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUID;
-import me.NoChance.PvPManager.Dependencies.Hooks.SavageFactions;
-import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClans;
-import me.NoChance.PvPManager.Dependencies.Hooks.Vault;
-import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuard;
-import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacy;
+import me.NoChance.PvPManager.Dependencies.PvPDependency;
+import me.NoChance.PvPManager.Dependencies.RegionDependency;
+import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.FactionsHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUIDHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.SavageFactionsHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.VaultHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
+import me.NoChance.PvPManager.Listeners.PlayerMoveListener;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
@@ -29,121 +32,100 @@ import net.milkbowl.vault.economy.Economy;
 public class DependencyManager {
 
 	private final HashMap<Hook, Dependency> dependencies = new HashMap<>();
-	private final HashSet<PvPlugin> attackChecks = new HashSet<>();
+	private final ArrayList<PvPDependency> attackChecks = new ArrayList<>();
+	private final ArrayList<RegionDependency> regionChecks = new ArrayList<>();
 
 	public DependencyManager() {
-		checkPlugin(Hook.FACTIONS, "Factions");
-		checkPlugin(Hook.SIMPLECLANS, "SimpleClans");
-		checkPlugin(Hook.VAULT, "Vault");
-		checkPlugin(Hook.WORLDGUARD, "WorldGuard");
+		setupHooks();
 	}
 
-	private void checkPlugin(final Hook hook, final String pluginName) {
-		final Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
-		try {
-			switch (hook) {
-			case FACTIONS:
-				checkForFactions(plugin);
-				break;
-			case SIMPLECLANS:
-				checkForSimpleClans(plugin);
-				break;
-			case VAULT:
-				checkForVault(plugin);
-				break;
-			case WORLDGUARD:
-				checkForWorldguard(plugin);
-				break;
-			default:
-				break;
+	private void setupHooks() {
+		for (final Hook hook : Hook.values()) {
+			try {
+				if (!hook.isEnabled()) {
+					if (hook.getDisabledWarning() != null) {
+						Log.warning(hook.getDisabledWarning());
+					}
+					hook.getDisabledAction().run();
+					continue;
+				}
+				attemptHookingInto(hook);
+			} catch (final NoClassDefFoundError | NoSuchMethodError | ClassCastException e) {
+				Log.warning("Your " + hook + " version is currently unsupported: " + hook.getDescription().getFullName());
+				Log.warning(hook + " support disabled");
+			} catch (final DependencyException e) {
+				Log.warning(e.getMessage());
+				if (isDependencyEnabled(hook)) {
+					hook.getDisabledAction().run();
+					unregisterDependency(getDependency(hook));
+				}
 			}
-		} catch (final NoClassDefFoundError | NoSuchMethodError e) {
-			Log.warning("Your " + pluginName + " version is currently unsupported: " + plugin.getDescription().getFullName());
-			Log.warning(pluginName + " support disabled");
 		}
 	}
 
-	private void checkForVault(final Plugin plugin) {
-		if (plugin != null) {
-			final RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-			Economy economy = null;
-			if (economyProvider != null) {
-				economy = economyProvider.getProvider();
-			}
-			if (economy != null) {
-				Log.info("Vault Found! Using it for currency related features");
-				dependencies.put(Hook.VAULT, new Vault(economy));
-			} else {
-				Log.severe("Error! No Economy plugin found");
-			}
-		} else {
-			Log.severe("Vault not found! Features requiring Vault won't work!");
-			Settings.setFineAmount(0);
-			Settings.setMoneyPenalty(0);
-			Settings.setMoneyReward(0);
-		}
-	}
-
-	private void checkForWorldguard(final Plugin plugin) {
-		if (plugin == null)
-			return;
-
-		final String wgVersion = plugin.getDescription().getVersion().replaceAll("(-.+)", "");
-		if (CombatUtils.isVersionSuperior(wgVersion, "6.2.2")) {
-			dependencies.put(Hook.WORLDGUARD, new WorldGuard());
-		} else {
-			dependencies.put(Hook.WORLDGUARD, new WorldGuardLegacy());
-		}
-		Log.info("WorldGuard Found! Enabling WorldGuard Support");
-	}
-
-	private void checkForFactions(final Plugin plugin) {
-		if (plugin == null)
-			return;
-
-		final String fVersion = plugin.getDescription().getVersion();
-		try {
+	private void attemptHookingInto(final Hook hook) {
+		switch (hook) {
+		case FACTIONS:
+			final String fVersion = hook.getVersion();
 			if (fVersion.contains("RC")) {
-				addPvPlugin(Hook.FACTIONS, new SavageFactions());
-				Log.info("SavageFactions Found! Hooked successfully");
+				registerDependency(new SavageFactionsHook(hook));
 			} else if (fVersion.contains("U")) {
-				addPvPlugin(Hook.FACTIONS, new FactionsUUID());
-				Log.info("FactionsUUID Found! Hooked successfully");
-			} else if (Integer.parseInt(fVersion.replace(".", "")) >= 270) {
-				addPvPlugin(Hook.FACTIONS, new Factions());
-				Log.info("Factions Found! Hooked successfully");
+				registerDependency(new FactionsUUIDHook(hook));
+			} else if (CombatUtils.isVersionAtLeast(fVersion, "2.7")) {
+				registerDependency(new FactionsHook(hook));
 			} else {
-				Log.info("Update your Factions plugin to the latest version if you want PvPManager to hook into it successfully");
+				Log.info("Update Factions to the latest version if you want PvPManager to hook into it successfully");
 			}
-		} catch (final NumberFormatException e) {
-			Log.warning("Couldn't read Factions version, maybe it's yet another fork? Plugin: " + plugin.getDescription().getFullName());
+			break;
+		case SIMPLECLANS:
+			registerDependency(new SimpleClansHook(hook));
+			break;
+		case VAULT:
+			registerDependency(new VaultHook(hook));
+			break;
+		case WORLDGUARD:
+			if (CombatUtils.isVersionAtLeast(CombatUtils.stripTags(hook.getVersion()), "7.0")) {
+				registerDependency(new WorldGuardModernHook(hook));
+			} else {
+				registerDependency(new WorldGuardLegacyHook(hook));
+			}
+			break;
+		default:
+			registerDependency(new BaseDependency(hook));
+			break;
 		}
-	}
-
-	private void checkForSimpleClans(final Plugin plugin) {
-		if (plugin == null)
-			return;
-		addPvPlugin(Hook.SIMPLECLANS, new SimpleClans());
-		Log.info("SimpleClans Found! Hooked successfully");
-	}
-
-	private void addPvPlugin(final Hook h, final PvPlugin plugin) {
-		dependencies.put(h, plugin);
-		attackChecks.add(plugin);
 	}
 
 	public final boolean canAttack(final Player attacker, final Player defender) {
-		for (final PvPlugin pvPlugin : attackChecks)
+		for (final PvPDependency pvPlugin : attackChecks)
 			if (!pvPlugin.canAttack(attacker, defender))
 				return false;
 		return true;
 	}
 
-	public boolean worldguardCanAttack(final Location l) {
-		return ((PvPlugin) dependencies.get(Hook.WORLDGUARD)).canBeAttacked(null, l);
+	public final boolean canAttackAt(final Location l) {
+		for (final RegionDependency regionPlugin : regionChecks) {
+			if (!regionPlugin.canAttackAt(l))
+				return false;
+		}
+		return true;
 	}
 
-	public final boolean isDependencyEnabled(final Hook d) {
+	public void startListeners(final PlayerHandler ph) {
+		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
+			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.8")) {
+				Bukkit.getPluginManager().registerEvents(new PlayerMoveListener(ph), ph.getPlugin());
+			} else {
+				Log.warning("Pushback on border hopping not available for 1.7.10 or below! Feature disabled!");
+				Settings.setBorderHoppingPushback(false);
+			}
+		}
+		if (isDependencyEnabled(Hook.WORLDGUARD)) {
+			((WorldGuardHook) getDependency(Hook.WORLDGUARD)).startListener(ph);
+		}
+	}
+
+	public boolean isDependencyEnabled(final Hook d) {
 		return dependencies.containsKey(d);
 	}
 
@@ -151,22 +133,31 @@ public class DependencyManager {
 		return dependencies.get(h);
 	}
 
-	public String getDependencyVersion(final Hook h) {
-		final JavaPlugin plugin = getDependencyMainClass(h);
-		if (plugin != null)
-			return plugin.getDescription().getVersion();
-		return null;
+	public void registerDependency(final Dependency dep) {
+		dependencies.put(dep.getHook(), dep);
+		if (dep instanceof PvPDependency) {
+			attackChecks.add((PvPDependency) dep);
+		}
+		if (dep instanceof RegionDependency) {
+			regionChecks.add((RegionDependency) dep);
+		}
+	}
+
+	public void unregisterDependency(final Dependency dep) {
+		dependencies.remove(dep.getHook());
+		attackChecks.remove(dep);
+		attackChecks.remove(dep);
 	}
 
 	public JavaPlugin getDependencyMainClass(final Hook h) {
 		if (isDependencyEnabled(h))
-			return dependencies.get(h).getMainClass();
+			return dependencies.get(h).getPlugin();
 		return null;
 	}
 
 	public final Economy getEconomy() {
 		if (isDependencyEnabled(Hook.VAULT))
-			return ((Vault) dependencies.get(Hook.VAULT)).getEconomy();
+			return ((VaultHook) dependencies.get(Hook.VAULT)).getEconomy();
 		return null;
 	}
 

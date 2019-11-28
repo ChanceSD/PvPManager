@@ -4,6 +4,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public interface Dependency {
 
-	public JavaPlugin getMainClass();
+	public String getName();
+
+	public Hook getHook();
+
+	public JavaPlugin getPlugin();
+
+	default String onEnableMessage() {
+		return getName() + " Found! Hooked successfully";
+	}
 
 }

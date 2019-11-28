@@ -112,7 +112,7 @@ public final class Settings {
 	public static void initizalizeVariables(final Config c) {
 		assignSections(c);
 
-		minecraftVersion = Bukkit.getBukkitVersion().isEmpty() ? "1.7" : Bukkit.getBukkitVersion().replaceAll("-.+", "");
+		minecraftVersion = Bukkit.getBukkitVersion().isEmpty() ? "0" : Bukkit.getBukkitVersion().replaceAll("-.+", "");
 		locale = GENERAL.getString("Locale", "en").toUpperCase();
 		defaultPvp = GENERAL.getBoolean("Default PvP", true);
 		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
@@ -489,6 +489,10 @@ public final class Settings {
 
 	public static boolean isDisableGodMode() {
 		return disableGodMode;
+	}
+
+	public static void setPvpBlood(final boolean pvpBlood) {
+		Settings.pvpBlood = pvpBlood;
 	}
 
 	public static void setMoneyPenalty(final double moneyPenalty) {

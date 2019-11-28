@@ -15,7 +15,6 @@ import me.NoChance.PvPManager.Commands.PvPList;
 import me.NoChance.PvPManager.Commands.PvPOverride;
 import me.NoChance.PvPManager.Commands.PvPStatus;
 import me.NoChance.PvPManager.Commands.Tag;
-import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Libraries.Metrics.CustomMetrics;
 import me.NoChance.PvPManager.Libraries.Updater.BukkitUpdater;
 import me.NoChance.PvPManager.Libraries.Updater.SpigotUpdater;
@@ -24,16 +23,12 @@ import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateResult;
 import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
-import me.NoChance.PvPManager.Listeners.PlayerMoveListener;
-import me.NoChance.PvPManager.Listeners.WGListener;
-import me.NoChance.PvPManager.Listeners.WGListenerLegacy;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.LogFile;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public final class PvPManager extends JavaPlugin {
@@ -47,6 +42,7 @@ public final class PvPManager extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		final long start = System.currentTimeMillis();
 		instance = this;
 		Log.setup(getLogger());
 		loadFiles();
@@ -63,6 +59,7 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("tag").setExecutor(new Tag(playerHandler));
 		getCommand("announce").setExecutor(new Announce());
 		startMetrics();
+		Log.info("PvPManager Enabled (" + (System.currentTimeMillis() - start) + " ms)");
 	}
 
 	@Override
@@ -82,22 +79,7 @@ public final class PvPManager extends JavaPlugin {
 	private void startListeners() {
 		registerListener(new EntityListener(playerHandler));
 		registerListener(new PlayerListener(playerHandler));
-		if (dependencyManager.isDependencyEnabled(Hook.WORLDGUARD)) {
-			if (Settings.borderHoppingPushback()) {
-				if (!CombatUtils.isVersionSuperior(Settings.getMinecraftVersion(), "1.7.10")) {
-					Log.severe("Pushback on border hopping not available for 1.7.10 or below! Feature disabled!");
-					Settings.setBorderHoppingPushback(false);
-				} else {
-					registerListener(new PlayerMoveListener(playerHandler));
-				}
-			}
-			final String wgVersion = dependencyManager.getDependencyVersion(Hook.WORLDGUARD).replaceAll("(-.+)", "");
-			if (CombatUtils.isVersionSuperior(wgVersion, "6.2.2")) {
-				registerListener(new WGListener(playerHandler));
-			} else {
-				registerListener(new WGListenerLegacy(playerHandler));
-			}
-		}
+		dependencyManager.startListeners(playerHandler);
 	}
 
 	private void startMetrics() {
