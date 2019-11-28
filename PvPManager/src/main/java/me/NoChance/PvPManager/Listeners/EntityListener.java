@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager.Listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -22,6 +21,7 @@ import com.sk89q.commandbook.CommandBook;
 import com.sk89q.commandbook.GodComponent;
 
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -36,11 +36,11 @@ public class EntityListener implements Listener {
 
 	public EntityListener(final PlayerHandler ph) {
 		this.ph = ph;
-		if (Bukkit.getPluginManager().isPluginEnabled("CommandBook")) {
+		if (Hook.COMMANDBOOK.isEnabled()) {
 			this.gc = (GodComponent) CommandBook.inst().getComponentManager().getComponent("god");
 		}
-		if (Bukkit.getPluginManager().isPluginEnabled("Essentials")) {
-			this.ess = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+		if (Hook.ESSENTIALS.isEnabled()) {
+			this.ess = (Essentials) Hook.ESSENTIALS.getPlugin();
 		}
 	}
 

@@ -19,7 +19,7 @@ import org.powermock.reflect.Whitebox;
 public class PluginTest {
 
 	private PvPManager plugin;
-	private final Logger logger = Logger.getLogger("PvPManager-Test");
+	private Server server;
 	private String filePath;
 	private static PluginTest instance;
 
@@ -31,14 +31,15 @@ public class PluginTest {
 		final String decoded = filePath + "TestServer/plugins/PvPManager";
 		final File pluginDirectory = new File(decoded);
 		pluginDirectory.mkdirs();
-		final Server server = mock(Server.class, Mockito.RETURNS_MOCKS);
+		server = mock(Server.class, Mockito.RETURNS_MOCKS);
 		Mockito.when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
 		Mockito.when(server.getUpdateFolderFile()).thenReturn(new File(filePath + "TestServer/plugins/update"));
+		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [%4$-7s] %5$s %n");
+		Mockito.when(server.getLogger()).thenReturn(Logger.getLogger("Minecraft"));
 		Bukkit.setServer(server);
 		plugin = PowerMockito.mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
 		final PluginDescriptionFile pdf = new PluginDescriptionFile(PluginTest.class.getClassLoader().getResource("plugin.yml").openStream());
 		Whitebox.invokeMethod(plugin, "init", (Object) null, server, pdf, pluginDirectory, new File(filePath), PluginTest.class.getClassLoader());
-		Mockito.doReturn(logger).when(plugin).getLogger();
 		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(Matchers.anyString());
 		plugin.onEnable();
 		System.out.println(plugin.getDescription().getVersion());
@@ -64,6 +65,10 @@ public class PluginTest {
 
 	public static PluginTest getInstance() {
 		return instance;
+	}
+
+	public Server getServer() {
+		return server;
 	}
 
 	public final PvPManager getPlugin() {

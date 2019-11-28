@@ -109,9 +109,9 @@ public final class CombatUtils {
 		return contains;
 	}
 
-	public static final boolean isVersionSuperior(final String v1, final String v2) {
+	public static final boolean isVersionAtLeast(final String v1, final String v2) {
 		if (v1.equals(v2))
-			return false;
+			return true;
 
 		final String[] v1Array = v1.split("\\.");
 		final String[] v2Array = v2.split("\\.");
@@ -129,6 +129,10 @@ public final class CombatUtils {
 			Log.severe("Error reading version number! Comparing " + v1 + " to " + v2);
 		}
 		return true;
+	}
+
+	public static String stripTags(final String version) {
+		return version.replaceAll("(-.+)", "");
 	}
 
 }

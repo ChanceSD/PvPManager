@@ -1,22 +1,19 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.perms.Relation;
 
-import me.NoChance.PvPManager.Dependencies.PvPlugin;
+import me.NoChance.PvPManager.Dependencies.BaseDependency;
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.PvPDependency;
 
-public class FactionsUUID implements PvPlugin {
+public class FactionsUUIDHook extends BaseDependency implements PvPDependency {
 
-	private final FactionsPlugin factions;
-
-	public FactionsUUID() {
-		factions = FactionsPlugin.getInstance();
+	public FactionsUUIDHook(final Hook hook) {
+		super(hook);
 	}
 
 	@Override
@@ -27,13 +24,8 @@ public class FactionsUUID implements PvPlugin {
 	}
 
 	@Override
-	public boolean canBeAttacked(final Player player, final Location l) {
-		return false;
-	}
-
-	@Override
-	public JavaPlugin getMainClass() {
-		return factions;
+	public String getName() {
+		return "FactionsUUID";
 	}
 
 }
