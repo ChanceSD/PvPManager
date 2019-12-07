@@ -94,7 +94,6 @@ public final class PvPManager extends JavaPlugin {
 		}
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
-			Log.info("Update Available: " + Messages.getNewVersion());
 			Bukkit.broadcast("§6[§8PvPManager§6]§2 Update Available: §e" + Messages.getNewVersion(), "pvpmanager.admin");
 			if (Settings.isAutoUpdate()) {
 				if (updater.downloadFile()) {
@@ -104,10 +103,8 @@ public final class PvPManager extends JavaPlugin {
 				Log.info("Could not download latest update. Please update manually from one of the links below.");
 			}
 			Settings.setUpdate(true);
-			Bukkit.broadcast("§6Spigot Link: §8https://www.spigotmc.org/resources/pvpmanager.845/", "pvpmanager.admin");
-			Bukkit.broadcast("§6Bukkit Link: §8https://dev.bukkit.org/projects/pvpmanager", "pvpmanager.admin");
-			Log.info("Spigot Link: https://www.spigotmc.org/resources/pvpmanager.845/");
-			Log.info("Bukkit Link: https://dev.bukkit.org/projects/pvpmanager");
+			Bukkit.broadcast("§6[§8PvPManager§6]§2 §6Spigot Link: §8https://www.spigotmc.org/resources/pvpmanager.845/", "pvpmanager.admin");
+			Bukkit.broadcast("§6[§8PvPManager§6]§2 §6Bukkit Link: §8https://dev.bukkit.org/projects/pvpmanager", "pvpmanager.admin");
 		} else {
 			Log.info("No update found");
 		}

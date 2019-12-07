@@ -80,7 +80,7 @@ public class WorldGuardLegacyHook extends BaseDependency implements WorldGuardHo
 
 	@Override
 	public String getName() {
-		return "WorldGuard Legacy";
+		return "WorldGuardLegacy";
 	}
 
 }

@@ -94,8 +94,8 @@ Tagged In Combat:
     Commands On PvPLog:
       - 'announce &6[&8PvPManager&6] %p tried to escape combat!'
 
-# Should new players on your server be protected from PvP (If they want to PvP anyway they can use /pvp disable)
-# Time - How many minutes should newbie protection last, not persistent through restarts
+# Should new players on your server be protected from PvP (If they want to PvP anyway they can use /newbie disable)
+# Time - How many minutes should newbie protection last, persists through restarts
 # Block Pick Items - Block players from picking up items while they have protection
 # Protect From Everything - Protect newbies from all types of damage including PvE
 Newbie Protection:
