@@ -78,6 +78,14 @@ public class CustomMetrics {
 				return valueMap;
 			}
 		}));
+
+		metrics.addCustomChart(new Metrics.SimplePie("auto_soup", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return Settings.isAutoSoupEnabled() ? "Enabled" : "Disabled";
+			}
+		}));
+
 	}
 
 	private Map<String, Integer> getMapEntry(final String key) {
