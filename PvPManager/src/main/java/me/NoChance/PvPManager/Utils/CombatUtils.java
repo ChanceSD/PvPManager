@@ -132,7 +132,7 @@ public final class CombatUtils {
 	}
 
 	public static String stripTags(final String version) {
-		return version.replaceAll("(-.+)", "");
+		return version.replaceAll("(-|;).+", "");
 	}
 
 }
