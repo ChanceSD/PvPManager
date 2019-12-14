@@ -45,7 +45,7 @@ public class PlayerListener implements Listener {
 		this.ph = ph;
 		this.wg = (WorldGuardHook) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-			mushroomSoup = Material.MUSHROOM_STEM;
+			mushroomSoup = Material.MUSHROOM_STEW;
 		} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.0")) { // avoid loading Material class on unit tests
 			mushroomSoup = Material.getMaterial("MUSHROOM_SOUP");
 		}
@@ -164,39 +164,44 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public final void onPlayerInteract(final PlayerInteractEvent e) {
+	public final void onPlayerUseSoup(final PlayerInteractEvent e) {
 		final Player player = e.getPlayer();
 		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()))
 			return;
 
 		final ItemStack i = player.getItemInHand();
-		final PvPlayer pvplayer = ph.get(player);
 		if (Settings.isAutoSoupEnabled() && i.getType() == mushroomSoup) {
 			if (player.getHealth() == player.getMaxHealth())
 				return;
 			player.setHealth(player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());
 			i.setType(Material.BOWL);
-			return;
 		}
-		if (e.isCancelled())
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public final void onPlayerInteract(final PlayerInteractEvent e) {
+		final Player player = e.getPlayer();
+		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()) || e.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
-		if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-			if (i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) {
-				for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
-					if (player.equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()) || !player.canSee(p)) {
-						continue;
-					}
-					final PvPlayer target = ph.get(p);
-					if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
-						pvplayer.message(Messages.pvpDisabledOther(target.getName()));
-						e.setCancelled(true);
-						return;
-					}
+
+		final ItemStack i = player.getItemInHand();
+		final PvPlayer pvplayer = ph.get(player);
+
+		if (i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) {
+			for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
+				if (player.equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()) || !player.canSee(p)) {
+					continue;
+				}
+				final PvPlayer target = ph.get(p);
+				if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
+					pvplayer.message(Messages.pvpDisabledOther(target.getName()));
+					e.setCancelled(true);
+					return;
 				}
 			}
-			if (Settings.blockInteract() && pvplayer.isInCombat()) {
-				e.setCancelled(true);
-			}
+		}
+		if (Settings.blockInteract() && pvplayer.isInCombat()) {
+			e.setCancelled(true);
 		}
 	}
 
