@@ -22,18 +22,18 @@ public final class CombatUtils {
 	}
 
 	public static boolean hasTimePassed(final long toggleTime, final int cooldown) {
-		return hasTimePassed(toggleTime, cooldown * 1000L);
+		return hasTimePassedMs(toggleTime, cooldown * 1000);
 	}
 
-	public static boolean hasTimePassed(final long toggleTime, final long cooldown) {
+	public static boolean hasTimePassedMs(final long toggleTime, final long cooldown) {
 		return System.currentTimeMillis() - toggleTime >= cooldown;
 	}
 
 	public static int getTimeLeft(final long startTime, final int time) {
-		return getTimeLeft(startTime, time * 1000) / 1000;
+		return (int) (getTimeLeftMs(startTime, time * 1000) / 1000);
 	}
 
-	public static long getTimeLeft(final long startTime, final long time) {
+	public static long getTimeLeftMs(final long startTime, final long time) {
 		return startTime + time - System.currentTimeMillis();
 	}
 
