@@ -21,7 +21,7 @@ public class TagTask extends TimerTask {
 			final Iterator<PvPlayer> iterator = tagged.iterator();
 			while (iterator.hasNext()) {
 				final PvPlayer p = iterator.next();
-				if (CombatUtils.hasTimePassed(p.getTaggedTime(), time)) {
+				if (CombatUtils.hasTimePassedMs(p.getTaggedTime(), time)) {
 					p.unTag();
 					iterator.remove();
 				}
