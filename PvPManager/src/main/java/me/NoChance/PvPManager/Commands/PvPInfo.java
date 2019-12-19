@@ -43,7 +43,7 @@ public class PvPInfo implements CommandExecutor {
 		sender.sendMessage(ChatColor.GREEN + "- PvP Status: §f" + target.hasPvPEnabled());
 		sender.sendMessage(ChatColor.GREEN + "- In Combat: §f" + target.isInCombat());
 		sender.sendMessage(ChatColor.GREEN + "- Newbie: §f" + target.isNewbie());
-		sender.sendMessage(ChatColor.GREEN + "- World: §f" + target.getWorldName());
+		sender.sendMessage(ChatColor.GREEN + "- World: §f" + target.getPlayer().getWorld().getName());
 		sender.sendMessage(ChatColor.GREEN + "- Override PvP: §f" + target.hasOverride());
 	}
 
