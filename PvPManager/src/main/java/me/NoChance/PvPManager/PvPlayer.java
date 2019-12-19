@@ -1,9 +1,7 @@
 package me.NoChance.PvPManager;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,8 +20,6 @@ import me.NoChance.PvPManager.Utils.Log;
 
 public class PvPlayer extends EcoPlayer {
 
-	private WeakReference<Player> player;
-	private final UUID uuid;
 	private boolean newbie;
 	private boolean tagged;
 	private boolean pvpState;
@@ -39,9 +35,7 @@ public class PvPlayer extends EcoPlayer {
 	private TeamProfile teamProfile;
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
-		super(plugin.getDependencyManager().getEconomy());
-		this.player = new WeakReference<>(player);
-		this.uuid = player.getUniqueId();
+		super(player, plugin.getDependencyManager().getEconomy());
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
 		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled() || !Settings.getTeamColor().isEmpty()) {
@@ -56,23 +50,6 @@ public class PvPlayer extends EcoPlayer {
 		}
 	}
 
-	public final String getName() {
-		return getPlayer().getName();
-	}
-
-	public final UUID getUUID() {
-		return uuid;
-	}
-
-	@Override
-	public final Player getPlayer() {
-		return player.get();
-	}
-
-	public final String getWorldName() {
-		return getPlayer().getWorld().getName();
-	}
-
 	public final long getToggleTime() {
 		return this.toggleTime;
 	}
@@ -82,10 +59,6 @@ public class PvPlayer extends EcoPlayer {
 			return;
 
 		setPvP(!pvpState);
-	}
-
-	public void sendActionBar(final String message) {
-		plugin.getDisplayManager().displayActionBar(getPlayer(), message);
 	}
 
 	public final boolean hasToggleCooldownPassed() {
@@ -259,7 +232,7 @@ public class PvPlayer extends EcoPlayer {
 	public final long getNewbieTimeLeft() {
 		return newbieTask.getTimeleft();
 	}
-	
+
 	public long getTagTimeLeft() {
 		return taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis();
 	}
@@ -308,7 +281,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void updatePlayer(final Player p) {
 		if (!p.equals(getPlayer())) {
-			player = new WeakReference<>(p);
+			setPlayer(p);
 			if (teamProfile != null) {
 				teamProfile = new TeamProfile(this);
 			}

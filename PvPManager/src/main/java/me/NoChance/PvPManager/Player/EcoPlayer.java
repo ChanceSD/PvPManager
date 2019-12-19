@@ -8,26 +8,15 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import net.milkbowl.vault.economy.Economy;
 
-public abstract class EcoPlayer {
+public abstract class EcoPlayer extends BasePlayer {
 
 	private final Economy economy;
 	private final DecimalFormat df = new DecimalFormat();
 
-	protected EcoPlayer(final Economy economy) {
+	protected EcoPlayer(final Player player, final Economy economy) {
+		super(player);
 		this.economy = economy;
 		df.setMaximumFractionDigits(2);
-	}
-
-	protected abstract Player getPlayer();
-
-	public final boolean isOnline() {
-		return getPlayer() != null;
-	}
-
-	public final void message(final String message) {
-		if (isOnline() && !message.isEmpty()) {
-			getPlayer().sendMessage(message);
-		}
 	}
 
 	private void withdrawMoney(final double amount) {
