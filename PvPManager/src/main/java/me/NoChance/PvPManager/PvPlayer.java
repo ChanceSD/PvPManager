@@ -153,6 +153,9 @@ public class PvPlayer extends EcoPlayer {
 			if (Settings.isUseNameTag()) {
 				teamProfile.restoreTeam();
 			}
+			if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+				getPlayer().removePotionEffect(PotionEffectType.GLOWING); // effect should pass by itself but now players can get untagged before tag expires
+			}
 
 			message(Messages.getOutOfCombat());
 			sendActionBar(Messages.getOutOfCombat());
