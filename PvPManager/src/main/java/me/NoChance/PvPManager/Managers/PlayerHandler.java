@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.UUID;
 
@@ -23,20 +24,21 @@ public class PlayerHandler {
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
-	private final TagTask tagTask = new TagTask();
+	private final TagTask tagTask;
 	private final WorldGuardHook worldguard;
 
 	public PlayerHandler(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
-		worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
+		this.tagTask = new TagTask(plugin.getDisplayManager());
+		this.worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
 		if (Settings.isKillAbuseEnabled()) {
 			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20);
 		}
 
 		addOnlinePlayers();
-		new Timer(true).scheduleAtFixedRate(tagTask, 1000, 1000);
+		new Timer(true).scheduleAtFixedRate(tagTask, 1000, 500);
 	}
 
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
@@ -158,7 +160,7 @@ public class PlayerHandler {
 		tagTask.addTagged(p);
 	}
 
-	public final HashMap<UUID, PvPlayer> getPlayers() {
+	public final Map<UUID, PvPlayer> getPlayers() {
 		return players;
 	}
 

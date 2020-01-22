@@ -49,8 +49,8 @@ public final class PvPManager extends JavaPlugin {
 		Log.setup(getLogger());
 		loadFiles();
 		dependencyManager = new DependencyManager();
+		displayManager = new DisplayManager();
 		playerHandler = new PlayerHandler(this);
-		displayManager = new DisplayManager(this);
 		startListeners();
 		getCommand("pvp").setExecutor(new PvP(playerHandler));
 		getCommand("newbie").setExecutor(new Newbie(playerHandler));
@@ -136,7 +136,7 @@ public final class PvPManager extends JavaPlugin {
 	public Updater getUpdater() {
 		return updater;
 	}
-	
+
 	public DisplayManager getDisplayManager() {
 		return displayManager;
 	}

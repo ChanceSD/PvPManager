@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -45,7 +47,9 @@ public abstract class BasePlayer {
 	}
 
 	public void sendActionBar(final String message) {
-		getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.10")) { // Premium PvPManager supports lower versions with NMS
+			getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+		}
 	}
 
 }

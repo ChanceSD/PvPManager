@@ -55,6 +55,7 @@ Disable:
 # while 'none' or empty quotes '' will disable this feature completely
 # Color -> Necessary on 1.13+, changes name color and glowing color, leave empty '' for no color
 # Glowing -> For 1.9+ only, sets the player glowing while tagged
+# Action Bar -> Symbol to use for the bar and how many times to repeat it. Leave message empty to disable. Other symbols ▊,▮,▯,|
 # Untag Enemy -> When the player kills the enemy he was fighting he gets untagged
 # Block -> Section is self-explanatory, what to block in combat
 # Command whitelist is recursive, allowing 'tell' will allow 'tell' with any number of arguments
@@ -69,6 +70,10 @@ Tagged In Combat:
   NameTag Prefix: '&4&lCombat '
   Color: '&c'
   Glowing: true
+  Action Bar:
+    Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec]'
+    Symbol: '▊'
+    Total Bars: 20
   Untag Enemy: true
   Block:
     EnderPearls: true
