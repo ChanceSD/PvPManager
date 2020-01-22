@@ -7,13 +7,18 @@ import java.util.Set;
 import java.util.TimerTask;
 
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class TagTask extends TimerTask {
 
 	private final long time = Settings.getTimeInCombat() * 1000;
 	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<>());
+	private final DisplayManager display;
+
+	public TagTask(final DisplayManager display) {
+		this.display = display;
+	}
 
 	@Override
 	public final void run() {
@@ -21,18 +26,19 @@ public class TagTask extends TimerTask {
 			final Iterator<PvPlayer> iterator = tagged.iterator();
 			while (iterator.hasNext()) {
 				final PvPlayer p = iterator.next();
-				if (CombatUtils.hasTimePassedMs(p.getTaggedTime(), time)) {
+				final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
+				if (timePassed >= time) {
 					p.unTag();
 					iterator.remove();
-				} else {
-					p.sendActionBar(p.getTagTimeLeft() / 1000 + " seconds left");
+				} else if (!Settings.getActionBarMessage().isEmpty()) {
+					display.showProgress(p, timePassed / 1000D);
 				}
 			}
 		}
 	}
 
 	@Override
-	public final boolean cancel() throws IllegalStateException {
+	public final boolean cancel() {
 		synchronized (tagged) {
 			for (final PvPlayer pvPlayer : tagged)
 				if (pvPlayer.isInCombat()) {

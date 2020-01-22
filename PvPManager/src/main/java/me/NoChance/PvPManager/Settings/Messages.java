@@ -114,7 +114,7 @@ public class Messages {
 			e1.printStackTrace();
 			return "Encoding error! Please report this bug!";
 		}
-		return ChatColor.translateAlternateColorCodes('&', message);
+		return colorize(message);
 	}
 
 	private static void getMessages() {
@@ -174,6 +174,10 @@ public class Messages {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String colorize(final String message) {
+		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
 	public static String getErrorPlayerNotFound() {

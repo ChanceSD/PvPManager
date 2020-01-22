@@ -80,6 +80,9 @@ public final class Settings {
 	private static boolean blockInteractInCombat;
 	private static boolean untagEnemy;
 	private static String teamColor;
+	private static String actionBarMessage;
+	private static String actionBarSymbol;
+	private static int actionBarTotalBars;
 	private static List<String> newbieBlacklist;
 	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
 	private static Set<String> playerKillsWGExclusions = new HashSet<>();
@@ -136,6 +139,9 @@ public final class Settings {
 		teamColor = TAGGEDCOMBAT.getString("Color", "&c").replace("&", "");
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
+		actionBarMessage = Messages.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
+		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
+		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", true);
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
@@ -186,71 +192,6 @@ public final class Settings {
 		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
 		configVersion = c.getInt("Config Version");
 
-	}
-
-	public static void updateDefaultConfig(final Config config, final int newVersion) {
-		config.set("General.Default PvP", Settings.isDefaultPvp());
-		config.set("General.PvP Blood", Settings.isPvpBlood());
-		config.set("General.Ignore No Damage Hits", Settings.isIgnoreNoDamageHits());
-		config.set("General.Auto Soup Health", Settings.getSoupHealth());
-
-		config.set("Anti Border Hopping.Vulnerable", Settings.borderHoppingVulnerable());
-		config.set("Anti Border Hopping.Push Back", Settings.borderHoppingPushback());
-
-		config.set("Disable.Fly", Settings.isDisableFly());
-		config.set("Disable.GameMode", Settings.isDisableGamemode());
-		config.set("Disable.Disguise", Settings.isDisableDisguise());
-		config.set("Disable.Invisibility", Settings.isDisableInvisibility());
-
-		config.set("Tagged In Combat.Enabled", Settings.isInCombatEnabled());
-		config.set("Tagged In Combat.Time", Settings.getTimeInCombat());
-		config.set("Tagged In Combat.NameTag Prefix", Settings.getNameTagColor());
-		config.set("Tagged In Combat.Glowing", Settings.isGlowingInCombat());
-		config.set("Tagged In Combat.Block.EnderPearls", Settings.isBlockEnderPearl());
-		config.set("Tagged In Combat.Block.Teleport", Settings.isBlockEnderPearl());
-		config.set("Tagged In Combat.Block.Place Blocks", Settings.isBlockPlaceBlocks());
-		config.set("Tagged In Combat.Block.Interact", Settings.blockInteract());
-		config.set("Tagged In Combat.Block.Commands.Enabled", Settings.isStopCommands());
-		config.set("Tagged In Combat.Block.Commands.Whitelist", Settings.isCommandsWhitelist());
-		config.set("Tagged In Combat.Block.Commands.Command List", Settings.getCommandsAllowed());
-		config.set("Tagged In Combat.Punishments.Punish On Kick", Settings.punishOnKick());
-		config.set("Tagged In Combat.Punishments.Commands On PvPLog", Settings.getCommandsOnPvPLog());
-		config.set("Tagged In Combat.Punishments.Log To File", Settings.isLogToFile());
-		config.set("Tagged In Combat.Punishments.Kill on Logout.Enabled", Settings.isKillOnLogout());
-		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Inventory", Settings.isDropInventory());
-		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Experience", Settings.isDropExp());
-		config.set("Tagged In Combat.Punishments.Kill on Logout.Player Drops.Armor", Settings.isDropArmor());
-		config.set("Tagged In Combat.Punishments.Money Penalty", Settings.getFineAmount());
-
-		config.set("Player Kills.Money Reward", Settings.getMoneyReward());
-		config.set("Player Kills.Money Penalty", Settings.getMoneyPenalty());
-		config.set("Player Kills.Commands On Kill", Settings.getCommandsOnKill());
-
-		config.set("PvP Toggle.Cooldown", Settings.getToggleCooldown());
-		config.set("PvP Toggle.NameTags.Enabled", Settings.isToggleNametagsEnabled());
-		config.set("PvP Toggle.NameTags.Prefix On", Settings.getToggleColorOn());
-		config.set("PvP Toggle.NameTags.Prefix Off", Settings.getToggleColorOff());
-		config.set("PvP Toggle.Commands PvP On", Settings.getCommandsPvPOn());
-		config.set("PvP Toggle.Commands PvP Off", Settings.getCommandsPvPOff());
-		config.set("PvP Toggle.WorldGuard Overrides", Settings.isWorldguardOverrides());
-
-		config.set("Kill Abuse.Enabled", Settings.isKillAbuseEnabled());
-		config.set("Kill Abuse.Max Kills", Settings.getKillAbuseMaxKills());
-		config.set("Kill Abuse.Time Limit", Settings.getKillAbuseTime());
-		config.set("Kill Abuse.Commands on Abuse", Settings.getKillAbuseCommands());
-		config.set("Kill Abuse.Respawn Protection", Settings.getRespawnProtection());
-
-		config.set("Newbie Protection.Enabled", Settings.isNewbieProtectionEnabled());
-		config.set("Newbie Protection.Time(minutes)", Settings.getNewbieProtectionTime());
-		config.set("Newbie Protection.Block Pick Items", Settings.isBlockPickNewbies());
-		config.set("Newbie Protection.Protect From Everything", Settings.isNewbieGodMode());
-		config.set("Newbie Protection.Command Blacklist", Settings.getNewbieBlacklist());
-
-		config.set("Config Version", newVersion);
-		config.set("Update Check.Enabled", Settings.isUpdateCheck());
-		config.set("Update Check.Auto Update", Settings.isUpdate());
-		config.saveConfig();
-		initizalizeVariables(config);
 	}
 
 	public static void helpMenu(final Player player) {
@@ -553,6 +494,18 @@ public final class Settings {
 
 	public static String getTeamColor() {
 		return teamColor;
+	}
+
+	public static String getActionBarMessage() {
+		return actionBarMessage;
+	}
+
+	public static String getActionBarSymbol() {
+		return actionBarSymbol;
+	}
+
+	public static int getActionBarBars() {
+		return actionBarTotalBars;
 	}
 
 	public static Set<String> getKillsWGExclusions() {
