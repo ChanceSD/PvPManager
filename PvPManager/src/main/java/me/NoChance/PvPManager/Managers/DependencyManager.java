@@ -103,9 +103,9 @@ public class DependencyManager {
 		return true;
 	}
 
-	public final boolean canAttackAt(final Location l) {
+	public final boolean canAttackAt(final Player p, final Location l) {
 		for (final RegionDependency regionPlugin : regionChecks) {
-			if (!regionPlugin.canAttackAt(l))
+			if (!regionPlugin.canAttackAt(p, l))
 				return false;
 		}
 		return true;

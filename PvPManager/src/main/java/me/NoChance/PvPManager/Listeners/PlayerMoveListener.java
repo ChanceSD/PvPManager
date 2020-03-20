@@ -34,7 +34,7 @@ public class PlayerMoveListener implements Listener {
 		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ() && event.getFrom().getBlockY() == event.getTo().getBlockY())
 			return;
 
-		if (!wg.canAttackAt(event.getTo()) && wg.canAttackAt(event.getFrom())) {
+		if (!wg.canAttackAt(null, event.getTo()) && wg.canAttackAt(null, event.getFrom())) {
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {
 				final Vector newVel = event.getFrom().toVector().subtract(event.getTo().toVector());
 				newVel.setY(newVel.getY() + 0.1).normalize().multiply(1.5);
