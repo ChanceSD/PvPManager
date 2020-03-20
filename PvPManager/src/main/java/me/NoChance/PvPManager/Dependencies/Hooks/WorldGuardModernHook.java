@@ -35,7 +35,7 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardHo
 	}
 
 	@Override
-	public boolean canAttackAt(final Location l) {
+	public boolean canAttackAt(final Player p, final Location l) {
 		// State has to be != DENY because you can pvp on ALLOW and on no state
 		return getWGPvPState(l) != State.DENY;
 	}

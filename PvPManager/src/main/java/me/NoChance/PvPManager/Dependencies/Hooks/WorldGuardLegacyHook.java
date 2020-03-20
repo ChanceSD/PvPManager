@@ -45,7 +45,7 @@ public class WorldGuardLegacyHook extends BaseDependency implements WorldGuardHo
 	}
 
 	@Override
-	public boolean canAttackAt(final Location l) {
+	public boolean canAttackAt(final Player p, final Location l) {
 		return getWGPvPState(l) != State.DENY;
 	}
 
