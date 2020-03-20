@@ -38,6 +38,11 @@ public class PvPlayer extends EcoPlayer {
 		super(player, plugin.getDependencyManager().getEconomy());
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
+		if (plugin.getConfigM().getUserStorage().contains(player.getUniqueId().toString())) {
+			loadUserData(plugin.getConfigM().getUserData(player.getUniqueId()));
+		} else {
+			loadState();
+		}
 		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled() || !Settings.getTeamColor().isEmpty()) {
 			try {
 				this.teamProfile = new TeamProfile(this);
@@ -102,8 +107,7 @@ public class PvPlayer extends EcoPlayer {
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
 			message(Messages.getNewbieProtection().replace("%", Integer.toString(Settings.getNewbieProtectionTime())));
-			this.newbieTask = new NewbieTask(this);
-			newbieTask.runTaskLater(plugin, newbieTask.getTimeleft() / 50);
+			this.newbieTask = new NewbieTask(this, plugin, 0);
 		} else if (this.newbie && newbieTask != null) {
 			if (Bukkit.getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
 				message(Messages.getNewbieProtectionEnd());
@@ -240,7 +244,7 @@ public class PvPlayer extends EcoPlayer {
 		return taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis();
 	}
 
-	public final void loadState() {
+	private final void loadState() {
 		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp")) {
 			this.pvpState = false;
 		} else if (!getPlayer().hasPlayedBefore()) {
@@ -248,26 +252,24 @@ public class PvPlayer extends EcoPlayer {
 				setNewbie(true);
 			}
 		}
-		// now that the state is definitely loaded, set player team
-		if (teamProfile != null) {
-			teamProfile.setPvP(pvpState);
-		}
 	}
 
-	public void loadUserData(final Map<String, Object> userData) {
+	private void loadUserData(final Map<String, Object> userData) {
 		if (userData.get(UserDataFields.PVP_STATUS) instanceof Boolean) {
 			this.pvpState = (boolean) userData.get(UserDataFields.PVP_STATUS);
 		}
-		if (userData.get(UserDataFields.TOGGLE_TIME) instanceof Long) {
-			this.toggleTime = (long) userData.get(UserDataFields.TOGGLE_TIME);
+		final Object toggle_time = userData.get(UserDataFields.TOGGLE_TIME);
+		if (toggle_time instanceof Integer || toggle_time instanceof Long) {
+			this.toggleTime = ((Number) toggle_time).longValue();
 		}
 		if (userData.get(UserDataFields.NEWBIE) instanceof Boolean) {
 			this.newbie = (boolean) userData.get(UserDataFields.NEWBIE);
 			if (this.newbie) {
-				if (userData.get(UserDataFields.NEWBIE_TIMELEFT) instanceof Long) {
-					final long timeleft = (long) userData.get(UserDataFields.NEWBIE_TIMELEFT);
-					this.newbieTask = new NewbieTask(this);
-					newbieTask.runTaskLater(plugin, timeleft / 50);
+				final Object newbie_time = userData.get(UserDataFields.NEWBIE_TIMELEFT);
+				if (newbie_time instanceof Integer || newbie_time instanceof Long) {
+					final long timeleft = ((Number) newbie_time).longValue();
+					this.newbieTask = new NewbieTask(this, plugin, timeleft);
+					message(String.format(Messages.getNewbieTimeCheck(), timeleft / 1000));
 				}
 			}
 		}
