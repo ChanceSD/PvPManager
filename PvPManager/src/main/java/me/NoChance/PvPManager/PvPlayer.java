@@ -247,7 +247,7 @@ public class PvPlayer extends EcoPlayer {
 	private final void loadState() {
 		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp")) {
 			this.pvpState = false;
-		} else if (!getPlayer().hasPlayedBefore()) {
+		} else if (!getPlayer().hasPlayedBefore() && !plugin.getPlayerHandler().isNewbieDisabled(this)) {
 			if (Settings.isNewbieProtectionEnabled()) {
 				setNewbie(true);
 			}

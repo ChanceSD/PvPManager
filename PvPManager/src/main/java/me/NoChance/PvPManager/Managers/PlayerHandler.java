@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Timer;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import me.NoChance.PvPManager.Tasks.TagTask;
 public class PlayerHandler {
 
 	private final HashMap<UUID, PvPlayer> players = new HashMap<>();
+	private final HashSet<UUID> newbiesDisabled = new HashSet<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
@@ -88,6 +90,7 @@ public class PlayerHandler {
 		for (final Player p : plugin.getServer().getOnlinePlayers()) {
 			get(p);
 		}
+		newbiesDisabled.clear();
 	}
 
 	/**
@@ -131,6 +134,9 @@ public class PlayerHandler {
 	public void handlePluginDisable() {
 		tagTask.cancel();
 		for (final PvPlayer p : players.values()) {
+			if (!p.getPlayer().hasPlayedBefore() && !p.isNewbie()) {
+				newbiesDisabled.add(p.getUUID());
+			}
 			configManager.saveUser(p);
 			p.removeCombatTeam();
 		}
@@ -158,6 +164,10 @@ public class PlayerHandler {
 
 	public final Map<UUID, PvPlayer> getPlayers() {
 		return players;
+	}
+
+	public boolean isNewbieDisabled(final PvPlayer p) {
+		return newbiesDisabled.contains(p.getUUID());
 	}
 
 	public final PvPManager getPlugin() {
