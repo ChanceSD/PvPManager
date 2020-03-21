@@ -58,6 +58,8 @@ public class Messages {
 	private static String errorNotNewbie;
 	private static String newbieTimeCheck;
 	private static String newbieProtectionRemoved;
+	private static String respawnProtectionSelf;
+	private static String respawnProtectionOther;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -148,6 +150,8 @@ public class Messages {
 		moneySteal = getString("Money_Steal");
 		pvpListNoResults = getString("PvPList_Nothing_Found");
 		errorPlayerNotFound = getString("Error_Player_Not_Found");
+		respawnProtectionSelf = getString("Respawn_Protection");
+		respawnProtectionOther = getString("Respawn_Protection_Other");
 	}
 
 	private static void checkChanges() {
@@ -318,6 +322,14 @@ public class Messages {
 
 	public static String getNewbieProtectionRemoved() {
 		return newbieProtectionRemoved;
+	}
+
+	public static String respawnProtSelf() {
+		return respawnProtectionSelf;
+	}
+
+	public static String respawnProtOther(final String name) {
+		return respawnProtectionOther.replace("%p", name);
 	}
 
 }
