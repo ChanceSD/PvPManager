@@ -73,6 +73,8 @@ public class EntityListener implements Listener {
 		case PVPDISABLED:
 			ph.get(attacker).message(result.attackerCaused() ? Messages.pvpDisabled() : Messages.pvpDisabledOther(attacked.getName()));
 			break;
+		case RESPAWN_PROTECTION:
+			ph.get(attacker).message(result.attackerCaused() ? Messages.respawnProtSelf() : Messages.respawnProtOther(attacked.getName()));
 		default:
 			break;
 		}
