@@ -6,8 +6,6 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import me.NoChance.PvPManager.Player.EcoPlayer;
 import me.NoChance.PvPManager.Player.TeamProfile;
@@ -135,7 +133,7 @@ public class PvPlayer extends EcoPlayer {
 			teamProfile.setInCombat();
 		}
 		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
-			getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Settings.getTimeInCombat() * 20, 1));
+			getPlayer().setGlowing(true);
 		}
 
 		if (attacker) {
