@@ -40,8 +40,11 @@ public abstract class EcoPlayer extends BasePlayer {
 	public final void giveReward(final EcoPlayer victim) {
 		double moneyWon = Settings.getMoneyReward() >= 1 ? Settings.getMoneyReward() : Settings.getMoneyReward() * economy.getBalance(getPlayer());
 		if (Settings.isMoneySteal()) {
+			final double vbalance = economy.getBalance(victim.getPlayer());
 			if (Settings.getMoneyReward() < 1) {
-				moneyWon = Settings.getMoneyReward() * economy.getBalance(victim.getPlayer());
+				moneyWon = Settings.getMoneyReward() * vbalance;
+			} else if (Settings.getMoneyReward() > vbalance) {
+				moneyWon = vbalance;
 			}
 			economy.withdrawPlayer(victim.getPlayer(), moneyWon);
 			victim.message(Messages.getMoneySteal().replace("%p", getPlayer().getName()).replace("%m", df.format(moneyWon)));
