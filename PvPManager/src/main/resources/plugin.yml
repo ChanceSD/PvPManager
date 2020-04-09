@@ -90,6 +90,9 @@ permissions:
    pvpmanager.nodisable:
      description: Players with this permission don't get fly and gamemode disabled
      default: op
+   pvpmanager.nokillabuse:
+     description: Players with this permission don't get punished by kill abuse
+     default: op
    pvpmanager.list:
      description: Allows access to the list of players with PvP enabled
      default: false

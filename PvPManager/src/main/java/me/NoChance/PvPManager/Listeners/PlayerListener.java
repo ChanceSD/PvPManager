@@ -112,7 +112,7 @@ public class PlayerListener implements Listener {
 		// Player died in combat, process that
 		if (pvpDeath && !killer.equals(player)) {
 			final PvPlayer pKiller = ph.get(killer);
-			if (Settings.isKillAbuseEnabled()) {
+			if (Settings.isKillAbuseEnabled() && !killer.hasPermission("pvpmanager.nokillabuse")) {
 				pKiller.addVictim(player.getName());
 			}
 			if (wg == null || !wg.containsRegionsAt(killer.getLocation(), Settings.getKillsWGExclusions())) {
