@@ -14,7 +14,7 @@ import me.NoChance.PvPManager.PvPManager;
 public class LogFile {
 
 	private final File file;
-	private final SimpleDateFormat format = new SimpleDateFormat("[yyyy/MM/dd] [HH:mm:ss] ");
+	private final SimpleDateFormat format = new SimpleDateFormat("[yyyy/MM/dd HH:mm:ss] ");
 
 	public LogFile(final File file) {
 		this.file = file;
@@ -22,26 +22,30 @@ public class LogFile {
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
-				log("This file logs all players that disconnected during combat");
-				log("You can disable the logging in the config\n");
+				write("This file logs every player that disconnected during combat");
+				write("You can disable the logging in the config file\n");
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public final void log(final String line) {
+	private void write(final String line) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
-					bw.write(format.format(new Date()) + line);
+					bw.write(line);
 					bw.newLine();
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}.runTaskAsynchronously(PvPManager.getInstance());
+	}
+
+	public final void log(final String line) {
+		write(format.format(new Date()) + line);
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
@@ -18,6 +19,7 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class PlayerHandler {
 
@@ -151,6 +153,12 @@ public class PlayerHandler {
 
 		if (scoreboard.getTeam("PvPOff") != null) {
 			scoreboard.getTeam("PvPOff").unregister();
+		}
+		for (final Team team : scoreboard.getTeams()) {
+			if (team.getName().startsWith("PVP-")) {
+				Log.severe("Failed to cleanly remove a team. Please report this bug.");
+				team.unregister();
+			}
 		}
 	}
 
