@@ -39,7 +39,7 @@ public class TeamProfile {
 	}
 
 	private void setupTeams() {
-		final String id = pvPlayer.getUUID().toString().replaceAll("-", "").substring(0, 16);
+		final String id = "PVP-" + pvPlayer.getUUID().toString().replaceAll("-", "").substring(0, 12);
 		if (scoreboard.getTeam(id) != null) {
 			inCombat = scoreboard.getTeam(id);
 		} else {

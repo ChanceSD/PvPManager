@@ -31,8 +31,3 @@ bStats
 -----------
 
 [![bStats](https://bstats.org/signatures/bukkit/PvPManager.svg "bStats")](https://bstats.org/plugin/bukkit/PvPManager/ "bStats")
-
-License
------------
-Copyright (c) 2019 , NoChanceSD  
-All rights reserved
