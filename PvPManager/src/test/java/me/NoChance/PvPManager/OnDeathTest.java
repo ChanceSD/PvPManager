@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Settings.Settings;
 
 public class OnDeathTest {
 
@@ -50,6 +51,7 @@ public class OnDeathTest {
 		listener.onPlayerDeath(event);
 		assertFalse(pDefender.isInCombat());
 
+		Settings.setUntagEnemy(true);
 		pAttacker.setTagged(true, pDefender);
 		pDefender.setTagged(false, pAttacker);
 		assertTrue(pAttacker.isInCombat());
