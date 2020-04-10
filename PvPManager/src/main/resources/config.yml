@@ -26,7 +26,7 @@ General:
   Ignore No Damage Hits: false
   Auto Soup Health: 0
   World Exclusions:
-    - Example
+    - 'example'
     
 # Here you can choose which methods to use to stop 'border hopping' while players are tagged
 # Border hopping is when a player gets in PvP and tries to run into a safe zone to escape
@@ -74,7 +74,7 @@ Tagged In Combat:
     Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec]'
     Symbol: '▊'
     Total Bars: 20
-  Untag Enemy: true
+  Untag Enemy: false
   Block:
     EnderPearls: true
     Teleport: true
@@ -84,8 +84,8 @@ Tagged In Combat:
       Enabled: true
       Whitelist: true
       Command List:
-        - tell
-        - tag
+        - 'tell'
+        - 'tag'
   Punishments:
     Punish On Kick: true
     Money Penalty: 0
@@ -97,7 +97,7 @@ Tagged In Combat:
         Experience: true
         Armor: true
     Commands On PvPLog:
-      - 'announce &6[&8PvPManager&6] %p tried to escape combat!'
+      - 'announce &6[&8PvPManager&6]&c %p tried to escape combat and died!'
 
 # Should new players on your server be protected from PvP (If they want to PvP anyway they can use /newbie disable)
 # Time - How many minutes should newbie protection last, persists through restarts
@@ -108,7 +108,8 @@ Newbie Protection:
   Time(minutes): 5
   Block Pick Items: false
   Protect From Everything: false
-  Command Blacklist: []
+  Command Blacklist:
+    - 'examplecommand'
 
 # Prevent player abuse by killing the same player several times to rise in rank or even just grief
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
@@ -132,8 +133,10 @@ Player Kills:
   Money Reward: 0
   Money Penalty: 0
   Money Steal: false
-  Commands On Kill: []
-  WorldGuard Exclusions: []
+  Commands On Kill:
+    - 'examplecommand <player> killed <victim>'
+  WorldGuard Exclusions:
+    - 'exampleregion'
 
 # Section for PvP Toggle command - /pvp
 # Players can't use the command unless they have permission
@@ -150,8 +153,10 @@ PvP Toggle:
     Enabled: false
     Prefix On: '&1'
     Prefix Off: '&2'
-  Commands PvP On: []
-  Commands PvP Off: []
+  Commands PvP On:
+    - 'examplecommand %p turned pvp on'
+  Commands PvP Off:
+    - 'examplecommand %p turned pvp off'
   Force On Change World: false
   WorldGuard Overrides: true
 
