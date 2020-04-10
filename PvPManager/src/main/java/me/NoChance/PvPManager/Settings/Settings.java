@@ -139,7 +139,7 @@ public final class Settings {
 		actionBarMessage = Messages.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
-		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", true);
+		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
@@ -397,6 +397,10 @@ public final class Settings {
 
 	public static boolean isUntagEnemy() {
 		return untagEnemy;
+	}
+
+	public static void setUntagEnemy(final boolean untagEnemy) {
+		Settings.untagEnemy = untagEnemy;
 	}
 
 	public static boolean borderHoppingVulnerable() {

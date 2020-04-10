@@ -75,7 +75,7 @@ public final class PvPManager extends JavaPlugin {
 		this.configM = new ConfigManager(this);
 		Messages.setup(this);
 		if (Settings.isLogToFile()) {
-			log = new LogFile(new File(getDataFolder(), "pvplog.txt"));
+			log = new LogFile(new File(getDataFolder(), "combatlogs.log"));
 		}
 	}
 
