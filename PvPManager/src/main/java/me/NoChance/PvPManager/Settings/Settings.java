@@ -1,9 +1,7 @@
 package me.NoChance.PvPManager.Settings;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -25,11 +23,11 @@ public final class Settings {
 	private static boolean blockTeleport;
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocks;
-	private static List<String> commandsAllowed = Collections.singletonList("tag");
-	private static List<String> commandsOnKill = new ArrayList<>();
-	private static List<String> commandsOnPvPLog = new ArrayList<>();
-	private static List<String> commandsPvPOff = new ArrayList<>();
-	private static List<String> commandsPvPOn = new ArrayList<>();
+	private static List<String> commandsAllowed;
+	private static List<String> commandsOnKill;
+	private static List<String> commandsOnPvPLog;
+	private static List<String> commandsPvPOff;
+	private static List<String> commandsPvPOn;
 	private static boolean commandsWhitelist;
 	private static boolean defaultPvp;
 	private static boolean disableDisguise;
@@ -45,7 +43,7 @@ public final class Settings {
 	private static boolean ignoreNoDamageHits;
 	private static boolean inCombatEnabled;
 	private static boolean useNameTag;
-	private static List<String> killAbuseCommands = Collections.singletonList("kick <player> Kill Abuse Is Not Allowed!");
+	private static List<String> killAbuseCommands;
 	private static boolean killAbuseEnabled;
 	private static int killAbuseMaxKills;
 	private static int killAbuseTime;
@@ -84,8 +82,8 @@ public final class Settings {
 	private static String actionBarSymbol;
 	private static int actionBarTotalBars;
 	private static List<String> newbieBlacklist;
-	private static List<String> worldsExcluded = Arrays.asList("Example", "Example2");
-	private static Set<String> playerKillsWGExclusions = new HashSet<>();
+	private static List<String> worldsExcluded;
+	private static Set<String> playerKillsWGExclusions;
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection BORDERHOPPING;
 	private static ConfigurationSection DISABLE;
@@ -111,7 +109,6 @@ public final class Settings {
 		UPDATECHECK = config.getConfigurationSection("Update Check");
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void initizalizeVariables(final Config c) {
 		assignSections(c);
 
@@ -122,7 +119,7 @@ public final class Settings {
 		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
 		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
 		soupHealth = GENERAL.getDouble("Auto Soup Health", 0);
-		worldsExcluded = (List<String>) GENERAL.getList("World Exclusions", worldsExcluded);
+		worldsExcluded = getList(GENERAL.getStringList("World Exclusions"));
 
 		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
 		borderHoppingPushback = BORDERHOPPING.getBoolean("Push Back", true);
@@ -149,7 +146,7 @@ public final class Settings {
 		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact", false);
 		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
-		commandsAllowed = (List<String>) TAGGEDCOMBAT.getList("Block.Commands.Command List", commandsAllowed);
+		commandsAllowed = getList(TAGGEDCOMBAT.getStringList("Block.Commands.Command List"));
 		punishOnKick = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick", true);
 		fineAmount = TAGGEDCOMBAT.getDouble("Punishments.Money Penalty", 10.00);
 		logToFile = TAGGEDCOMBAT.getBoolean("Punishments.Log To File", true);
@@ -157,32 +154,32 @@ public final class Settings {
 		dropInventory = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Inventory", true);
 		dropExp = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Experience", true);
 		dropArmor = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Armor", true);
-		commandsOnPvPLog = (List<String>) TAGGEDCOMBAT.getList("Punishments.Commands On PvPLog", new ArrayList<>());
+		commandsOnPvPLog = getList(TAGGEDCOMBAT.getStringList("Punishments.Commands On PvPLog"));
 
 		newbieProtectionEnabled = NEWBIEPROTECTION.getBoolean("Enabled", true);
 		newbieProtectionTime = NEWBIEPROTECTION.getInt("Time(minutes)", 5);
 		blockPickNewbies = NEWBIEPROTECTION.getBoolean("Block Pick Items", false);
 		newbieGodMode = NEWBIEPROTECTION.getBoolean("Protect From Everything", false);
-		newbieBlacklist = (List<String>) NEWBIEPROTECTION.getList("Command Blacklist", new ArrayList<>());
+		newbieBlacklist = getList(NEWBIEPROTECTION.getStringList("Command Blacklist"));
 
 		killAbuseEnabled = KILLABUSE.getBoolean("Enabled", true);
 		killAbuseMaxKills = KILLABUSE.getInt("Max Kills", 5);
 		killAbuseTime = KILLABUSE.getInt("Time Limit", 60);
-		killAbuseCommands = (List<String>) KILLABUSE.getList("Commands on Abuse", killAbuseCommands);
+		killAbuseCommands = getList(KILLABUSE.getStringList("Commands on Abuse"));
 		respawnProtection = KILLABUSE.getInt("Respawn Protection", 5);
 
 		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 10));
 		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 10));
 		moneySteal = PLAYERKILLS.getBoolean("Money Steal", false);
-		commandsOnKill = (List<String>) PLAYERKILLS.getList("Commands On Kill", commandsOnKill);
-		playerKillsWGExclusions = new HashSet<>((List<String>) PLAYERKILLS.getList("WorldGuard Exclusions", new ArrayList<>()));
+		commandsOnKill = getList(PLAYERKILLS.getStringList("Commands On Kill"));
+		playerKillsWGExclusions = new HashSet<>(getList(PLAYERKILLS.getStringList("WorldGuard Exclusions")));
 
 		toggleCooldown = PVPTOGGLE.getInt("Cooldown", 15);
 		setToggleNametagsEnabled(PVPTOGGLE.getBoolean("NameTags.Enabled", false));
 		toggleColorOn = PVPTOGGLE.getString("NameTags.Prefix On", "&1");
 		toggleColorOff = PVPTOGGLE.getString("NameTags.Prefix Off", "&2");
-		commandsPvPOn = (List<String>) PVPTOGGLE.getList("Commands PvP On", new ArrayList<>());
-		commandsPvPOff = (List<String>) PVPTOGGLE.getList("Commands PvP Off", new ArrayList<>());
+		commandsPvPOn = getList(PVPTOGGLE.getStringList("Commands PvP On"));
+		commandsPvPOff = getList(PVPTOGGLE.getStringList("Commands PvP Off"));
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 
@@ -206,6 +203,16 @@ public final class Settings {
 		player.sendMessage(ChatColor.GOLD + "/pm update " + ChatColor.WHITE + "| Update to Latest Version");
 		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");
 		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
+	}
+
+	private static List<String> getList(final List<String> list) {
+		for (final Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
+			final String string = iterator.next();
+			if (string.startsWith("example")) {
+				iterator.remove();
+			}
+		}
+		return list;
 	}
 
 	public static List<String> getNewbieBlacklist() {
