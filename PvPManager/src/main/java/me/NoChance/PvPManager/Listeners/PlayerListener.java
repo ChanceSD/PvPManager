@@ -15,6 +15,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -61,6 +62,13 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public final void onToggleFlight(final PlayerToggleFlightEvent event) {
 		if (Settings.isDisableFly() && event.isFlying() && ph.get(event.getPlayer()).isInCombat()) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public final void onPlayerEat(final PlayerItemConsumeEvent event) {
+		if (Settings.isBlockEat() && ph.get(event.getPlayer()).isInCombat() && event.getItem().getType().isEdible()) {
 			event.setCancelled(true);
 		}
 	}
