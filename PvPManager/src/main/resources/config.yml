@@ -80,6 +80,7 @@ Tagged In Combat:
     Teleport: true
     Place Blocks: false
     Interact: false
+    Eat: false
     Commands:
       Enabled: true
       Whitelist: true

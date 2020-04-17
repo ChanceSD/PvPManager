@@ -23,6 +23,7 @@ public final class Settings {
 	private static boolean blockTeleport;
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocks;
+	private static boolean blockEat;
 	private static List<String> commandsAllowed;
 	private static List<String> commandsOnKill;
 	private static List<String> commandsOnPvPLog;
@@ -144,6 +145,7 @@ public final class Settings {
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
 		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact", false);
+		blockEat = TAGGEDCOMBAT.getBoolean("Block.Eat", false);
 		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
 		commandsAllowed = getList(TAGGEDCOMBAT.getStringList("Block.Commands.Command List"));
@@ -321,6 +323,10 @@ public final class Settings {
 
 	public static boolean isBlockPlaceBlocks() {
 		return blockPlaceBlocks;
+	}
+
+	public static boolean isBlockEat() {
+		return blockEat;
 	}
 
 	public static boolean isCommandsWhitelist() {
