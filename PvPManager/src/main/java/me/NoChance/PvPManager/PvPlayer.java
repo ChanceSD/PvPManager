@@ -256,11 +256,11 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final long getNewbieTimeLeft() {
-		return newbieTask.getTimeleft();
+		return newbie ? newbieTask.getTimeleft() : 0;
 	}
 
 	public long getTagTimeLeft() {
-		return taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis();
+		return tagged ? taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis() : 0;
 	}
 
 	private final void loadState() {
