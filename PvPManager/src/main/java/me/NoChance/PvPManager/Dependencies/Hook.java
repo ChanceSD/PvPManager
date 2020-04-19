@@ -11,14 +11,15 @@ public enum Hook {
 		Settings.setFineAmount(0);
 		Settings.setMoneyPenalty(0);
 		Settings.setMoneyReward(0);
-	}), SIMPLECLANS("SimpleClans"), COMMANDBOOK("CommandBook");
+	}), SIMPLECLANS("SimpleClans"), COMMANDBOOK("CommandBook"), PLACEHOLDERAPI("PlaceholderAPI");
 
 	private final String pluginName;
 	private String disabledWarning;
 	private Runnable disabledAction;
 
 	private Hook(final String name) {
-		this(name, null, ()->{});
+		this(name, null, () -> {
+		});
 	}
 
 	private Hook(final String name, final String disabledWarning, final Runnable disabledAction) {
