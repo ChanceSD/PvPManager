@@ -1,7 +1,5 @@
 package me.NoChance.PvPManager.Listeners;
 
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,7 +30,6 @@ import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Settings.Settings.DropMode;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 @SuppressWarnings("deprecation")
@@ -94,31 +91,12 @@ public class PlayerListener implements Listener {
 		final Player player = event.getEntity();
 		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
 			return;
+
 		final PvPlayer pvPlayer = ph.get(player);
-
-		// Let's process player's inventory/exp according to config file
-		if (pvPlayer.hasPvPLogged()) {
-			if (!Settings.isDropExp()) {
-				event.setKeepLevel(true);
-				event.setDroppedExp(0);
-			}
-			if (!Settings.isDropInventory() && Settings.isDropArmor()) {
-				CombatUtils.fakeItemStackDrop(player, player.getInventory().getArmorContents());
-				player.getInventory().setArmorContents(null);
-			} else if (Settings.isDropInventory() && !Settings.isDropArmor()) {
-				CombatUtils.fakeItemStackDrop(player, player.getInventory().getContents());
-				player.getInventory().clear();
-			}
-			if (!Settings.isDropInventory() || !Settings.isDropArmor()) {
-				event.setKeepInventory(true);
-				event.getDrops().clear();
-			}
-		}
-
 		final Player killer = player.getKiller();
-		final boolean pvpDeath = killer != null;
+
 		// Player died in combat, process that
-		if (pvpDeath && !killer.equals(player)) {
+		if (killer != null && !killer.equals(player)) {
 			final PvPlayer pKiller = ph.get(killer);
 			if (Settings.isKillAbuseEnabled() && !killer.hasPermission("pvpmanager.nokillabuse")) {
 				pKiller.addVictim(player.getName());
@@ -135,33 +113,7 @@ public class PlayerListener implements Listener {
 				}
 			}
 		}
-		if (!pvPlayer.hasPvPLogged()) {
-			final DropMode mode = Settings.getDropMode();
-			switch (mode) {
-			case DROP:
-				if (!pvpDeath && !pvPlayer.isInCombat()) {
-					event.setKeepInventory(true);
-					event.getDrops().clear();
-				}
-				break;
-			case KEEP:
-				if (pvpDeath || pvPlayer.isInCombat()) {
-					event.setKeepInventory(true);
-					event.getDrops().clear();
-				}
-				break;
-			case TRANSFER:
-				if (pvpDeath) {
-					final ItemStack[] drops = event.getDrops().toArray(new ItemStack[event.getDrops().size()]);
-					final HashMap<Integer, ItemStack> returned = killer.getInventory().addItem(drops);
-					CombatUtils.fakeItemStackDrop(player, returned.values().toArray(new ItemStack[returned.values().size()]));
-					event.getDrops().clear();
-				}
-				break;
-			default:
-				break;
-			}
-		}
+
 		if (pvPlayer.isInCombat()) {
 			ph.untag(pvPlayer);
 			final PvPlayer enemy = pvPlayer.getEnemy();
@@ -169,6 +121,14 @@ public class PlayerListener implements Listener {
 				ph.untag(enemy);
 			}
 		}
+
+		// Let's process player's inventory/exp according to config file
+		if (pvPlayer.hasPvPLogged()) {
+			ph.handleCombatLogDrops(event, player);
+			return;
+		}
+
+		ph.handlePlayerDrops(event, player, killer);
 	}
 
 	@EventHandler

@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Listeners;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -55,7 +56,7 @@ public class EntityListener implements Listener {
 			return;
 		}
 
-		final Player attacker = getAttacker(event);
+		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
 		final CancelResult result = ph.tryCancel(attacker, attacked);
 
@@ -85,7 +86,7 @@ public class EntityListener implements Listener {
 		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (ph.tryCancel(getAttacker(event), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE)) {
+		if (ph.tryCancel(getAttacker(event.getDamager()), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE)) {
 			event.setCancelled(false);
 		}
 	}
@@ -94,7 +95,7 @@ public class EntityListener implements Listener {
 	public final void onPlayerDamageMonitor(final EntityDamageByEntityEvent event) {
 		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
-		final Player attacker = getAttacker(event);
+		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
 
 		final CancelResult result = ph.tryCancel(attacker, attacked);
@@ -115,7 +116,7 @@ public class EntityListener implements Listener {
 			return;
 		}
 
-		final Player attacker = getAttackerCombust(event);
+		final Player attacker = getAttacker(event.getCombuster());
 		final Player attacked = (Player) event.getEntity();
 
 		if (!ph.canAttack(attacker, attacked)) {
@@ -177,15 +178,10 @@ public class EntityListener implements Listener {
 			}
 	}
 
-	private Player getAttacker(final EntityDamageByEntityEvent event) {
-		if (event.getDamager() instanceof Projectile)
-			return (Player) ((Projectile) event.getDamager()).getShooter();
-		return (Player) event.getDamager();
+	private Player getAttacker(final Entity damager) {
+		if (damager instanceof Projectile)
+			return (Player) ((Projectile) damager).getShooter();
+		return (Player) damager;
 	}
 
-	private Player getAttackerCombust(final EntityCombustByEntityEvent event) {
-		if (event.getCombuster() instanceof Projectile)
-			return (Player) ((Projectile) event.getCombuster()).getShooter();
-		return (Player) event.getCombuster();
-	}
 }
