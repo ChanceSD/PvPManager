@@ -45,8 +45,8 @@ public class EntityListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public final void onPlayerDamage(final EntityDamageByEntityEvent event) { // NO_UCD
-		if (!CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
+	public final void onPlayerDamage(final EntityDamageByEntityEvent event) {
+		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
 		if (!CombatUtils.isPvP(event)) {
 			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Settings.isNewbieGodMode()) {
@@ -81,8 +81,8 @@ public class EntityListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public final void onPlayerDamageOverride(final EntityDamageByEntityEvent event) { // NO_UCD
-		if (!CombatUtils.isPvP(event) || !CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()) || !event.isCancelled())
+	public final void onPlayerDamageOverride(final EntityDamageByEntityEvent event) {
+		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
 		if (ph.tryCancel(getAttacker(event), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE)) {
@@ -91,8 +91,8 @@ public class EntityListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public final void onPlayerDamageMonitor(final EntityDamageByEntityEvent event) { // NO_UCD
-		if (!CombatUtils.isPvP(event) || !CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
+	public final void onPlayerDamageMonitor(final EntityDamageByEntityEvent event) {
+		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
 		final Player attacker = getAttacker(event);
 		final Player attacked = (Player) event.getEntity();
@@ -106,7 +106,7 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public final void onEntityCombust(final EntityCombustByEntityEvent event) {
-		if (!CombatUtils.isWorldAllowed(event.getEntity().getWorld().getName()))
+		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
 		if (!CombatUtils.isPvP(event)) {
 			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Settings.isNewbieGodMode()) {
