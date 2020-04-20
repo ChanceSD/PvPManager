@@ -90,8 +90,8 @@ public final class CombatUtils {
 		return Bukkit.getPlayer(name) != null;
 	}
 
-	public static boolean isWorldAllowed(final String worldName) {
-		return !Settings.getWorldsExcluded().contains(worldName);
+	public static boolean isWorldExcluded(final String worldName) {
+		return Settings.getWorldsExcluded().contains(worldName);
 	}
 
 	public static boolean recursiveContainsCommand(final String[] givenCommand, final List<String> list) {

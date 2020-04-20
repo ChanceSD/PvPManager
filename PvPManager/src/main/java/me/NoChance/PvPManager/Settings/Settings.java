@@ -83,7 +83,7 @@ public final class Settings {
 	private static String actionBarSymbol;
 	private static int actionBarTotalBars;
 	private static List<String> newbieBlacklist;
-	private static List<String> worldsExcluded;
+	private static Set<String> worldsExcluded;
 	private static Set<String> playerKillsWGExclusions;
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection BORDERHOPPING;
@@ -120,7 +120,7 @@ public final class Settings {
 		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
 		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
 		soupHealth = GENERAL.getDouble("Auto Soup Health", 0);
-		worldsExcluded = getList(GENERAL.getStringList("World Exclusions"));
+		worldsExcluded = new HashSet<>(getList(GENERAL.getStringList("World Exclusions")));
 
 		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
 		borderHoppingPushback = BORDERHOPPING.getBoolean("Push Back", true);
@@ -305,7 +305,7 @@ public final class Settings {
 		return toggleCooldown;
 	}
 
-	public static List<String> getWorldsExcluded() {
+	public static Set<String> getWorldsExcluded() {
 		return worldsExcluded;
 	}
 

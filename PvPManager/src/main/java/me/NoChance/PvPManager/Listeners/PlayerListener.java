@@ -92,7 +92,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public final void onPlayerDeath(final PlayerDeathEvent event) {
 		final Player player = event.getEntity();
-		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()))
+		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
 			return;
 		final PvPlayer pvPlayer = ph.get(player);
 
@@ -174,7 +174,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerUseSoup(final PlayerInteractEvent e) {
 		final Player player = e.getPlayer();
-		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()))
+		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
 			return;
 
 		final ItemStack i = player.getItemInHand();
@@ -189,7 +189,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerInteract(final PlayerInteractEvent e) {
 		final Player player = e.getPlayer();
-		if (!CombatUtils.isWorldAllowed(player.getWorld().getName()) || e.getAction() != Action.RIGHT_CLICK_BLOCK)
+		if (CombatUtils.isWorldExcluded(player.getWorld().getName()) || e.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
 
 		final ItemStack i = player.getItemInHand();
@@ -280,16 +280,17 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
-		if (CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName()))
-			if (Settings.isKillAbuseEnabled() && Settings.getRespawnProtection() != 0) {
-				final PvPlayer player = ph.get(event.getPlayer());
-				player.setRespawnTime(System.currentTimeMillis());
-			}
+		if (CombatUtils.isWorldExcluded(event.getPlayer().getWorld().getName()))
+			return;
+		if (Settings.isKillAbuseEnabled() && Settings.getRespawnProtection() != 0) {
+			final PvPlayer player = ph.get(event.getPlayer());
+			player.setRespawnTime(System.currentTimeMillis());
+		}
 	}
 
 	@EventHandler
 	public void onChangeWorld(final PlayerChangedWorldEvent event) {
-		if (!CombatUtils.isWorldAllowed(event.getPlayer().getWorld().getName()))
+		if (CombatUtils.isWorldExcluded(event.getPlayer().getWorld().getName()))
 			return;
 		if (Settings.isForcePvPOnWorldChange()) {
 			ph.get(event.getPlayer()).setPvP(Settings.isDefaultPvp());
