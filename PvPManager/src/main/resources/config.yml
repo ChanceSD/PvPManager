@@ -9,11 +9,11 @@
 # Locale -> Changes messages language, options are - en ru ch es it de br
 # Default PvP -> Leave it at true unless you want no PvP for new players
 # PvP Blood -> Enable blood particles on PvP
-# Player Drop Mode -> What happens to a player's drops on death
+# Player Drop Mode -> What happens to a player's drops and exp on death
 # The options are 'ALWAYS' - (PvPManager does nothing, so feature is disabled),
 # mode 'DROP' - (Players drop items when killed in PvP but not in PvE),
 # mode 'KEEP' - (Players keep items when killed in PvP but not in PvE) and
-# mode 'TRANSFER' - (Same as 'DROP' but transfer items directly to killer without drops)
+# mode 'TRANSFER' - (Same as 'DROP' but transfer items(not exp) directly to killer without drops)
 # Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
 # This prevents players from doing a hit and run between zone borders
 # Auto Soup Health -> How much health does soup heal, use 0 to disable

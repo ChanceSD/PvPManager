@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -19,6 +21,7 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public class PlayerHandler {
@@ -131,6 +134,59 @@ public class PlayerHandler {
 		if (Settings.getFineAmount() != 0) {
 			player.applyFine();
 		}
+	}
+
+	public void handleCombatLogDrops(final PlayerDeathEvent event, final Player player) {
+		if (!Settings.isDropExp()) {
+			keepExp(event);
+		}
+		if (!Settings.isDropInventory() && Settings.isDropArmor()) {
+			CombatUtils.fakeItemStackDrop(player, player.getInventory().getArmorContents());
+			player.getInventory().setArmorContents(null);
+		} else if (Settings.isDropInventory() && !Settings.isDropArmor()) {
+			CombatUtils.fakeItemStackDrop(player, player.getInventory().getContents());
+			player.getInventory().clear();
+		}
+		if (!Settings.isDropInventory() || !Settings.isDropArmor()) {
+			keepInv(event);
+		}
+	}
+
+	public void handlePlayerDrops(final PlayerDeathEvent event, final Player player, final Player killer) {
+		switch (Settings.getDropMode()) {
+		case DROP:
+			if (killer == null) {
+				keepInv(event);
+				keepExp(event);
+			}
+			break;
+		case KEEP:
+			if (killer != null) {
+				keepInv(event);
+				keepExp(event);
+			}
+			break;
+		case TRANSFER:
+			if (killer != null) {
+				final ItemStack[] drops = event.getDrops().toArray(new ItemStack[event.getDrops().size()]);
+				final HashMap<Integer, ItemStack> returned = killer.getInventory().addItem(drops);
+				CombatUtils.fakeItemStackDrop(player, returned.values().toArray(new ItemStack[returned.values().size()]));
+				event.getDrops().clear();
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void keepInv(final PlayerDeathEvent event) {
+		event.setKeepInventory(true);
+		event.getDrops().clear();
+	}
+
+	private void keepExp(final PlayerDeathEvent event) {
+		event.setKeepLevel(true);
+		event.setDroppedExp(0);
 	}
 
 	public void handlePluginDisable() {
