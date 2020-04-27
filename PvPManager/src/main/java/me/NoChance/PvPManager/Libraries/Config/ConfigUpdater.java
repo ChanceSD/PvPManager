@@ -3,9 +3,9 @@ package me.NoChance.PvPManager.Libraries.Config;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +49,7 @@ public class ConfigUpdater {
 		final FileConfiguration oldConfig = YamlConfiguration.loadConfiguration(toUpdate);
 		final FileConfiguration newConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(resourceName)));
 		@SuppressWarnings("resource")
-		final BufferedWriter writer = new BufferedWriter(new FileWriter(toUpdate));
+		final BufferedWriter writer = Files.newBufferedWriter(toUpdate.toPath());
 
 		final List<String> ignoredSectionsArrayList = new ArrayList<>(ignoredSections);
 		//ignoredSections can ONLY contain configurations sections
