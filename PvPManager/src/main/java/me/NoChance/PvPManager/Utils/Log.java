@@ -25,4 +25,8 @@ public final class Log {
 		log.warning(message);
 	}
 
+	public static void debug(final String message) {
+		Log.debug(message);
+	}
+
 }

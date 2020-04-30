@@ -150,7 +150,7 @@ public final class Settings {
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
 		commandsAllowed = getList(TAGGEDCOMBAT.getStringList("Block.Commands.Command List"));
 		punishOnKick = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick", true);
-		fineAmount = TAGGEDCOMBAT.getDouble("Punishments.Money Penalty", 10.00);
+		fineAmount = TAGGEDCOMBAT.getDouble("Punishments.Money Penalty", 0.00);
 		logToFile = TAGGEDCOMBAT.getBoolean("Punishments.Log To File", true);
 		killOnLogout = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Enabled", true);
 		dropInventory = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Inventory", true);

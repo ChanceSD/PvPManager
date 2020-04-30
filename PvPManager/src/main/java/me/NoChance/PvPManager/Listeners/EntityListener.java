@@ -17,12 +17,7 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.earth2me.essentials.Essentials;
-import com.sk89q.commandbook.CommandBook;
-import com.sk89q.commandbook.GodComponent;
-
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -32,17 +27,9 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 public class EntityListener implements Listener {
 
 	private final PlayerHandler ph;
-	private GodComponent gc;
-	private Essentials ess;
 
 	public EntityListener(final PlayerHandler ph) {
 		this.ph = ph;
-		if (Hook.COMMANDBOOK.isEnabled()) {
-			this.gc = (GodComponent) CommandBook.inst().getComponentManager().getComponent("god");
-		}
-		if (Hook.ESSENTIALS.isEnabled()) {
-			this.ess = (Essentials) Hook.ESSENTIALS.getPlugin();
-		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -64,21 +51,7 @@ public class EntityListener implements Listener {
 			event.setCancelled(true);
 		}
 
-		switch (result) {
-		case FAIL_OVERRIDE:
-		case FAIL:
-			break;
-		case NEWBIE:
-			ph.get(attacker).message(result.attackerCaused() ? Messages.newbieBlocked() : Messages.newbieBlockedOther(attacked.getName()));
-			break;
-		case PVPDISABLED:
-			ph.get(attacker).message(result.attackerCaused() ? Messages.pvpDisabled() : Messages.pvpDisabledOther(attacked.getName()));
-			break;
-		case RESPAWN_PROTECTION:
-			ph.get(attacker).message(result.attackerCaused() ? Messages.respawnProtSelf() : Messages.respawnProtOther(attacked.getName()));
-		default:
-			break;
-		}
+		Messages.messageProtection(result, attacker, attacked);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -127,17 +100,16 @@ public class EntityListener implements Listener {
 	private void onDamageActions(final Player attacker, final Player defender) {
 		final PvPlayer pvpAttacker = ph.get(attacker);
 		final PvPlayer pvpDefender = ph.get(defender);
-		if (pvpAttacker == null || pvpDefender == null)
-			return;
+
 		if (Settings.isPvpBlood()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 		}
 		if (!attacker.hasPermission("pvpmanager.nodisable")) {
 			if (Settings.isDisableFly()) {
-				if (attacker.isFlying() || attacker.getAllowFlight()) {
+				if (CombatUtils.canFly(attacker)) {
 					pvpAttacker.disableFly();
 				}
-				if (!defender.hasPermission("pvpmanager.nodisable") && (defender.isFlying() || defender.getAllowFlight())) {
+				if (!defender.hasPermission("pvpmanager.nodisable") && CombatUtils.canFly(defender)) {
 					pvpDefender.disableFly();
 				}
 			}
@@ -148,12 +120,7 @@ public class EntityListener implements Listener {
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
 			}
 			if (Settings.isDisableGodMode()) {
-				if (gc != null && gc.hasGodMode(attacker)) {
-					gc.disableGodMode(attacker);
-				}
-				if (ess != null && ess.getUser(attacker).isGodModeEnabled()) {
-					ess.getUser(attacker).setGodModeEnabled(false);
-				}
+				ph.getPlugin().getDependencyManager().disableGodMode(attacker);
 			}
 		}
 		if (Settings.isInCombatEnabled()) {
