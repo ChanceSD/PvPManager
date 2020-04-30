@@ -15,7 +15,7 @@ public class CommandBookHook extends BaseDependency implements GodDependency {
 
 	public CommandBookHook(final Hook hook) {
 		super(hook);
-		this.gc = (GodComponent) CommandBook.inst().getComponentManager().getComponent("god");
+		this.gc = (GodComponent) ((CommandBook) hook.getPlugin()).getComponentManager().getComponent("god");
 	}
 
 	@Override
