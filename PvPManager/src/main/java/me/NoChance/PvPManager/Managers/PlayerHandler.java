@@ -103,8 +103,8 @@ public class PlayerHandler {
 	 * @return PvPlayer instance for the provided player
 	 */
 	public final PvPlayer get(final Player player) {
-		final UUID uuid = player.getUniqueId();
-		return players.containsKey(uuid) ? players.get(uuid) : addUser(new PvPlayer(player, plugin));
+		final PvPlayer pvPlayer = players.get(player.getUniqueId());
+		return pvPlayer != null ? pvPlayer : addUser(new PvPlayer(player, plugin));
 	}
 
 	private PvPlayer addUser(final PvPlayer p) {

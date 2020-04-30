@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Dependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
+import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
@@ -34,6 +35,7 @@ public class DependencyManager {
 	private final HashMap<Hook, Dependency> dependencies = new HashMap<>();
 	private final ArrayList<PvPDependency> attackChecks = new ArrayList<>();
 	private final ArrayList<RegionDependency> regionChecks = new ArrayList<>();
+	private final ArrayList<GodDependency> godChecks = new ArrayList<>();
 
 	public DependencyManager() {
 		setupHooks();
@@ -50,7 +52,7 @@ public class DependencyManager {
 					continue;
 				}
 				attemptHookingInto(hook);
-			} catch (final NoClassDefFoundError | NoSuchMethodError | ClassCastException e) {
+			} catch (final NoClassDefFoundError | NoSuchMethodError | ClassCastException | NoSuchFieldError e) {
 				Log.warning("Your " + hook + " version is currently unsupported: " + hook.getDescription().getFullName());
 				Log.warning(hook + " support disabled");
 			} catch (final DependencyException e) {
@@ -111,6 +113,14 @@ public class DependencyManager {
 		return true;
 	}
 
+	public final void disableGodMode(final Player p) {
+		for (final GodDependency godPlugin : godChecks) {
+			if (godPlugin.hasGodMode(p)) {
+				godPlugin.removeGodMode(p);
+			}
+		}
+	}
+
 	public void startListeners(final PlayerHandler ph) {
 		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
 			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.8")) {
@@ -140,6 +150,9 @@ public class DependencyManager {
 		}
 		if (dep instanceof RegionDependency) {
 			regionChecks.add((RegionDependency) dep);
+		}
+		if (dep instanceof GodDependency) {
+			godChecks.add((GodDependency) dep);
 		}
 	}
 

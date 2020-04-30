@@ -76,6 +76,10 @@ public final class CombatUtils {
 		return false;
 	}
 
+	public static boolean canFly(final Player p) {
+		return p.isFlying() || p.getAllowFlight();
+	}
+
 	public static void fakeItemStackDrop(final Player player, final ItemStack[] inventory) {
 		final Location playerLocation = player.getLocation();
 		final World playerWorld = player.getWorld();

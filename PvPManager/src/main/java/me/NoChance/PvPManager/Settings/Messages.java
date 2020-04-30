@@ -15,8 +15,10 @@ import java.util.Properties;
 import java.util.Queue;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Utils.Log;
 
 public class Messages {
@@ -177,6 +179,22 @@ public class Messages {
 			pw.println(a);
 		} catch (final IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static void messageProtection(final CancelResult result, final Player player, final Player attacked) {
+		switch (result) {
+		case NEWBIE:
+			plugin.getPlayerHandler().get(player).message(result.attackerCaused() ? newbieBlocked() : newbieBlockedOther(attacked.getName()));
+			break;
+		case PVPDISABLED:
+			plugin.getPlayerHandler().get(player).message(result.attackerCaused() ? pvpDisabled() : pvpDisabledOther(attacked.getName()));
+			break;
+		case RESPAWN_PROTECTION:
+			plugin.getPlayerHandler().get(player).message(result.attackerCaused() ? respawnProtSelf() : respawnProtOther(attacked.getName()));
+			break;
+		default:
+			break;
 		}
 	}
 

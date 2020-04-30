@@ -28,7 +28,8 @@ public abstract class EcoPlayer extends BasePlayer {
 	}
 
 	public final void applyFine() {
-		withdrawMoney(Settings.getFineAmount());
+		final double penalty = Settings.getFineAmount() >= 1 ? Settings.getFineAmount() : Settings.getFineAmount() * economy.getBalance(getPlayer());
+		withdrawMoney(penalty);
 	}
 
 	public final void applyPenalty() {
