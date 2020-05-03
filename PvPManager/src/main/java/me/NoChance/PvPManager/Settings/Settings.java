@@ -16,6 +16,7 @@ public final class Settings {
 		ALWAYS, DROP, KEEP, TRANSFER
 	}
 
+	public static boolean DEBUG = false;
 	private static int configVersion;
 	private static String minecraftVersion;
 	private static boolean autoUpdate;
@@ -204,6 +205,7 @@ public final class Settings {
 		player.sendMessage(ChatColor.GOLD + "/pm " + ChatColor.WHITE + "| Show This Help Page");
 		player.sendMessage(ChatColor.GOLD + "/pm update " + ChatColor.WHITE + "| Update to Latest Version");
 		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");
+		player.sendMessage(ChatColor.GOLD + "/pm cleanup " + ChatColor.WHITE + "| Cleanup inactive users from database");
 		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
 	}
 

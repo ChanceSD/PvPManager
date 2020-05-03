@@ -22,7 +22,6 @@ import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Log;
 
 public class PlayerHandler {
 
@@ -92,6 +91,11 @@ public class PlayerHandler {
 	}
 
 	private void addOnlinePlayers() {
+		for (final Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+			if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
+				team.unregister();
+			}
+		}
 		for (final Player p : plugin.getServer().getOnlinePlayers()) {
 			get(p);
 		}
@@ -210,12 +214,6 @@ public class PlayerHandler {
 		if (scoreboard.getTeam("PvPOff") != null) {
 			scoreboard.getTeam("PvPOff").unregister();
 		}
-		for (final Team team : scoreboard.getTeams()) {
-			if (team.getName().startsWith("PVP-")) {
-				Log.severe("Failed to cleanly remove a team. Please report this bug.");
-				team.unregister();
-			}
-		}
 	}
 
 	public final void untag(final PvPlayer p) {
@@ -236,6 +234,10 @@ public class PlayerHandler {
 
 	public final PvPManager getPlugin() {
 		return plugin;
+	}
+
+	public ConfigManager getConfigManager() {
+		return configManager;
 	}
 
 }

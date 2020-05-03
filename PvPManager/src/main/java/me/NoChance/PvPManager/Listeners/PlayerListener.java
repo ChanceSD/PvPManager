@@ -76,7 +76,7 @@ public class PlayerListener implements Listener {
 		final PvPlayer pvPlayer = ph.get(player);
 		if (pvPlayer.isInCombat()) {
 			if (Settings.isLogToFile()) {
-				ph.getPlugin().getLog().log(player.getName() + " tried to escape combat!");
+				ph.getConfigManager().getLog().log(player.getName() + " tried to escape combat!");
 			}
 			for (final String s : Settings.getCommandsOnPvPLog()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", player.getName())));

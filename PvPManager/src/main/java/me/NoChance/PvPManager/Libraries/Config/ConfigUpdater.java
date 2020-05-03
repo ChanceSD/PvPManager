@@ -3,8 +3,10 @@ package me.NoChance.PvPManager.Libraries.Config;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,14 +43,14 @@ public class ConfigUpdater {
 	 * @param ignoredSections List of sections to ignore and copy from the current config
 	 * @throws IOException If an IOException occurs
 	 */
+	@SuppressWarnings("resource")
 	public static void update(final Plugin plugin, final String resourceName, final File toUpdate, final List<String> ignoredSections) throws IOException {
-		final BufferedReader newReader = new BufferedReader(new InputStreamReader(plugin.getResource(resourceName)));
+		final BufferedReader newReader = new BufferedReader(new InputStreamReader(plugin.getResource(resourceName), StandardCharsets.UTF_8));
 		final List<String> newLines = newReader.lines().collect(Collectors.toList());
 		newReader.close();
 
-		final FileConfiguration oldConfig = YamlConfiguration.loadConfiguration(toUpdate);
-		final FileConfiguration newConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(resourceName)));
-		@SuppressWarnings("resource")
+		final FileConfiguration oldConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(toUpdate), StandardCharsets.UTF_8));
+		final FileConfiguration newConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(resourceName), StandardCharsets.UTF_8));
 		final BufferedWriter writer = Files.newBufferedWriter(toUpdate.toPath());
 
 		final List<String> ignoredSectionsArrayList = new ArrayList<>(ignoredSections);

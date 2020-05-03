@@ -225,64 +225,52 @@
 			<optional>true</optional>
 			<exclusions>
 				<exclusion>
-					<groupId>org.bukkit</groupId>
-					<artifactId>bukkit</artifactId>
+					<groupId>io.papermc</groupId>
+					<artifactId>paperlib</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sk89q</groupId>
+					<artifactId>commandbook</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.bstats</groupId>
 					<artifactId>bstats-bukkit</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>com.sk89q.intake</groupId>
-					<artifactId>intake</artifactId>
+					<groupId>net.java.truevfs</groupId>
+					<artifactId>truevfs-profile-default_2.13</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.flywaydb</groupId>
-					<artifactId>flyway-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.khelekore</groupId>
-					<artifactId>prtree</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.google.code.findbugs</groupId>
-					<artifactId>jsr305</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sk89q</groupId>
-					<artifactId>squirrelid</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>rhino</groupId>
-					<artifactId>js</artifactId>
+					<groupId>it.unimi.dsi</groupId>
+					<artifactId>fastutil</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>de.schlichtherle</groupId>
 					<artifactId>truezip</artifactId>
 				</exclusion>
 				<exclusion>
+					<groupId>org.mozilla</groupId>
+					<artifactId>rhino</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.code.findbugs</groupId>
+					<artifactId>jsr305</artifactId>
+				</exclusion>
+				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>com.sk89q.worldedit.worldedit-libs</groupId>
-					<artifactId>core</artifactId>
+					<groupId>org.antlr</groupId>
+					<artifactId>antlr4-runtime</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>com.sk89q.worldedit.worldedit-libs</groupId>
+					<groupId>org.flywaydb</groupId>
+					<artifactId>flyway-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
 					<artifactId>bukkit</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.logging.log4j</groupId>
-					<artifactId>log4j-slf4j-impl</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>io.papermc</groupId>
-					<artifactId>paperlib</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.mozilla</groupId>
-					<artifactId>rhino</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
