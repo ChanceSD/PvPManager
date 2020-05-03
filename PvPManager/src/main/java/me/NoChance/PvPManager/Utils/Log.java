@@ -2,6 +2,8 @@ package me.NoChance.PvPManager.Utils;
 
 import java.util.logging.Logger;
 
+import me.NoChance.PvPManager.Settings.Settings;
+
 public final class Log {
 
 	private static Logger log;
@@ -26,7 +28,9 @@ public final class Log {
 	}
 
 	public static void debug(final String message) {
-		Log.debug(message);
+		if (Settings.DEBUG) {
+			log.info(message);
+		}
 	}
 
 }

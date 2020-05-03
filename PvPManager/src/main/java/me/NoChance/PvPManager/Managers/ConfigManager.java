@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -8,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -20,6 +23,7 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Version;
 import me.NoChance.PvPManager.Libraries.Config.ConfigUpdater;
 import me.NoChance.PvPManager.Settings.Config;
+import me.NoChance.PvPManager.Settings.LogFile;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -31,13 +35,18 @@ public class ConfigManager {
 	private final File configFile;
 	private final File usersFile;
 	private final YamlConfiguration users;
+	private final ExecutorService executor = Executors.newSingleThreadExecutor();
 	private Config config;
+	private LogFile log;
 
 	public ConfigManager(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		this.configFile = new File(plugin.getDataFolder(), "config.yml");
+		if (Settings.isLogToFile()) {
+			log = new LogFile(new File(plugin.getDataFolder(), "combatlogs.log"));
+		}
 		loadConfig();
 		loadUsersFile();
 	}
@@ -78,7 +87,11 @@ public class ConfigManager {
 	}
 
 	private void initConfig() {
-		config = new Config(plugin, "config.yml");
+		try {
+			config = new Config(plugin, "config.yml");
+		} catch (final FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		Settings.initizalizeVariables(config);
 	}
 
@@ -134,7 +147,7 @@ public class ConfigManager {
 		if (!player.isNewbie() && player.hasPvPEnabled() == Settings.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
 			// clear entry for this user if there is one
 			if (getUserStorage().contains(player.getUUID().toString())) {
-				getUserStorage().set(player.getUUID().toString(), null);
+				removeUser(player.getUUID().toString());
 				saveUsersToDisk();
 			}
 			return;
@@ -144,8 +157,19 @@ public class ConfigManager {
 		saveUsersToDisk();
 	}
 
+	public final void removeUser(final String id) {
+		getUserStorage().set(id, null);
+	}
+
+	public final void removeUsers(final List<String> ids) {
+		for (final String id : ids) {
+			removeUser(id);
+		}
+		saveUsersToDisk();
+	}
+
 	private void saveUsersToDisk() {
-		new Thread(new Runnable() {
+		executor.submit(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -156,11 +180,15 @@ public class ConfigManager {
 					e.printStackTrace();
 				}
 			}
-		}).start();
+		});
 	}
 
 	public final FileConfiguration getConfig() {
 		return config;
+	}
+
+	public LogFile getLog() {
+		return log;
 	}
 
 	public Map<String, Object> getUserData(final UUID uuid) {
