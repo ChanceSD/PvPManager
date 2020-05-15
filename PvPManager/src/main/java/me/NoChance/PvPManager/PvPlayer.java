@@ -129,7 +129,7 @@ public class PvPlayer extends EcoPlayer {
 		if (tagged)
 			return;
 
-		if (Settings.isUseNameTag()) {
+		if (Settings.isUseNameTag() || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && !Settings.getTeamColor().isEmpty()) {
 			teamProfile.setInCombat();
 		}
 		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
@@ -139,11 +139,15 @@ public class PvPlayer extends EcoPlayer {
 		if (attacker) {
 			final String message = Messages.getTaggedAttacker().replace("%p", tagger.getName());
 			message(message);
-			sendActionBar(message);
+			if (!Settings.getActionBarMessage().isEmpty()) {
+				sendActionBar(message);
+			}
 		} else {
 			final String message = Messages.getTaggedDefender().replace("%p", tagger.getName());
 			message(message);
-			sendActionBar(message);
+			if (!Settings.getActionBarMessage().isEmpty()) {
+				sendActionBar(message);
+			}
 		}
 
 		this.tagged = true;
@@ -152,7 +156,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void unTag() {
 		if (isOnline()) {
-			if (Settings.isUseNameTag()) {
+			if (Settings.isUseNameTag() || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && !Settings.getTeamColor().isEmpty()) {
 				teamProfile.restoreTeam();
 			}
 			if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
@@ -160,7 +164,9 @@ public class PvPlayer extends EcoPlayer {
 			}
 
 			message(Messages.getOutOfCombat());
-			sendActionBar(Messages.getOutOfCombat());
+			if (!Settings.getActionBarMessage().isEmpty()) {
+				sendActionBar(Messages.getOutOfCombat());
+			}
 		}
 
 		this.tagged = false;
