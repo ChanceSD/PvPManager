@@ -36,7 +36,7 @@ commands:
       description: List all players with pvp enabled
       aliases: [plist, pvpl]
       permission: pvpmanager.list
-   tag:
+   pvptag:
       description: Shows time left until out of combat
       aliases: [ct, pt, pvptag]
    announce:
