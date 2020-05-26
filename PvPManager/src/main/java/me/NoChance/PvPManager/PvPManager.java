@@ -55,7 +55,7 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvpinfo").setExecutor(new PvPInfo(playerHandler));
 		getCommand("pvplist").setExecutor(new PvPList(playerHandler));
 		getCommand("pvpstatus").setExecutor(new PvPStatus(playerHandler));
-		getCommand("tag").setExecutor(new Tag(playerHandler));
+		getCommand("pvptag").setExecutor(new Tag(playerHandler));
 		getCommand("announce").setExecutor(new Announce());
 		startMetrics();
 		Log.info("PvPManager Enabled (" + (System.currentTimeMillis() - start) + " ms)");
