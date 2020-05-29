@@ -44,11 +44,11 @@ public class ConfigManager {
 		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		this.configFile = new File(plugin.getDataFolder(), "config.yml");
+		loadConfig();
+		loadUsersFile();
 		if (Settings.isLogToFile()) {
 			log = new LogFile(new File(plugin.getDataFolder(), "combatlogs.log"));
 		}
-		loadConfig();
-		loadUsersFile();
 	}
 
 	private void loadConfig() {
