@@ -25,7 +25,7 @@ public class TeamProfile {
 		setupTeams();
 		final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
 		// player got stuck in this team somehow (server crash?)
-		if (team != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()))) {
+		if (team != null && team.getScoreboard() != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()))) {
 			team.removeEntry(pvPlayer.getName());
 		}
 	}
@@ -78,7 +78,14 @@ public class TeamProfile {
 		if (team != null && !team.equals(inCombat)) {
 			previousTeam = team;
 		}
-		inCombat.addEntry(pvPlayer.getName());
+		try {
+			inCombat.addEntry(pvPlayer.getName());
+		} catch (final IllegalStateException e) {
+			setupTeams();
+			inCombat.addEntry(pvPlayer.getName());
+			Log.info("Failed to add player to combat team");
+			Log.info("This warning can be ignored but if it happens often it means one of your plugins is removing PvPManager teams and causing a conflict");
+		}
 	}
 
 	public final void restoreTeam() {

@@ -48,7 +48,7 @@ public class PvPlayer extends EcoPlayer {
 				Settings.setUseNameTag(false);
 				Settings.setToggleNametagsEnabled(false);
 				this.teamProfile = null;
-				Log.severe("Colored nametags disabled. You need to update your Spigot version.");
+				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
 			}
 		}
 	}
