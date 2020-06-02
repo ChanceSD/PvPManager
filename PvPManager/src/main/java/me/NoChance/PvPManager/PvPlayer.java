@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import me.NoChance.PvPManager.Events.PlayerTagEvent;
+import me.NoChance.PvPManager.Events.PlayerUntagEvent;
 import me.NoChance.PvPManager.Player.EcoPlayer;
 import me.NoChance.PvPManager.Player.TeamProfile;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -129,6 +131,11 @@ public class PvPlayer extends EcoPlayer {
 		if (tagged)
 			return;
 
+		final PlayerTagEvent event = new PlayerTagEvent(getPlayer(), this);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled())
+			return;
+
 		if (Settings.isUseNameTag() || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && !Settings.getTeamColor().isEmpty()) {
 			teamProfile.setInCombat();
 		}
@@ -155,6 +162,11 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void unTag() {
+		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled())
+			return;
+
 		if (isOnline()) {
 			if (Settings.isUseNameTag() || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && !Settings.getTeamColor().isEmpty()) {
 				teamProfile.restoreTeam();
