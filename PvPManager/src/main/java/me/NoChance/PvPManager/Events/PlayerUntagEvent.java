@@ -19,10 +19,20 @@ public final class PlayerUntagEvent extends Event implements Cancellable {
 		this.pvplayer = pvplayer;
 	}
 
+	/**
+	 * The player being untagged in this event
+	 *
+	 * @return Player being tagged
+	 */
 	public final Player getPlayer() {
 		return player;
 	}
 
+	/**
+	 * Utility method to quickly get the PvPlayer being untagged
+	 *
+	 * @return PvPlayer instance of the player
+	 */
 	public final PvPlayer getPvPlayer() {
 		return pvplayer;
 	}

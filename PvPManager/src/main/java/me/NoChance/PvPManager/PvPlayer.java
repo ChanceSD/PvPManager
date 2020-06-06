@@ -131,7 +131,7 @@ public class PvPlayer extends EcoPlayer {
 		if (tagged)
 			return;
 
-		final PlayerTagEvent event = new PlayerTagEvent(getPlayer(), this);
+		final PlayerTagEvent event = new PlayerTagEvent(getPlayer(), this, attacker, tagger.getPlayer());
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled())
 			return;

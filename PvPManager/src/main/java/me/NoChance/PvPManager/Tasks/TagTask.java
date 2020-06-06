@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TimerTask;
 
+import org.bukkit.Bukkit;
+
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -28,7 +30,7 @@ public class TagTask extends TimerTask {
 				final PvPlayer p = iterator.next();
 				final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
 				if (timePassed >= time) {
-					p.unTag();
+					Bukkit.getScheduler().runTask(display.getPlugin(), () -> p.unTag());
 					iterator.remove();
 				} else if (!Settings.getActionBarMessage().isEmpty()) {
 					display.showProgress(p, timePassed / 1000D);
