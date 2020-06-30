@@ -196,7 +196,8 @@ public class PlayerHandler {
 	public void handlePluginDisable() {
 		tagTask.cancel();
 		for (final PvPlayer p : players.values()) {
-			if (!p.getPlayer().hasPlayedBefore() && !p.isNewbie()) {
+			final Player player = p.getPlayer();
+			if (player != null && !player.hasPlayedBefore() && !p.isNewbie()) {
 				newbiesDisabled.add(p.getUUID());
 			}
 			configManager.saveUser(p);
@@ -207,12 +208,13 @@ public class PlayerHandler {
 
 	private final void removeTeams() {
 		final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-		if (scoreboard.getTeam("PvPOn") != null) {
-			scoreboard.getTeam("PvPOn").unregister();
+		final Team pvpon = scoreboard.getTeam("PvPOn");
+		if (pvpon != null) {
+			pvpon.unregister();
 		}
-
-		if (scoreboard.getTeam("PvPOff") != null) {
-			scoreboard.getTeam("PvPOff").unregister();
+		final Team pvpoff = scoreboard.getTeam("PvPOff");
+		if (pvpoff != null) {
+			pvpoff.unregister();
 		}
 	}
 

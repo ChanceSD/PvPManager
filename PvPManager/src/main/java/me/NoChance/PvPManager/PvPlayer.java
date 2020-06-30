@@ -6,6 +6,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.eclipse.jdt.annotation.Nullable;
 
 import me.NoChance.PvPManager.Events.PlayerTagEvent;
 import me.NoChance.PvPManager.Events.PlayerUntagEvent;
@@ -95,6 +96,7 @@ public class PvPlayer extends EcoPlayer {
 		return this.override;
 	}
 
+	@Nullable
 	public PvPlayer getEnemy() {
 		return this.enemy;
 	}

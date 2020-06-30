@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -154,14 +155,15 @@ public class PlayerListener implements Listener {
 
 		final ItemStack i = player.getItemInHand();
 		final PvPlayer pvplayer = ph.get(player);
+		final Block clickedBlock = e.getClickedBlock();
 
-		if (i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) {
-			for (final Player p : e.getClickedBlock().getWorld().getPlayers()) {
-				if (player.equals(p) || !e.getClickedBlock().getWorld().equals(p.getWorld()) || !player.canSee(p)) {
+		if ((i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) && clickedBlock != null) {
+			for (final Player p : clickedBlock.getWorld().getPlayers()) {
+				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
 					continue;
 				}
 				final PvPlayer target = ph.get(p);
-				if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && e.getClickedBlock().getLocation().distanceSquared(p.getLocation()) < 9) {
+				if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 9) {
 					pvplayer.message(Messages.pvpDisabledOther(target.getName()));
 					e.setCancelled(true);
 					return;
