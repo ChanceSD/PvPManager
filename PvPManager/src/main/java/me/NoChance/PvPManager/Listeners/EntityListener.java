@@ -32,7 +32,7 @@ public class EntityListener implements Listener {
 		this.ph = ph;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public final void onPlayerDamage(final EntityDamageByEntityEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
@@ -49,9 +49,8 @@ public class EntityListener implements Listener {
 
 		if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
 			event.setCancelled(true);
+			Messages.messageProtection(result, attacker, attacked);
 		}
-
-		Messages.messageProtection(result, attacker, attacked);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -71,11 +70,7 @@ public class EntityListener implements Listener {
 		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
 
-		final CancelResult result = ph.tryCancel(attacker, attacked);
-
-		if (result == CancelResult.FAIL || result == CancelResult.FAIL_OVERRIDE) {
-			onDamageActions(attacker, attacked);
-		}
+		onDamageActions(attacker, attacked);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
