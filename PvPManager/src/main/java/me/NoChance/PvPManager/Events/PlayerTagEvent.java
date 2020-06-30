@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.eclipse.jdt.annotation.Nullable;
 
 import me.NoChance.PvPManager.PvPlayer;
 
@@ -70,6 +71,7 @@ public final class PlayerTagEvent extends Event implements Cancellable {
 	 *
 	 * @return The player's enemy or null if there isn't one
 	 */
+	@Nullable
 	public final Player getEnemy() {
 		return enemy;
 	}
