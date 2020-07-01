@@ -51,19 +51,25 @@ public class DamageListenerTest {
 
 	private void createAttack(final boolean cancelled) {
 		mockEvent = spy(new EntityDamageByEntityEvent(attacker, defender, DamageCause.ENTITY_ATTACK, 5));
-		when(mockEvent.isCancelled()).thenReturn(cancelled);
+		mockEvent.setCancelled(cancelled);
 
 		final Projectile proj = mock(Projectile.class);
 		when(proj.getShooter()).thenReturn(attacker);
 		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
-		when(projMockEvent.isCancelled()).thenReturn(cancelled);
+		projMockEvent.setCancelled(cancelled);
 
-		damageListener.onPlayerDamage(mockEvent);
-		damageListener.onPlayerDamageOverride(mockEvent);
-		damageListener.onPlayerDamageMonitor(mockEvent);
-		damageListener.onPlayerDamage(projMockEvent);
-		damageListener.onPlayerDamageOverride(projMockEvent);
-		damageListener.onPlayerDamageMonitor(projMockEvent);
+		callEvent(mockEvent);
+		callEvent(projMockEvent);
+	}
+
+	private void callEvent(final EntityDamageByEntityEvent event) {
+		if (!event.isCancelled()) { // ignore cancelled true
+			damageListener.onPlayerDamage(event);
+		}
+		damageListener.onPlayerDamageOverride(event);
+		if (!event.isCancelled()) { // ignore cancelled true
+			damageListener.onPlayerDamageMonitor(event);
+		}
 	}
 
 	@Test
@@ -117,8 +123,8 @@ public class DamageListenerTest {
 		assertTrue(ph.get(attacker).isInCombat());
 		assertTrue(ph.get(defender).isInCombat());
 
-		verify(mockEvent, never()).setCancelled(false);
-		verify(projMockEvent, never()).setCancelled(false);
+		verify(mockEvent, times(1)).setCancelled(false); // only when creating the attack
+		verify(projMockEvent, times(1)).setCancelled(false); // only when creating the attack
 	}
 
 	@Test
