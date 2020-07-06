@@ -17,6 +17,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
@@ -131,6 +132,8 @@ public class PlayerHandler {
 
 	public final void applyPunishments(final PvPlayer player) {
 		final Player p = player.getPlayer();
+		final PlayerCombatLogEvent event = new PlayerCombatLogEvent(p, player);
+		Bukkit.getPluginManager().callEvent(event);
 		if (Settings.isKillOnLogout()) {
 			player.setPvpLogged(true);
 			p.setHealth(0);
