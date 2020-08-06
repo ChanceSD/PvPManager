@@ -46,6 +46,11 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardHo
 	}
 
 	@Override
+	public boolean hasDenyPvPFlag(final Player player) {
+		return getWGPvPState(player.getLocation()) == State.DENY;
+	}
+
+	@Override
 	public Set<ProtectedRegion> getRegionsAt(final Location l) {
 		return regionQuery.getApplicableRegions(BukkitAdapter.adapt(l)).getRegions();
 	}

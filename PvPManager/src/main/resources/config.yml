@@ -32,9 +32,11 @@ General:
 # Border hopping is when a player gets in PvP and tries to run into a safe zone to escape
 # Vulnerable -> Makes players still vulnerable to PvP in safe zones
 # Push Back -> Players will be launched back when trying to enter a safe zone (Disabling this might improve performance)  
+# Reset Combat Tag -> Only meant for when Vulnerable is true. Toggles whether combat tagging resets while fighting in a safe zone. Works for WorldGuard Only
 Anti Border Hopping:
   Vulnerable: true
   Push Back: true
+  Reset Combat Tag: true
 
 # What should be disabled when a player(except operators) enters PvP
 # Fly -> Disable any kind of fly mode

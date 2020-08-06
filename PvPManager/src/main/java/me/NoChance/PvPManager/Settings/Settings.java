@@ -75,6 +75,7 @@ public final class Settings {
 	private static double soupHealth;
 	private static boolean borderHoppingVulnerable;
 	private static boolean borderHoppingPushback;
+	private static boolean borderHoppingResetCombatTag;
 	private static boolean worldguardOverrides;
 	private static boolean glowingInCombat;
 	private static boolean blockInteractInCombat;
@@ -125,6 +126,7 @@ public final class Settings {
 
 		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
 		borderHoppingPushback = BORDERHOPPING.getBoolean("Push Back", true);
+		borderHoppingResetCombatTag = BORDERHOPPING.getBoolean("Reset Combat Tag", true);
 
 		disableFly = DISABLE.getBoolean("Fly", true);
 		disableGamemode = DISABLE.getBoolean("GameMode", true);
@@ -421,6 +423,14 @@ public final class Settings {
 
 	public static void setBorderHoppingPushback(final boolean borderHoppingPushback) {
 		Settings.borderHoppingPushback = borderHoppingPushback;
+	}
+
+	public static boolean borderHoppingResetCombatTag() {
+		return borderHoppingResetCombatTag;
+	}
+
+	public static void setBorderHoppingResetCombatTag(final boolean borderHoppingResetCombatTag) {
+		Settings.borderHoppingResetCombatTag = borderHoppingResetCombatTag;
 	}
 
 	public static boolean isStopCommands() {
