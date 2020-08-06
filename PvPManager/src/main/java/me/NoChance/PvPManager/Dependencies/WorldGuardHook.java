@@ -14,6 +14,8 @@ public interface WorldGuardHook extends RegionPvPDependency {
 
 	public boolean hasAllowPvPFlag(Player player);
 
+	public boolean hasDenyPvPFlag(Player player);
+
 	public State getWGPvPState(final Location l);
 
 	public Set<ProtectedRegion> getRegionsAt(final Location l);
