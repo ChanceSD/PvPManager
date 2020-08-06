@@ -18,6 +18,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -27,9 +29,11 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 public class EntityListener implements Listener {
 
 	private final PlayerHandler ph;
+	private final WorldGuardHook wg;
 
 	public EntityListener(final PlayerHandler ph) {
 		this.ph = ph;
+		this.wg = (WorldGuardHook) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -119,6 +123,11 @@ public class EntityListener implements Listener {
 			}
 		}
 		if (Settings.isInCombatEnabled()) {
+			if (wg != null && Settings.borderHoppingVulnerable()) {
+				if (!Settings.borderHoppingResetCombatTag() && (!wg.hasAllowPvPFlag(attacker) && (!wg.hasAllowPvPFlag(defender)))) {
+					return;
+				}
+			}
 			pvpAttacker.setTagged(true, pvpDefender);
 			pvpDefender.setTagged(false, pvpAttacker);
 		}
