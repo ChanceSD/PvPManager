@@ -59,10 +59,7 @@ public class DependencyManager {
 				Log.warning(hook + " support disabled");
 			} catch (final DependencyException e) {
 				Log.warning(e.getMessage());
-				if (isDependencyEnabled(hook)) {
-					hook.getDisabledAction().run();
-					unregisterDependency(getDependency(hook));
-				}
+				hook.getDisabledAction().run();
 			}
 		}
 	}
