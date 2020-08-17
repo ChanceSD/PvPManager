@@ -60,6 +60,9 @@ public class DependencyManager {
 			} catch (final DependencyException e) {
 				Log.warning(e.getMessage());
 				hook.getDisabledAction().run();
+			} catch (final Exception e) {
+				Log.warning("Failed to enable support for " + hook.getDescription().getFullName() + ". Is it up to date?");
+				e.printStackTrace();
 			}
 		}
 	}
