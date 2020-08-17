@@ -71,7 +71,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler // normal priority to avoid conflict with griefprevention
 	public final void onPlayerLogout(final PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
