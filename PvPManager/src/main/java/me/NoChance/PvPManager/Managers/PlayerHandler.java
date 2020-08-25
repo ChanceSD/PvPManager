@@ -27,7 +27,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 public class PlayerHandler {
 
 	private final HashMap<UUID, PvPlayer> players = new HashMap<>();
-	private final HashSet<UUID> newbiesDisabled = new HashSet<>();
+	private static final HashSet<UUID> newbiesDisabled = new HashSet<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
@@ -233,7 +233,7 @@ public class PlayerHandler {
 		return players;
 	}
 
-	public boolean isNewbieDisabled(final PvPlayer p) {
+	public static boolean isNewbieDisabled(final PvPlayer p) {
 		return newbiesDisabled.contains(p.getUUID());
 	}
 

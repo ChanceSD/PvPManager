@@ -10,6 +10,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import me.NoChance.PvPManager.Events.PlayerTagEvent;
 import me.NoChance.PvPManager.Events.PlayerUntagEvent;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.EcoPlayer;
 import me.NoChance.PvPManager.Player.TeamProfile;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -265,7 +266,7 @@ public class PvPlayer extends EcoPlayer {
 	private final void loadState() {
 		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp")) {
 			this.pvpState = false;
-		} else if (!getPlayer().hasPlayedBefore() && !plugin.getPlayerHandler().isNewbieDisabled(this)) {
+		} else if (!getPlayer().hasPlayedBefore() && !PlayerHandler.isNewbieDisabled(this)) {
 			if (Settings.isNewbieProtectionEnabled()) {
 				setNewbie(true);
 			}
