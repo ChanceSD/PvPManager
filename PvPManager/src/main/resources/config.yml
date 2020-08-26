@@ -41,7 +41,7 @@ Anti Border Hopping:
 # What should be disabled when a player(except operators) enters PvP
 # Fly -> Disable any kind of fly mode
 # GameMode -> Anything not Survival gets disabled
-# Disguise -> Disguises from DisguiseCraft or LibsDisguises
+# Disguise -> Disguises from LibsDisguises
 # GodMode -> GodMode from Essentials or CommandBook
 # Invisibility -> Invisibility potions, defaults to false as it's a vanilla feature
 Disable:

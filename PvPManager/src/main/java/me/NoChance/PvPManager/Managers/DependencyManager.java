@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Dependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
+import me.NoChance.PvPManager.Dependencies.DisguiseDependency;
 import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
@@ -21,6 +22,7 @@ import me.NoChance.PvPManager.Dependencies.Hooks.CommandBookHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUIDHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SavageFactionsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
@@ -39,6 +41,7 @@ public class DependencyManager {
 	private final ArrayList<PvPDependency> attackChecks = new ArrayList<>();
 	private final ArrayList<RegionDependency> regionChecks = new ArrayList<>();
 	private final ArrayList<GodDependency> godChecks = new ArrayList<>();
+	private final ArrayList<DisguiseDependency> disguiseChecks = new ArrayList<>();
 
 	public DependencyManager() {
 		setupHooks();
@@ -109,6 +112,9 @@ public class DependencyManager {
 		case PLACEHOLDERAPI:
 			registerDependency(new PlaceHolderAPIHook(hook));
 			break;
+		case LIBSDISGUISES:
+			registerDependency(new LibsDisguisesHook(hook));
+			break;
 		default:
 			registerDependency(new BaseDependency(hook));
 			break;
@@ -134,6 +140,14 @@ public class DependencyManager {
 		for (final GodDependency godPlugin : godChecks) {
 			if (godPlugin.hasGodMode(p)) {
 				godPlugin.removeGodMode(p);
+			}
+		}
+	}
+
+	public final void disableDisguise(final Player p) {
+		for (final DisguiseDependency disguisePlugin : disguiseChecks) {
+			if (disguisePlugin.isDisguised(p)) {
+				disguisePlugin.unDisguise(p);
 			}
 		}
 	}
@@ -171,11 +185,13 @@ public class DependencyManager {
 		if (dep instanceof GodDependency) {
 			godChecks.add((GodDependency) dep);
 		}
+		if (dep instanceof DisguiseDependency) {
+			disguiseChecks.add((DisguiseDependency) dep);
+		}
 	}
 
 	public void unregisterDependency(final Dependency dep) {
 		dependencies.remove(dep.getHook());
-		attackChecks.remove(dep);
 		attackChecks.remove(dep);
 	}
 

@@ -115,6 +115,9 @@ public class EntityListener implements Listener {
 			if (Settings.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
 				attacker.setGameMode(GameMode.SURVIVAL);
 			}
+			if (Settings.isDisableDisguise()) {
+				ph.getPlugin().getDependencyManager().disableDisguise(attacker);
+			}
 			if (Settings.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
 			}
