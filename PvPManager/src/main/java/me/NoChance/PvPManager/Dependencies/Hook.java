@@ -11,7 +11,7 @@ public enum Hook {
 		Settings.setFineAmount(0);
 		Settings.setMoneyPenalty(0);
 		Settings.setMoneyReward(0);
-	}), SIMPLECLANS("SimpleClans"), COMMANDBOOK("CommandBook"), PLACEHOLDERAPI("PlaceholderAPI");
+	}), SIMPLECLANS("SimpleClans"), COMMANDBOOK("CommandBook"), PLACEHOLDERAPI("PlaceholderAPI"), LIBSDISGUISES("LibsDisguises");
 
 	private final String pluginName;
 	private String disabledWarning;
