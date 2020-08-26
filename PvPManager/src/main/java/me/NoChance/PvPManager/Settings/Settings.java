@@ -80,7 +80,7 @@ public final class Settings {
 	private static boolean glowingInCombat;
 	private static boolean blockInteractInCombat;
 	private static boolean untagEnemy;
-	private static String teamColor;
+	private static ChatColor teamColor;
 	private static String actionBarMessage;
 	private static String actionBarSymbol;
 	private static int actionBarTotalBars;
@@ -137,7 +137,7 @@ public final class Settings {
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
-		teamColor = TAGGEDCOMBAT.getString("Color", "&c").replace("&", "");
+		teamColor = ChatColor.getByChar(TAGGEDCOMBAT.getString("Color", "&c").replace("&", ""));
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
 		actionBarMessage = Messages.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
@@ -521,7 +521,7 @@ public final class Settings {
 		return blockInteractInCombat;
 	}
 
-	public static String getTeamColor() {
+	public static ChatColor getTeamColor() {
 		return teamColor;
 	}
 

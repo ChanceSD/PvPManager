@@ -47,8 +47,8 @@ public class TeamProfile {
 			if (Settings.isUseNameTag()) {
 				inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()));
 			}
-			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && !Settings.getTeamColor().isEmpty()) {
-				inCombat.setColor(ChatColor.getByChar(Settings.getTeamColor()));
+			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && Settings.getTeamColor() != null) {
+				inCombat.setColor(Settings.getTeamColor());
 			}
 		}
 		if (Settings.isToggleNametagsEnabled()) {
