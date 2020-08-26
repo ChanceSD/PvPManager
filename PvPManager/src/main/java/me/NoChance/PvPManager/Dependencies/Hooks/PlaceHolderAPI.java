@@ -54,7 +54,8 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 			final int timeLeft = CombatUtils.getTimeLeft(p.getToggleTime(), Settings.getToggleCooldown());
 			return String.valueOf(timeLeft > 0 ? timeLeft : 0);
 		case "current_enemy":
-			return p.getEnemy().getName();
+			final PvPlayer pPlayer = p.getEnemy();
+			return pPlayer != null ? pPlayer.getName() : "None";
 		}
 
 		return null;
