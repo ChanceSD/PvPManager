@@ -70,6 +70,7 @@ public class TeamProfile {
 					pvpOff.setCanSeeFriendlyInvisibles(false);
 				}
 			}
+			setPvP(pvPlayer.hasPvPEnabled());
 		}
 	}
 
