@@ -16,6 +16,7 @@ public class TeamProfile {
 	private Team pvpOn;
 	private Team pvpOff;
 	private Team previousTeam;
+	private String previousTeamName;
 	private final PvPlayer pvPlayer;
 	private Scoreboard scoreboard;
 
@@ -23,11 +24,6 @@ public class TeamProfile {
 		this.pvPlayer = p;
 		setupScoreboard();
 		setupTeams();
-		final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
-		// player got stuck in this team somehow (server crash?)
-		if (team != null && team.getScoreboard() != null && team.getPrefix().equals(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()))) {
-			team.removeEntry(pvPlayer.getName());
-		}
 	}
 
 	private void setupScoreboard() {
@@ -70,35 +66,53 @@ public class TeamProfile {
 					pvpOff.setCanSeeFriendlyInvisibles(false);
 				}
 			}
+			// set pvp tag if player has pvp nametags on
 			setPvP(pvPlayer.hasPvPEnabled());
 		}
 	}
 
 	public final void setInCombat() {
-		final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
-		if (team != null && !team.equals(inCombat)) {
-			previousTeam = team;
-		}
+		storePreviousTeam();
 		try {
 			inCombat.addEntry(pvPlayer.getName());
 		} catch (final IllegalStateException e) {
-			setupTeams();
-			inCombat.addEntry(pvPlayer.getName());
 			Log.info("Failed to add player to combat team");
 			Log.info("This warning can be ignored but if it happens often it means one of your plugins is removing PvPManager teams and causing a conflict");
+			setupTeams();
+			inCombat.addEntry(pvPlayer.getName());
 		}
 	}
 
+	private void storePreviousTeam() {
+		try {
+			final Team team = scoreboard.getEntryTeam(pvPlayer.getName());
+			if (team != null && !team.equals(inCombat)) {
+				previousTeam = team;
+				previousTeamName = team.getName();
+			}
+		} catch (final IllegalStateException e) {
+			previousTeamName = null;
+			Log.debug("Failed to store previous team: " + e.getMessage());
+		}
+	}
+
+	private static boolean restoringSent;
+
 	public final void restoreTeam() {
 		try {
-			if (previousTeam != null && scoreboard.getTeam(previousTeam.getName()) != null) {
+			if (previousTeamName != null && scoreboard.getTeam(previousTeamName) != null) {
 				previousTeam.addEntry(pvPlayer.getName());
 			} else {
 				inCombat.removeEntry(pvPlayer.getName());
 			}
 		} catch (final IllegalStateException e) {
+			if (restoringSent)
+				return;
+			restoringSent = true;
 			// Some plugin is unregistering teams when it shouldn't
 			Log.severe("Error restoring nametag for: " + pvPlayer.getName());
+		} finally {
+			previousTeamName = null;
 		}
 	}
 
@@ -116,10 +130,15 @@ public class TeamProfile {
 		}
 	}
 
+	private static boolean unregisteredSent;
+
 	public void removeCombatTeam() {
 		try {
 			inCombat.unregister();
 		} catch (final IllegalStateException e) {
+			if (unregisteredSent)
+				return;
+			unregisteredSent = true;
 			Log.severe("Team was already unregistered for player: " + pvPlayer.getName());
 		}
 	}
