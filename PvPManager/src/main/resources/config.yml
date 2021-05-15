@@ -165,6 +165,12 @@ PvP Toggle:
   Force On Change World: false
   WorldGuard Overrides: true
 
+# Section to configure interactions with other plugins
+Plugin Hooks:
+  SimpleClans:
+    # Disable PvP protection if the players are in a SimpleClans war
+    No Protection In War: true
+
 # Should PvPManager be allowed to check for updates and tell you about them
 # Auto Update - After checking should we download it automatically for you?
 Update Check:

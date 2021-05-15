@@ -17,6 +17,7 @@ import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
+import me.NoChance.PvPManager.Dependencies.WarDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.CommandBookHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
@@ -42,6 +43,7 @@ public class DependencyManager {
 	private final ArrayList<RegionDependency> regionChecks = new ArrayList<>();
 	private final ArrayList<GodDependency> godChecks = new ArrayList<>();
 	private final ArrayList<DisguiseDependency> disguiseChecks = new ArrayList<>();
+	private final ArrayList<WarDependency> warChecks = new ArrayList<>();
 
 	public DependencyManager() {
 		setupHooks();
@@ -155,6 +157,14 @@ public class DependencyManager {
 		}
 	}
 
+	public final boolean shouldDisableProtection(final Player attacker, final Player defender) {
+		for (final WarDependency warPlugin : warChecks) {
+			if (warPlugin.isInWar(attacker, defender))
+				return true;
+		}
+		return false;
+	}
+
 	public void startListeners(final PlayerHandler ph) {
 		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
 			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.8")) {
@@ -190,6 +200,12 @@ public class DependencyManager {
 		}
 		if (dep instanceof DisguiseDependency) {
 			disguiseChecks.add((DisguiseDependency) dep);
+		}
+		if (dep instanceof WarDependency) {
+			final WarDependency warHook = (WarDependency) dep;
+			if (warHook.shouldDisablePvPInWar()) {
+				warChecks.add(warHook);
+			}
 		}
 	}
 

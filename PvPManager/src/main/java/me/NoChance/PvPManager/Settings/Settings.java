@@ -92,6 +92,7 @@ public final class Settings {
 	private static List<String> newbieBlacklist;
 	private static Set<String> worldsExcluded;
 	private static Set<String> playerKillsWGExclusions;
+	private static boolean simpleClansNoPvPInWar;
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection BORDERHOPPING;
 	private static ConfigurationSection DISABLE;
@@ -100,6 +101,7 @@ public final class Settings {
 	private static ConfigurationSection KILLABUSE;
 	private static ConfigurationSection PLAYERKILLS;
 	private static ConfigurationSection PVPTOGGLE;
+	private static ConfigurationSection PLUGINHOOKS;
 	private static ConfigurationSection UPDATECHECK;
 
 	private Settings() {
@@ -114,6 +116,7 @@ public final class Settings {
 		KILLABUSE = config.getConfigurationSection("Kill Abuse");
 		PLAYERKILLS = config.getConfigurationSection("Player Kills");
 		PVPTOGGLE = config.getConfigurationSection("PvP Toggle");
+		PLUGINHOOKS = config.getConfigurationSection("Plugin Hooks");
 		UPDATECHECK = config.getConfigurationSection("Update Check");
 	}
 
@@ -195,6 +198,8 @@ public final class Settings {
 		commandsPvPOff = getList(PVPTOGGLE.getStringList("Commands PvP Off"));
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
+
+		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() == null ? false : PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
 
 		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
@@ -559,6 +564,10 @@ public final class Settings {
 
 	public static String getMinecraftVersion() {
 		return minecraftVersion;
+	}
+
+	public static boolean isSimpleClansNoPvPInWar() {
+		return simpleClansNoPvPInWar;
 	}
 
 }

@@ -63,7 +63,8 @@ public class PlayerHandler {
 				attacker.message("§cYour PvP was enabled because you entered a PvP allowed region");
 				attacked.setPvP(true);
 				attacked.message("§cYour PvP was enabled because you entered a PvP allowed region");
-			}
+			} else if (dependencyManager.shouldDisableProtection(damager, defender))
+				return CancelResult.FAIL;
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 		}
 		return CancelResult.FAIL;
