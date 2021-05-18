@@ -72,6 +72,7 @@ public class Messages {
 	private static String respawnProtectionSelf;
 	private static String respawnProtectionOther;
 	private static String pvpForceEnabledWG;
+	private static String teleportBlockedInCombat;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -174,6 +175,7 @@ public class Messages {
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
 		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorlGuard");
+		teleportBlockedInCombat = getString("Teleport_Blocked_InCombat");
 	}
 
 	private static void checkChanges() {
@@ -404,6 +406,10 @@ public class Messages {
 
 	public static String getOutOfCombatABar() {
 		return outOfCombatActionbar;
+	}
+
+	public static String getTeleportBlockedInCombat() {
+		return teleportBlockedInCombat;
 	}
 
 }
