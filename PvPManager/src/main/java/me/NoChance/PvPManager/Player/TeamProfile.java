@@ -79,7 +79,6 @@ public class TeamProfile {
 			Log.info("Failed to add player to combat team");
 			Log.info("This warning can be ignored but if it happens often it means one of your plugins is removing PvPManager teams and causing a conflict");
 			setupTeams();
-			inCombat.addEntry(pvPlayer.getName());
 		}
 	}
 
