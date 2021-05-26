@@ -39,13 +39,7 @@
 		<!-- Essentials and FactionsUUID -->
 		<repository>
 			<id>enderzone-repo</id>
-			<url>https://ci.ender.zone/plugin/repository/everything</url>
-		</repository>
-
-		<!-- SavageFactions -->
-		<repository>
-			<id>illyria</id>
-			<url>https://nexus.illyria.io/repository/maven-public/</url>
+			<url>https://ci.ender.zone/plugin/repository/everything/</url>
 		</repository>
 
 		<!-- LibsDisguises -->
