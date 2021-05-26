@@ -197,7 +197,7 @@ public class PlayerListener implements Listener {
 			}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public final void onPlayerKick(final PlayerKickEvent event) {
 		final PvPlayer pvPlayer = ph.get(event.getPlayer());
 		if (pvPlayer.isInCombat() && !Settings.punishOnKick()) {
