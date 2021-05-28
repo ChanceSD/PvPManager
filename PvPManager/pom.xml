@@ -16,21 +16,17 @@
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 		<repository>
-			<id>vault-repo</id>
-			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
-		</repository>
-		<repository>
 			<id>placeholderapi</id>
-			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
 
-		<!-- WorldGuard -->
+		<!-- WorldGuard and CommandBook -->
 		<repository>
 			<id>sk89q-repo</id>
-			<url>http://maven.sk89q.com/repo/</url>
+			<url>https://maven.enginehub.org/repo/</url>
 		</repository>
 
-		<!-- SimpleClans -->
+		<!-- SimpleClans and Vault -->
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
@@ -45,7 +41,7 @@
 		<!-- LibsDisguises -->
 		<repository>
 			<id>md_5-public</id>
-			<url>http://repo.md-5.net/content/groups/public/</url>
+			<url>https://repo.md-5.net/content/groups/public/</url>
 		</repository>
 	</repositories>
 
@@ -221,9 +217,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.milkbowl.vault</groupId>
-			<artifactId>Vault</artifactId>
-			<version>1.7.3</version>
+			<groupId>com.github.MilkBowl</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.7</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
