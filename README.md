@@ -1,17 +1,40 @@
 PvPManager
 ===========
-
 [![Discord](https://discordapp.com/api/guilds/622559860705198108/widget.png)](https://discord.gg/QFTjs3g)
 [![Spiget Downloads](https://img.shields.io/spiget/downloads/845?label=spigot%20downloads)](https://www.spigotmc.org/resources/pvpmanager-lite.845/)
 [![Build Status](https://travis-ci.org/NoChanceSD/PvPManager.svg)](https://travis-ci.org/NoChanceSD/PvPManager)
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/nochancesd/pvpmanager/latest)](https://github.com/NoChanceSD/PvPManager/commits/master)
 ![GitHub Releases](https://img.shields.io/github/downloads/nochancesd/pvpmanager/latest/total)
 ***
+
+Useful Links
+------------
 **Spigot:** https://www.spigotmc.org/resources/pvpmanager-lite.845/  
 **Bukkit:** http://dev.bukkit.org/bukkit-plugins/pvpmanager/  
 **Discord:** https://discord.gg/QFTjs3g  
-**Development Builds:** http://ci.md-5.net/job/PvPManager/
-***
+**Development Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/
+
+Developers
+------
+Maven Repo:
+```xml
+<repository>
+    <id>CodeMC</id>
+    <url>https://repo.codemc.org/repository/maven-public/</url>
+</repository>
+```
+Artifact Information:
+```xml
+<dependency>
+    <groupId>me.NoChance.PvPManager</groupId>
+    <artifactId>PvPManager</artifactId>
+    <version>3.8-SNAPSHOT</version>
+    <scope>provided</scope>
+</dependency>
+ ```
+
+Description
+------------
 PvPManager aims to be an All in One PvP plugin. Meaning that instead of using multiple plugins that change/customize the PvP experience in your server you would just use PvPManager. 
 
 **Some of the plugin's main features are:**

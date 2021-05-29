@@ -5,9 +5,3 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: LibsDisguises:LibsDisguises
-    versions:
-    - 10.0.21
-    - 10.0.22
-    - 10.0.23
