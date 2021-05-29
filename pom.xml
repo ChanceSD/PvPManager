@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.NoChance.PvPManager</groupId>
 	<artifactId>PvPManager-parent</artifactId>
@@ -11,6 +12,17 @@
 		<config.version>52</config.version>
 		<powermock.version>2.0.9</powermock.version>
 	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>codemc-releases</id>
+			<url>https://repo.codemc.io/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>codemc-snapshots</id>
+			<url>https://repo.codemc.io/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<modules>
 		<module>PvPManager</module>
