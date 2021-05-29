@@ -18,7 +18,7 @@ public class CustomMetrics {
 
 	private void initMetrics(final PvPManager plugin) {
 
-		final Metrics metrics = new Metrics(plugin);
+		final Metrics metrics = new Metrics(plugin, 5653);
 
 		metrics.addCustomChart(new Metrics.SimplePie("time_in_combat", new Callable<String>() {
 			@Override

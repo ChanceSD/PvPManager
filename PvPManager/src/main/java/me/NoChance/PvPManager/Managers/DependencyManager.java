@@ -72,6 +72,9 @@ public class DependencyManager {
 			} catch (final Exception e) {
 				Log.warning("Failed to enable support for " + hook.getDescription().getFullName() + ". Is it up to date?");
 				e.printStackTrace();
+			} catch (final ExceptionInInitializerError e) {
+				// Ignore, only here for unit tests
+				Log.warning("Exception initializing " + hook);
 			}
 		}
 	}
