@@ -28,21 +28,21 @@ public abstract class EcoPlayer extends BasePlayer {
 	}
 
 	public final void applyFine() {
-		final double penalty = Settings.getFineAmount() >= 1 ? Settings.getFineAmount() : Settings.getFineAmount() * economy.getBalance(getPlayer());
+		final double penalty = Settings.getFineAmount() > 1 ? Settings.getFineAmount() : Settings.getFineAmount() * economy.getBalance(getPlayer());
 		withdrawMoney(penalty);
 	}
 
 	public final void applyPenalty() {
-		final double penalty = Settings.getMoneyPenalty() >= 1 ? Settings.getMoneyPenalty() : Settings.getMoneyPenalty() * economy.getBalance(getPlayer());
+		final double penalty = Settings.getMoneyPenalty() > 1 ? Settings.getMoneyPenalty() : Settings.getMoneyPenalty() * economy.getBalance(getPlayer());
 		withdrawMoney(penalty);
 		message(Messages.getMoneyPenalty().replace("%m", df.format(penalty)));
 	}
 
 	public final void giveReward(final EcoPlayer victim) {
-		double moneyWon = Settings.getMoneyReward() >= 1 ? Settings.getMoneyReward() : Settings.getMoneyReward() * economy.getBalance(getPlayer());
+		double moneyWon = Settings.getMoneyReward() > 1 ? Settings.getMoneyReward() : Settings.getMoneyReward() * economy.getBalance(getPlayer());
 		if (Settings.isMoneySteal()) {
 			final double vbalance = economy.getBalance(victim.getPlayer());
-			if (Settings.getMoneyReward() < 1) {
+			if (Settings.getMoneyReward() <= 1) {
 				moneyWon = Settings.getMoneyReward() * vbalance;
 			} else if (Settings.getMoneyReward() > vbalance) {
 				moneyWon = vbalance;

@@ -62,7 +62,7 @@ Disable:
 # Block -> Section is self-explanatory, what to block in combat
 # Command whitelist is recursive, allowing 'tell' will allow 'tell' with any number of arguments
 # Punish On Kick -> Punish the player even if he gets kicked by other plugin while tagged
-# Money Penalty -> Money lost on combat log, use less than 1 for percentage like 0.05 for 5% (0 to disable)
+# Money Penalty -> Money lost on combat log, use less or equal to 1 for percentage like 0.05 for 5%, 1 for 100% (0 to disable)
 # Log To File -> Logs all combat loggers to a file that you can read later
 # Kill on Logout -> Should the player be killed and, if so, what will he drop
 # Commands On PvPLog -> List of commands to execute on combat log, use '%p' for player name
@@ -128,8 +128,8 @@ Kill Abuse:
   Respawn Protection: 3
 
 # Section with settings triggered when a player kills another player
-# Money Reward - Money won as reward, use less than 1 for percentage like 0.05 for 5% (0 to disable)
-# Money Penalty - Money lost on PvP death, use less than 1 for percentage like 0.1 for 10% (0 to disable)
+# Money Reward - Money won as reward, use less or equal to 1 for percentage like 0.05 for 5%, 1 for 100% (0 to disable)
+# Money Penalty - Money lost on PvP death, use less or equal to 1 for percentage like 0.1 for 10%, 1 for 100% (0 to disable)
 # Money Steal - Should the amount won from money reward be stolen from the dead player
 # Commands On Kill - Commands to execute on kill (<player> is the killer, <victim> is the victim)
 # WorldGuard Exclusions - WorldGuard regions where rewards, penalties and commands will not be executed
