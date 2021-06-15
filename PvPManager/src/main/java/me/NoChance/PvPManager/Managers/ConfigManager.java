@@ -70,6 +70,10 @@ public class ConfigManager {
 				}
 				Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
 				Log.warning("It's recommended that you check the file and adjust the new settings");
+				if (Settings.isAutoUpdate()) {
+					Messages.getMessageQueue().add("§6[§fPvPManager§6] "
+					        + "§4A future update will greatly change the messages file and require it to be reset, consider disabling auto update if this concerns you");
+				}
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2It's recommended that you check the file and adjust the new settings");
 			}
@@ -144,7 +148,8 @@ public class ConfigManager {
 
 	public final void saveUser(final PvPlayer player) {
 		// check if we really need to save this player
-		if (!player.isNewbie() && player.hasPvPEnabled() == Settings.isDefaultPvp() && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
+		if (!player.isNewbie() && player.hasPvPEnabled() == Settings.isDefaultPvp()
+		        && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
 			// clear entry for this user if there is one
 			if (getUserStorage().contains(player.getUUID().toString())) {
 				removeUser(player.getUUID().toString());
