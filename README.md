@@ -28,7 +28,7 @@ Artifact Information:
 <dependency>
     <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>PvPManager</artifactId>
-    <version>3.8-SNAPSHOT</version>
+    <version>3.8</version>
     <scope>provided</scope>
 </dependency>
  ```
