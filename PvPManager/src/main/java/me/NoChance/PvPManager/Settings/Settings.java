@@ -137,7 +137,8 @@ public final class Settings {
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
-		teamColor = ChatColor.getByChar(TAGGEDCOMBAT.getString("Color", "&c").replace("&", ""));
+		final String tColor = TAGGEDCOMBAT.getString("Color", "&c").replace("&", "");
+		teamColor = tColor.isEmpty() ? null : ChatColor.getByChar(tColor);
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
 		actionBarMessage = Messages.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
