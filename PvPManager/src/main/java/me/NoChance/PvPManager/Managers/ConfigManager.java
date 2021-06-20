@@ -71,8 +71,10 @@ public class ConfigManager {
 				Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
 				Log.warning("It's recommended that you check the file and adjust the new settings");
 				if (Settings.isAutoUpdate()) {
-					Messages.getMessageQueue().add("§6[§fPvPManager§6] "
-					        + "§4A future update will greatly change the messages file and require it to be reset, consider disabling auto update if this concerns you");
+					Log.warning(
+					        "§6[§fPvPManager§6] §4A future update will greatly change the messages file and require it to be reset, consider disabling auto update if this concerns you");
+					Messages.getMessageQueue().add(
+					        "§6[§fPvPManager§6] §4A future update will greatly change the messages file and require it to be reset, consider disabling auto update if this concerns you");
 				}
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
 				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2It's recommended that you check the file and adjust the new settings");
