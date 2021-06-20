@@ -26,10 +26,16 @@
 			<url>https://maven.enginehub.org/repo/</url>
 		</repository>
 
-		<!-- SimpleClans and Vault -->
+		<!-- Vault -->
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
+		</repository>
+
+		<!-- SimpleClans -->
+		<repository>
+			<id>codemc-repo</id>
+			<url>https://repo.codemc.org/repository/maven-public</url>
 		</repository>
 
 		<!-- Essentials and FactionsUUID -->
@@ -71,6 +77,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.2</version>
 				<configuration>
+					<argLine>-Dfile.encoding=UTF-8 --illegal-access=warn</argLine>
 					<includes>
 						<include>**/*AllTests.java</include>
 					</includes>
@@ -114,9 +121,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.github.marcelo-mason</groupId>
+			<groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
 			<artifactId>SimpleClans</artifactId>
-			<version>2.10.2</version>
+			<version>2.15.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
