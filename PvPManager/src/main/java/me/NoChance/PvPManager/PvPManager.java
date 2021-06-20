@@ -20,6 +20,7 @@ import me.NoChance.PvPManager.Libraries.Updater.Updater;
 import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateResult;
 import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Listeners.EntityListener;
+import me.NoChance.PvPManager.Listeners.EntityListener1_9;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
@@ -27,6 +28,7 @@ import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public final class PvPManager extends JavaPlugin {
@@ -73,6 +75,9 @@ public final class PvPManager extends JavaPlugin {
 	}
 
 	private void startListeners() {
+		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+			registerListener(new EntityListener1_9(playerHandler));
+		}
 		registerListener(new EntityListener(playerHandler));
 		registerListener(new PlayerListener(playerHandler));
 		dependencyManager.startListeners(playerHandler);

@@ -24,6 +24,7 @@ public final class Settings {
 	private static boolean blockTeleport;
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocks;
+	private static boolean blockGlideInCombat;
 	private static boolean blockEat;
 	private static List<String> commandsAllowed;
 	private static List<String> commandsOnKill;
@@ -149,6 +150,7 @@ public final class Settings {
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
 		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact", false);
+		blockGlideInCombat = TAGGEDCOMBAT.getBoolean("Block.Elytra", false);
 		blockEat = TAGGEDCOMBAT.getBoolean("Block.Eat", false);
 		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
@@ -328,6 +330,10 @@ public final class Settings {
 
 	public static boolean isBlockPlaceBlocks() {
 		return blockPlaceBlocks;
+	}
+
+	public static boolean isBlockGlide() {
+		return blockGlideInCombat;
 	}
 
 	public static boolean isBlockEat() {
@@ -545,4 +551,5 @@ public final class Settings {
 	public static String getMinecraftVersion() {
 		return minecraftVersion;
 	}
+
 }

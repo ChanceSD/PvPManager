@@ -83,6 +83,7 @@ Tagged In Combat:
     Teleport: true
     Place Blocks: false
     Interact: false
+    Elytra: false
     Eat: false
     Commands:
       Enabled: true
