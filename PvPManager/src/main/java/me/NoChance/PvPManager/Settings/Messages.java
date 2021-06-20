@@ -47,6 +47,7 @@ public class Messages {
 	private static String newbieProtectionOnHit;
 	private static String newbieProtectionAttacker;
 	private static String enderpearlBlockedIncombat;
+	private static String pushbackWarning;
 	private static String errorCommand;
 	private static String currentVersion;
 	private static String moneyReward;
@@ -143,6 +144,7 @@ public class Messages {
 		newbieProtectionAttacker = getString("Newbie_Protection_Atacker");
 		newbieTimeCheck = getString("Newbie_Time_Check");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
+		pushbackWarning = getString("Pushback_Warning");
 		errorCommand = getString("Error_Command");
 		errorNotNewbie = getString("Error_Not_Newbie");
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
@@ -292,6 +294,10 @@ public class Messages {
 
 	public static String getEnderpearlBlockedIncombat() {
 		return enderpearlBlockedIncombat;
+	}
+
+	public static String getPushbackWarning() {
+		return pushbackWarning;
 	}
 
 	public static String getErrorCommand() {

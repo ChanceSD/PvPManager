@@ -15,6 +15,7 @@ import com.google.common.cache.CacheBuilder;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Settings.Messages;
 
 public class PlayerMoveListener implements Listener {
 
@@ -31,7 +32,8 @@ public class PlayerMoveListener implements Listener {
 	public final void onPlayerMove(final PlayerMoveEvent event) {
 		if (!ph.get(event.getPlayer()).isInCombat())
 			return;
-		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ() && event.getFrom().getBlockY() == event.getTo().getBlockY())
+		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ()
+		        && event.getFrom().getBlockY() == event.getTo().getBlockY())
 			return;
 
 		if (!wg.canAttackAt(null, event.getTo()) && wg.canAttackAt(null, event.getFrom())) {
@@ -40,7 +42,7 @@ public class PlayerMoveListener implements Listener {
 				newVel.setY(newVel.getY() + 0.1).normalize().multiply(1.5);
 
 				event.getPlayer().setVelocity(newVel);
-				event.getPlayer().sendMessage("§cYou can't run away to safezones while in PvP!");
+				event.getPlayer().sendMessage(Messages.getPushbackWarning());
 
 				cache.put(event.getPlayer().getUniqueId(), event.getPlayer());
 			}
