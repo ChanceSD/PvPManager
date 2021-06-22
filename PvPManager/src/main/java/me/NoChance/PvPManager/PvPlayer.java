@@ -188,6 +188,9 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void setPvP(final boolean pvpState) {
+		if (pvpState && getPlayer().hasPermission("pvpmanager.nopvp"))
+			return; // make sure players with this permission can't enable PvP
+
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
 		if (Settings.isToggleNametagsEnabled()) {
