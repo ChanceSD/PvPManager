@@ -35,6 +35,7 @@ public class ConfigManager {
 	private final File configFile;
 	private final File usersFile;
 	private final YamlConfiguration users;
+	private final ConfigurationSection userSection;
 	private final ExecutorService executor = Executors.newSingleThreadExecutor();
 	private Config config;
 	private LogFile log;
@@ -46,6 +47,7 @@ public class ConfigManager {
 		this.configFile = new File(plugin.getDataFolder(), "config.yml");
 		loadConfig();
 		loadUsersFile();
+		this.userSection = users.getConfigurationSection("players");
 		if (Settings.isLogToFile()) {
 			log = new LogFile(new File(plugin.getDataFolder(), "combatlogs.log"));
 		}
@@ -203,7 +205,7 @@ public class ConfigManager {
 	}
 
 	public ConfigurationSection getUserStorage() {
-		return users.getConfigurationSection("players");
+		return userSection;
 	}
 
 	public final int getConfigVersion() {
