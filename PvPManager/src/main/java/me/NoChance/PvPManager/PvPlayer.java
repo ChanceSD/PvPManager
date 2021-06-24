@@ -2,6 +2,8 @@ package me.NoChance.PvPManager;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,26 +37,13 @@ public class PvPlayer extends EcoPlayer {
 	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
 	private TeamProfile teamProfile;
+	private static final ExecutorService executor = Executors.newCachedThreadPool();
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
 		super(player, plugin.getDependencyManager().getEconomy());
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
-		if (plugin.getConfigM().getUserStorage().contains(player.getUniqueId().toString())) {
-			loadUserData(plugin.getConfigM().getUserData(player.getUniqueId()));
-		} else {
-			loadState();
-		}
-		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled() || Settings.getTeamColor() != null) {
-			try {
-				this.teamProfile = new TeamProfile(this);
-			} catch (final NoSuchMethodError e) {
-				Settings.setUseNameTag(false);
-				Settings.setToggleNametagsEnabled(false);
-				this.teamProfile = null;
-				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
-			}
-		}
+		executor.submit(this::loadData);
 	}
 
 	public final long getToggleTime() {
@@ -139,7 +128,7 @@ public class PvPlayer extends EcoPlayer {
 		if (event.isCancelled())
 			return;
 
-		if (Settings.isUseNameTag() || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && Settings.getTeamColor() != null) {
+		if (teamProfile != null) {
 			teamProfile.setInCombat();
 		}
 		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
@@ -171,7 +160,7 @@ public class PvPlayer extends EcoPlayer {
 			return;
 
 		if (isOnline()) {
-			if (Settings.isUseNameTag() || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && Settings.getTeamColor() != null) {
+			if (teamProfile != null) {
 				teamProfile.restoreTeam();
 			}
 			if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
@@ -193,7 +182,7 @@ public class PvPlayer extends EcoPlayer {
 
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
-		if (Settings.isToggleNametagsEnabled()) {
+		if (teamProfile != null) {
 			teamProfile.setPvP(pvpState);
 		}
 		if (!pvpState) {
@@ -264,6 +253,25 @@ public class PvPlayer extends EcoPlayer {
 
 	public long getTagTimeLeft() {
 		return tagged ? taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis() : 0;
+	}
+
+	private void loadData() {
+		if (plugin.getConfigM().getUserStorage().contains(getUUID().toString())) {
+			loadUserData(plugin.getConfigM().getUserData(getUUID()));
+		} else if (Bukkit.getPlayer(getUUID()) != null) {
+			loadState();
+		}
+		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled()
+		        || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && Settings.getTeamColor() != null) {
+			try {
+				this.teamProfile = new TeamProfile(this);
+			} catch (final NoSuchMethodError e) {
+				Settings.setUseNameTag(false);
+				Settings.setToggleNametagsEnabled(false);
+				this.teamProfile = null;
+				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
+			}
+		}
 	}
 
 	private final void loadState() {

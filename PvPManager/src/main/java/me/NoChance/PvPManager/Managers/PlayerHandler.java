@@ -127,7 +127,7 @@ public class PlayerHandler {
 			player.setPvpLogged(false);
 			untag(player);
 		}
-		configManager.saveUser(player);
+		configManager.markForSave(player);
 	}
 
 	public final void applyPunishments(final PvPlayer player) {
@@ -203,7 +203,7 @@ public class PlayerHandler {
 			if (player != null && !player.hasPlayedBefore() && !p.isNewbie()) {
 				newbiesDisabled.add(p.getUUID());
 			}
-			configManager.saveUser(p);
+			configManager.markForSave(p);
 			p.removeCombatTeam();
 		}
 		removeTeams();

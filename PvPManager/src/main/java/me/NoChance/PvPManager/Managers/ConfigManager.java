@@ -9,8 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -34,20 +37,20 @@ public class ConfigManager {
 	private final PvPManager plugin;
 	private final File configFile;
 	private final File usersFile;
-	private final YamlConfiguration users;
-	private final ConfigurationSection userSection;
+	private final YamlConfiguration users = new YamlConfiguration();
 	private final ExecutorService executor = Executors.newSingleThreadExecutor();
+	private final BlockingQueue<PvPlayer> playersToSave = new LinkedBlockingDeque<>();
+	private Future<?> lastTask;
+	private ConfigurationSection userSection;
 	private Config config;
 	private LogFile log;
 
 	public ConfigManager(final PvPManager plugin) {
 		this.plugin = plugin;
-		this.users = new YamlConfiguration();
 		this.usersFile = new File(plugin.getDataFolder(), "users.yml");
 		this.configFile = new File(plugin.getDataFolder(), "config.yml");
 		loadConfig();
 		loadUsersFile();
-		this.userSection = users.getConfigurationSection("players");
 		if (Settings.isLogToFile()) {
 			log = new LogFile(new File(plugin.getDataFolder(), "combatlogs.log"));
 		}
@@ -114,6 +117,7 @@ public class ConfigManager {
 			if (users.get("players") == null || users.get("players") instanceof List) {
 				resetUsersFile();
 			}
+			this.userSection = users.getConfigurationSection("players");
 			Log.info("Loaded " + getUserStorage().getKeys(false).size() + " players from users file");
 		} catch (final Exception e) {
 			Log.severe("Error loading users file! Error: ");
@@ -150,20 +154,23 @@ public class ConfigManager {
 		}
 	}
 
-	public final void saveUser(final PvPlayer player) {
+	private final void saveUser(final PvPlayer player) {
 		// check if we really need to save this player
 		if (!player.isNewbie() && player.hasPvPEnabled() == Settings.isDefaultPvp()
 		        && CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())) {
 			// clear entry for this user if there is one
 			if (getUserStorage().contains(player.getUUID().toString())) {
 				removeUser(player.getUUID().toString());
-				saveUsersToDisk();
 			}
 			return;
 		}
-
 		getUserStorage().createSection(player.getUUID().toString(), player.getUserData());
-		saveUsersToDisk();
+	}
+
+	public final void markForSave(final PvPlayer player) {
+		if (playersToSave.offer(player) && (lastTask == null || lastTask.isDone())) {
+			triggerSave();
+		}
 	}
 
 	public final void removeUser(final String id) {
@@ -177,19 +184,24 @@ public class ConfigManager {
 		saveUsersToDisk();
 	}
 
-	private void saveUsersToDisk() {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					synchronized (users) {
-						users.save(usersFile);
-					}
-				} catch (final IOException e) {
-					e.printStackTrace();
-				}
+	private void triggerSave() {
+		lastTask = executor.submit(() -> {
+			while (playersToSave.peek() != null) {
+				saveUser(playersToSave.poll());
+			}
+			saveUsersToDisk();
+			if (!playersToSave.isEmpty()) {
+				triggerSave();
 			}
 		});
+	}
+
+	private void saveUsersToDisk() {
+		try {
+			users.save(usersFile);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final FileConfiguration getConfig() {
