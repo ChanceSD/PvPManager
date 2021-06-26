@@ -80,7 +80,7 @@ permissions:
      default: false
    pvpmanager.nocombat:
      description: Exempts a player from being tagged in combat
-     default: op
+     default: false
    pvpmanager.nopvp:
      description: Players with this permission always have PvP disabled
      default: false
@@ -89,10 +89,10 @@ permissions:
      default: op
    pvpmanager.nodisable:
      description: Players with this permission don't get fly and gamemode disabled
-     default: op
+     default: false
    pvpmanager.nokillabuse:
      description: Players with this permission don't get punished by kill abuse
-     default: op
+     default: false
    pvpmanager.list:
      description: Allows access to the list of players with PvP enabled
      default: false
