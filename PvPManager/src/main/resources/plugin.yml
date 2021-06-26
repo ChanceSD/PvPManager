@@ -48,8 +48,6 @@ permissions:
      description: Gives access to all PvPManager features
      children:
        pvpmanager.admin: true
-       pvpmanager.nocombat: true
-       pvpmanager.nodisable: true
    pvpmanager.admin:
      description: Gives access to PvPManager features
      default: op
@@ -86,7 +84,7 @@ permissions:
      default: false
    pvpmanager.override:
      description: Players with this permission can use the PvPOverride command
-     default: op
+     default: false
    pvpmanager.nodisable:
      description: Players with this permission don't get fly and gamemode disabled
      default: false
