@@ -1,0 +1,37 @@
+# 你可以將此訊息自訂義為你想要的語言或更換顏色……
+# 你可以透過刪除等號（=）之後的所有內容來關閉訊息
+# 舉例：Newbie_Protection = （留下空白）
+# Translated into Chinese Traditional by Flandre_tw
+Already_Disabled = &6[&8PvPManager&6] &4你已經關閉 PvP 了 ！
+Already_Enabled = &6[&8PvPManager&6] &4你已經開啟 PvP 了 ！
+Other_Status_Enabled = &6[&8PvPManager&6] &6玩家 %p 已經開啟 PvP ！
+Others_Status_Disabled = &6[&8PvPManager&6] &6玩家 %p 已經關閉 PvP ！
+PvP_Disabled = &6[&8PvPManager&6] &2已關閉 PvP ！
+PvP_Enabled = &6[&8PvPManager&6] &4已開啟 PvP ！
+Self_Status_Disabled = &6[&8PvPManager&6] &6你已經關閉 PvP ！
+Self_Status_Enabled = &6[&8PvPManager&6] &6你已經開啟 PvP ！
+Command_Denied_InCombat = &6[&8PvPManager&6] &c你還在戰鬥中 ！ 無法輸入指令 ！
+Attack_Denied_You = &6[&8PvPManager&6] &4你關閉了 PvP ！
+Attack_Denied_Other = &6[&8PvPManager&6] &4%p 已經開啟 PvP ！
+Tagged_Attacker = &6[&8PvPManager&6] &7你已經將&f %p &7視為目標 ！ 請勿登出，否則將受到懲罰 ！
+Tagged_Defender = &6[&8PvPManager&6] &7你已經被&f %p &7視為目標 ！ 請勿登出，否則將受到懲罰 ！
+Out_Of_Combat = &6[&8PvPManager&6] &a你已經結束戰鬥。
+Newbie_Protection = &6[&8PvPManager&6] &a歡迎 ！ PvP 保護系統會在 &6% &a分鐘內保護你不被攻擊 ！
+Newbie_Protection_End = &6[&8PvPManager&6] &c你的 PvP 保護系統已經失效 ！ 你現在可以被攻擊 ！
+Newbie_Protection_Removed = &6[&8PvPManager&6] &e你的 PvP 保護系統已經關閉 ！ 請注意安全 ！
+Newbie_Protection_On_Hit = &6[&8PvPManager&6] &4你現在處於 PvP 保護系統的保護下 ！ 如果你真的想要 PvP，請輸入 &2/newbie disable &4來關閉 PvP 保護系統。
+Newbie_Protection_Atacker = &6[&8PvPManager&6] &4%p 現在處於新手 PvP 保護系統保護下 ！
+Newbie_Time_Check = &6[&8PvPManager&6] &7你在 &e%d &7秒後將不再受到 PvP 保護系統保護。
+Respawn_Protection = &6[&8PvPManager&6] &4你現在處於重生保護 ！
+Respawn_Protection_Other = &6[&8PvPManager&6]&4 %p 現在處於重生保護 ！
+EnderPearl_Blocked_InCombat = &6[&8PvPManager&6] &4你不能在戰鬥中使用終界珍珠 ！
+Pushback_Warning = &c你不能在戰鬥中逃離到安全區域 ！
+Error_Command = &4你沒有使用該指令的權限。
+Error_Not_Newbie = &6[&8PvPManager&6] &c你已經不是新手了 ！
+Error_Permission = &4你沒有使用該指令的權限。
+Error_PvP_Cooldown = &6[&8PvPManager&6] &c你現在還不能切換 PvP ！ 請等候 %m 秒後再切換 ！
+Error_Player_Not_Found = &4玩家 %p 未在線 （或不存在）。
+Money_Reward = &2你擊殺 %p 並獲得了 %m 元 ！
+Money_Penalty = &c你被擊殺且失去了 %m 元 ！
+Money_Steal = &c玩家 %p 從你身上偷了 %m 元 ！
+PvPList_Nothing_Found = &c沒有玩家開啟 PvP ！
