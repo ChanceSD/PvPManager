@@ -233,7 +233,7 @@ public class PlayerHandler {
 		return players;
 	}
 
-	public static boolean isNewbieDisabled(final PvPlayer p) {
+	public static boolean isRemovedNewbie(final PvPlayer p) {
 		return newbiesDisabled.contains(p.getUUID());
 	}
 

@@ -98,6 +98,8 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
+			if (PlayerHandler.isRemovedNewbie(this))
+				return;
 			message(Messages.getNewbieProtection().replace("%", Integer.toString(Settings.getNewbieProtectionTime())));
 			this.newbieTask = new NewbieTask(this, plugin, 0);
 		} else if (this.newbie && newbieTask != null) {
@@ -177,8 +179,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void setPvP(final boolean pvpState) {
-		if (pvpState && getPlayer().hasPermission("pvpmanager.nopvp"))
-			return; // make sure players with this permission can't enable PvP
+		if (pvpState == this.pvpState)
+			return;
 
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
@@ -258,8 +260,11 @@ public class PvPlayer extends EcoPlayer {
 	private void loadData() {
 		if (plugin.getConfigM().getUserStorage().contains(getUUID().toString())) {
 			loadUserData(plugin.getConfigM().getUserData(getUUID()));
-		} else if (Bukkit.getPlayer(getUUID()) != null) {
-			loadState();
+		} else if (CombatUtils.isReal(getUUID()) && Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
+			setNewbie(true);
+		}
+		if (getPlayer().hasPermission("pvpmanager.nopvp")) {
+			this.pvpState = false;
 		}
 		if (Settings.isUseNameTag() || Settings.isToggleNametagsEnabled()
 		        || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && Settings.getTeamColor() != null) {
@@ -270,16 +275,6 @@ public class PvPlayer extends EcoPlayer {
 				Settings.setToggleNametagsEnabled(false);
 				this.teamProfile = null;
 				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
-			}
-		}
-	}
-
-	private final void loadState() {
-		if (!getPlayer().isOp() && getPlayer().hasPermission("pvpmanager.nopvp")) {
-			this.pvpState = false;
-		} else if (!getPlayer().hasPlayedBefore() && !PlayerHandler.isNewbieDisabled(this)) {
-			if (Settings.isNewbieProtectionEnabled()) {
-				setNewbie(true);
 			}
 		}
 	}

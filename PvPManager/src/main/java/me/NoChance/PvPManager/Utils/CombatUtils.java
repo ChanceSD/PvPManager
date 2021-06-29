@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Utils;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -92,6 +93,14 @@ public final class CombatUtils {
 
 	public static boolean isOnline(final String name) {
 		return Bukkit.getPlayer(name) != null;
+	}
+
+	public static boolean isOnline(final UUID id) {
+		return Bukkit.getPlayer(id) != null;
+	}
+
+	public static boolean isReal(final UUID id) {
+		return Bukkit.getPlayer(id) != null;
 	}
 
 	public static boolean isWorldExcluded(final String worldName) {

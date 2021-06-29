@@ -34,6 +34,8 @@ public class PvP implements CommandExecutor {
 		if (args.length >= 1) {
 			if (sender.hasPermission("pvpmanager.pvpstatus.change")) {
 				if ((args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on")) && sender instanceof Player) {
+					if (sender.hasPermission("pvpmanager.nopvp"))
+						return true; // make sure players with this permission can't enable PvP
 					final PvPlayer pvpPlayer = ph.get((Player) sender);
 					if (pvpPlayer.hasToggleCooldownPassed()) {
 						final boolean enable = args[0].equalsIgnoreCase("on");
