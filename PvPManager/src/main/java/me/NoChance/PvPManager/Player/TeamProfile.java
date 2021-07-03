@@ -7,7 +7,6 @@ import org.bukkit.scoreboard.Team;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public class TeamProfile {
@@ -36,15 +35,17 @@ public class TeamProfile {
 
 	private void setupTeams() {
 		final String id = "PVP-" + pvPlayer.getUUID().toString().replaceAll("-", "").substring(0, 12);
-		if (scoreboard.getTeam(id) != null) {
-			inCombat = scoreboard.getTeam(id);
-		} else {
-			inCombat = scoreboard.registerNewTeam(id);
-			if (Settings.isUseNameTag()) {
-				inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()));
-			}
-			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13") && Settings.getTeamColor() != null) {
-				inCombat.setColor(Settings.getTeamColor());
+		if (Settings.isUseCombatTeam()) {
+			if (scoreboard.getTeam(id) != null) {
+				inCombat = scoreboard.getTeam(id);
+			} else {
+				inCombat = scoreboard.registerNewTeam(id);
+				if (Settings.isUseNameTag()) {
+					inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()));
+				}
+				if (Settings.getTeamColor() != null) {
+					inCombat.setColor(Settings.getTeamColor());
+				}
 			}
 		}
 		if (Settings.isToggleNametagsEnabled()) {

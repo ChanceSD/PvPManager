@@ -10,6 +10,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Utils.CombatUtils;
+
 public final class Settings {
 
 	public enum DropMode {
@@ -46,6 +49,7 @@ public final class Settings {
 	private static boolean ignoreNoDamageHits;
 	private static boolean inCombatEnabled;
 	private static boolean useNameTag;
+	private static boolean useCombatTeam;
 	private static List<String> killAbuseCommands;
 	private static boolean killAbuseEnabled;
 	private static int killAbuseMaxKills;
@@ -139,9 +143,10 @@ public final class Settings {
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
 		final String tColor = TAGGEDCOMBAT.getString("Color", "&c").replace("&", "");
-		teamColor = tColor.isEmpty() ? null : ChatColor.getByChar(tColor);
-		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
+		teamColor = tColor.isEmpty() || !CombatUtils.isVersionAtLeast(minecraftVersion, "1.13") ? null : ChatColor.getByChar(tColor);
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
+		useCombatTeam = useNameTag || teamColor != null;
+		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		actionBarMessage = Messages.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
@@ -492,8 +497,12 @@ public final class Settings {
 		return useNameTag;
 	}
 
-	public static void setUseNameTag(final boolean useNameTag) {
-		Settings.useNameTag = useNameTag;
+	public static void setUseCombatTeam(final boolean useCombatTeam) {
+		Settings.useCombatTeam = useCombatTeam;
+	}
+
+	public static boolean isUseCombatTeam() {
+		return useCombatTeam;
 	}
 
 	public static int getConfigVersion() {
