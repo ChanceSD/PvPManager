@@ -58,6 +58,13 @@ permissions:
        pvpmanager.info: true
        pvpmanager.info.others: true
        pvpmanager.pvpstatus.nocooldown: true
+   pvpmanager.exempt:
+     description: Prevents player from suffering consequences for PvP
+     default: false
+     children:
+       pvpmanager.nocombat: true
+       pvpmanager.nodisable: true
+       pvpmanager.nokillabuse: true
    pvpmanager.user:
      description: Gives access to PvPManager features that i think would be appropriate for a user
      default: false
