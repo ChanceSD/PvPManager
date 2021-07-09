@@ -212,6 +212,10 @@ public class DependencyManager {
 	public void unregisterDependency(final Dependency dep) {
 		dependencies.remove(dep.getHook());
 		attackChecks.remove(dep);
+		regionChecks.remove(dep);
+		godChecks.remove(dep);
+		disguiseChecks.remove(dep);
+		warChecks.remove(dep);
 	}
 
 	public JavaPlugin getDependencyMainClass(final Hook h) {
