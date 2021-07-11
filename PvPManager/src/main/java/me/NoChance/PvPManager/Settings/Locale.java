@@ -1,7 +1,13 @@
 package me.NoChance.PvPManager.Settings;
 
 public enum Locale {
-	EN("messages.properties"), RU("messages_ru.properties"), CH("messages_ch.properties"), ES("messages_es.properties"), DE("messages_de.properties"), BR("messages_br.properties");
+	EN("messages.properties"),
+	RU("messages_ru.properties"),
+	ZH("messages_zh.properties"),
+	ZHTW("messages_zhtw.properties"),
+	ES("messages_es.properties"),
+	DE("messages_de.properties"),
+	BR("messages_br.properties");
 
 	private final String fileName;
 
