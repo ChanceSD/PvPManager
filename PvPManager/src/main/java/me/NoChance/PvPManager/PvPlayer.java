@@ -130,7 +130,7 @@ public class PvPlayer extends EcoPlayer {
 		if (event.isCancelled())
 			return;
 
-		if (Settings.isUseCombatTeam()) {
+		if (teamProfile != null && Settings.isUseCombatTeam()) {
 			teamProfile.setInCombat();
 		}
 		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
@@ -162,7 +162,7 @@ public class PvPlayer extends EcoPlayer {
 			return;
 
 		if (isOnline()) {
-			if (Settings.isUseCombatTeam()) {
+			if (teamProfile != null && Settings.isUseCombatTeam()) {
 				teamProfile.restoreTeam();
 			}
 			if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
@@ -184,7 +184,7 @@ public class PvPlayer extends EcoPlayer {
 
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
-		if (Settings.isToggleNametagsEnabled()) {
+		if (teamProfile != null && Settings.isToggleNametagsEnabled()) {
 			teamProfile.setPvP(pvpState);
 		}
 		if (!pvpState) {
@@ -318,7 +318,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void removeCombatTeam() {
-		if (Settings.isUseCombatTeam()) {
+		if (teamProfile != null && Settings.isUseCombatTeam()) {
 			teamProfile.removeCombatTeam();
 		}
 	}
