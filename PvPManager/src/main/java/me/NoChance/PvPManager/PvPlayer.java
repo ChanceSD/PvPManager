@@ -43,7 +43,7 @@ public class PvPlayer extends EcoPlayer {
 		super(player, plugin.getDependencyManager().getEconomy());
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
-		executor.submit(this::loadData);
+		executor.execute(this::loadData);
 	}
 
 	public final long getToggleTime() {

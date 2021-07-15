@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -169,6 +172,13 @@ public class ConfigManager {
 
 	public final void markForSave(final PvPlayer player) {
 		if (playersToSave.offer(player) && (lastTask == null || lastTask.isDone())) {
+			try {
+				if (lastTask != null && lastTask.isDone()) {
+					lastTask.get(50, TimeUnit.MILLISECONDS);
+				}
+			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+				e.printStackTrace();
+			}
 			triggerSave();
 		}
 	}
