@@ -16,20 +16,20 @@ commands:
       usage: "Usage: /<command> [on|off] or /<command> [player] [on|off]"
    newbie:
       description: Check time left as a newbie or force disable newbie
-      aliases: [nt, newbietime]
+      aliases: [newbietime]
       usage: "Usage: /<command> [name] or /<command> disable"
    pvpoverride:
       description: Allows the player to attack everyone everywhere
-      aliases: [pvpo, povd]
+      aliases: [pvpo]
       permission: pvpmanager.override
    pvpinfo:
       description: Allows the player to see his or others information
-      aliases: [pvpi, pi]
+      aliases: [pvpi]
       permission: pvpmanager.info
       usage: "Usage: /<command> [player]"
    pvpstatus:
       description: Allows the player to see his or others pvp status
-      aliases: [pvps, ps, pstatus, status]
+      aliases: [pvps, pstatus]
       permission: pvpmanager.pvpstatus.self
       usage: "Usage: /<command> [player]"
    pvplist:
@@ -38,7 +38,7 @@ commands:
       permission: pvpmanager.list
    pvptag:
       description: Shows time left until out of combat
-      aliases: [ct, pt, tag]
+      aliases: [ptag, ctag, combattag]
    announce:
       description: Broadcasts a message to all players with color support
       permission: pvpmanager.admin
