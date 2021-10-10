@@ -49,7 +49,7 @@ public final class CombatUtils {
 				final ProjectileSource projSource = ((Projectile) attacker).getShooter();
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					if (!shooter.equals(defender) && !shooter.hasMetadata("NPC"))
+					if (Settings.isSelfTag() ||!shooter.equals(defender) && !shooter.hasMetadata("NPC"))
 						return !(Settings.isIgnoreNoDamageHits() && event.getDamage() == 0);
 				}
 			}

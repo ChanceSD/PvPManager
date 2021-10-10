@@ -83,6 +83,7 @@ public final class Settings {
 	private static boolean borderHoppingResetCombatTag;
 	private static boolean worldguardOverrides;
 	private static boolean glowingInCombat;
+	private static boolean selfTag;
 	private static boolean blockInteractInCombat;
 	private static boolean untagEnemy;
 	private static ChatColor teamColor;
@@ -150,6 +151,7 @@ public final class Settings {
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
 		useCombatTeam = useNameTag || teamColor != null;
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
+		selfTag = TAGGEDCOMBAT.getBoolean("Self Tag", false);
 		actionBarMessage = Messages.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
@@ -390,6 +392,10 @@ public final class Settings {
 		return ignoreNoDamageHits;
 	}
 
+	public static void setIgnoreNoDamageHits(final boolean ignoreNoDamageHits) {
+		Settings.ignoreNoDamageHits = ignoreNoDamageHits;
+	}
+
 	public static boolean isInCombatEnabled() {
 		return inCombatEnabled;
 	}
@@ -570,4 +576,11 @@ public final class Settings {
 		return simpleClansNoPvPInWar;
 	}
 
+	public static boolean isSelfTag() {
+		return selfTag;
+	}
+
+	public static void setSelfTag(final boolean selfTag) {
+		Settings.selfTag = selfTag;
+	}
 }
