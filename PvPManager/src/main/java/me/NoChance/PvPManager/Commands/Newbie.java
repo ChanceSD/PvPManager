@@ -45,7 +45,7 @@ public class Newbie implements CommandExecutor {
 				}
 				final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(args[0]));
 				final long timeLeft = specifiedPlayer.getNewbieTimeLeft() / 1000;
-				sender.sendMessage(String.format("&6[&8PvPManager&6]§8%s is protected from PvP for another %d seconds", specifiedPlayer.getName(), timeLeft));
+				sender.sendMessage(String.format(Messages.getNewbieTimeCheckOther(), specifiedPlayer.getName(), timeLeft));
 				return true;
 			}
 		} else if (!(sender instanceof Player)) {

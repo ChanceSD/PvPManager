@@ -60,6 +60,7 @@ public class Messages {
 	private static String errorPlayerNotFound;
 	private static String errorNotNewbie;
 	private static String newbieTimeCheck;
+	private static String newbieTimeCheckOther;
 	private static String newbieProtectionRemoved;
 	private static String respawnProtectionSelf;
 	private static String respawnProtectionOther;
@@ -143,6 +144,7 @@ public class Messages {
 		newbieProtectionOnHit = getString("Newbie_Protection_On_Hit");
 		newbieProtectionAttacker = getString("Newbie_Protection_Atacker");
 		newbieTimeCheck = getString("Newbie_Time_Check");
+		newbieTimeCheckOther = getString("Newbie_Time_Check_Other");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
 		pushbackWarning = getString("Pushback_Warning");
 		errorCommand = getString("Error_Command");
@@ -342,6 +344,10 @@ public class Messages {
 
 	public static String getNewbieTimeCheck() {
 		return newbieTimeCheck;
+	}
+
+	public static String getNewbieTimeCheckOther() {
+		return newbieTimeCheckOther;
 	}
 
 	public static String getNewbieProtectionRemoved() {
