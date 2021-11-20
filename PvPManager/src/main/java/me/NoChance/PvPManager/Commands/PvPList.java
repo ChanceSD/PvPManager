@@ -20,15 +20,19 @@ public class PvPList implements CommandExecutor {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-		sender.sendMessage(ChatColor.GOLD + "**** Players With PvP Enabled ****");
-		sender.sendMessage(ChatColor.DARK_GRAY + (sender instanceof Player ? pvpList((Player) sender, false) : pvpList(null, true)));
+		sender.sendMessage(Messages.getPvpListTitle());
+		sender.sendMessage(Messages.getPvpListEnabled());
+		sender.sendMessage(ChatColor.GRAY + (sender instanceof Player ? pvpList((Player) sender, true, false) : pvpList(null, true, true)));
+		sender.sendMessage(Messages.getPvpListDisabled());
+		sender.sendMessage(ChatColor.GRAY + (sender instanceof Player ? pvpList((Player) sender, false, false) : pvpList(null, false, true)));
 		return true;
 	}
 
-	private String pvpList(final Player sender, final boolean console) {
+	private String pvpList(final Player sender, final boolean enabled, final boolean console) {
 		final StringBuilder list = new StringBuilder();
 		for (final PvPlayer p : ph.getPlayers().values()) {
-			if (p.hasPvPEnabled() && (console || sender.canSee(p.getPlayer()))) {
+			final Player player = p.getPlayer();
+			if (enabled == p.hasPvPEnabled() && player != null && (console || sender.canSee(player))) {
 				list.append(p.getName()).append(", ");
 			}
 		}

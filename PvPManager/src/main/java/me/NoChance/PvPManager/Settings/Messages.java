@@ -56,6 +56,9 @@ public class Messages {
 	private static Locale locale;
 	private static final Queue<String> messageQueue = new LinkedList<>();
 	private static String newVersion;
+	private static String pvpListTitle;
+	private static String pvpListEnabled;
+	private static String pvpListDisabled;
 	private static String pvpListNoResults;
 	private static String errorPlayerNotFound;
 	private static String errorNotNewbie;
@@ -154,6 +157,9 @@ public class Messages {
 		moneyReward = getString("Money_Reward");
 		moneyPenalty = getString("Money_Penalty");
 		moneySteal = getString("Money_Steal");
+		pvpListTitle = getString("PvPList_Title");
+		pvpListEnabled = getString("PvPList_Enabled");
+		pvpListDisabled = getString("PvPList_Disabled");
 		pvpListNoResults = getString("PvPList_Nothing_Found");
 		errorPlayerNotFound = getString("Error_Player_Not_Found");
 		respawnProtectionSelf = getString("Respawn_Protection");
@@ -212,6 +218,18 @@ public class Messages {
 
 	public static String getPvpListNoResults() {
 		return pvpListNoResults;
+	}
+
+	public static String getPvpListTitle() {
+		return pvpListTitle;
+	}
+
+	public static String getPvpListEnabled() {
+		return pvpListEnabled;
+	}
+
+	public static String getPvpListDisabled() {
+		return pvpListDisabled;
 	}
 
 	public static String getErrorPermission() {
