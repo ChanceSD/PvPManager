@@ -17,6 +17,7 @@
 # Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
 # This prevents players from doing a hit and run between zone borders
 # Auto Soup Health -> How much health does soup heal, use 0 to disable
+# Bowl Disappear -> Should empty bowls just be deleted
 # World Exclusions -> List of worlds where PvPManager will have no effect
 General:
   Locale: en
@@ -24,7 +25,9 @@ General:
   PvP Blood: true
   Player Drop Mode: ALWAYS
   Ignore No Damage Hits: false
-  Auto Soup Health: 0
+  Auto Soup:
+     Health: 0
+     Bowl Disappear: false
   World Exclusions:
     - 'example'
     

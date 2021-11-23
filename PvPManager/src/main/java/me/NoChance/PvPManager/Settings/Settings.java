@@ -78,6 +78,7 @@ public final class Settings {
 	private static boolean updateCheck;
 	private static boolean optOutMetrics;
 	private static double soupHealth;
+	private static boolean soupBowlDisappear;
 	private static boolean borderHoppingVulnerable;
 	private static boolean borderHoppingPushback;
 	private static boolean borderHoppingResetCombatTag;
@@ -130,7 +131,8 @@ public final class Settings {
 		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
 		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
 		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
-		soupHealth = GENERAL.getDouble("Auto Soup Health", 0);
+		soupHealth = GENERAL.getDouble("Auto Soup.Health", 0);
+		soupBowlDisappear = GENERAL.getBoolean("Auto Soup.Bowl Disappear", false);
 		worldsExcluded = new HashSet<>(getList(GENERAL.getStringList("World Exclusions")));
 
 		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
@@ -526,6 +528,10 @@ public final class Settings {
 
 	public static double getSoupHealth() {
 		return soupHealth;
+	}
+
+	public static boolean isSoupBowlDisappear() {
+		return soupBowlDisappear;
 	}
 
 	public static boolean isBlockTeleport() {

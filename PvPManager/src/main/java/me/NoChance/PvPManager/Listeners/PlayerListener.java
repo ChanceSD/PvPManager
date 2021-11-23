@@ -142,8 +142,13 @@ public class PlayerListener implements Listener {
 		if (Settings.isAutoSoupEnabled() && i.getType() == mushroomSoup) {
 			if (player.getHealth() == player.getMaxHealth())
 				return;
-			player.setHealth(player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());
-			i.setType(Material.BOWL);
+			player.setHealth(
+			        player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());
+			if (Settings.isSoupBowlDisappear()) {
+				player.getInventory().setItemInHand(null); // can't use setAmount(0) because of 1.8
+			} else {
+				i.setType(Material.BOWL);
+			}
 		}
 	}
 
