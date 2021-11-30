@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>me.NoChance.PvPManager</groupId>
 		<artifactId>PvPManager-parent</artifactId>
-		<version>3.8.4</version>
+		<version>3.8.10</version>
 	</parent>
 
 	<artifactId>PvPManager</artifactId>
@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.17.1-R0.1-SNAPSHOT</version>
+			<version>1.18-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
