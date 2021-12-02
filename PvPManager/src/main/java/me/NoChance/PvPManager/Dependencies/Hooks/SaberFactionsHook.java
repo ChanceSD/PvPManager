@@ -11,11 +11,11 @@ import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
 
-public class SavageFactionsHook extends BaseDependency implements PvPDependency {
+public class SaberFactionsHook extends BaseDependency implements PvPDependency {
 
 	private final MemoryFPlayers fPlayers;
 
-	public SavageFactionsHook(final Hook hook) {
+	public SaberFactionsHook(final Hook hook) {
 		super(hook);
 		fPlayers = (MemoryFPlayers) FPlayers.getInstance();
 	}
@@ -29,7 +29,7 @@ public class SavageFactionsHook extends BaseDependency implements PvPDependency 
 
 	@Override
 	public String getName() {
-		return "SavageFactions";
+		return "SaberFactions";
 	}
 
 }
