@@ -38,7 +38,7 @@ commands:
       permission: pvpmanager.list
    pvptag:
       description: Shows time left until out of combat
-      aliases: [ptag, ctag, combattag]
+      aliases: [ct, ctag, combattag]
    announce:
       description: Broadcasts a message to all players with color support
       permission: pvpmanager.admin
