@@ -62,4 +62,8 @@ public class TagTask extends TimerTask {
 		}
 	}
 
+	public Set<PvPlayer> getTaggedPlayers() {
+		return new HashSet<>(tagged);
+	}
+
 }

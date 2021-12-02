@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Managers;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.UUID;
 
@@ -232,6 +233,10 @@ public class PlayerHandler {
 
 	public final Map<UUID, PvPlayer> getPlayers() {
 		return players;
+	}
+
+	public final Set<PvPlayer> getPlayersInCombat() {
+		return tagTask.getTaggedPlayers();
 	}
 
 	public static boolean isRemovedNewbie(final PvPlayer p) {

@@ -1,9 +1,13 @@
 package me.NoChance.PvPManager.Libraries.Metrics;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+
+import org.bukkit.Bukkit;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Dependencies.Dependency;
@@ -74,6 +78,12 @@ public class CustomMetrics {
 				final Map<String, Integer> valueMap = new HashMap<>();
 				for (final Entry<Hook, Dependency> entry : plugin.getDependencyManager().getDependencies().entrySet()) {
 					valueMap.put(entry.getValue().getName(), 1);
+				}
+				final List<String> extra = Arrays.asList("Towny", "TAB", "NametagEdit", "GriefPrevention");
+				for (final String plugin : extra) {
+					if (Bukkit.getPluginManager().isPluginEnabled(plugin)) {
+						valueMap.put(plugin, 1);
+					}
 				}
 				return valueMap;
 			}
