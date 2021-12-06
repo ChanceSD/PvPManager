@@ -188,7 +188,7 @@
 		<dependency>
 			<groupId>com.github.SaberLLC</groupId>
 			<artifactId>Saber-Factions</artifactId>
-			<version>2.4.0-RC</version>
+			<version>2.9.1-RC</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
