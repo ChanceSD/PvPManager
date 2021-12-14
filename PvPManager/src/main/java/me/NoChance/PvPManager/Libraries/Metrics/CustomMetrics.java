@@ -17,6 +17,8 @@ import me.NoChance.PvPManager.Settings.Settings;
 public class CustomMetrics {
 
 	public CustomMetrics(final PvPManager plugin) {
+		if (Settings.isReloading())
+			return;
 		initMetrics(plugin);
 	}
 

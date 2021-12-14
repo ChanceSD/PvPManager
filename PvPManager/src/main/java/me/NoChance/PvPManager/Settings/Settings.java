@@ -22,6 +22,7 @@ public final class Settings {
 	public static boolean DEBUG = false;
 	private static int configVersion;
 	private static String minecraftVersion;
+	private static boolean isReloading;
 	private static boolean autoUpdate;
 	private static boolean blockEnderPearl;
 	private static boolean blockTeleport;
@@ -588,5 +589,13 @@ public final class Settings {
 
 	public static void setSelfTag(final boolean selfTag) {
 		Settings.selfTag = selfTag;
+	}
+
+	public static boolean isReloading() {
+		return isReloading;
+	}
+
+	public static void setReloading(final boolean isReloading) {
+		Settings.isReloading = isReloading;
 	}
 }

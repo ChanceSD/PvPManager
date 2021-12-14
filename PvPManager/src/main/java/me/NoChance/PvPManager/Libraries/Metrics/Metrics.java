@@ -19,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -132,6 +133,10 @@ public class Metrics {
 
 		private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1, task -> new Thread(task, "bStats-Metrics"));
 
+		private static ScheduledFuture<?> scheduledInitialTask;
+
+		private static ScheduledFuture<?> scheduledTask;
+
 		private static final String REPORT_URL = "https://bStats.org/api/v2/data/%s";
 
 		private final String platform;
@@ -223,6 +228,13 @@ public class Metrics {
 					this.submitData();
 				}
 			};
+			// Cancel previous tasks if there are any
+			if (scheduledInitialTask != null) {
+				scheduledInitialTask.cancel(true);
+			}
+			if (scheduledTask != null) {
+				scheduledTask.cancel(true);
+			}
 			// Many servers tend to restart at a fixed time at xx:00 which causes an uneven distribution
 			// of requests on the
 			// bStats backend. To circumvent this problem, we introduce some randomness into the initial
@@ -232,8 +244,8 @@ public class Metrics {
 			// WARNING: Modifying this code will get your plugin banned on bStats. Just don't do it!
 			final long initialDelay = (long) (1000 * 60 * (3 + Math.random() * 3));
 			final long secondDelay = (long) (1000 * 60 * (Math.random() * 30));
-			scheduler.schedule(submitTask, initialDelay, TimeUnit.MILLISECONDS);
-			scheduler.scheduleAtFixedRate(submitTask, initialDelay + secondDelay, 1000 * 60 * 30, TimeUnit.MILLISECONDS);
+			scheduledInitialTask = scheduler.schedule(submitTask, initialDelay, TimeUnit.MILLISECONDS);
+			scheduledTask = scheduler.scheduleAtFixedRate(submitTask, initialDelay + secondDelay, 1000 * 60 * 30, TimeUnit.MILLISECONDS);
 		}
 
 		private void submitData() {

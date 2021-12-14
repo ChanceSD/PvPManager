@@ -132,11 +132,13 @@ public class PM implements CommandExecutor {
 	}
 
 	private void reload(final CommandSender player) {
+		Settings.setReloading(true);
 		Settings.setUpdate(false);
 		Bukkit.getScheduler().cancelTasks(plugin);
 		HandlerList.unregisterAll(plugin);
 		plugin.onDisable();
 		plugin.onEnable();
+		Settings.setReloading(false);
 		player.sendMessage("§2PvPManager Reloaded!");
 	}
 
