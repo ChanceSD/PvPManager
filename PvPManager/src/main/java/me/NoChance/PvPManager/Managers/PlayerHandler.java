@@ -211,6 +211,7 @@ public class PlayerHandler {
 			p.cleanForRemoval();
 		}
 		removeTeams();
+		configManager.awaitSave();
 	}
 
 	private final void removeTeams() {

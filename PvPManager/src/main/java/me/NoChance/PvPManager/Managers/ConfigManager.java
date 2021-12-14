@@ -206,6 +206,16 @@ public class ConfigManager {
 		});
 	}
 
+	public void awaitSave() {
+		try {
+			while (!playersToSave.isEmpty()) {
+				lastTask.get();
+			}
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void saveUsersToDisk() {
 		try {
 			users.save(usersFile);
