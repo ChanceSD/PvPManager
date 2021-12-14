@@ -7,6 +7,7 @@ import org.bukkit.scoreboard.Team;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public class TeamProfile {
@@ -54,8 +55,15 @@ public class TeamProfile {
 					pvpOn = scoreboard.getTeam("PvPOn");
 				} else {
 					pvpOn = scoreboard.registerNewTeam("PvPOn");
-					pvpOn.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getToggleColorOn()));
 					pvpOn.setCanSeeFriendlyInvisibles(false);
+					final String pvpOnPrefix = ChatColor.translateAlternateColorCodes('&', Settings.getToggleColorOn());
+					pvpOn.setPrefix(pvpOnPrefix);
+					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+						final ChatColor nameColor = getLastColor(pvpOnPrefix);
+						if (nameColor != null) {
+							pvpOn.setColor(nameColor);
+						}
+					}
 				}
 			}
 			if (!Settings.getToggleColorOff().equalsIgnoreCase("none")) {
@@ -63,13 +71,27 @@ public class TeamProfile {
 					pvpOff = scoreboard.getTeam("PvPOff");
 				} else {
 					pvpOff = scoreboard.registerNewTeam("PvPOff");
-					pvpOff.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getToggleColorOff()));
 					pvpOff.setCanSeeFriendlyInvisibles(false);
+					final String pvpOffPrefix = ChatColor.translateAlternateColorCodes('&', Settings.getToggleColorOff());
+					pvpOff.setPrefix(pvpOffPrefix);
+					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+						final ChatColor nameColor = getLastColor(pvpOffPrefix);
+						if (nameColor != null) {
+							pvpOff.setColor(nameColor);
+						}
+					}
 				}
 			}
 			// set pvp tag if player has pvp nametags on
 			setPvP(pvPlayer.hasPvPEnabled());
 		}
+	}
+
+	private ChatColor getLastColor(final String string) {
+		final String lastColors = ChatColor.getLastColors(string);
+		if (lastColors.isEmpty())
+			return null;
+		return ChatColor.getByChar(lastColors.replace("§", ""));
 	}
 
 	public final void setInCombat() {
