@@ -42,6 +42,8 @@ public class CustomMetrics {
 				map.put("Kill Abuse", getMapEntry(Settings.isKillAbuseEnabled() ? "Enabled" : "Disabled"));
 				map.put("Update Check", getMapEntry(!Settings.isUpdateCheck() ? "Disabled" : !Settings.isAutoUpdate() ? "Update Check" : "Auto Update"));
 				map.put("PvP Blood", getMapEntry(Settings.isPvpBlood() ? "Enabled" : "Disabled"));
+				map.put("Drop Mode", getMapEntry(Settings.getDropMode().toString()));
+				map.put("Combat Nametags", getMapEntry(Settings.isUseCombatTeam() ? "Enabled" : "Disabled"));
 				return map;
 			}
 		}));
@@ -81,7 +83,7 @@ public class CustomMetrics {
 				for (final Entry<Hook, Dependency> entry : plugin.getDependencyManager().getDependencies().entrySet()) {
 					valueMap.put(entry.getValue().getName(), 1);
 				}
-				final List<String> extra = Arrays.asList("Towny", "TAB", "NametagEdit", "GriefPrevention");
+				final List<String> extra = Arrays.asList("Towny", "TAB", "NametagEdit", "GriefPrevention", "RedProtect", "GriefDefender");
 				for (final String plugin : extra) {
 					if (Bukkit.getPluginManager().isPluginEnabled(plugin)) {
 						valueMap.put(plugin, 1);
@@ -98,6 +100,19 @@ public class CustomMetrics {
 			}
 		}));
 
+		metrics.addCustomChart(new Metrics.SimplePie("locale", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return Settings.getLocale();
+			}
+		}));
+
+		metrics.addCustomChart(new Metrics.SingleLineChart("players_in_combat", new Callable<Integer>() {
+			@Override
+			public Integer call() throws Exception {
+				return PvPManager.getInstance().getPlayerHandler().getPlayersInCombat().size();
+			}
+		}));
 	}
 
 	private Map<String, Integer> getMapEntry(final String key) {
