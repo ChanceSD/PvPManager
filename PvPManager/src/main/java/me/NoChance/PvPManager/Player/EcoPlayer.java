@@ -28,30 +28,40 @@ public abstract class EcoPlayer extends BasePlayer {
 	}
 
 	public final void applyFine() {
-		final double penalty = Settings.getFineAmount() > 1 ? Settings.getFineAmount() : Settings.getFineAmount() * economy.getBalance(getPlayer());
+		final double penalty = getMoneyPercentage(Settings.getFineAmount());
 		withdrawMoney(penalty);
 	}
 
 	public final void applyPenalty() {
-		final double penalty = Settings.getMoneyPenalty() > 1 ? Settings.getMoneyPenalty() : Settings.getMoneyPenalty() * economy.getBalance(getPlayer());
+		final double penalty = getMoneyPercentage(Settings.getMoneyPenalty());
 		withdrawMoney(penalty);
 		message(Messages.getMoneyPenalty().replace("%m", df.format(penalty)));
 	}
 
 	public final void giveReward(final EcoPlayer victim) {
-		double moneyWon = Settings.getMoneyReward() > 1 ? Settings.getMoneyReward() : Settings.getMoneyReward() * economy.getBalance(getPlayer());
+		double moneyWon = getMoneyPercentage(Settings.getMoneyReward());
 		if (Settings.isMoneySteal()) {
 			final double vbalance = economy.getBalance(victim.getPlayer());
 			if (Settings.getMoneyReward() <= 1) {
-				moneyWon = Settings.getMoneyReward() * vbalance;
+				moneyWon = roundMoney(Settings.getMoneyReward() * vbalance);
 			} else if (Settings.getMoneyReward() > vbalance) {
 				moneyWon = vbalance;
 			}
-			economy.withdrawPlayer(victim.getPlayer(), moneyWon);
+			victim.withdrawMoney(moneyWon);
 			victim.message(Messages.getMoneySteal().replace("%p", getPlayer().getName()).replace("%m", df.format(moneyWon)));
 		}
 		depositMoney(moneyWon);
 		message(Messages.getMoneyReward().replace("%m", df.format(moneyWon)).replace("%p", victim.getPlayer().getName()));
+	}
+
+	private double getMoneyPercentage(final double percentage) {
+		if (percentage > 1)
+			return percentage;
+		return roundMoney(percentage * economy.getBalance(getPlayer()));
+	}
+
+	private double roundMoney(final double money) {
+		return Math.round(money * 100.0) / 100.0;
 	}
 
 }
