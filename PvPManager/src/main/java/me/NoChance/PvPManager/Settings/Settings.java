@@ -16,7 +16,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 public final class Settings {
 
 	public enum DropMode {
-		ALWAYS, DROP, KEEP, TRANSFER
+		ALWAYS, DROP, KEEP, TRANSFER, CLEAR
 	}
 
 	public static boolean DEBUG = false;

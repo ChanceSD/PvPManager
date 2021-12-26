@@ -9,7 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<pvpmanager.version>${project.version}</pvpmanager.version>
-		<config.version>56</config.version>
+		<config.version>57</config.version>
 		<powermock.version>2.0.9</powermock.version>
 	</properties>
 

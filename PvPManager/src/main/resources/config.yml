@@ -13,7 +13,8 @@
 # The options are 'ALWAYS' - (PvPManager does nothing, so feature is disabled),
 # mode 'DROP' - (Players drop items when killed in PvP but not in PvE),
 # mode 'KEEP' - (Players keep items when killed in PvP but not in PvE) and
-# mode 'TRANSFER' - (Same as 'DROP' but transfer items(not exp) directly to killer without drops)
+# mode 'TRANSFER' - (Same as 'DROP' but transfer items(not exp) directly to killer's inventory without drops)
+# mode 'CLEAR' - (Clear all drops and exp on death, this deletes everything on death so make sure it is what you want)
 # Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
 # This prevents players from doing a hit and run between zone borders
 # Auto Soup Health -> How much health does soup heal, use 0 to disable

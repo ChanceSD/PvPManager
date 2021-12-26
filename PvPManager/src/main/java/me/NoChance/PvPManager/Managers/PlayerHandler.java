@@ -181,6 +181,10 @@ public class PlayerHandler {
 				event.getDrops().clear();
 			}
 			break;
+		case CLEAR:
+			event.getDrops().clear();
+			event.setDroppedExp(0);
+			break;
 		default:
 			break;
 		}
