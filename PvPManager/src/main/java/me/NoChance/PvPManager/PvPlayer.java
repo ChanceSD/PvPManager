@@ -138,17 +138,11 @@ public class PvPlayer extends EcoPlayer {
 		}
 
 		if (attacker) {
-			final String message = Messages.getTaggedAttacker().replace("%p", tagger.getName());
-			message(message);
-			if (!Settings.getActionBarMessage().isEmpty()) {
-				sendActionBar(message);
-			}
+			message(Messages.getTaggedAttacker().replace("%p", tagger.getName()));
+			sendActionBar(Messages.getTaggedAttackerABar().replace("%p", tagger.getName()));
 		} else {
-			final String message = Messages.getTaggedDefender().replace("%p", tagger.getName());
-			message(message);
-			if (!Settings.getActionBarMessage().isEmpty()) {
-				sendActionBar(message);
-			}
+			message(Messages.getTaggedDefender().replace("%p", tagger.getName()));
+			sendActionBar(Messages.getTaggedDefenderABar().replace("%p", tagger.getName()));
 		}
 
 		this.tagged = true;
@@ -170,9 +164,7 @@ public class PvPlayer extends EcoPlayer {
 			}
 
 			message(Messages.getOutOfCombat());
-			if (!Settings.getActionBarMessage().isEmpty()) {
-				sendActionBar(Messages.getOutOfCombat());
-			}
+			sendActionBar(Messages.getOutOfCombatABar());
 		}
 
 		this.tagged = false;

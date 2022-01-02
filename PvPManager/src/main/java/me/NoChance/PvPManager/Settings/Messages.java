@@ -42,6 +42,9 @@ public class Messages {
 	private static String taggedAttacker;
 	private static String taggedDefender;
 	private static String outOfCombat;
+	private static String taggedAttackerActionbar;
+	private static String taggedDefenderActionbar;
+	private static String outOfCombatActionbar;
 	private static String newbieProtection;
 	private static String newbieProtectionEnd;
 	private static String newbieProtectionOnHit;
@@ -139,8 +142,11 @@ public class Messages {
 		attackDeniedYou = getString("Attack_Denied_You");
 		attackDeniedOther = getString("Attack_Denied_Other");
 		taggedAttacker = getString("Tagged_Attacker");
+		taggedAttackerActionbar = getString("Tagged_Attacker_ActionBar");
 		taggedDefender = getString("Tagged_Defender");
+		taggedDefenderActionbar = getString("Tagged_Defender_ActionBar");
 		outOfCombat = getString("Out_Of_Combat");
+		outOfCombatActionbar = getString("Out_Of_Combat_ActionBar");
 		newbieProtection = getString("Newbie_Protection");
 		newbieProtectionEnd = getString("Newbie_Protection_End");
 		newbieProtectionRemoved = getString("Newbie_Protection_Removed");
@@ -378,6 +384,18 @@ public class Messages {
 
 	public static String respawnProtOther(final String name) {
 		return respawnProtectionOther.replace("%p", name);
+	}
+
+	public static String getTaggedAttackerABar() {
+		return taggedAttackerActionbar;
+	}
+
+	public static String getTaggedDefenderABar() {
+		return taggedDefenderActionbar;
+	}
+
+	public static String getOutOfCombatABar() {
+		return outOfCombatActionbar;
 	}
 
 }

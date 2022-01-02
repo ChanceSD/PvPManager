@@ -15,7 +15,7 @@ public abstract class BasePlayer {
 	private WeakReference<Player> player;
 	private final UUID uuid;
 
-	public BasePlayer(final Player player) {
+	protected BasePlayer(final Player player) {
 		this.player = new WeakReference<>(player);
 		this.uuid = player.getUniqueId();
 	}
@@ -47,7 +47,7 @@ public abstract class BasePlayer {
 	}
 
 	public void sendActionBar(final String message) {
-		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.10")) { // Premium PvPManager supports lower versions with NMS
+		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.10") && !message.isEmpty()) { // Premium PvPManager supports lower versions with NMS
 			getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
 		}
 	}
