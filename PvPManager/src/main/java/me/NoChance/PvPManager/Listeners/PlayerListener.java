@@ -145,7 +145,12 @@ public class PlayerListener implements Listener {
 			player.setHealth(
 			        player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());
 			if (Settings.isSoupBowlDisappear()) {
-				player.getInventory().setItemInHand(null); // can't use setAmount(0) because of 1.8
+				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+					player.getInventory().getItemInMainHand().setAmount(0);
+				} else {
+					player.getInventory().setItemInHand(null);
+					e.setCancelled(true);
+				}
 			} else {
 				i.setType(Material.BOWL);
 			}
