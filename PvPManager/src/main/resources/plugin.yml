@@ -9,7 +9,7 @@ api-version: 1.13
 commands:
    pvpmanager:
       description: Shows Main PvPManager Page.
-      aliases: [pm, pvpm]
+      aliases: [pm, pvpm, pmr]
    pvp:
       description: Change your PvP Status.
       aliases: [toggle, pvptoggle]
