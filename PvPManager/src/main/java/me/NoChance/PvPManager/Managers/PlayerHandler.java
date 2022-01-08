@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -46,7 +45,6 @@ public class PlayerHandler {
 		}
 
 		addOnlinePlayers();
-		new Timer(true).scheduleAtFixedRate(tagTask, 1000, 500);
 	}
 
 	public final CancelResult tryCancel(final Player damager, final Player defender) {

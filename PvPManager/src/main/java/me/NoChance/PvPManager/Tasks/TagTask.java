@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Timer;
 import java.util.TimerTask;
 
 import org.bukkit.Bukkit;
@@ -14,12 +15,15 @@ import me.NoChance.PvPManager.Settings.Settings;
 
 public class TagTask extends TimerTask {
 
+	private final Timer timer;
 	private final long time = Settings.getTimeInCombat() * 1000;
 	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<>());
 	private final DisplayManager display;
 
 	public TagTask(final DisplayManager display) {
 		this.display = display;
+		this.timer = new Timer();
+		timer.scheduleAtFixedRate(this, 1000, 500);
 	}
 
 	@Override
@@ -48,7 +52,9 @@ public class TagTask extends TimerTask {
 				}
 		}
 		tagged.clear();
-		return super.cancel();
+		super.cancel();
+		timer.cancel();
+		return false;
 	}
 
 	public final void addTagged(final PvPlayer p) {
