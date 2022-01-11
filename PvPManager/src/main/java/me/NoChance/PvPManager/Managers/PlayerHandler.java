@@ -121,8 +121,8 @@ public class PlayerHandler {
 	}
 
 	public final void removeUser(final PvPlayer player) {
+		player.cleanForRemoval();
 		players.remove(player.getUUID());
-		player.removeCombatTeam();
 		if (player.hasPvPLogged()) {
 			player.setPvpLogged(false);
 			untag(player);
@@ -208,7 +208,7 @@ public class PlayerHandler {
 				newbiesDisabled.add(p.getUUID());
 			}
 			configManager.markForSave(p);
-			p.removeCombatTeam();
+			p.cleanForRemoval();
 		}
 		removeTeams();
 	}

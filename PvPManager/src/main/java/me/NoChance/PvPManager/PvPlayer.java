@@ -309,7 +309,8 @@ public class PvPlayer extends EcoPlayer {
 		}
 	}
 
-	public final void removeCombatTeam() {
+	public final void cleanForRemoval() {
+		newbieTask.cancel();
 		if (teamProfile != null && Settings.isUseCombatTeam()) {
 			teamProfile.removeCombatTeam();
 		}
