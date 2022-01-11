@@ -196,10 +196,13 @@ public class ConfigManager {
 
 	private void triggerSave() {
 		lastTask = executor.submit(() -> {
+			final long start = System.currentTimeMillis();
+			Log.debug("Starting async save...");
 			while (playersToSave.peek() != null) {
 				saveUser(playersToSave.poll());
 			}
 			saveUsersToDisk();
+			Log.debug("Finished async save - " + (System.currentTimeMillis() - start) + " ms");
 			if (!playersToSave.isEmpty()) {
 				triggerSave();
 			}
@@ -209,7 +212,10 @@ public class ConfigManager {
 	public void awaitSave() {
 		try {
 			while (!playersToSave.isEmpty()) {
+				final long start = System.currentTimeMillis();
+				Log.debug("Awaiting save...");
 				lastTask.get();
+				Log.debug("Finished awaiting - " + (System.currentTimeMillis() - start) + " ms");
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
