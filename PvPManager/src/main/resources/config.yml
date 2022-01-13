@@ -157,7 +157,9 @@ Player Kills:
 # Commands -> Command list to execute on PvP toggle, use '%p' for player name
 # Force On Change World -> Force player PvP to default when changing world, useful if there are worlds
 # where players don't have permission to use /pvp
-# WorldGuard Override -> Players can still be damaged in areas with WG's pvp flag set to allow
+# WorldGuard Overrides -> Players can still be damaged in PvP in areas with WG's pvp flag set to allow
+# WorldGuard Overrides Region List -> If instead of using the pvp flag, you want to define which regions get pvp force enabled
+# If you want to force enable pvp in all regions with pvp flag ALLOW then just leave the list empty or with example
 PvP Toggle:
   Cooldown: 15
   NameTags:
@@ -170,6 +172,8 @@ PvP Toggle:
     - 'examplecommand %p turned pvp off'
   Force On Change World: false
   WorldGuard Overrides: true
+  WorldGuard Overrides Region List:
+    - 'example'
 
 # Section to configure interactions with other plugins
 Plugin Hooks:

@@ -84,6 +84,7 @@ public final class Settings {
 	private static boolean borderHoppingPushback;
 	private static boolean borderHoppingResetCombatTag;
 	private static boolean worldguardOverrides;
+	private static Set<String> worldguardOverridesList;
 	private static boolean glowingInCombat;
 	private static boolean selfTag;
 	private static boolean blockInteractInCombat;
@@ -203,6 +204,7 @@ public final class Settings {
 		commandsPvPOff = getList(PVPTOGGLE.getStringList("Commands PvP Off"));
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
+		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
 
 		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() == null ? false : PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
 
@@ -597,5 +599,9 @@ public final class Settings {
 
 	public static void setReloading(final boolean isReloading) {
 		Settings.isReloading = isReloading;
+	}
+
+	public static Set<String> getWorldguardOverridesList() {
+		return worldguardOverridesList;
 	}
 }
