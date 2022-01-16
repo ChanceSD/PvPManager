@@ -15,10 +15,15 @@ public class DisplayManager {
 
 	public DisplayManager(final PvPManager plugin) {
 		this.plugin = plugin;
-		if (!Settings.getActionBarMessage().isEmpty()) {
-			for (int i = 0; i < Settings.getTimeInCombat() + 1; i++) {
-				actionBars.put(i, new ProgressBar(Settings.getActionBarMessage(), Settings.getActionBarBars(), Settings.getTimeInCombat(), Settings.getActionBarSymbol(), i));
-			}
+		setupActionBar();
+	}
+	
+	private void setupActionBar() {
+		if (Settings.getActionBarMessage().isEmpty()) 
+			return;
+		
+		for (int i = 0; i < Settings.getTimeInCombat() + 1; i++) {
+			actionBars.put(i, new ProgressBar(Settings.getActionBarMessage(), Settings.getActionBarBars(), Settings.getTimeInCombat(), Settings.getActionBarSymbol(), i));
 		}
 	}
 
