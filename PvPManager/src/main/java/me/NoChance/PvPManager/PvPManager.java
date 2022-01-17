@@ -60,6 +60,7 @@ public final class PvPManager extends JavaPlugin {
 		getCommand("pvptag").setExecutor(new Tag(playerHandler));
 		getCommand("announce").setExecutor(new Announce());
 		startMetrics();
+		checkJavaVersion();
 		Log.info("PvPManager Enabled (" + (System.currentTimeMillis() - start) + " ms)");
 	}
 
@@ -108,6 +109,24 @@ public final class PvPManager extends JavaPlugin {
 			Bukkit.broadcast("§6[§8PvPManager§6]§2 §6Bukkit Link: §8https://dev.bukkit.org/projects/pvpmanager", "pvpmanager.admin");
 		} else {
 			Log.info("No update found");
+		}
+	}
+
+	private void checkJavaVersion() {
+		int javaVersion;
+		String version = System.getProperty("java.version");
+		if (version.startsWith("1.")) {
+			version = version.substring(2, 3);
+		} else {
+			final int dot = version.indexOf(".");
+			if (dot != -1) {
+				version = version.substring(0, dot);
+			}
+		}
+		javaVersion = Integer.parseInt(version);
+		if (javaVersion <= 8) {
+			Log.severe("You appear to be using Java 8 or lower. For now the plugin still works but please update to Java 16+");
+			Log.severe("In the future PvPManager might stop supporting Java versions this old");
 		}
 	}
 
