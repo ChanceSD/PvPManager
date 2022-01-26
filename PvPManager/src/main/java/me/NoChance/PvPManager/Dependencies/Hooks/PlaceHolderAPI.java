@@ -46,6 +46,8 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 			return p.hasOverride() ? "true" : "false";
 		case "has_respawn_prot":
 			return p.hasRespawnProtection() ? "true" : "false";
+		case "combat_color":
+			return p.isInCombat() ? Settings.getTeamColor().toString() : "";
 		case "combat_timeleft":
 			return String.valueOf(p.getTagTimeLeft() / 1000);
 		case "newbie_timeleft":
