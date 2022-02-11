@@ -14,11 +14,11 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Queue;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public class Messages {
@@ -128,7 +128,7 @@ public class Messages {
 			e1.printStackTrace();
 			return "Encoding error! Please report this bug!";
 		}
-		return colorize(message);
+		return ChatUtils.colorize(message);
 	}
 
 	private static void getMessages() {
@@ -216,10 +216,6 @@ public class Messages {
 		default:
 			break;
 		}
-	}
-
-	public static String colorize(final String message) {
-		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
 	public static String getErrorPlayerNotFound() {

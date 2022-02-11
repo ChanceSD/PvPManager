@@ -11,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public final class Settings {
@@ -156,7 +157,7 @@ public final class Settings {
 		useCombatTeam = useNameTag || teamColor != null;
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		selfTag = TAGGEDCOMBAT.getBoolean("Self Tag", false);
-		actionBarMessage = Messages.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
+		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
