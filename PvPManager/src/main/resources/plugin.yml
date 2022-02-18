@@ -98,6 +98,9 @@ permissions:
    pvpmanager.nokillabuse:
      description: Players with this permission don't get punished by kill abuse
      default: false
+   pvpmanager.exempt.block.commands:
+     description: Players with this permission can use commands while tagged
+     default: false
    pvpmanager.list:
      description: Allows access to the list of players with PvP enabled
      default: false

@@ -234,7 +234,7 @@ public class PlayerListener implements Listener {
 			final PvPlayer player = ph.get(event.getPlayer());
 			final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
 
-			if (player.isInCombat()) {
+			if (player.isInCombat() && !event.getPlayer().hasPermission("pvpmanager.exempt.block.commands")) {
 				final boolean contains = CombatUtils.recursiveContainsCommand(givenCommand, Settings.getCommandsAllowed());
 				if (Settings.isCommandsWhitelist() != contains) {
 					event.setCancelled(true);
