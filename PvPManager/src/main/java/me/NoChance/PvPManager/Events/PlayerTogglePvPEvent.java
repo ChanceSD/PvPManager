@@ -8,38 +8,49 @@ import org.bukkit.event.HandlerList;
 import me.NoChance.PvPManager.PvPlayer;
 
 /**
- * This event is called before a player is set as no longer in combat.
+ * This event is called any time a Player's PvP state would change.
  * <br>
- * Canceling the event will keep the player in combat indefinitely.
+ * If the event is cancelled the player's state will not change.
  */
-public final class PlayerUntagEvent extends Event implements Cancellable {
+public final class PlayerTogglePvPEvent extends Event implements Cancellable {
 
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled;
 	private final Player player;
 	private final PvPlayer pvplayer;
+	private final boolean pvpState;
 
-	public PlayerUntagEvent(final Player player, final PvPlayer pvplayer) {
+	public PlayerTogglePvPEvent(final Player player, final PvPlayer pvplayer, final boolean pvpState) {
 		this.player = player;
 		this.pvplayer = pvplayer;
+		this.pvpState = pvpState;
 	}
 
 	/**
-	 * The player being untagged in this event
+	 * The player
 	 *
-	 * @return Player being tagged
+	 * @return Player
 	 */
 	public final Player getPlayer() {
 		return player;
 	}
 
 	/**
-	 * Utility method to quickly get the PvPlayer being untagged
+	 * Utility method to quickly get the PvPlayer
 	 *
 	 * @return PvPlayer instance of the player
 	 */
 	public final PvPlayer getPvPlayer() {
 		return pvplayer;
+	}
+
+	/**
+	 * Returns the player's new PvP state
+	 *
+	 * @return true if the player would now have PvP enabled, false if the player would now have PvP disabled
+	 */
+	public final boolean getPvPState() {
+		return pvpState;
 	}
 
 	@Override

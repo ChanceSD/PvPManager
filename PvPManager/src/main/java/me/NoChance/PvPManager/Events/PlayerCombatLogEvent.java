@@ -6,6 +6,11 @@ import org.bukkit.event.HandlerList;
 
 import me.NoChance.PvPManager.PvPlayer;
 
+/**
+ * This event is called whenever a player combat logged.
+ * <br>
+ * Meaning the player disconnected while in combat.
+ */
 public final class PlayerCombatLogEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();

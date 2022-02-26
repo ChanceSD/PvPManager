@@ -65,9 +65,9 @@ public final class PlayerTagEvent extends Event implements Cancellable {
 	/**
 	 * Returns the enemy of {@link #getPlayer}.
 	 * <p>
-	 * In case {@link #isAttacker} is true it will return the player he damaged.
+	 * In case {@link #isAttacker} is true it will return the player they damaged.
 	 * <br>
-	 * In case {@link #isAttacker} is false it will return his damager.
+	 * In case {@link #isAttacker} is false it will return their damager.
 	 *
 	 * @return The player's enemy or null if there isn't one
 	 */

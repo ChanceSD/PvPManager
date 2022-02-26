@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
 import me.NoChance.PvPManager.Events.PlayerTagEvent;
+import me.NoChance.PvPManager.Events.PlayerTogglePvPEvent;
 import me.NoChance.PvPManager.Events.PlayerUntagEvent;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.EcoPlayer;
@@ -60,7 +61,8 @@ public class PvPlayer extends EcoPlayer {
 	public final boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Settings.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = CombatUtils.getTimeLeft(toggleTime, Settings.getToggleCooldown());
-			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - (secondsLeft / 60) * 60)).replace("%t", Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60)));
+			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - secondsLeft / 60 * 60)).replace("%t",
+			        Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60)));
 			return false;
 		}
 		return true;
@@ -174,8 +176,14 @@ public class PvPlayer extends EcoPlayer {
 		if (pvpState == this.pvpState)
 			return;
 
+		final PlayerTogglePvPEvent event = new PlayerTogglePvPEvent(getPlayer(), this, pvpState);
+		Bukkit.getPluginManager().callEvent(event);
+		if (event.isCancelled())
+			return;
+
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
+
 		if (teamProfile != null && Settings.isToggleNametagsEnabled()) {
 			teamProfile.setPvP(pvpState);
 		}
