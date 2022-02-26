@@ -54,6 +54,7 @@ public class PlayerListener implements Listener {
 	public final void onBlockPlace(final BlockPlaceEvent event) {
 		if (Settings.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat()) {
 			event.setCancelled(true);
+			ph.get(event.getPlayer()).sendActionBar(Messages.getBlockPlaceBlockedInCombat());
 		}
 	}
 
@@ -68,6 +69,7 @@ public class PlayerListener implements Listener {
 	public final void onPlayerEat(final PlayerItemConsumeEvent event) {
 		if (Settings.isBlockEat() && ph.get(event.getPlayer()).isInCombat() && event.getItem().getType().isEdible()) {
 			event.setCancelled(true);
+			ph.get(event.getPlayer()).sendActionBar(Messages.getEatBlockedInCombat());
 		}
 	}
 
@@ -182,6 +184,7 @@ public class PlayerListener implements Listener {
 		}
 		if (Settings.blockInteract() && pvplayer.isInCombat()) {
 			e.setCancelled(true);
+			pvplayer.sendActionBar(Messages.getInteractBlockedInCombat());
 		}
 	}
 
@@ -191,6 +194,7 @@ public class PlayerListener implements Listener {
 			final PvPlayer player = ph.get(e.getPlayer());
 			if (player.isNewbie()) {
 				e.setCancelled(true);
+				player.sendActionBar(Messages.getNewbiePickupItemBlocked());
 			}
 		}
 	}

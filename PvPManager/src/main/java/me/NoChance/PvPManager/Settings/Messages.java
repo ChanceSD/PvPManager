@@ -73,6 +73,10 @@ public class Messages {
 	private static String respawnProtectionOther;
 	private static String pvpForceEnabledWG;
 	private static String teleportBlockedInCombat;
+	private static String blockPlaceBlockedInCombat;
+	private static String eatBlockedInCombat;
+	private static String interactBlockedInCombat;
+	private static String newbiePickupItemBlocked;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -158,7 +162,12 @@ public class Messages {
 		newbieTimeCheck = getString("Newbie_Time_Check");
 		newbieTimeCheckOther = getString("Newbie_Time_Check_Other");
 		newbieCommandBlocked = getString("Newbie_Command_Blocked");
+		newbiePickupItemBlocked = getString("Newbie_Pickup_Items_Blocked");
+		blockPlaceBlockedInCombat = getString("Block_Place_Blocked_InCombat");
+		eatBlockedInCombat = getString("Eating_Blocked_InCombat");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
+		interactBlockedInCombat = getString("Interact_Blocked_InCombat");
+		teleportBlockedInCombat = getString("Teleport_Blocked_InCombat");
 		pushbackWarning = getString("Pushback_Warning");
 		errorCommand = getString("Error_Command");
 		errorNotNewbie = getString("Error_Not_Newbie");
@@ -175,7 +184,6 @@ public class Messages {
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
 		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorlGuard");
-		teleportBlockedInCombat = getString("Teleport_Blocked_InCombat");
 	}
 
 	private static void checkChanges() {
@@ -412,4 +420,19 @@ public class Messages {
 		return teleportBlockedInCombat;
 	}
 
+	public static String getBlockPlaceBlockedInCombat() {
+		return blockPlaceBlockedInCombat;
+	}
+
+	public static String getEatBlockedInCombat() {
+		return eatBlockedInCombat;
+	}
+
+	public static String getInteractBlockedInCombat() {
+		return interactBlockedInCombat;
+	}
+
+	public static String getNewbiePickupItemBlocked() {
+		return newbiePickupItemBlocked;
+	}
 }

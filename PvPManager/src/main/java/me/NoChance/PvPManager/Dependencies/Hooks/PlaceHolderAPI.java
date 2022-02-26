@@ -9,6 +9,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class PlaceHolderAPI extends PlaceholderExpansion {
@@ -37,15 +38,15 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		final PvPlayer p = plugin.getPlayerHandler().get(player);
 		switch (identifier) {
 		case "in_combat":
-			return p.isInCombat() ? "true" : "false";
+			return getPAPIBoolean(p.isInCombat());
 		case "pvp_status":
-			return p.hasPvPEnabled() ? "true" : "false";
+			return getPAPIBoolean(p.hasPvPEnabled());
 		case "is_newbie":
-			return p.isNewbie() ? "true" : "false";
+			return getPAPIBoolean(p.isNewbie());
 		case "has_override":
-			return p.hasOverride() ? "true" : "false";
+			return getPAPIBoolean(p.hasOverride());
 		case "has_respawn_prot":
-			return p.hasRespawnProtection() ? "true" : "false";
+			return getPAPIBoolean(p.hasRespawnProtection());
 		case "combat_color":
 			return p.isInCombat() ? Settings.getTeamColor().toString() : "";
 		case "combat_timeleft":
@@ -61,6 +62,13 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		}
 
 		return null;
+	}
+
+	private String getPAPIBoolean(final boolean value) {
+		if (value)
+			return PlaceholderAPIPlugin.booleanTrue();
+		else
+			return PlaceholderAPIPlugin.booleanFalse();
 	}
 
 	private void registerPlaceholder(final String name) {
