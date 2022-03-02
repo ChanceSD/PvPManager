@@ -163,7 +163,7 @@
 		<dependency>
 			<groupId>com.massivecraft.factions</groupId>
 			<artifactId>Factions</artifactId>
-			<version>2.14</version>
+			<version>3.3.0</version>
 			<scope>system</scope>
 			<optional>true</optional>
 			<systemPath>${project.basedir}/libs/Factions-2.14.jar</systemPath>
