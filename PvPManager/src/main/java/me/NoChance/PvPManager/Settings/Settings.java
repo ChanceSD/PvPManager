@@ -177,7 +177,7 @@ public final class Settings {
 		dropInventory = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Inventory", true);
 		dropExp = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Experience", true);
 		dropArmor = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Armor", true);
-		commandsOnPvPLog = getList(TAGGEDCOMBAT.getStringList("Punishments.Commands On PvPLog"));
+		commandsOnPvPLog = getCommandList(TAGGEDCOMBAT.getStringList("Punishments.Commands On PvPLog"));
 
 		newbieProtectionEnabled = NEWBIEPROTECTION.getBoolean("Enabled", true);
 		newbieProtectionTime = NEWBIEPROTECTION.getInt("Time(minutes)", 5);
@@ -188,21 +188,21 @@ public final class Settings {
 		killAbuseEnabled = KILLABUSE.getBoolean("Enabled", true);
 		killAbuseMaxKills = KILLABUSE.getInt("Max Kills", 5);
 		killAbuseTime = KILLABUSE.getInt("Time Limit", 60);
-		killAbuseCommands = getList(KILLABUSE.getStringList("Commands on Abuse"));
+		killAbuseCommands = getCommandList(KILLABUSE.getStringList("Commands on Abuse"));
 		respawnProtection = KILLABUSE.getInt("Respawn Protection", 5);
 
 		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 10));
 		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 10));
 		moneySteal = PLAYERKILLS.getBoolean("Money Steal", false);
-		commandsOnKill = getList(PLAYERKILLS.getStringList("Commands On Kill"));
+		commandsOnKill = getCommandList(PLAYERKILLS.getStringList("Commands On Kill"));
 		playerKillsWGExclusions = new HashSet<>(getList(PLAYERKILLS.getStringList("WorldGuard Exclusions")));
 
 		toggleCooldown = PVPTOGGLE.getInt("Cooldown", 15);
 		setToggleNametagsEnabled(PVPTOGGLE.getBoolean("NameTags.Enabled", false));
 		toggleColorOn = PVPTOGGLE.getString("NameTags.Prefix On", "&1");
 		toggleColorOff = PVPTOGGLE.getString("NameTags.Prefix Off", "&2");
-		commandsPvPOn = getList(PVPTOGGLE.getStringList("Commands PvP On"));
-		commandsPvPOff = getList(PVPTOGGLE.getStringList("Commands PvP Off"));
+		commandsPvPOn = getCommandList(PVPTOGGLE.getStringList("Commands PvP On"));
+		commandsPvPOff = getCommandList(PVPTOGGLE.getStringList("Commands PvP Off"));
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
@@ -235,6 +235,22 @@ public final class Settings {
 	private static List<String> getList(final List<String> list) {
 		for (final Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
 			final String string = iterator.next();
+			if (string.startsWith("example")) {
+				iterator.remove();
+			}
+		}
+		return list;
+	}
+
+	private static List<String> getCommandList(final List<String> list) {
+		for (final Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
+			String string = iterator.next().toLowerCase();
+			if (string.startsWith("!console")) {
+				string = string.substring(9);
+			}
+			if (string.startsWith("!player")) {
+				string = string.substring(8);
+			}
 			if (string.startsWith("example")) {
 				iterator.remove();
 			}
