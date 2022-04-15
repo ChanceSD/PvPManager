@@ -26,6 +26,7 @@ public final class Settings {
 	private static boolean isReloading;
 	private static boolean autoUpdate;
 	private static boolean blockEnderPearl;
+	private static boolean blockChorusFruit;
 	private static boolean blockTeleport;
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocks;
@@ -162,6 +163,7 @@ public final class Settings {
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
+		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
 		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact", false);
@@ -340,6 +342,10 @@ public final class Settings {
 
 	public static boolean isBlockEnderPearl() {
 		return blockEnderPearl;
+	}
+
+	public static boolean isBlockChorusFruit() {
+		return blockChorusFruit;
 	}
 
 	public static boolean isBlockPickNewbies() {
