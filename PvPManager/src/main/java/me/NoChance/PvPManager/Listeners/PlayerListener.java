@@ -226,7 +226,8 @@ public class PlayerListener implements Listener {
 			if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
 				event.setCancelled(true);
 				player.message(Messages.getEnderpearlBlockedIncombat());
-			} else if (event.getCause().equals(TeleportCause.CHORUS_FRUIT) && Settings.isBlockChorusFruit()) {
+			} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && event.getCause().equals(TeleportCause.CHORUS_FRUIT)
+			        && Settings.isBlockChorusFruit()) {
 				event.setCancelled(true);
 				player.message(Messages.getChorusBlockedInCombat());
 			} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
