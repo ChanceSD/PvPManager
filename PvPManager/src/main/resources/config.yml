@@ -86,6 +86,7 @@ Tagged In Combat:
   Untag Enemy: false
   Block:
     EnderPearls: true
+    ChorusFruits: true
     Teleport: true
     Place Blocks: false
     Interact: false

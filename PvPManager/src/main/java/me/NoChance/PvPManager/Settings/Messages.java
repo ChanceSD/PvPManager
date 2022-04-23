@@ -52,6 +52,7 @@ public class Messages {
 	private static String newbieProtectionAttacker;
 	private static String newbieCommandBlocked;
 	private static String enderpearlBlockedIncombat;
+	private static String chorusBlockedInCombat;
 	private static String pushbackWarning;
 	private static String errorCommand;
 	private static String currentVersion;
@@ -167,6 +168,7 @@ public class Messages {
 		blockPlaceBlockedInCombat = getString("Block_Place_Blocked_InCombat");
 		eatBlockedInCombat = getString("Eating_Blocked_InCombat");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
+		chorusBlockedInCombat = getString("ChorusFruit_Blocked_InCombat");
 		interactBlockedInCombat = getString("Interact_Blocked_InCombat");
 		teleportBlockedInCombat = getString("Teleport_Blocked_InCombat");
 		pushbackWarning = getString("Pushback_Warning");
@@ -334,6 +336,10 @@ public class Messages {
 
 	public static String getEnderpearlBlockedIncombat() {
 		return enderpearlBlockedIncombat;
+	}
+
+	public static String getChorusBlockedInCombat() {
+		return chorusBlockedInCombat;
 	}
 
 	public static String getPushbackWarning() {
