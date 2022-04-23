@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,19 +8,39 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
 import me.NoChance.PvPManager.Settings.Settings;
 
 public final class CombatUtils {
 
+	private static final List<String> harmfulPotions = new ArrayList<>();
+
 	private CombatUtils() {
+	}
+
+	static {
+		harmfulPotions.add("SLOW");
+		harmfulPotions.add("SLOW_DIGGING");
+		harmfulPotions.add("HARM");
+		harmfulPotions.add("CONFUSION");
+		harmfulPotions.add("BLINDNESS");
+		harmfulPotions.add("HUNGER");
+		harmfulPotions.add("WEAKNESS");
+		harmfulPotions.add("POISON");
+		harmfulPotions.add("WITHER");
+		harmfulPotions.add("GLOWING");
+		harmfulPotions.add("LEVITATION");
+		harmfulPotions.add("UNLUCK");
+		harmfulPotions.add("BAD_OMEN");
 	}
 
 	public static boolean hasTimePassed(final long toggleTime, final int cooldown) {
@@ -45,11 +66,11 @@ public final class CombatUtils {
 		if (defender instanceof Player && !defender.hasMetadata("NPC")) {
 			if (attacker instanceof Player && !attacker.hasMetadata("NPC"))
 				return true;
-			if (attacker instanceof Projectile) {
-				final ProjectileSource projSource = ((Projectile) attacker).getShooter();
+			if (attacker instanceof Projectile || attacker instanceof AreaEffectCloud) {
+				final ProjectileSource projSource = getSource(attacker);
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					if (Settings.isSelfTag() ||!shooter.equals(defender) && !shooter.hasMetadata("NPC"))
+					if (Settings.isSelfTag() || !shooter.equals(defender) && !shooter.hasMetadata("NPC"))
 						return !(Settings.isIgnoreNoDamageHits() && event.getDamage() == 0);
 				}
 			}
@@ -107,6 +128,10 @@ public final class CombatUtils {
 		return Settings.getWorldsExcluded().contains(worldName);
 	}
 
+	public static boolean isHarmfulPotion(final PotionEffectType type) {
+		return harmfulPotions.contains(type.getName());
+	}
+
 	public static boolean recursiveContainsCommand(final String[] givenCommand, final List<String> list) {
 		boolean contains = false;
 		for (int i = 0; i < givenCommand.length; i++) {
@@ -146,6 +171,13 @@ public final class CombatUtils {
 
 	public static String stripTags(final String version) {
 		return version.replaceAll("[-;+].+", "");
+	}
+
+	private static ProjectileSource getSource(final Entity entity) {
+		if (entity instanceof Projectile)
+			return ((Projectile) entity).getShooter();
+		else
+			return ((AreaEffectCloud) entity).getSource();
 	}
 
 }

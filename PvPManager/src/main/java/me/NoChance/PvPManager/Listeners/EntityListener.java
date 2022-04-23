@@ -3,7 +3,9 @@ package me.NoChance.PvPManager.Listeners;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -137,23 +139,69 @@ public class EntityListener implements Listener {
 
 	@EventHandler
 	public final void onPotionSplash(final PotionSplashEvent event) {
+		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
+			return;
+
 		final ThrownPotion potion = event.getPotion();
 		if (event.getAffectedEntities().isEmpty() || !(potion.getShooter() instanceof Player))
 			return;
 
-		for (final PotionEffect effect : potion.getEffects())
-			if (effect.getType().equals(PotionEffectType.POISON)) {
-				for (final LivingEntity e : event.getAffectedEntities())
-					if (e instanceof Player && !ph.get((Player) e).hasPvPEnabled()) {
-						event.setIntensity(e, 0);
-					}
+		for (final PotionEffect effect : potion.getEffects()) {
+			if (!CombatUtils.isHarmfulPotion(effect.getType()))
 				return;
+		}
+
+		final Player player = (Player) potion.getShooter();
+		for (final LivingEntity e : event.getAffectedEntities()) {
+			if (e.getType() != EntityType.PLAYER || e.equals(player)) {
+				continue;
 			}
+			final Player attacked = (Player) e;
+			final CancelResult result = ph.tryCancel(player, attacked);
+
+			if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
+				event.setIntensity(attacked, 0);
+				Messages.messageProtection(result, player, attacked);
+			} else {
+				onDamageActions(player, attacked);
+			}
+		}
 	}
+
+//	@EventHandler(ignoreCancelled = true)
+//	public final void onLingeringPotionSplash(final AreaEffectCloudApplyEvent event) {
+//		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
+//			return;
+//		System.out.println("ling");
+//		final AreaEffectCloud areaCloud = event.getEntity();
+//		if (event.getAffectedEntities().isEmpty() || !(areaCloud.getSource() instanceof Player))
+//			return;
+//
+//		if (!CombatUtils.isHarmfulPotion(areaCloud.getBasePotionData().getType().getEffectType()))
+//			return;
+//
+//		final Player player = (Player) areaCloud.getSource();
+//		for (final LivingEntity e : event.getAffectedEntities()) {
+//			if (e.getType() != EntityType.PLAYER || e.equals(player)) {
+//				continue;
+//			}
+//			final Player attacked = (Player) e;
+//			final CancelResult result = ph.tryCancel(player, attacked);
+//
+//			if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
+//				event.setCancelled(true);
+//				Messages.messageProtection(result, player, attacked);
+//			} else {
+//				onDamageActions(player, attacked);
+//			}
+//		}
+//	}
 
 	private Player getAttacker(final Entity damager) {
 		if (damager instanceof Projectile)
 			return (Player) ((Projectile) damager).getShooter();
+		if (damager instanceof AreaEffectCloud)
+			return (Player) ((AreaEffectCloud) damager).getSource();
 		return (Player) damager;
 	}
 

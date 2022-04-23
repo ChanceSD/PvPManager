@@ -17,6 +17,7 @@ import java.util.Queue;
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.Log;
@@ -213,18 +214,21 @@ public class Messages {
 	}
 
 	public static void messageProtection(final CancelResult result, final Player player, final Player attacked) {
+		final String message = getProtectionMessage(result, attacked);
+		final PvPlayer receiver = plugin.getPlayerHandler().get(player);
+		receiver.message(message);
+	}
+
+	public static String getProtectionMessage(final CancelResult result, final Player attacked) {
 		switch (result) {
 		case NEWBIE:
-			plugin.getPlayerHandler().get(player).message(result.attackerCaused() ? newbieBlocked() : newbieBlockedOther(attacked.getName()));
-			break;
+			return result.attackerCaused() ? newbieBlocked() : newbieBlockedOther(attacked.getName());
 		case PVPDISABLED:
-			plugin.getPlayerHandler().get(player).message(result.attackerCaused() ? pvpDisabled() : pvpDisabledOther(attacked.getName()));
-			break;
+			return result.attackerCaused() ? pvpDisabled() : pvpDisabledOther(attacked.getName());
 		case RESPAWN_PROTECTION:
-			plugin.getPlayerHandler().get(player).message(result.attackerCaused() ? respawnProtSelf() : respawnProtOther(attacked.getName()));
-			break;
+			return result.attackerCaused() ? respawnProtSelf() : respawnProtOther(attacked.getName());
 		default:
-			break;
+			return "";
 		}
 	}
 
