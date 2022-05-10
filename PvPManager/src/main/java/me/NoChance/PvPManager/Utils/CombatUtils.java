@@ -30,7 +30,6 @@ public final class CombatUtils {
 	static {
 		harmfulPotions.add("SLOW");
 		harmfulPotions.add("SLOW_DIGGING");
-		harmfulPotions.add("HARM");
 		harmfulPotions.add("CONFUSION");
 		harmfulPotions.add("BLINDNESS");
 		harmfulPotions.add("HUNGER");
@@ -66,7 +65,7 @@ public final class CombatUtils {
 		if (defender instanceof Player && !defender.hasMetadata("NPC")) {
 			if (attacker instanceof Player && !attacker.hasMetadata("NPC"))
 				return true;
-			if (attacker instanceof Projectile || attacker instanceof AreaEffectCloud) {
+			if (attacker instanceof Projectile || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && attacker instanceof AreaEffectCloud) {
 				final ProjectileSource projSource = getSource(attacker);
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;

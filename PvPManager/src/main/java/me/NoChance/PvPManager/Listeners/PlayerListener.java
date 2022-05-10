@@ -13,6 +13,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -29,6 +31,7 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -255,6 +258,22 @@ public class PlayerListener implements Listener {
 			}
 		}
 
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public final void onPlayerFish(final PlayerFishEvent event) {
+		final Player player = event.getPlayer();
+		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
+			return;
+
+		if (event.getState() == State.CAUGHT_ENTITY && event.getCaught() instanceof Player) {
+			final Player caught = (Player) event.getCaught();
+			final CancelResult result = ph.tryCancel(player, caught);
+			if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
+				event.setCancelled(true);
+				Messages.messageProtection(result, player, caught);
+			} // TODO trigger damage actions
+		}
 	}
 
 	@EventHandler

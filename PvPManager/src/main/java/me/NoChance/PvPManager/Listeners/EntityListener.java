@@ -1,11 +1,15 @@
 package me.NoChance.PvPManager.Listeners;
 
+import java.util.concurrent.TimeUnit;
+
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -13,11 +17,18 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.weather.LightningStrikeEvent;
+import org.bukkit.event.weather.LightningStrikeEvent.Cause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
@@ -32,6 +43,7 @@ public class EntityListener implements Listener {
 
 	private final PlayerHandler ph;
 	private final WorldGuardHook wg;
+	private final Cache<LightningStrike, Location> lightningCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.SECONDS).build();
 
 	public EntityListener(final PlayerHandler ph) {
 		this.ph = ph;
@@ -42,9 +54,17 @@ public class EntityListener implements Listener {
 	public final void onPlayerDamage(final EntityDamageByEntityEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
-		if (!CombatUtils.isPvP(event)) {
-			if (event.getEntity() instanceof Player && ph.get((Player) event.getEntity()).isNewbie() && Settings.isNewbieGodMode()) {
+		if (!CombatUtils.isPvP(event) && event.getEntity() instanceof Player) {
+			final PvPlayer attacked = ph.get((Player) event.getEntity());
+			if (attacked.isNewbie() && Settings.isNewbieGodMode()) {
 				event.setCancelled(true);
+			} else if (event.getDamager() instanceof LightningStrike) {
+				final LightningStrike lightning = (LightningStrike) event.getDamager();
+				if (!lightningCache.asMap().containsKey(lightning))
+					return;
+				if (!attacked.hasPvPEnabled() || attacked.isNewbie() || attacked.hasRespawnProtection()) {
+					event.setCancelled(true);
+				}
 			}
 			return;
 		}
@@ -98,7 +118,7 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	private void onDamageActions(final Player attacker, final Player defender) {
+	public void onDamageActions(final Player attacker, final Player defender) {
 		final PvPlayer pvpAttacker = ph.get(attacker);
 		final PvPlayer pvpDefender = ph.get(defender);
 
@@ -137,7 +157,7 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public final void onPotionSplash(final PotionSplashEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
@@ -168,34 +188,39 @@ public class EntityListener implements Listener {
 		}
 	}
 
-//	@EventHandler(ignoreCancelled = true)
-//	public final void onLingeringPotionSplash(final AreaEffectCloudApplyEvent event) {
-//		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
-//			return;
-//		System.out.println("ling");
-//		final AreaEffectCloud areaCloud = event.getEntity();
-//		if (event.getAffectedEntities().isEmpty() || !(areaCloud.getSource() instanceof Player))
-//			return;
-//
-//		if (!CombatUtils.isHarmfulPotion(areaCloud.getBasePotionData().getType().getEffectType()))
-//			return;
-//
-//		final Player player = (Player) areaCloud.getSource();
-//		for (final LivingEntity e : event.getAffectedEntities()) {
-//			if (e.getType() != EntityType.PLAYER || e.equals(player)) {
-//				continue;
-//			}
-//			final Player attacked = (Player) e;
-//			final CancelResult result = ph.tryCancel(player, attacked);
-//
-//			if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
-//				event.setCancelled(true);
-//				Messages.messageProtection(result, player, attacked);
-//			} else {
-//				onDamageActions(player, attacked);
-//			}
-//		}
-//	}
+	@EventHandler(ignoreCancelled = true)
+	public void onLightningStrike(final LightningStrikeEvent event) {
+		if (CombatUtils.isWorldExcluded(event.getLightning().getWorld().getName()))
+			return;
+		if (!CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13.1"))
+			return;
+		if (event.getCause() != Cause.TRIDENT)
+			return;
+
+		lightningCache.put(event.getLightning(), event.getLightning().getLocation());
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockIgnite(final BlockIgniteEvent event) {
+		if (event.getCause() != IgniteCause.LIGHTNING)
+			return;
+		if (CombatUtils.isWorldExcluded(event.getBlock().getWorld().getName()))
+			return;
+
+		final Entity ignitingEntity = event.getIgnitingEntity();
+		if (ignitingEntity instanceof LightningStrike && lightningCache.asMap().containsKey(ignitingEntity)) {
+			final LightningStrike lightningStrike = (LightningStrike) ignitingEntity;
+			for (final Entity entity : lightningStrike.getNearbyEntities(2, 2, 2)) {
+				if (entity instanceof Player) {
+					final PvPlayer attacked = ph.get((Player) entity);
+					if (!attacked.hasPvPEnabled() || attacked.isNewbie() || attacked.hasRespawnProtection()) {
+						event.setCancelled(true);
+						return;
+					}
+				}
+			}
+		}
+	}
 
 	private Player getAttacker(final Entity damager) {
 		if (damager instanceof Projectile)

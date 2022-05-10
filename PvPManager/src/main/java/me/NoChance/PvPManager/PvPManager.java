@@ -38,6 +38,7 @@ public final class PvPManager extends JavaPlugin {
 	private Updater updater;
 	private DependencyManager dependencyManager;
 	private DisplayManager displayManager;
+	private EntityListener entityListener;
 	private static PvPManager instance;
 
 	@Override
@@ -79,7 +80,8 @@ public final class PvPManager extends JavaPlugin {
 		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
 			registerListener(new EntityListener1_9(playerHandler));
 		}
-		registerListener(new EntityListener(playerHandler));
+		entityListener = new EntityListener(playerHandler);
+		registerListener(entityListener);
 		registerListener(new PlayerListener(playerHandler));
 		dependencyManager.startListeners(playerHandler);
 	}
@@ -132,6 +134,10 @@ public final class PvPManager extends JavaPlugin {
 
 	private void registerListener(final Listener listener) {
 		this.getServer().getPluginManager().registerEvents(listener, this);
+	}
+
+	public EntityListener getEntityListener() {
+		return entityListener;
 	}
 
 	public ConfigManager getConfigM() {
