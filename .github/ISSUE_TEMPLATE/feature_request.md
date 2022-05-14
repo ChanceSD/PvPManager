@@ -3,7 +3,7 @@ name: Feature request
 about: Suggest an idea for the plugin
 title: ''
 labels: enhancement
-assignees: NoChanceSD
+assignees: ChanceSD
 
 ---
 
