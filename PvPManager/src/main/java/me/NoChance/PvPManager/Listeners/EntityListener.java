@@ -54,7 +54,10 @@ public class EntityListener implements Listener {
 	public final void onPlayerDamage(final EntityDamageByEntityEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
-		if (!CombatUtils.isPvP(event) && event.getEntity() instanceof Player) {
+		if (!CombatUtils.isPvP(event)) {
+			if (!(event.getEntity() instanceof Player))
+				return;
+
 			final PvPlayer attacked = ph.get((Player) event.getEntity());
 			if (attacked.isNewbie() && Settings.isNewbieGodMode()) {
 				event.setCancelled(true);
