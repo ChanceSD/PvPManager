@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.when;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.junit.Before;
@@ -65,6 +67,28 @@ public class DamageListenerTest {
 		callEvent(projMockEvent);
 	}
 
+	private void createMobAttack(final boolean mobAttacker, final boolean cancelled) {
+		final Zombie zombie = mock(Zombie.class, RETURNS_MOCKS);
+		if (mobAttacker) {
+			mockEvent = spy(new EntityDamageByEntityEvent(zombie, defender, DamageCause.ENTITY_ATTACK, 5));
+		} else {
+			mockEvent = spy(new EntityDamageByEntityEvent(attacker, zombie, DamageCause.ENTITY_ATTACK, 5));
+		}
+		mockEvent.setCancelled(cancelled);
+
+		final Projectile proj = mock(Projectile.class);
+		when(proj.getShooter()).thenReturn(attacker);
+		if (mobAttacker) {
+			projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
+		} else {
+			projMockEvent = spy(new EntityDamageByEntityEvent(proj, zombie, DamageCause.PROJECTILE, 5));
+		}
+		projMockEvent.setCancelled(cancelled);
+
+		callEvent(mockEvent);
+		callEvent(projMockEvent);
+	}
+
 	private void callEvent(final EntityDamageByEntityEvent event) {
 		if (!event.isCancelled()) { // ignore cancelled true
 			damageListener.onPlayerDamage(event);
@@ -73,6 +97,17 @@ public class DamageListenerTest {
 		if (!event.isCancelled()) { // ignore cancelled true
 			damageListener.onPlayerDamageMonitor(event);
 		}
+	}
+
+	@Test
+	public final void testMobAttack() {
+		createMobAttack(false, false);
+		assertFalse(mockEvent.isCancelled());
+		assertFalse(projMockEvent.isCancelled());
+
+		createMobAttack(true, false);
+		assertFalse(mockEvent.isCancelled());
+		assertFalse(projMockEvent.isCancelled());
 	}
 
 	@Test
