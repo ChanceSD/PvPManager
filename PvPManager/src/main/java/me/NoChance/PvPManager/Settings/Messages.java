@@ -68,6 +68,8 @@ public class Messages {
 	private static String pvpListNoResults;
 	private static String errorPlayerNotFound;
 	private static String errorNotNewbie;
+	private static String errorNotInCombat;
+	private static String errorNotPlayer;
 	private static String newbieTimeCheck;
 	private static String newbieTimeCheckOther;
 	private static String newbieProtectionRemoved;
@@ -79,6 +81,7 @@ public class Messages {
 	private static String eatBlockedInCombat;
 	private static String interactBlockedInCombat;
 	private static String newbiePickupItemBlocked;
+	private static String tagRemaining;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -176,6 +179,8 @@ public class Messages {
 		errorNotNewbie = getString("Error_Not_Newbie");
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
 		errorPermission = getString("Error_Permission");
+		errorNotInCombat = getString("Error_Not_In_Combat");
+		errorNotPlayer = getString("Error_Not_Player");
 		moneyReward = getString("Money_Reward");
 		moneyPenalty = getString("Money_Penalty");
 		moneySteal = getString("Money_Steal");
@@ -187,6 +192,7 @@ public class Messages {
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
 		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorlGuard");
+		tagRemaining = getString("Tag_Remaining");
 	}
 
 	private static void checkChanges() {
@@ -406,6 +412,14 @@ public class Messages {
 		return newbieProtectionRemoved;
 	}
 
+	public static String getErrorNotInCombat() {
+		return errorNotInCombat;
+	}
+
+	public static String getErrorNotPlayer() {
+		return errorNotPlayer;
+	}
+
 	public static String respawnProtSelf() {
 		return respawnProtectionSelf;
 	}
@@ -444,5 +458,9 @@ public class Messages {
 
 	public static String getNewbiePickupItemBlocked() {
 		return newbiePickupItemBlocked;
+	}
+
+	public static String getTagRemaining() {
+		return tagRemaining;
 	}
 }

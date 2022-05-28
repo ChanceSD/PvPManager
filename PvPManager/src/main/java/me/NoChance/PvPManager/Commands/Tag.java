@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Commands;
 
+import me.NoChance.PvPManager.Settings.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,14 +23,14 @@ public class Tag implements CommandExecutor {
 		if (args.length == 0 && sender instanceof Player) {
 			final PvPlayer pvPlayer = ph.get((Player) sender);
 			if (!pvPlayer.isInCombat())
-				pvPlayer.message("§cYou are not in combat");
+				pvPlayer.message(Messages.getErrorNotInCombat());
 			else {
 				final long timeLeft = (pvPlayer.getTaggedTime() + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis()) / 1000;
-				pvPlayer.message(String.format("§8You are in combat for another %d seconds", timeLeft));
+				pvPlayer.message(String.format(Messages.getTagRemaining(), timeLeft));
 			}
 			return true;
 		} else if (!(sender instanceof Player)) {
-			sender.sendMessage("This command is only available for players");
+			sender.sendMessage(Messages.getErrorNotPlayer());
 			return true;
 		}
 		return false;
