@@ -75,7 +75,7 @@ public class DependencyManager {
 				// Ignore, only here for unit tests
 				Log.warning("Exception initializing " + hook);
 			} catch (final Exception | LinkageError e) {
-				Log.warning("Failed to enable support for " + hook.getDescription().getFullName() + ". Is it up to date?");
+				Log.warning("Failed to enable support for " + hook.getDescription().getFullName() + ". Is " + hook + " up to date?");
 				e.printStackTrace();
 			}
 		}
