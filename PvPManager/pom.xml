@@ -11,10 +11,14 @@
 	<packaging>jar</packaging>
 
 	<repositories>
+	
+		<!-- SpigotMC -->
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
+		
+		<!-- PlaceholderAPI -->
 		<repository>
 			<id>placeholderapi</id>
 			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
@@ -108,24 +112,24 @@
 	</build>
 
 	<dependencies>
+	
+		<!-- Spigot API -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.18.2-R0.1-SNAPSHOT</version>
+			<version>1.19-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>persistence-api</artifactId>
-					<groupId>javax.persistence</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
+		
+		<!-- SimpleClans -->
 		<dependency>
 			<groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
 			<artifactId>SimpleClans</artifactId>
 			<version>2.16.0</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<!-- CommandBook -->
 		<dependency>
 			<groupId>com.sk89q</groupId>
 			<artifactId>commandbook</artifactId>
@@ -138,6 +142,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- Essentials -->
 		<dependency>
 			<groupId>net.ess3</groupId>
 			<artifactId>EssentialsX</artifactId>
@@ -193,12 +199,15 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- PlaceHolderAPI -->
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
 			<version>2.11.1</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<!-- Vault -->
 		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
@@ -206,63 +215,24 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
+		
+		<!-- WorldGuard -->
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard-bukkit</artifactId>
 			<version>7.0.7</version>
 			<scope>provided</scope>
 			<optional>true</optional>
+
 			<exclusions>
 				<exclusion>
-					<groupId>io.papermc</groupId>
-					<artifactId>paperlib</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sk89q</groupId>
-					<artifactId>commandbook</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.bstats</groupId>
-					<artifactId>bstats-bukkit</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>net.java.truevfs</groupId>
-					<artifactId>truevfs-profile-default_2.13</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>it.unimi.dsi</groupId>
-					<artifactId>fastutil</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>de.schlichtherle</groupId>
-					<artifactId>truezip</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.mozilla</groupId>
-					<artifactId>rhino</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.google.code.findbugs</groupId>
-					<artifactId>jsr305</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>org.antlr</groupId>
-					<artifactId>antlr4-runtime</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.flywaydb</groupId>
-					<artifactId>flyway-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.bukkit</groupId>
-					<artifactId>bukkit</artifactId>
+					<artifactId>antlr4</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- WorldGuard Legacy-->
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard-legacy</artifactId>
@@ -270,6 +240,8 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
+		
+		<!-- LibsDisguises -->
 		<dependency>
 			<groupId>LibsDisguises</groupId>
 			<artifactId>LibsDisguises</artifactId>
@@ -282,6 +254,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- Unit Tests -->
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
@@ -294,6 +268,8 @@
 			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Nullability anotations -->
 		<dependency>
 			<groupId>org.eclipse.jdt</groupId>
 			<artifactId>org.eclipse.jdt.annotation</artifactId>

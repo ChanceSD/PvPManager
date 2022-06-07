@@ -1,6 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Strings;
 
 public class ProgressBar {
 
@@ -25,7 +25,7 @@ public class ProgressBar {
 	public void setProgress(final double progress) {
 		final double percent = progress / goal;
 		final int progressBars = (int) (totalBars * percent);
-		message = message.replace("<barsLeft>", StringUtils.repeat(symbol, totalBars - progressBars)).replace("<barsPassed>", StringUtils.repeat(symbol, progressBars))
+		message = message.replace("<barsLeft>", Strings.repeat(symbol, totalBars - progressBars)).replace("<barsPassed>", Strings.repeat(symbol, progressBars))
 		        .replace("<time>", Integer.toString((int) (goal - progress)));
 		this.progress = progress;
 	}
