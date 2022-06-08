@@ -11,7 +11,6 @@
 	<packaging>jar</packaging>
 
 	<repositories>
-	
 		<!-- SpigotMC -->
 		<repository>
 			<id>spigot-repo</id>
@@ -24,7 +23,7 @@
 			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
 
-		<!-- WorldGuard and CommandBook -->
+		<!-- WorldGuard -->
 		<repository>
 			<id>sk89q-repo</id>
 			<url>https://maven.enginehub.org/repo/</url>
@@ -112,7 +111,6 @@
 	</build>
 
 	<dependencies>
-	
 		<!-- Spigot API -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
@@ -127,20 +125,6 @@
 			<artifactId>SimpleClans</artifactId>
 			<version>2.16.0</version>
 			<scope>provided</scope>
-		</dependency>
-		
-		<!-- CommandBook -->
-		<dependency>
-			<groupId>com.sk89q</groupId>
-			<artifactId>commandbook</artifactId>
-			<version>2.5-SNAPSHOT</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- Essentials -->
@@ -223,7 +207,6 @@
 			<version>7.0.7</version>
 			<scope>provided</scope>
 			<optional>true</optional>
-
 			<exclusions>
 				<exclusion>
 					<groupId>org.antlr</groupId>

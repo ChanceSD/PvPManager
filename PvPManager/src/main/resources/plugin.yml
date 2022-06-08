@@ -1,9 +1,9 @@
 name: ${project.artifactId}
 main: ${project.groupId}.PvPManager
 version: ${pvpmanager.version}
-author: NoChanceSD
+author: ChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
-softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, SimpleClans, EZRanksLite, Essentials, CommandBook, PlaceholderAPI, Towny]
+softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, SimpleClans, EZRanksLite, Essentials, PlaceholderAPI, Towny]
 api-version: 1.13
 
 commands:

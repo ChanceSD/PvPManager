@@ -19,7 +19,6 @@ import me.NoChance.PvPManager.Dependencies.PvPDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.WarDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.CommandBookHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUIDHook;
@@ -107,9 +106,6 @@ public class DependencyManager {
 			} else {
 				registerDependency(new WorldGuardLegacyHook(hook));
 			}
-			break;
-		case COMMANDBOOK:
-			registerDependency(new CommandBookHook(hook));
 			break;
 		case ESSENTIALS:
 			registerDependency(new EssentialsHook(hook));
