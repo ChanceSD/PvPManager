@@ -80,6 +80,7 @@ public abstract class Updater {
 				this.thread.join();
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 		}
 	}

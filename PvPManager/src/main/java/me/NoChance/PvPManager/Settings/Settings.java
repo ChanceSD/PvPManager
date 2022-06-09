@@ -78,7 +78,7 @@ public final class Settings {
 	private static boolean toggleNametagsEnabled;
 	private static boolean forcePvPOnWorldChange;
 	private static boolean update = false;
-	private static boolean updateCheck;
+	private static boolean checkUpdates;
 	private static boolean optOutMetrics;
 	private static double soupHealth;
 	private static boolean soupBowlDisappear;
@@ -211,7 +211,7 @@ public final class Settings {
 
 		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() == null ? false : PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
 
-		updateCheck = UPDATECHECK.getBoolean("Enabled", true);
+		checkUpdates = UPDATECHECK.getBoolean("Enabled", true);
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
 
 		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
@@ -497,7 +497,7 @@ public final class Settings {
 	}
 
 	public static boolean isUpdateCheck() {
-		return updateCheck;
+		return checkUpdates;
 	}
 
 	public static boolean isOptOutMetrics() {

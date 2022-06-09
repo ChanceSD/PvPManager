@@ -38,6 +38,8 @@ public class OnDeathTest {
 
 	@Test
 	public final void regularDeath() {
+		final PvPlayer pDefender = ph.get(defender);
+		assertFalse(pDefender.isInCombat());
 		listener.onPlayerDeath(event);
 	}
 

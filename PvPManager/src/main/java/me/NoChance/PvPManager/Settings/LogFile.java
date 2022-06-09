@@ -18,15 +18,13 @@ public class LogFile {
 
 	public LogFile(final File file) {
 		this.file = file;
-
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
+		try {
+			if (!file.exists() && file.createNewFile()) {
 				write("This file logs every player that disconnected during combat");
 				write("You can disable the logging in the config file\n");
-			} catch (final IOException e) {
-				e.printStackTrace();
 			}
+		} catch (final IOException e) {
+			e.printStackTrace();
 		}
 	}
 

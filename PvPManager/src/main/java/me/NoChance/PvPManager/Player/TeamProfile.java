@@ -35,7 +35,7 @@ public class TeamProfile {
 	}
 
 	private void setupTeams() {
-		final String id = "PVP-" + pvPlayer.getUUID().toString().replaceAll("-", "").substring(0, 12);
+		final String id = "PVP-" + pvPlayer.getUUID().toString().replace("-", "").substring(0, 12);
 		if (Settings.isUseCombatTeam()) {
 			if (scoreboard.getTeam(id) != null) {
 				inCombat = scoreboard.getTeam(id);

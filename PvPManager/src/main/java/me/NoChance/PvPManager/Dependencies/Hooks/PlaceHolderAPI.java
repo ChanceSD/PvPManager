@@ -59,9 +59,9 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		case "current_enemy":
 			final PvPlayer pPlayer = p.getEnemy();
 			return pPlayer != null ? pPlayer.getName() : "None";
+		default:
+			return null;
 		}
-
-		return null;
 	}
 
 	private String getPAPIBoolean(final boolean value) {

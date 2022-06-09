@@ -176,7 +176,10 @@ public class ConfigManager {
 				if (lastTask != null && lastTask.isDone()) {
 					lastTask.get(50, TimeUnit.MILLISECONDS);
 				}
-			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			} catch (final InterruptedException e) {
+				e.printStackTrace();
+				Thread.currentThread().interrupt();
+			} catch (ExecutionException | TimeoutException e) {
 				e.printStackTrace();
 			}
 			triggerSave();
@@ -217,7 +220,10 @@ public class ConfigManager {
 				lastTask.get();
 				Log.debug("Finished awaiting - " + (System.currentTimeMillis() - start) + " ms");
 			}
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (final InterruptedException e) {
+			e.printStackTrace();
+			Thread.currentThread().interrupt();
+		} catch (final ExecutionException e) {
 			e.printStackTrace();
 		}
 	}

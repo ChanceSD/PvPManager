@@ -43,7 +43,7 @@ public final class CombatUtils {
 	}
 
 	public static boolean hasTimePassed(final long toggleTime, final int cooldown) {
-		return hasTimePassedMs(toggleTime, cooldown * 1000);
+		return hasTimePassedMs(toggleTime, cooldown * 1000L);
 	}
 
 	public static boolean hasTimePassedMs(final long toggleTime, final long cooldown) {
@@ -51,7 +51,7 @@ public final class CombatUtils {
 	}
 
 	public static int getTimeLeft(final long startTime, final int time) {
-		return (int) (getTimeLeftMs(startTime, time * 1000) / 1000);
+		return (int) (getTimeLeftMs(startTime, time * 1000L) / 1000);
 	}
 
 	public static long getTimeLeftMs(final long startTime, final long time) {

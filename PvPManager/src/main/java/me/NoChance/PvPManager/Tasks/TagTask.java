@@ -16,7 +16,7 @@ import me.NoChance.PvPManager.Settings.Settings;
 public class TagTask extends TimerTask {
 
 	private final Timer timer;
-	private final long time = Settings.getTimeInCombat() * 1000;
+	private final long time = Settings.getTimeInCombat() * 1000L;
 	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<>());
 	private final DisplayManager display;
 
