@@ -51,7 +51,7 @@ public class DamageListenerTest {
 	@Before
 	public final void setup() {
 		ph.getPlayers().clear();
-		assertTrue(ph.getPlayers().size() == 0);
+		assertEquals(0, ph.getPlayers().size());
 	}
 
 	private void createAttack(final boolean cancelled) {

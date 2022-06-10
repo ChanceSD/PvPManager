@@ -10,6 +10,8 @@ public class ChatUtils {
 	private static final Pattern HEX_PATTERN = Pattern.compile("&(#[a-fA-F0-9]{6})");
 	private static boolean hexSupported = checkForBungeeAPI();
 
+	private ChatUtils() {}
+
 	private static boolean checkForBungeeAPI() {
 		try {
 			net.md_5.bungee.api.ChatColor.of("#FFFFFF");
