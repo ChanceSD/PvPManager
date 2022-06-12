@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.MySQL;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,12 +9,12 @@ import java.util.logging.Level;
 public abstract class Converter {
 
 	void onDatabaseLoad(final Database database) {
-		try {
+		try (Connection connection = database.getConnection()) {
 			if (needsConversion(database)) {
 				final Table oldTable = getOldTable();
 
 				//Load entries
-				final PreparedStatement ps = database.getConnection().prepareStatement("SELECT * FROM " + oldTable.getName());
+				final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + oldTable.getName());
 				final ResultSet entries = ps.executeQuery();
 
 				//Convert

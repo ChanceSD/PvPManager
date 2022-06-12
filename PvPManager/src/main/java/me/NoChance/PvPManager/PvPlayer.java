@@ -252,8 +252,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	private synchronized void loadData() {
-		if (plugin.getConfigM().getUserStorage().contains(getUUID().toString())) {
-			loadUserData(plugin.getConfigM().getUserData(getUUID()));
+		if (plugin.getDatabaseManager().userExists(getUUID())) {
+			loadUserData(plugin.getDatabaseManager().getUserData(getUUID()));
 		} else if (CombatUtils.isReal(getUUID()) && Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
@@ -280,22 +280,27 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	private void loadUserData(final Map<String, Object> userData) {
-		if (userData.get(UserDataFields.PVP_STATUS) instanceof Boolean) {
-			this.pvpState = (boolean) userData.get(UserDataFields.PVP_STATUS);
+		final Object pvpstate = userData.get(UserDataFields.PVP_STATUS);
+		if (pvpstate instanceof Integer) {
+			this.pvpState = (int) pvpstate != 0;
+		} else if (pvpstate instanceof Boolean) {
+			this.pvpState = (boolean) pvpstate;
 		}
-		final Object toggle_time = userData.get(UserDataFields.TOGGLE_TIME);
-		if (toggle_time instanceof Integer || toggle_time instanceof Long) {
-			this.toggleTime = ((Number) toggle_time).longValue();
+		final Object pvpToggleTime = userData.get(UserDataFields.TOGGLE_TIME);
+		if (pvpToggleTime instanceof Integer || pvpToggleTime instanceof Long) {
+			this.toggleTime = ((Number) pvpToggleTime).longValue();
 		}
-		if (userData.get(UserDataFields.NEWBIE) instanceof Boolean) {
-			this.newbie = (boolean) userData.get(UserDataFields.NEWBIE);
-			if (this.newbie) {
-				final Object newbie_time = userData.get(UserDataFields.NEWBIE_TIMELEFT);
-				if (newbie_time instanceof Integer || newbie_time instanceof Long) {
-					final long timeleft = ((Number) newbie_time).longValue();
-					this.newbieTask = new NewbieTask(this, plugin, timeleft);
-					message(String.format(Messages.getNewbieTimeCheck(), timeleft / 1000));
-				}
+		final Object newbieState = userData.get(UserDataFields.NEWBIE);
+		if (newbieState instanceof Integer) {
+			this.newbie = (int) newbieState != 0;
+		} else if (newbieState instanceof Boolean) {
+			this.newbie = (boolean) newbieState;
+		}
+		if (this.newbie) {
+			final Object newbieTime = userData.get(UserDataFields.NEWBIE_TIMELEFT);
+			if (newbieTime instanceof Integer || newbieTime instanceof Long) {
+				final long timeleft = ((Number) newbieTime).longValue();
+				this.newbieTask = new NewbieTask(this, plugin, timeleft);
 			}
 		}
 	}

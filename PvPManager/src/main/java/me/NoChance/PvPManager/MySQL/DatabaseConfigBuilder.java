@@ -6,12 +6,17 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class DatabaseConfigBuilder {
 
+	protected enum DatabaseType {
+		SQLITE, MYSQL
+	}
+
 	private String driver;
 	private String url;
 	private String database;
 	private String user;
 	private String password;
 	private String file;
+	private DatabaseType type;
 
 	/**
 	 * Default constructor, no settings.
@@ -27,7 +32,8 @@ public class DatabaseConfigBuilder {
 	 */
 	public DatabaseConfigBuilder(final ConfigurationSection section) {
 		final String url = String.format("%s:%d", section.getString("host"), section.getInt("port"));
-		driver(section.getString("driver")).url(url).database(section.getString("database")).user(section.getString("user")).password(section.getString("password"));
+		driver(section.getString("driver")).type(DatabaseType.MYSQL).url(url).database(section.getString("database")).user(section.getString("user"))
+		        .password(section.getString("password"));
 	}
 
 	/**
@@ -40,9 +46,10 @@ public class DatabaseConfigBuilder {
 	public DatabaseConfigBuilder(final ConfigurationSection section, final File backup) {
 		if (section.getBoolean("enabled")) {
 			final String url = String.format("%s:%d", section.getString("host"), section.getInt("port"));
-			driver("com.mysql.jdbc.Driver").url(url).database(section.getString("database")).user(section.getString("user")).password(section.getString("password"));
+			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(url).database(section.getString("database")).user(section.getString("user"))
+			        .password(section.getString("password"));
 		} else {
-			driver("org.sqlite.SQLiteDataSource").sqlite(backup);
+			driver("org.sqlite.SQLiteDataSource").type(DatabaseType.SQLITE).sqlite(backup);
 		}
 	}
 
@@ -76,6 +83,11 @@ public class DatabaseConfigBuilder {
 		return this;
 	}
 
+	public DatabaseConfigBuilder type(final DatabaseType type) {
+		this.type = type;
+		return this;
+	}
+
 	public String getFile() {
 		return file;
 	}
@@ -98,5 +110,9 @@ public class DatabaseConfigBuilder {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public DatabaseType getType() {
+		return type;
 	}
 }

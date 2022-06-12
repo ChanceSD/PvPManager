@@ -24,7 +24,8 @@ public class Table {
 		for (final String b : a) {
 			i += 1;
 			final String[] c = b.split(" ");
-			v += c[0] == null ? "" : c[0] + (i <= a.length - 1 ? "," : "");
+			final String f = c[0] == null || c[0].isEmpty() ? c[1] : c[0];
+			v += f == null ? "" : f + (i <= a.length - 1 ? "," : "");
 		}
 
 		return "(" + v + ")";

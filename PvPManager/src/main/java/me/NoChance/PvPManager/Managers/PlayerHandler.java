@@ -19,7 +19,6 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
-import me.NoChance.PvPManager.MySQL.Database;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -38,7 +37,7 @@ public class PlayerHandler {
 	private final PvPManager plugin;
 	private final TagTask tagTask;
 	private final WorldGuardHook worldguard;
-	private final Database database;
+	private final DatabaseManager database;
 
 	public PlayerHandler(final PvPManager plugin) {
 		this.plugin = plugin;
@@ -46,7 +45,7 @@ public class PlayerHandler {
 		this.dependencyManager = plugin.getDependencyManager();
 		this.tagTask = new TagTask(plugin.getDisplayManager());
 		this.worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
-		this.database = plugin.getDataBase();
+		this.database = plugin.getDatabaseManager();
 		if (Settings.isKillAbuseEnabled()) {
 			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20L);
 		}
@@ -132,7 +131,7 @@ public class PlayerHandler {
 			player.setPvpLogged(false);
 			untag(player);
 		}
-		configManager.markForSave(player);
+		database.saveUser(player);
 	}
 
 	public final void applyPunishments(final PvPlayer player) {
@@ -226,12 +225,11 @@ public class PlayerHandler {
 			if (player != null && !player.hasPlayedBefore() && !p.isNewbie()) {
 				newbiesDisabled.add(p.getUUID());
 			}
-			configManager.markForSave(p);
+			database.saveUser(p);
 			p.cleanForRemoval();
 		}
 		removeTeams();
 		Log.info("Saving player data to users file");
-		configManager.awaitSave();
 	}
 
 	private final void removeTeams() {
@@ -252,18 +250,6 @@ public class PlayerHandler {
 
 	public final void tag(final PvPlayer p) {
 		tagTask.addTagged(p);
-	}
-
-	public void addKill(final UUID id) {
-		database.increment("kills", id.toString());
-	}
-
-	public void addDeath(final UUID id) {
-		database.increment("deaths", id.toString());
-	}
-
-	private void checkPlayerData(final UUID uuid) {
-		database.addPlayerEntry(uuid.toString());
 	}
 
 	public final Map<UUID, PvPlayer> getPlayers() {

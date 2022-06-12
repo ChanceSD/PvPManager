@@ -4,6 +4,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 
 public class NewbieTask extends BukkitRunnable {
@@ -13,6 +14,7 @@ public class NewbieTask extends BukkitRunnable {
 
 	public NewbieTask(final PvPlayer player, final PvPManager plugin, final long time) {
 		this.player = player;
+		player.message(String.format(Messages.getNewbieTimeCheck(), time / 1000));
 		final long timeLeft = time == 0 ? Settings.getNewbieProtectionTime() * 60000 : time;
 		this.finishTime = System.currentTimeMillis() + timeLeft;
 		this.runTaskLater(plugin, timeLeft / 50);
@@ -24,7 +26,7 @@ public class NewbieTask extends BukkitRunnable {
 	}
 
 	public long getTimeleft() {
-		return finishTime - System.currentTimeMillis();
+		return Math.max(0, finishTime - System.currentTimeMillis());
 	}
 
 }

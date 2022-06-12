@@ -30,7 +30,6 @@ import me.NoChance.PvPManager.Managers.DatabaseManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.MySQL.Database;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -67,6 +66,7 @@ public class PvPManager extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		playerHandler.handlePluginDisable();
+		databaseManager.close();
 		instance = null;
 	}
 
@@ -193,10 +193,6 @@ public class PvPManager extends JavaPlugin {
 
 	public Updater getUpdater() {
 		return updater;
-	}
-
-	public Database getDataBase() {
-		return database;
 	}
 
 	public DisplayManager getDisplayManager() {
