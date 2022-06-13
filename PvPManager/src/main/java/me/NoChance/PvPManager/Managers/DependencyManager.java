@@ -20,7 +20,6 @@ import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.WarDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.FactionsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUIDHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
@@ -88,8 +87,6 @@ public class DependencyManager {
 				registerDependency(new SaberFactionsHook(hook));
 			} else if (fVersion.contains("U")) {
 				registerDependency(new FactionsUUIDHook(hook));
-			} else if (CombatUtils.isVersionAtLeast(fVersion, "2.7")) {
-				registerDependency(new FactionsHook(hook));
 			} else {
 				Log.info("Update Factions to the latest version if you want PvPManager to hook into it successfully");
 			}

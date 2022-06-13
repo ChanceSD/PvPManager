@@ -141,24 +141,6 @@
 			</exclusions>
 		</dependency>
 
-		<!-- MassiveCore and Factions -->
-		<dependency>
-			<groupId>com.massivecraft</groupId>
-			<artifactId>MassiveCore</artifactId>
-			<version>2.14</version>
-			<scope>system</scope>
-			<optional>true</optional>
-			<systemPath>${project.basedir}/libs/MassiveCore-2.14.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.massivecraft.factions</groupId>
-			<artifactId>Factions</artifactId>
-			<version>2.14</version>
-			<scope>system</scope>
-			<optional>true</optional>
-			<systemPath>${project.basedir}/libs/Factions-2.14.jar</systemPath>
-		</dependency>
-
 		<!-- FactionsUUID -->
 		<dependency>
 			<groupId>com.massivecraft</groupId>
