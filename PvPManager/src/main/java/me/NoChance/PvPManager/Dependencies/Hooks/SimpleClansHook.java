@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Dependencies.Hooks;
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
+import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
 import me.NoChance.PvPManager.Dependencies.WarDependency;
@@ -18,6 +19,8 @@ public class SimpleClansHook extends BaseDependency implements PvPDependency, Wa
 	public SimpleClansHook(final Hook hook) {
 		super(hook);
 		clanManager = ((SimpleClans) getPlugin()).getClanManager();
+		if (clanManager == null)
+			throw new DependencyException("Failed to enable SimpleClans support, try updating SimpleClans or check for errors in SimpleClans startup", hook);
 	}
 
 	@Override
