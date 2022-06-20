@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.MySQL;
+package me.NoChance.PvPManager.Database;
 
 import java.io.File;
 
@@ -25,15 +25,14 @@ public class DatabaseConfigBuilder {
 	}
 
 	/**
-	 * Construct a database based on a config section with a driver and custom url.
-	 * This is quite advanced.
+	 * Construct a database based on a config section with a custom url.
 	 *
 	 * @param section Configuration section.
 	 */
 	public DatabaseConfigBuilder(final ConfigurationSection section) {
-		final String url = String.format("%s:%d", section.getString("host"), section.getInt("port"));
-		driver(section.getString("driver")).type(DatabaseType.MYSQL).url(url).database(section.getString("database")).user(section.getString("user"))
-		        .password(section.getString("password"));
+		final String url = String.format("%s:%d", section.getString("Host"), section.getInt("Port"));
+		driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(url).database(section.getString("Database")).user(section.getString("Username"))
+		        .password(section.getString("Password"));
 	}
 
 	/**
@@ -44,10 +43,12 @@ public class DatabaseConfigBuilder {
 	 * @param backup SQLIte file backup.
 	 */
 	public DatabaseConfigBuilder(final ConfigurationSection section, final File backup) {
-		if (section.getBoolean("enabled")) {
-			final String url = String.format("%s:%d", section.getString("host"), section.getInt("port"));
-			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(url).database(section.getString("database")).user(section.getString("user"))
-			        .password(section.getString("password"));
+		final DatabaseType dbType = DatabaseType.valueOf(section.getString("Type", "SQLite").toUpperCase());
+		if (dbType == DatabaseType.MYSQL) {
+			final ConfigurationSection mysql = section.getConfigurationSection("MySQL");
+			final String url = String.format("%s:%d", mysql.getString("Host"), mysql.getInt("Port"));
+			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(url).database(mysql.getString("Database")).user(mysql.getString("Username"))
+			        .password(mysql.getString("Password"));
 		} else {
 			driver("org.sqlite.SQLiteDataSource").type(DatabaseType.SQLITE).sqlite(backup);
 		}

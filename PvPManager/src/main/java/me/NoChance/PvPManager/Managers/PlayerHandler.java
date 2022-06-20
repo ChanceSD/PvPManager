@@ -131,7 +131,6 @@ public class PlayerHandler {
 			player.setPvpLogged(false);
 			untag(player);
 		}
-		database.saveUser(player);
 	}
 
 	public final void applyPunishments(final PvPlayer player) {
@@ -225,11 +224,11 @@ public class PlayerHandler {
 			if (player != null && !player.hasPlayedBefore() && !p.isNewbie()) {
 				newbiesDisabled.add(p.getUUID());
 			}
-			database.saveUser(p);
 			p.cleanForRemoval();
 		}
 		removeTeams();
-		Log.info("Saving player data to users file");
+		Log.info("Saving player data to database");
+		PvPlayer.shutdownExecutorAndWait();
 	}
 
 	private final void removeTeams() {

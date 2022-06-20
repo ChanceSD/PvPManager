@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -280,13 +281,13 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	private void loadUserData(final Map<String, Object> userData) {
-		final Object pvpstate = userData.get(UserDataFields.PVP_STATUS);
+		final Object pvpstate = userData.get(UserDataFields.PVPSTATUS);
 		if (pvpstate instanceof Integer) {
 			this.pvpState = (int) pvpstate != 0;
 		} else if (pvpstate instanceof Boolean) {
 			this.pvpState = (boolean) pvpstate;
 		}
-		final Object pvpToggleTime = userData.get(UserDataFields.TOGGLE_TIME);
+		final Object pvpToggleTime = userData.get(UserDataFields.TOGGLETIME);
 		if (pvpToggleTime instanceof Integer || pvpToggleTime instanceof Long) {
 			this.toggleTime = ((Number) pvpToggleTime).longValue();
 		}
@@ -297,7 +298,7 @@ public class PvPlayer extends EcoPlayer {
 			this.newbie = (boolean) newbieState;
 		}
 		if (this.newbie) {
-			final Object newbieTime = userData.get(UserDataFields.NEWBIE_TIMELEFT);
+			final Object newbieTime = userData.get(UserDataFields.NEWBIETIMELEFT);
 			if (newbieTime instanceof Integer || newbieTime instanceof Long) {
 				final long timeleft = ((Number) newbieTime).longValue();
 				this.newbieTask = new NewbieTask(this, plugin, timeleft);
@@ -307,10 +308,12 @@ public class PvPlayer extends EcoPlayer {
 
 	public final Map<String, Object> getUserData() {
 		final Map<String, Object> userData = new HashMap<>();
-		userData.put(UserDataFields.PVP_STATUS, hasPvPEnabled());
-		userData.put(UserDataFields.TOGGLE_TIME, getToggleTime());
+		userData.put(UserDataFields.NAME, getName());
+		userData.put(UserDataFields.DISPLAYNAME, getPlayer().getDisplayName());
+		userData.put(UserDataFields.PVPSTATUS, hasPvPEnabled());
+		userData.put(UserDataFields.TOGGLETIME, getToggleTime());
 		userData.put(UserDataFields.NEWBIE, isNewbie());
-		userData.put(UserDataFields.NEWBIE_TIMELEFT, newbieTask != null ? newbieTask.getTimeleft() : 0);
+		userData.put(UserDataFields.NEWBIETIMELEFT, newbieTask != null ? newbieTask.getTimeleft() : 0);
 		return userData;
 	}
 
@@ -330,6 +333,7 @@ public class PvPlayer extends EcoPlayer {
 		if (nametag != null && Settings.isUseCombatTeam()) {
 			nametag.removeCombatTeam();
 		}
+		executor.execute(() -> plugin.getDatabaseManager().saveUser(this));
 	}
 
 	public boolean isLoaded() {
@@ -342,6 +346,16 @@ public class PvPlayer extends EcoPlayer {
 				Log.debug("Waiting on data loading for " + this);
 				wait(100);
 			}
+		} catch (final InterruptedException e) {
+			e.printStackTrace();
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	public static void shutdownExecutorAndWait() {
+		try {
+			executor.shutdown();
+			executor.awaitTermination(3, TimeUnit.SECONDS);
 		} catch (final InterruptedException e) {
 			e.printStackTrace();
 			Thread.currentThread().interrupt();

@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.MySQL;
+package me.NoChance.PvPManager.Database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -194,7 +194,15 @@ Plugin Hooks:
     No Protection In War: true
 
 Database:
-  Host: 127.0.0.1
+  # Database type, supported databases: SQLite or MySQL
+  Type: SQLite
+  # Only fill this section if using MySQL
+  MySQL:
+    Host: 127.0.0.1
+    Port: 3306
+    Username: root
+    Password: '12345'
+    Database: minecraft
 
 # Should PvPManager be allowed to check for updates and tell you about them
 # Auto Update - After checking should we download it automatically for you?

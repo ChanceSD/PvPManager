@@ -14,10 +14,12 @@ public class NewbieTask extends BukkitRunnable {
 
 	public NewbieTask(final PvPlayer player, final PvPManager plugin, final long time) {
 		this.player = player;
-		player.message(String.format(Messages.getNewbieTimeCheck(), time / 1000));
 		final long timeLeft = time == 0 ? Settings.getNewbieProtectionTime() * 60000 : time;
 		this.finishTime = System.currentTimeMillis() + timeLeft;
 		this.runTaskLater(plugin, timeLeft / 50);
+		if (time != 0) {
+			player.message(String.format(Messages.getNewbieTimeCheck(), time / 1000));
+		}
 	}
 
 	@Override

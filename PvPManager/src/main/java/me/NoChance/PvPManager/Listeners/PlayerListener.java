@@ -30,7 +30,6 @@ import org.bukkit.inventory.ItemStack;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
-import me.NoChance.PvPManager.Managers.DatabaseManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -41,13 +40,11 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 public class PlayerListener implements Listener {
 
 	private final PlayerHandler ph;
-	private final DatabaseManager database;
 	private final WorldGuardHook wg;
 	private Material mushroomSoup;
 
 	public PlayerListener(final PlayerHandler ph) {
 		this.ph = ph;
-		this.database = ph.getPlugin().getDatabaseManager();
 		this.wg = (WorldGuardHook) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
 			mushroomSoup = Material.MUSHROOM_STEW;
@@ -121,8 +118,6 @@ public class PlayerListener implements Listener {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
 				}
 			}
-			database.increment("kills", killer.getUniqueId());
-			database.increment("deaths", player.getUniqueId());
 		}
 
 		if (pvPlayer.isInCombat()) {

@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.MySQL;
+package me.NoChance.PvPManager.Database;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -7,9 +7,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -29,6 +33,8 @@ public class Database {
 		if (builder.getFile() != null) {
 			// Use SQLITE
 			config.setJdbcUrl(String.format(SQLITE_URL_TEMPLATE, builder.getFile()));
+			config.addDataSourceProperty("journal_mode", "wal");
+			config.addDataSourceProperty("synchronous", "normal");
 		} else {
 			// Use MYSQL
 			config.setJdbcUrl(String.format(MYSQL_URL_TEMPLATE, builder.getUrl(), builder.getDatabase()));
@@ -36,9 +42,12 @@ public class Database {
 			config.setPassword(builder.getPassword());
 		}
 		config.setPoolName("PvPManager");
-//		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-//		ctx.getConfiguration().getLoggerConfig("com.zaxxer.hikari.HikariDataSource").setLevel(Level.WARN);
-		connectionPool = new HikariDataSource(config);
+		config.addDataSourceProperty("cachePrepStmts", "true");
+		config.addDataSourceProperty("prepStmtCacheSize", "250");
+		config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+		ctx.getConfiguration().getLoggerConfig("com.zaxxer.hikari.HikariDataSource").setLevel(Level.WARN);
+		this.connectionPool = new HikariDataSource(config);
 		if (!converted) {
 			databaseFactory.doConversion(this);
 			this.converted = true;
@@ -188,6 +197,53 @@ public class Database {
 	}
 
 	/**
+	 * Insert new data to the database
+	 *
+	 * All the collections of values must have the same size and the same object order
+	 *
+	 * @param table Table to insert data in
+	 * @param columns Collection of column names
+	 * @param values Collection of values to insert
+	 */
+	public void insertColumnsBatch(final Table table, final Collection<String> columns, final Collection<Collection<Object>> values) {
+		try (Connection connection = getConnection()) {
+			String valueCount = "";
+			final Collection<Object> collection = values.stream().findFirst().orElse(Collections.emptyList());
+			for (int i = 0; i < collection.size(); i++) {
+				valueCount += "?";
+				if (i < collection.size() - 1) {
+					valueCount += ",";
+				}
+			}
+			String columnList = "(";
+			int index = 0;
+			for (final String col : columns) {
+				columnList += col;
+				index++;
+				if (index < columns.size()) {
+					columnList += ",";
+				}
+			}
+			columnList += ")";
+			final PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");");
+			int inserts = 0;
+			for (final Collection<Object> object : values) {
+				int i = 0;
+				for (final Object value : object) {
+					ps.setObject(++i, value);
+				}
+				ps.addBatch();
+				inserts++;
+				if (inserts % 1000 == 0 || inserts == values.size()) {
+					ps.executeBatch();
+				}
+			}
+		} catch (final SQLException e) {
+			log("Failed to insert data to database", e);
+		}
+	}
+
+	/**
 	 * Get a value from a table.
 	 *
 	 * @param table Table to get value from
@@ -197,8 +253,8 @@ public class Database {
 	 * @return Value of found, NULL if not.
 	 */
 	public Object getValue(final Table table, final String index, final String toGet, final Object value) {
-		try (Connection connection = getConnection()) {
-			final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;");
+		try (Connection connection = getConnection();
+		        final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
 			final ResultSet result = ps.executeQuery();
 			if (result.next())
@@ -219,23 +275,24 @@ public class Database {
 	 * @return Value of found, NULL if not.
 	 */
 	public Map<String, Object> getRow(final Table table, final String index, final Object value) {
-		try (Connection connection = getConnection()) {
-			final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;");
+		try (Connection connection = getConnection();
+		        final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
-			final ResultSet result = ps.executeQuery();
-			if (result.next()) {
-				final ResultSetMetaData metaData = result.getMetaData();
-				final Map<String, Object> row = new HashMap<>();
-				for (int i = 1; i <= metaData.getColumnCount(); i++) {
-					row.put(metaData.getColumnName(i), result.getObject(i));
+			try (final ResultSet result = ps.executeQuery()) {
+				if (result.next()) {
+					final ResultSetMetaData metaData = result.getMetaData();
+					final Map<String, Object> row = new HashMap<>();
+					for (int i = 1; i <= metaData.getColumnCount(); i++) {
+						row.put(metaData.getColumnName(i), result.getObject(i));
+					}
+					return row;
 				}
-				return row;
 			}
 		} catch (final SQLException e) {
 			log("Failed to get data from database", e);
 		}
 
-		return null;
+		return Collections.emptyMap();
 	}
 
 	/**
