@@ -58,12 +58,16 @@ public class PlayerHandler {
 		if (attacked.isNewbie() || attacker.isNewbie())
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
 		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
-			if (Settings.isWorldguardOverrides() && worldguard != null
-			        && (worldguard.containsRegionsAt(defender.getLocation(), Settings.getWorldguardOverridesList()) || worldguard.hasAllowPvPFlag(defender))) {
-				attacker.setPvP(true);
-				attacked.setPvP(true);
-				attacker.message(Messages.getPvpForceEnabledWG());
-				attacked.message(Messages.getPvpForceEnabledWG());
+			if (worldguard != null && worldguard.hasAllowPvPFlag(defender)
+			        && (Settings.isWorldguardOverrides() || worldguard.containsRegionsAt(defender.getLocation(), Settings.getWorldguardOverridesList()))) {
+				if (!attacker.hasPvPEnabled()) {
+					attacker.setPvP(true);
+					attacker.message(Messages.getPvpForceEnabledWG());
+				}
+				if (!attacked.hasPvPEnabled()){
+					attacked.setPvP(true);
+					attacked.message(Messages.getPvpForceEnabledWG());
+				}
 			} else if (dependencyManager.shouldDisableProtection(damager, defender))
 				return CancelResult.FAIL;
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
