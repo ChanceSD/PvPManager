@@ -28,6 +28,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		registerPlaceholder("has_override");
 		registerPlaceholder("has_respawn_prot");
 		registerPlaceholder("current_enemy");
+		registerPlaceholder("combat_color");
 	}
 
 	@Override
