@@ -21,6 +21,7 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class PM implements CommandExecutor {
 
@@ -123,6 +124,9 @@ public class PM implements CommandExecutor {
 					p.setNewbie(true);
 				} else if (args[1].equalsIgnoreCase("attack")) {
 					plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
+				} else if (args[1].equalsIgnoreCase("toggle")) {
+					Settings.DEBUG = !Settings.DEBUG;
+					Log.info("Debug mode: " + Settings.DEBUG);
 				}
 				return true;
 			}
