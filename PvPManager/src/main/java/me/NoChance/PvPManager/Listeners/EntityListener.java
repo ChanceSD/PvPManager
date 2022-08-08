@@ -166,7 +166,7 @@ public class EntityListener implements Listener {
 			return;
 
 		final ThrownPotion potion = event.getPotion();
-		if (event.getAffectedEntities().isEmpty() || !(potion.getShooter() instanceof Player))
+		if (event.getAffectedEntities().isEmpty() || potion.getEffects().isEmpty() || !(potion.getShooter() instanceof Player))
 			return;
 
 		for (final PotionEffect effect : potion.getEffects()) {
