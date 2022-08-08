@@ -105,6 +105,9 @@ public class PM implements CommandExecutor {
 				PvPlayer p = null;
 				if (args.length == 2 && sender instanceof Player) {
 					p = plugin.getPlayerHandler().get((Player) sender);
+				} else if (args.length == 2 && args[1].equalsIgnoreCase("toggle")) {
+					Settings.DEBUG = !Settings.DEBUG;
+					Log.info("Debug mode: " + Settings.DEBUG);
 				} else if (args.length == 3) {
 					if (!CombatUtils.isOnline(args[2])) {
 						sender.sendMessage("§4Player not online!");
@@ -124,9 +127,6 @@ public class PM implements CommandExecutor {
 					p.setNewbie(true);
 				} else if (args[1].equalsIgnoreCase("attack")) {
 					plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
-				} else if (args[1].equalsIgnoreCase("toggle")) {
-					Settings.DEBUG = !Settings.DEBUG;
-					Log.info("Debug mode: " + Settings.DEBUG);
 				}
 				return true;
 			}

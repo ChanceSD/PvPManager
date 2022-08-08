@@ -93,18 +93,6 @@ public class PlayerHandler {
 		return false;
 	}
 
-	private void addOnlinePlayers() {
-		for (final Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-			if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
-				team.unregister();
-			}
-		}
-		for (final Player p : plugin.getServer().getOnlinePlayers()) {
-			get(p);
-		}
-		newbiesDisabled.clear();
-	}
-
 	/**
 	 * @param player
 	 * @return PvPlayer instance for the provided player
@@ -200,6 +188,19 @@ public class PlayerHandler {
 	private void keepExp(final PlayerDeathEvent event) {
 		event.setKeepLevel(true);
 		event.setDroppedExp(0);
+	}
+
+	private void addOnlinePlayers() {
+		for (final Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+			if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
+				team.unregister();
+			}
+		}
+		for (final Player p : plugin.getServer().getOnlinePlayers()) {
+			final PvPlayer pvPlayer = get(p);
+			pvPlayer.waitForPlayerToLoad();
+		}
+		newbiesDisabled.clear();
 	}
 
 	public void handlePluginDisable() {

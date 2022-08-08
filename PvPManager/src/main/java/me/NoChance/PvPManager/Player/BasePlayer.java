@@ -52,4 +52,9 @@ public abstract class BasePlayer {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "PvPlayer[name=" + getName() + ", uuid=" + uuid + "]";
+	}
+
 }

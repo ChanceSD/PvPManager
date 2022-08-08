@@ -30,6 +30,7 @@ public class PvPlayer extends EcoPlayer {
 	private boolean pvpState;
 	private boolean pvpLogged;
 	private boolean override;
+	private boolean loaded;
 	private long toggleTime;
 	private long respawnTime;
 	private long taggedTime;
@@ -257,7 +258,7 @@ public class PvPlayer extends EcoPlayer {
 		return tagged ? taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis() : 0;
 	}
 
-	private void loadData() {
+	private synchronized void loadData() {
 		if (plugin.getConfigM().getUserStorage().contains(getUUID().toString())) {
 			loadUserData(plugin.getConfigM().getUserData(getUUID()));
 		} else if (CombatUtils.isReal(getUUID()) && Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
@@ -276,6 +277,9 @@ public class PvPlayer extends EcoPlayer {
 				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
 			}
 		}
+		this.loaded = true;
+		notifyAll();
+		Log.debug("Finished loading data for " + this);
 	}
 
 	private void loadUserData(final Map<String, Object> userData) {
@@ -323,6 +327,22 @@ public class PvPlayer extends EcoPlayer {
 		}
 		if (teamProfile != null && Settings.isUseCombatTeam()) {
 			teamProfile.removeCombatTeam();
+		}
+	}
+
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	public synchronized void waitForPlayerToLoad() {
+		try {
+			while (!isLoaded()) {
+				Log.debug("Waiting on data loading for " + this);
+				wait(100);
+			}
+		} catch (final InterruptedException e) {
+			e.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
 	}
 
