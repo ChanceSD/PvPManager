@@ -22,6 +22,7 @@ import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUIDHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.McMMOHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SaberFactionsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
@@ -106,6 +107,9 @@ public class DependencyManager {
 			break;
 		case ESSENTIALS:
 			registerDependency(new EssentialsHook(hook));
+			break;
+		case MCMMO:
+			registerDependency(new McMMOHook(hook));
 			break;
 		case PLACEHOLDERAPI:
 			registerDependency(new PlaceHolderAPIHook(hook));

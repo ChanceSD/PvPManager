@@ -3,7 +3,7 @@ main: ${project.groupId}.PvPManager
 version: ${pvpmanager.version}
 author: ChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
-softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, SimpleClans, EZRanksLite, Essentials, PlaceholderAPI, Towny]
+softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, SimpleClans, EZRanksLite, Essentials, PlaceholderAPI, Towny, mcMMO]
 api-version: 1.13
 
 commands:
