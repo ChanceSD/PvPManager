@@ -23,7 +23,12 @@ public class EssentialsHook extends BaseDependency implements GodDependency {
 	}
 
 	@Override
-	public void removeGodMode(final Player player) {
+	public void enableGodMode(final Player player) {
+		ess.getUser(player).setGodModeEnabled(true);
+	}
+
+	@Override
+	public void disableGodMode(final Player player) {
 		ess.getUser(player).setGodModeEnabled(false);
 	}
 

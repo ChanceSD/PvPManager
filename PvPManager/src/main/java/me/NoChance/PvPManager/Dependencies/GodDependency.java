@@ -6,6 +6,8 @@ public interface GodDependency extends Dependency {
 
 	public boolean hasGodMode(Player player);
 
-	public void removeGodMode(Player player);
+	public void enableGodMode(Player player);
+
+	public void disableGodMode(Player player);
 
 }

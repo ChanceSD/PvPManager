@@ -137,7 +137,7 @@ public class DependencyManager {
 	public final void disableGodMode(final Player p) {
 		for (final GodDependency godPlugin : godChecks) {
 			if (godPlugin.hasGodMode(p)) {
-				godPlugin.removeGodMode(p);
+				godPlugin.disableGodMode(p);
 			}
 		}
 	}
