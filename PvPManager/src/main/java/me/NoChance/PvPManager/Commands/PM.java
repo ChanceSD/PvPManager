@@ -106,7 +106,7 @@ public class PM implements CommandExecutor {
 				if (args.length == 2 && sender instanceof Player) {
 					p = plugin.getPlayerHandler().get((Player) sender);
 				} else if (args.length == 2 && args[1].equalsIgnoreCase("toggle")) {
-					Settings.DEBUG = !Settings.DEBUG;
+					Settings.setDEBUG(!Settings.DEBUG);
 					Log.info("Debug mode: " + Settings.DEBUG);
 				} else if (args.length == 3) {
 					if (!CombatUtils.isOnline(args[2])) {

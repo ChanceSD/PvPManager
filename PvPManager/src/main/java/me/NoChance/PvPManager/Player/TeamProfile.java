@@ -39,8 +39,10 @@ public class TeamProfile {
 		if (Settings.isUseCombatTeam()) {
 			if (scoreboard.getTeam(id) != null) {
 				inCombat = scoreboard.getTeam(id);
+				Log.debug("Combat team with name " + id + " already existed");
 			} else {
 				inCombat = scoreboard.registerNewTeam(id);
+				Log.debug("Creating combat team with name " + id);
 				if (Settings.isUseNameTag()) {
 					inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()));
 				}
@@ -156,6 +158,7 @@ public class TeamProfile {
 
 	public void removeCombatTeam() {
 		try {
+			Log.debug("Unregistering team: " + inCombat.getName());
 			inCombat.unregister();
 		} catch (final IllegalStateException e) {
 			if (unregisteredSent)

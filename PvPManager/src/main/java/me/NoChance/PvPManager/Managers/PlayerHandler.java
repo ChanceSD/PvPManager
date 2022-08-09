@@ -24,6 +24,7 @@ import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class PlayerHandler {
 
@@ -193,6 +194,7 @@ public class PlayerHandler {
 	private void addOnlinePlayers() {
 		for (final Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
 			if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
+				Log.debug("Unregistered leftover team: " + team.getName() + " Entries: " + team.getEntries());
 				team.unregister();
 			}
 		}

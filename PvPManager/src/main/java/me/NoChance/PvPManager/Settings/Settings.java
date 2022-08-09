@@ -624,6 +624,10 @@ public final class Settings {
 		Settings.isReloading = isReloading;
 	}
 
+	public static void setDEBUG(final boolean dEBUG) {
+		Settings.DEBUG = dEBUG;
+	}
+
 	public static Set<String> getWorldguardOverridesList() {
 		return worldguardOverridesList;
 	}
