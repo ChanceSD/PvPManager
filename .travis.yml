@@ -9,6 +9,9 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.sonar/cache'
 
+git:
+  depth: false
+
 addons:
   sonarcloud:
     organization: "chancesd"
