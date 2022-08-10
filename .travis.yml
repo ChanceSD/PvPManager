@@ -6,10 +6,8 @@ notifications:
 
 cache:
   directories:
-  - $HOME/.m2
- 
-git:
-  depth: false 
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
 
 addons:
   sonarcloud:
