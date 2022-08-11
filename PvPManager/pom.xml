@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>me.NoChance.PvPManager</groupId>
@@ -16,7 +15,7 @@
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
-		
+
 		<!-- PlaceholderAPI -->
 		<repository>
 			<id>placeholderapi</id>
@@ -80,7 +79,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.2</version>
 				<configuration>
-					<argLine>-Dfile.encoding=UTF-8 --illegal-access=warn</argLine>
+					<argLine>${argLine} -Dfile.encoding=UTF-8 --illegal-access=warn</argLine>
 					<includes>
 						<include>**/*AllTests.java</include>
 					</includes>
@@ -109,6 +108,8 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+
 
 	<dependencies>
 		<!-- Spigot API -->
@@ -118,7 +119,7 @@
 			<version>1.19.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- SimpleClans -->
 		<dependency>
 			<groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
@@ -126,7 +127,7 @@
 			<version>2.16.0</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Essentials -->
 		<dependency>
 			<groupId>net.ess3</groupId>
@@ -155,7 +156,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-	
+
 		<!-- SaberFactions -->
 		<dependency>
 			<groupId>com.github.SaberLLC</groupId>
@@ -172,7 +173,7 @@
 			<version>2.11.2</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Vault -->
 		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
@@ -181,7 +182,7 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
-		
+
 		<!-- WorldGuard -->
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
@@ -196,7 +197,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- WorldGuard Legacy-->
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
@@ -205,7 +206,7 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
-		
+
 		<!-- mcMMO -->
 		<dependency>
 			<groupId>com.gmail.nossr50.mcMMO</groupId>
@@ -214,7 +215,7 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
-		
+
 		<!-- LibsDisguises -->
 		<dependency>
 			<groupId>LibsDisguises</groupId>
@@ -228,7 +229,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- Unit Tests -->
 		<dependency>
 			<groupId>org.powermock</groupId>
@@ -242,7 +243,7 @@
 			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Nullability anotations -->
 		<dependency>
 			<groupId>org.eclipse.jdt</groupId>
