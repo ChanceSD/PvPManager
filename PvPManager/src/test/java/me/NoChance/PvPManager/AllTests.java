@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager;
 
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.ClassRule;
 import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
@@ -11,7 +12,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ PvPManager.class, PluginCommand.class })
+@PrepareForTest({ JavaPlugin.class, PluginCommand.class })
 @PowerMockRunnerDelegate(Suite.class)
 @SuiteClasses({ UpdaterTest.class, DependencyTest.class, DamageListenerTest.class, OnDeathTest.class })
 public final class AllTests {
