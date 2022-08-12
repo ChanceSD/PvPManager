@@ -1,6 +1,8 @@
 package me.NoChance.PvPManager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,15 +53,7 @@ public class PvPManager extends JavaPlugin {
 		displayManager = new DisplayManager(this);
 		playerHandler = new PlayerHandler(this);
 		startListeners();
-		getCommand("pvp").setExecutor(new PvP(playerHandler));
-		getCommand("newbie").setExecutor(new Newbie(playerHandler));
-		getCommand("pvpmanager").setExecutor(new PM(this));
-		getCommand("pvpoverride").setExecutor(new PvPOverride(playerHandler));
-		getCommand("pvpinfo").setExecutor(new PvPInfo(playerHandler));
-		getCommand("pvplist").setExecutor(new PvPList(playerHandler));
-		getCommand("pvpstatus").setExecutor(new PvPStatus(playerHandler));
-		getCommand("pvptag").setExecutor(new Tag(playerHandler));
-		getCommand("announce").setExecutor(new Announce());
+		registerCommands();
 		startMetrics();
 		checkJavaVersion();
 		Log.info("PvPManager Enabled (" + (System.currentTimeMillis() - start) + " ms)");
@@ -84,6 +78,18 @@ public class PvPManager extends JavaPlugin {
 		registerListener(entityListener);
 		registerListener(new PlayerListener(playerHandler));
 		dependencyManager.startListeners(playerHandler);
+	}
+
+	private void registerCommands() {
+		registerCommand(getCommand("pvp"), new PvP(playerHandler));
+		registerCommand(getCommand("newbie"), new Newbie(playerHandler));
+		registerCommand(getCommand("pvpmanager"), new PM(this));
+		registerCommand(getCommand("pvpoverride"), new PvPOverride(playerHandler));
+		registerCommand(getCommand("pvpinfo"), new PvPInfo(playerHandler));
+		registerCommand(getCommand("pvplist"), new PvPList(playerHandler));
+		registerCommand(getCommand("pvpstatus"), new PvPStatus(playerHandler));
+		registerCommand(getCommand("pvptag"), new Tag(playerHandler));
+		registerCommand(getCommand("announce"), new Announce());
 	}
 
 	private void startMetrics() {
@@ -143,6 +149,12 @@ public class PvPManager extends JavaPlugin {
 
 	private void registerListener(final Listener listener) {
 		this.getServer().getPluginManager().registerEvents(listener, this);
+	}
+
+	private void registerCommand(final PluginCommand command, final CommandExecutor executor) {
+		if (command == null)
+			return;
+		command.setExecutor(executor);
 	}
 
 	public EntityListener getEntityListener() {

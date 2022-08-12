@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -33,6 +34,7 @@ public class DependencyTest {
 		final JavaPlugin plugin = PowerMockito.mock(JavaPlugin.class);
 		when(plugin.getDescription()).thenReturn(new PluginDescriptionFile("Plugin", "1.0", "plugin"));
 		when(server.getPluginManager().getPlugin(Matchers.anyString())).thenReturn(plugin);
+		assertEquals(server.getPluginManager().getPlugin("PvPManager"), plugin);
 		new DependencyManager();
 	}
 

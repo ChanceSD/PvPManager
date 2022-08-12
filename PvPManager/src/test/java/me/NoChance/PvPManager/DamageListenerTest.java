@@ -2,7 +2,6 @@ package me.NoChance.PvPManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
@@ -119,7 +118,7 @@ public class DamageListenerTest {
 		assertFalse(Settings.isSelfTag());
 		// attacker different from defender
 		when(proj.getShooter()).thenReturn(attacker);
-		assertNotEquals(proj.getShooter(), projMockEvent.getEntity());
+		assertEquals(proj.getShooter(), attacker);
 		assertTrue(CombatUtils.isPvP(projMockEvent));
 
 		// attacker equals defender
@@ -132,7 +131,7 @@ public class DamageListenerTest {
 		assertTrue(Settings.isSelfTag());
 		// attacker different from defender
 		when(proj.getShooter()).thenReturn(attacker);
-		assertNotEquals(proj.getShooter(), projMockEvent.getEntity());
+		assertEquals(proj.getShooter(), attacker);
 		assertTrue(CombatUtils.isPvP(projMockEvent));
 
 		// attacker equals defender

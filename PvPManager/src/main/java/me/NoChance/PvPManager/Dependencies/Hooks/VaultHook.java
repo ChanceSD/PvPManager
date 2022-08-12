@@ -20,7 +20,7 @@ public class VaultHook extends BaseDependency {
 	private Economy setupEconomy() {
 		final RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(Economy.class);
 		Economy eco = null;
-		if (economyProvider != null && economyProvider.getProvider() != null) {
+		if (economyProvider != null) {
 			eco = economyProvider.getProvider();
 		} else {
 			throw new DependencyException("Error loading Vault! No Economy plugin found", Hook.VAULT);

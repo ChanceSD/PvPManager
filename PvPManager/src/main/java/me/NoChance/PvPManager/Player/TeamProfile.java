@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager.Player;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -28,10 +27,6 @@ public class TeamProfile {
 
 	private void setupScoreboard() {
 		scoreboard = pvPlayer.getPlayer().getScoreboard();
-		if (scoreboard == null) {
-			scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-			pvPlayer.getPlayer().setScoreboard(scoreboard);
-		}
 	}
 
 	private void setupTeams() {
