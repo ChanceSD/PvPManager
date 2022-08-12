@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +11,8 @@ public class ChatUtils {
 	private static final Pattern HEX_PATTERN = Pattern.compile("&(#[a-fA-F0-9]{6})");
 	private static boolean hexSupported = checkForBungeeAPI();
 
-	private ChatUtils() {}
+	private ChatUtils() {
+	}
 
 	private static boolean checkForBungeeAPI() {
 		try {
@@ -37,5 +39,10 @@ public class ChatUtils {
 		}
 
 		return matcher.appendTail(buffer).toString();
+	}
+
+	public static List<String> getMatchingEntries(final String token, final List<String> toFilter) {
+		toFilter.removeIf(s -> !s.toLowerCase().contains(token.toLowerCase()));
+		return toFilter;
 	}
 }

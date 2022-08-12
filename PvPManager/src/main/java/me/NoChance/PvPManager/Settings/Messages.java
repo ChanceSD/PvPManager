@@ -29,6 +29,8 @@ public class Messages {
 	private static File messagesFile;
 	private static String errorPermission;
 	private static String errorPvpCooldown;
+	private static String errorPvpToggleNoPvp;
+	private static String errorPvpToggleForcePvp;
 	private static String alreadyDisabled;
 	private static String alreadyEnabled;
 	private static String otherStatusEnabled;
@@ -66,6 +68,7 @@ public class Messages {
 	private static String pvpListEnabled;
 	private static String pvpListDisabled;
 	private static String pvpListNoResults;
+	private static String pvpToggleAdminChanged;
 	private static String errorPlayerNotFound;
 	private static String errorNotNewbie;
 	private static String errorNotInCombat;
@@ -82,6 +85,8 @@ public class Messages {
 	private static String interactBlockedInCombat;
 	private static String newbiePickupItemBlocked;
 	private static String tagRemaining;
+	private static String enabled;
+	private static String disabled;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -178,6 +183,8 @@ public class Messages {
 		errorCommand = getString("Error_Command");
 		errorNotNewbie = getString("Error_Not_Newbie");
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
+		errorPvpToggleNoPvp = getString("Error_PvPToggle_NoPvP");
+		errorPvpToggleForcePvp = getString("Error_PvPToggle_ForcePvP");
 		errorPermission = getString("Error_Permission");
 		errorNotInCombat = getString("Error_Not_In_Combat");
 		errorNotPlayer = getString("Error_Not_Player");
@@ -188,11 +195,14 @@ public class Messages {
 		pvpListEnabled = getString("PvPList_Enabled");
 		pvpListDisabled = getString("PvPList_Disabled");
 		pvpListNoResults = getString("PvPList_Nothing_Found");
+		pvpToggleAdminChanged = getString("PvPToggle_Admin_Changed");
 		errorPlayerNotFound = getString("Error_Player_Not_Found");
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
 		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorlGuard");
 		tagRemaining = getString("Tag_Remaining");
+		enabled = getString("Enabled");
+		disabled = getString("Disabled");
 	}
 
 	private static void checkChanges() {
@@ -260,12 +270,24 @@ public class Messages {
 		return pvpListDisabled;
 	}
 
+	public static String getPvPToggleAdminChanged() {
+		return pvpToggleAdminChanged;
+	}
+
 	public static String getErrorPermission() {
 		return errorPermission;
 	}
 
 	public static String getErrorPvpCooldown() {
 		return errorPvpCooldown;
+	}
+
+	public static String getErrorPvPToggleNoPvP() {
+		return errorPvpToggleNoPvp;
+	}
+
+	public static String getErrorPvPToggleForcePvP() {
+		return errorPvpToggleForcePvp;
 	}
 
 	public static String getAlreadyDisabled() {
@@ -462,5 +484,13 @@ public class Messages {
 
 	public static String getTagRemaining() {
 		return tagRemaining;
+	}
+
+	public static String getEnabled() {
+		return enabled;
+	}
+
+	public static String getDisabled() {
+		return disabled;
 	}
 }

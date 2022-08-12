@@ -52,13 +52,6 @@ public class PvPlayer extends EcoPlayer {
 		return this.toggleTime;
 	}
 
-	public final void togglePvP() {
-		if (!hasToggleCooldownPassed())
-			return;
-
-		setPvP(!pvpState);
-	}
-
 	public final boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Settings.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = CombatUtils.getTimeLeft(toggleTime, Settings.getToggleCooldown());
@@ -264,7 +257,9 @@ public class PvPlayer extends EcoPlayer {
 		} else if (CombatUtils.isReal(getUUID()) && Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
-		if (getPlayer().hasPermission("pvpmanager.nopvp")) {
+		if (getPlayer().hasPermission("pvpmanager.forcepvp")) {
+			this.pvpState = true;
+		} else if (getPlayer().hasPermission("pvpmanager.nopvp")) {
 			this.pvpState = false;
 		}
 		if (Settings.isUseCombatTeam() || Settings.isToggleNametagsEnabled()) {

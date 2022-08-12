@@ -288,10 +288,23 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onChangeWorld(final PlayerChangedWorldEvent event) {
-		if (CombatUtils.isWorldExcluded(event.getPlayer().getWorld().getName()))
+		final Player player = event.getPlayer();
+		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
 			return;
+
+		final PvPlayer pvPlayer = ph.get(player);
+		if (!pvPlayer.hasPvPEnabled() && player.hasPermission("pvpmanager.forcepvp")) {
+			pvPlayer.setPvP(true);
+			pvPlayer.message(Messages.getErrorPvPToggleForcePvP());
+			return;
+		}
+		if (pvPlayer.hasPvPEnabled() && player.hasPermission("pvpmanager.nopvp")) {
+			pvPlayer.setPvP(false);
+			pvPlayer.message(Messages.getErrorPvPToggleNoPvP());
+			return;
+		}
 		if (Settings.isForcePvPOnWorldChange()) {
-			ph.get(event.getPlayer()).setPvP(Settings.isDefaultPvp());
+			pvPlayer.setPvP(Settings.isDefaultPvp());
 		}
 	}
 

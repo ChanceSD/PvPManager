@@ -11,7 +11,7 @@ commands:
       description: Shows Main PvPManager Page.
       aliases: [pm, pvpm, pmr]
    pvp:
-      description: Change your PvP Status.
+      description: Change your PvP status.
       aliases: [toggle, pvptoggle]
       usage: "Usage: /<command> [on|off] or /<command> [player] [on|off]"
    newbie:
@@ -86,8 +86,11 @@ permissions:
    pvpmanager.nocombat:
      description: Exempts a player from being tagged in combat
      default: false
+   pvpmanager.forcepvp:
+     description: Players with this permission always have PvP force enabled on login and world change
+     default: false
    pvpmanager.nopvp:
-     description: Players with this permission always have PvP disabled
+     description: Players with this permission always have PvP force disabled on login and world change
      default: false
    pvpmanager.override:
      description: Players with this permission can use the PvPOverride command
