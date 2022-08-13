@@ -98,7 +98,7 @@ public class PvP implements TabExecutor {
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 1) {
 			if (!sender.hasPermission("pvpmanager.admin"))
-				return ChatUtils.getMatchingEntries(args[0], Arrays.asList("ON", "OFF"));
+				return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("ON", "OFF"));
 			final List<String> list = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			list.addAll(Arrays.asList("ON", "OFF"));
 			return ChatUtils.getMatchingEntries(args[0], list);
