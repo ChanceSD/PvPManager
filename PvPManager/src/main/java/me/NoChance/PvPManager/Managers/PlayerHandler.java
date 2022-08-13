@@ -58,13 +58,13 @@ public class PlayerHandler {
 		if (attacked.isNewbie() || attacker.isNewbie())
 			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
 		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
-			if (worldguard != null && worldguard.hasAllowPvPFlag(defender)
-			        && (Settings.isWorldguardOverrides() || worldguard.containsRegionsAt(defender.getLocation(), Settings.getWorldguardOverridesList()))) {
+			if (worldguard != null && (Settings.isWorldguardOverrides() && worldguard.hasAllowPvPFlag(defender)
+			        || worldguard.containsRegionsAt(defender.getLocation(), Settings.getWorldguardOverridesList()))) {
 				if (!attacker.hasPvPEnabled()) {
 					attacker.setPvP(true);
 					attacker.message(Messages.getPvpForceEnabledWG());
 				}
-				if (!attacked.hasPvPEnabled()){
+				if (!attacked.hasPvPEnabled()) {
 					attacked.setPvP(true);
 					attacked.message(Messages.getPvpForceEnabledWG());
 				}
