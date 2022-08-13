@@ -1,10 +1,15 @@
 package me.NoChance.PvPManager;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,7 +18,7 @@ import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Settings;
 
-public class OnDeathTest {
+public class PlayerListenerTest {
 
 	private static PlayerListener listener;
 	private static PlayerHandler ph;
@@ -34,6 +39,30 @@ public class OnDeathTest {
 	@Before
 	public final void setup() {
 		event = new PlayerDeathEvent(defender, null, 0, null);
+		ph.getPlayers().clear();
+	}
+
+	@Test
+	public void onPlayerJoinTest() {
+		assertEquals(0, ph.getPlayers().size());
+		listener.onPlayerJoin(new PlayerJoinEvent(attacker, ""));
+		assertEquals(1, ph.getPlayers().size());
+		assertEquals(attacker, ph.getPlayers().values().stream().findFirst().get().getPlayer());
+	}
+
+	@Test
+	public void onPlayerLogoutTest() {
+		final PvPlayer pvPlayer = ph.get(defender);
+		pvPlayer.setTagged(true, ph.get(attacker));
+		assertTrue(pvPlayer.isInCombat());
+
+		listener.onPlayerLogout(new PlayerQuitEvent(defender, ""));
+		verify(defender, times(1)).setHealth(0);
+		assertFalse(pvPlayer.isInCombat());
+
+		assertEquals(1, ph.getPlayers().size());
+		listener.onPlayerLogout(new PlayerQuitEvent(attacker, ""));
+		assertEquals(0, ph.getPlayers().size());
 	}
 
 	@Test

@@ -14,7 +14,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ JavaPlugin.class, PluginCommand.class })
 @PowerMockRunnerDelegate(Suite.class)
-@SuiteClasses({ UpdaterTest.class, DependencyTest.class, DamageListenerTest.class, OnDeathTest.class })
+@SuiteClasses({ UpdaterTest.class, DependencyTest.class, DamageListenerTest.class, PlayerListenerTest.class })
 public final class AllTests {
 
 	private static PluginTest pt;

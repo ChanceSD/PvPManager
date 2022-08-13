@@ -62,6 +62,7 @@ public class PluginTest {
 	}
 
 	public final void tearDown() {
+		plugin.onDisable();
 		deleteDir(new File(filePath + "TestServer"));
 	}
 
