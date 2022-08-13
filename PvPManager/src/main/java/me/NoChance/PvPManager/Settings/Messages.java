@@ -199,7 +199,7 @@ public class Messages {
 		errorPlayerNotFound = getString("Error_Player_Not_Found");
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
-		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorlGuard");
+		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorldGuard");
 		tagRemaining = getString("Tag_Remaining");
 		enabled = getString("Enabled");
 		disabled = getString("Disabled");
