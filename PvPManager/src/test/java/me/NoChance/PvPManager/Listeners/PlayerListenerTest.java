@@ -15,14 +15,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import me.NoChance.PvPManager.AllTests;
+import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Settings;
 
-@ExtendWith(AllTests.class)
+@ExtendWith(InstanceCreator.class)
 public class PlayerListenerTest {
 
 	private static PlayerListener listener;
@@ -33,7 +33,7 @@ public class PlayerListenerTest {
 
 	@BeforeAll
 	public static void setupClass() {
-		final PluginTest pt = AllTests.getPt();
+		final PluginTest pt = InstanceCreator.getPt();
 		final PvPManager plugin = pt.getPlugin();
 		ph = plugin.getPlayerHandler();
 		listener = new PlayerListener(plugin.getPlayerHandler());

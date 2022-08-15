@@ -103,8 +103,7 @@ public class Config extends YamlConfiguration {
 	private void prepareFile(final String resource) {
 		try {
 			file.getParentFile().mkdirs();
-			file.createNewFile();
-			if (resource != null && !resource.isEmpty()) {
+			if (file.createNewFile() && resource != null && !resource.isEmpty()) {
 				this.copyResource(plugin.getResource(resource), file);
 			}
 		} catch (final IOException e) {

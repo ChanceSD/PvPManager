@@ -13,11 +13,11 @@ import org.mockito.Mockito;
 import me.NoChance.PvPManager.Libraries.Updater.Updater;
 import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
 
-@ExtendWith(AllTests.class)
-public class UpdaterTest {
+@ExtendWith(InstanceCreator.class)
+class UpdaterTest {
 
 	private UpdaterMock updater;
-	private final PvPManager plugin = AllTests.getPt().getPlugin();
+	private final PvPManager plugin = InstanceCreator.getPt().getPlugin();
 
 	@BeforeEach
 	public final void setup() {

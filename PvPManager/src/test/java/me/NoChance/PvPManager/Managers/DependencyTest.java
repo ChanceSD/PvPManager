@@ -16,18 +16,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
-import me.NoChance.PvPManager.AllTests;
+import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
-@ExtendWith(AllTests.class)
+@ExtendWith(InstanceCreator.class)
 public class DependencyTest {
 
 	private static Server server;
 
 	@BeforeAll
 	public static void setupClass() {
-		final PluginTest pt = AllTests.getPt();
+		final PluginTest pt = InstanceCreator.getPt();
 		server = pt.getServer();
 		when(server.getServicesManager()).thenReturn(mock(ServicesManager.class));
 	}

@@ -12,10 +12,13 @@ import me.NoChance.PvPManager.Managers.DependencyTest;
 
 @Suite
 @SelectClasses({ UpdaterTest.class, DependencyTest.class, EntityListenerTest.class, PlayerListenerTest.class })
-public final class AllTests implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+public final class InstanceCreator implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
 	private static boolean started = false;
 	public static PluginTest pt;
+
+	private InstanceCreator() {
+	}
 
 	@Override
 	public void beforeAll(final ExtensionContext context) throws Exception {
@@ -30,10 +33,6 @@ public final class AllTests implements BeforeAllCallback, ExtensionContext.Store
 	@Override
 	public void close() {
 		pt.tearDown();
-	}
-
-	private AllTests() {
-
 	}
 
 	public static PluginTest getPt() {

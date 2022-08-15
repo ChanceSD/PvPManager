@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import me.NoChance.PvPManager.AllTests;
+import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
@@ -30,7 +30,7 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
-@ExtendWith(AllTests.class)
+@ExtendWith(InstanceCreator.class)
 public class EntityListenerTest {
 
 	private static EntityListener damageListener;
@@ -42,7 +42,7 @@ public class EntityListenerTest {
 
 	@BeforeAll
 	public static void setupClass() {
-		final PluginTest pt = AllTests.getPt();
+		final PluginTest pt = InstanceCreator.getPt();
 		final PvPManager plugin = pt.getPlugin();
 		ph = plugin.getPlayerHandler();
 		damageListener = new EntityListener(ph);
