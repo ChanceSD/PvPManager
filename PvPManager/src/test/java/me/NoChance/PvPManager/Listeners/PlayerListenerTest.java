@@ -1,8 +1,8 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Listeners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -10,14 +10,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import me.NoChance.PvPManager.Listeners.PlayerListener;
+import me.NoChance.PvPManager.AllTests;
+import me.NoChance.PvPManager.PluginTest;
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Settings;
 
+@ExtendWith(AllTests.class)
 public class PlayerListenerTest {
 
 	private static PlayerListener listener;
@@ -26,7 +31,7 @@ public class PlayerListenerTest {
 	private static Player attacker;
 	private static Player defender;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setupClass() {
 		final PluginTest pt = AllTests.getPt();
 		final PvPManager plugin = pt.getPlugin();
@@ -36,14 +41,14 @@ public class PlayerListenerTest {
 		defender = pt.getDefender();
 	}
 
-	@Before
+	@BeforeEach
 	public final void setup() {
 		event = new PlayerDeathEvent(defender, null, 0, null);
 		ph.getPlayers().clear();
 	}
 
 	@Test
-	public void onPlayerJoinTest() {
+	void onPlayerJoinTest() {
 		assertEquals(0, ph.getPlayers().size());
 		listener.onPlayerJoin(new PlayerJoinEvent(attacker, ""));
 		assertEquals(1, ph.getPlayers().size());
@@ -51,7 +56,7 @@ public class PlayerListenerTest {
 	}
 
 	@Test
-	public void onPlayerLogoutTest() {
+	void onPlayerLogoutTest() {
 		final PvPlayer pvPlayer = ph.get(defender);
 		pvPlayer.setTagged(true, ph.get(attacker));
 		assertTrue(pvPlayer.isInCombat());
@@ -66,14 +71,14 @@ public class PlayerListenerTest {
 	}
 
 	@Test
-	public final void regularDeath() {
+	final void regularDeath() {
 		final PvPlayer pDefender = ph.get(defender);
 		assertFalse(pDefender.isInCombat());
 		listener.onPlayerDeath(event);
 	}
 
 	@Test
-	public final void inCombatDeath() {
+	final void inCombatDeath() {
 		final PvPlayer pAttacker = ph.get(attacker);
 		final PvPlayer pDefender = ph.get(defender);
 

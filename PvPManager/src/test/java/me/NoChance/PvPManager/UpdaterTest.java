@@ -1,29 +1,31 @@
 package me.NoChance.PvPManager;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
 import me.NoChance.PvPManager.Libraries.Updater.Updater;
 import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
 
+@ExtendWith(AllTests.class)
 public class UpdaterTest {
 
 	private UpdaterMock updater;
 	private final PvPManager plugin = AllTests.getPt().getPlugin();
 
-	@Before
+	@BeforeEach
 	public final void setup() {
 		updater = new UpdaterMock(plugin, UpdateType.VERSION_CHECK);
 	}
 
 	@Test
-	public final void testUpdater() {
+	final void testUpdater() {
 		assertTrue(updater.versionCheck("1.2.3", "1.2.4"));
 		assertFalse(updater.versionCheck("1.2.3", "1.2.3"));
 		assertFalse(updater.versionCheck("1.2.3", "1.2.2"));

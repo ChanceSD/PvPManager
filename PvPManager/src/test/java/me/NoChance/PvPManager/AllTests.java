@@ -1,23 +1,36 @@
 package me.NoChance.PvPManager;
 
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.ClassRule;
-import org.junit.rules.ExternalResource;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ JavaPlugin.class, PluginCommand.class })
-@PowerMockRunnerDelegate(Suite.class)
-@SuiteClasses({ UpdaterTest.class, DependencyTest.class, DamageListenerTest.class, PlayerListenerTest.class })
-public final class AllTests {
+import me.NoChance.PvPManager.Listeners.EntityListenerTest;
+import me.NoChance.PvPManager.Listeners.PlayerListenerTest;
+import me.NoChance.PvPManager.Managers.DependencyTest;
 
-	private static PluginTest pt;
+@Suite
+@SelectClasses({ UpdaterTest.class, DependencyTest.class, EntityListenerTest.class, PlayerListenerTest.class })
+public final class AllTests implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+
+	private static boolean started = false;
+	public static PluginTest pt;
+
+	@Override
+	public void beforeAll(final ExtensionContext context) throws Exception {
+		if (!started) {
+			started = true;
+			pt = new PluginTest();
+			pt.setup();
+			context.getRoot().getStore(Namespace.GLOBAL).put("pvpmanager", this);
+		}
+	}
+
+	@Override
+	public void close() {
+		pt.tearDown();
+	}
 
 	private AllTests() {
 
@@ -26,20 +39,5 @@ public final class AllTests {
 	public static PluginTest getPt() {
 		return pt;
 	}
-
-	@ClassRule
-	public static ExternalResource resource = new ExternalResource() {
-
-		@Override
-		protected void before() throws Throwable {
-			pt = new PluginTest();
-			pt.setup();
-		}
-
-		@Override
-		protected void after() {
-			pt.tearDown();
-		}
-	};
 
 }

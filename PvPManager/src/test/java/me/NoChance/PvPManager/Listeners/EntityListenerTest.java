@@ -1,8 +1,8 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Listeners;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -16,18 +16,22 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import me.NoChance.PvPManager.Listeners.EntityListener;
+import me.NoChance.PvPManager.AllTests;
+import me.NoChance.PvPManager.PluginTest;
+import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
-public class DamageListenerTest {
+@ExtendWith(AllTests.class)
+public class EntityListenerTest {
 
 	private static EntityListener damageListener;
 	private EntityDamageByEntityEvent mockEvent;
@@ -36,7 +40,7 @@ public class DamageListenerTest {
 	private static Player attacker;
 	private static Player defender;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setupClass() {
 		final PluginTest pt = AllTests.getPt();
 		final PvPManager plugin = pt.getPlugin();
@@ -47,7 +51,7 @@ public class DamageListenerTest {
 		defender = pt.getDefender();
 	}
 
-	@Before
+	@BeforeEach
 	public final void setup() {
 		ph.getPlayers().clear();
 	}
@@ -98,7 +102,7 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public final void testMobAttack() {
+	final void testMobAttack() {
 		createMobAttack(false, false);
 		assertFalse(mockEvent.isCancelled());
 		assertFalse(projMockEvent.isCancelled());
@@ -109,7 +113,7 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public final void testSelfTag() {
+	final void testSelfTag() {
 		final Projectile proj = mock(Projectile.class);
 		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
 		projMockEvent.setCancelled(false);
@@ -140,7 +144,7 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public final void testNoDamageHits() {
+	final void testNoDamageHits() {
 		final Projectile proj = mock(Projectile.class);
 		when(proj.getShooter()).thenReturn(attacker);
 
@@ -165,7 +169,7 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public final void cancelNewbie() {
+	final void cancelNewbie() {
 		ph.get(attacker).setNewbie(true);
 		createAttack(false);
 
@@ -177,7 +181,7 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public final void cancelPvPDisabled() {
+	final void cancelPvPDisabled() {
 		ph.get(defender).setPvP(false);
 		createAttack(false);
 
@@ -189,7 +193,7 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public final void failCancel() {
+	final void failCancel() {
 		ph.get(defender).setPvP(true);
 		ph.get(attacker).setPvP(true);
 
@@ -207,7 +211,7 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public final void overrideCancel() {
+	final void overrideCancel() {
 		ph.get(attacker).toggleOverride();
 		createAttack(false);
 
@@ -220,7 +224,7 @@ public class DamageListenerTest {
 	}
 
 	@Test
-	public final void overrideCancelled() {
+	final void overrideCancelled() {
 		ph.get(attacker).toggleOverride();
 		createAttack(true);
 

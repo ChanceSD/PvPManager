@@ -1,7 +1,7 @@
-package me.NoChance.PvPManager;
+package me.NoChance.PvPManager.Managers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -9,20 +9,23 @@ import org.bukkit.Server;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.Matchers;
-import org.powermock.api.mockito.PowerMockito;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
-import me.NoChance.PvPManager.Managers.DependencyManager;
+import me.NoChance.PvPManager.AllTests;
+import me.NoChance.PvPManager.PluginTest;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
+@ExtendWith(AllTests.class)
 public class DependencyTest {
 
 	private static Server server;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setupClass() {
 		final PluginTest pt = AllTests.getPt();
 		server = pt.getServer();
@@ -30,16 +33,16 @@ public class DependencyTest {
 	}
 
 	@Test
-	public void allEnabled() {
-		final JavaPlugin plugin = PowerMockito.mock(JavaPlugin.class);
+	void allEnabled() {
+		final JavaPlugin plugin = Mockito.mock(JavaPlugin.class);
 		when(plugin.getDescription()).thenReturn(new PluginDescriptionFile("Plugin", "1.0", "plugin"));
-		when(server.getPluginManager().getPlugin(Matchers.anyString())).thenReturn(plugin);
+		when(server.getPluginManager().getPlugin(ArgumentMatchers.anyString())).thenReturn(plugin);
 		assertEquals(server.getPluginManager().getPlugin("PvPManager"), plugin);
 		new DependencyManager();
 	}
 
 	@Test
-	public void versionTags() {
+	void versionTags() {
 		final String v1 = CombatUtils.stripTags("1.0.2-SNAPSHOT");
 		final String v2 = CombatUtils.stripTags("1.0.2;1994-9adac4f");
 		final String v3 = CombatUtils.stripTags("1.0.2+3827266");
@@ -48,9 +51,9 @@ public class DependencyTest {
 		assertTrue(v3.equals("1.0.2"));
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void cleanup() {
-		when(server.getPluginManager().getPlugin(Matchers.anyString())).thenReturn(null);
+		when(server.getPluginManager().getPlugin(ArgumentMatchers.anyString())).thenReturn(null);
 	}
 
 }

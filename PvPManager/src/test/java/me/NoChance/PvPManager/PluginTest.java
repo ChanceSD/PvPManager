@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -14,11 +15,11 @@ import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginManager;
-import org.mockito.Matchers;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.reflect.Whitebox;
 
 public class PluginTest {
 
@@ -40,10 +41,13 @@ public class PluginTest {
 		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [%4$-7s] %5$s %n");
 		Mockito.when(server.getLogger()).thenReturn(Logger.getLogger("Minecraft"));
 		Bukkit.setServer(server);
-		plugin = PowerMockito.mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
+		plugin = Mockito.mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
 		final PluginDescriptionFile pdf = new PluginDescriptionFile(PluginTest.class.getClassLoader().getResource("plugin.yml").openStream());
-		Whitebox.invokeMethod(plugin, "init", (Object) null, server, pdf, pluginDirectory, new File(filePath), PluginTest.class.getClassLoader());
-		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(Matchers.anyString());
+		final Method method = JavaPlugin.class.getDeclaredMethod("init", PluginLoader.class, Server.class, PluginDescriptionFile.class, File.class, File.class,
+		        ClassLoader.class);
+		method.setAccessible(true);
+		method.invoke(plugin, (Object) null, server, pdf, pluginDirectory, new File(filePath), PluginTest.class.getClassLoader());
+		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(ArgumentMatchers.anyString());
 		plugin.onEnable();
 		setupPlayers();
 	}
