@@ -1,6 +1,7 @@
 name: ${project.artifactId}
 main: ${project.groupId}.PvPManager
 version: ${pvpmanager.version}
+website: https://www.spigotmc.org/resources/pvpmanager-lite.845/
 author: ChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, SimpleClans, EZRanksLite, Essentials, PlaceholderAPI, Towny, mcMMO]

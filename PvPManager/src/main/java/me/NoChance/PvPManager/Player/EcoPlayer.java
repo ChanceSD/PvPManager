@@ -38,6 +38,11 @@ public abstract class EcoPlayer extends BasePlayer {
 		message(Messages.getMoneyPenalty().replace("%m", df.format(penalty)));
 	}
 
+	public final void applyPvPDisabledFee() {
+		withdrawMoney(Settings.getPvPDisabledFee());
+		message(Messages.getPvPDisabledFee().replace("%money", df.format(Settings.getPvPDisabledFee())));
+	}
+
 	public final void giveReward(final EcoPlayer victim) {
 		double moneyWon = getMoneyPercentage(Settings.getMoneyReward());
 		if (Settings.isMoneySteal()) {

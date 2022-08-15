@@ -87,6 +87,7 @@ public class Messages {
 	private static String tagRemaining;
 	private static String enabled;
 	private static String disabled;
+	private static String pvpDisabledFee;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -158,6 +159,7 @@ public class Messages {
 		commandDeniedIncombat = getString("Command_Denied_InCombat");
 		attackDeniedYou = getString("Attack_Denied_You");
 		attackDeniedOther = getString("Attack_Denied_Other");
+		pvpDisabledFee = getString("PvP_Disabled_Fee");
 		taggedAttacker = getString("Tagged_Attacker");
 		taggedAttackerActionbar = getString("Tagged_Attacker_ActionBar");
 		taggedDefender = getString("Tagged_Defender");
@@ -492,5 +494,9 @@ public class Messages {
 
 	public static String getDisabled() {
 		return disabled;
+	}
+
+	public static String getPvPDisabledFee() {
+		return pvpDisabledFee;
 	}
 }

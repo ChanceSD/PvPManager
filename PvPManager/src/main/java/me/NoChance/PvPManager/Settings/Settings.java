@@ -77,6 +77,7 @@ public final class Settings {
 	private static int toggleCooldown;
 	private static boolean toggleNametagsEnabled;
 	private static boolean forcePvPOnWorldChange;
+	private static int pvpDisabledFee;
 	private static boolean update = false;
 	private static boolean checkUpdates;
 	private static boolean optOutMetrics;
@@ -203,6 +204,7 @@ public final class Settings {
 		setToggleNametagsEnabled(PVPTOGGLE.getBoolean("NameTags.Enabled", false));
 		toggleColorOn = PVPTOGGLE.getString("NameTags.Prefix On", "&1");
 		toggleColorOff = PVPTOGGLE.getString("NameTags.Prefix Off", "&2");
+		pvpDisabledFee = PVPTOGGLE.getInt("PvP Disabled Money Fee", 0);
 		commandsPvPOn = getCommandList(PVPTOGGLE.getStringList("Commands PvP On"));
 		commandsPvPOff = getCommandList(PVPTOGGLE.getStringList("Commands PvP Off"));
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
@@ -630,5 +632,9 @@ public final class Settings {
 
 	public static Set<String> getWorldguardOverridesList() {
 		return worldguardOverridesList;
+	}
+
+	public static int getPvPDisabledFee() {
+		return pvpDisabledFee;
 	}
 }

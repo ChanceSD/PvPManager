@@ -166,11 +166,14 @@ PvP Toggle:
     Enabled: false
     Prefix On: '&1'
     Prefix Off: '&2'
+  # This setting runs every hour and applies a money fee to every player with PvP disabled, it's a very simplified system 
+  # so it doesn't track how long PvP has been off for that player. Leave as 0 to disable
+  PvP Disabled Money Fee: 0
+  Force On Change World: false
   Commands PvP On:
     - 'examplecommand %p turned pvp on'
   Commands PvP Off:
     - 'examplecommand %p turned pvp off'
-  Force On Change World: false
   WorldGuard Overrides: true
   WorldGuard Overrides Region List:
     - 'example'

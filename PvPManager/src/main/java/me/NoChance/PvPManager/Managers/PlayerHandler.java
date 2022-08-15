@@ -22,6 +22,7 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
+import me.NoChance.PvPManager.Tasks.PvPToggleFeeTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
@@ -44,6 +45,9 @@ public class PlayerHandler {
 		this.worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
 		if (Settings.isKillAbuseEnabled()) {
 			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20L);
+		}
+		if (Settings.getPvPDisabledFee() != 0) {
+			new PvPToggleFeeTask(this).runTaskTimerAsynchronously(plugin, 0, 60 * 60 * 20L);
 		}
 
 		addOnlinePlayers();
@@ -220,6 +224,7 @@ public class PlayerHandler {
 			p.cleanForRemoval();
 		}
 		removeTeams();
+		Log.info("Saving player data to users file");
 		configManager.awaitSave();
 	}
 
