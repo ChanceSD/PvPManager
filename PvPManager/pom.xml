@@ -80,7 +80,7 @@
 				<version>3.0.0-M7</version>
 				<configuration>
 					<includes>
-						<include>**/*AllTests.java</include>
+						<include>**/*InstanceCreator.java</include>
 					</includes>
 				</configuration>
 			</plugin>
