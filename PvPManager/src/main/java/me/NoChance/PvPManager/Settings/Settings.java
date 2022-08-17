@@ -67,6 +67,7 @@ public final class Settings {
 	private static boolean newbieGodMode;
 	private static boolean newbieProtectionEnabled;
 	private static int newbieProtectionTime;
+	private static boolean newbieAllowDisable;
 	private static boolean punishOnKick;
 	private static boolean pvpBlood;
 	private static int respawnProtection;
@@ -184,6 +185,7 @@ public final class Settings {
 
 		newbieProtectionEnabled = NEWBIEPROTECTION.getBoolean("Enabled", true);
 		newbieProtectionTime = NEWBIEPROTECTION.getInt("Time(minutes)", 5);
+		newbieAllowDisable = NEWBIEPROTECTION.getBoolean("Allow Player Disable", true);
 		blockPickNewbies = NEWBIEPROTECTION.getBoolean("Block Pick Items", false);
 		newbieGodMode = NEWBIEPROTECTION.getBoolean("Protect From Everything", false);
 		newbieBlacklist = getList(NEWBIEPROTECTION.getStringList("Command Blacklist"));
@@ -328,6 +330,10 @@ public final class Settings {
 
 	public static int getNewbieProtectionTime() {
 		return newbieProtectionTime;
+	}
+
+	public static boolean isNewbieDisableAllowed() {
+		return newbieAllowDisable;
 	}
 
 	public static int getRespawnProtection() {

@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class Newbie implements CommandExecutor {
@@ -30,7 +31,7 @@ public class Newbie implements CommandExecutor {
 			}
 			return true;
 		} else if (args.length >= 1) {
-			if (args[0].equalsIgnoreCase("disable") && sender instanceof Player) {
+			if (Settings.isNewbieDisableAllowed() && args[0].equalsIgnoreCase("disable") && sender instanceof Player) {
 				final PvPlayer player = ph.get((Player) sender);
 				if (player.isNewbie()) {
 					player.setNewbie(false);
