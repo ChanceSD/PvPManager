@@ -226,11 +226,11 @@ public class EntityListener implements Listener {
 	}
 
 	private Player getAttacker(final Entity damager) {
+		if (damager instanceof Player)
+			return (Player) damager;
 		if (damager instanceof Projectile)
 			return (Player) ((Projectile) damager).getShooter();
-		if (damager instanceof AreaEffectCloud)
-			return (Player) ((AreaEffectCloud) damager).getSource();
-		return (Player) damager;
+		return (Player) ((AreaEffectCloud) damager).getSource();
 	}
 
 }
