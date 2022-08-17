@@ -12,6 +12,7 @@ import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
+@SuppressWarnings("null")
 public class SimpleClansHook extends BaseDependency implements PvPDependency, WarDependency {
 
 	private final ClanManager clanManager;

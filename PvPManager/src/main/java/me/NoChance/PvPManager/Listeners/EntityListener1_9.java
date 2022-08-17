@@ -17,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -51,14 +52,15 @@ public class EntityListener1_9 implements Listener {
 		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
 		final AreaEffectCloud areaCloud = event.getEntity();
-		if (event.getAffectedEntities().isEmpty() || !(areaCloud.getSource() instanceof Player))
+		final ProjectileSource areaCloudSource = areaCloud.getSource();
+		if (event.getAffectedEntities().isEmpty() || !(areaCloudSource instanceof Player))
 			return;
 
 		final PotionEffectType potionType = areaCloud.getBasePotionData().getType().getEffectType();
 		if (potionType == null || !CombatUtils.isHarmfulPotion(potionType))
 			return;
 
-		final Player player = (Player) areaCloud.getSource();
+		final Player player = (Player) areaCloudSource;
 		final List<Entity> toRemove = new ArrayList<>();
 		for (final LivingEntity e : event.getAffectedEntities()) {
 			if (e.getType() != EntityType.PLAYER || e.equals(player)) {

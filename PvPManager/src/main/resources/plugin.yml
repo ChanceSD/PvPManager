@@ -47,11 +47,14 @@ commands:
 permissions:
    pvpmanager.*:
      description: Gives access to all PvPManager features
+     default: op
      children:
        pvpmanager.admin: true
+       pvpmanager.nopvp: false
+       pvpmanager.forcepvp: false
    pvpmanager.admin:
-     description: Gives access to PvPManager features
-     default: op
+     description: Gives access to admin features
+     default: false
      children:
        pvpmanager.reload: true
        pvpmanager.user: true
@@ -60,14 +63,14 @@ permissions:
        pvpmanager.info.others: true
        pvpmanager.pvpstatus.nocooldown: true
    pvpmanager.exempt:
-     description: Prevents player from suffering consequences for PvP
+     description: Exempts player from consequences during combat
      default: false
      children:
        pvpmanager.nocombat: true
        pvpmanager.nodisable: true
        pvpmanager.nokillabuse: true
    pvpmanager.user:
-     description: Gives access to PvPManager features that i think would be appropriate for a user
+     description: Gives access to features appropriate for average users
      default: false
      children:
        pvpmanager.pvpstatus.change: true
@@ -76,13 +79,13 @@ permissions:
        pvpmanager.list: true
        pvpmanager.menu: true
    pvpmanager.pvpstatus.nocooldown:
-     description: No cooldown for pvp command
+     description: No cooldown for pvp toggle command
      default: false
    pvpmanager.pvpstatus.change:
      description: Allows you to change your PvP status between <on> and <off>
      default: false
    pvpmanager.reload:
-     description: Allows you to reload PvPManager
+     description: Allows acess to the PvPManager reload command
      default: false
    pvpmanager.nocombat:
      description: Exempts a player from being tagged in combat
@@ -94,7 +97,7 @@ permissions:
      description: Players with this permission always have PvP force disabled on login and world change
      default: false
    pvpmanager.override:
-     description: Players with this permission can use the PvPOverride command
+     description: Players with this permission can use the pvp override command and attack everywhere
      default: false
    pvpmanager.nodisable:
      description: Players with this permission don't get fly and gamemode disabled
@@ -106,11 +109,11 @@ permissions:
      description: Players with this permission can use commands while tagged
      default: false
    pvpmanager.list:
-     description: Allows access to the list of players with PvP enabled
+     description: Allows access to the list of players with PvP enabled and disabled
      default: false
    pvpmanager.menu:
-     description: Allows access to PvPManager help menu
+     description: Allows access to the PvPManager help menu
      default: false
    pvpmanager.info.others:
-     description: Allows access to PvPManager info command
+     description: Allows using the PvPManager info command to check other player's info
      default: false
