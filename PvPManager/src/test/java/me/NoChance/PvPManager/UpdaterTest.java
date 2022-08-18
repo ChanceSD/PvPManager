@@ -64,6 +64,11 @@ class UpdaterTest {
 			return false;
 		}
 
+		@Override
+		public String getUpdateLink() {
+			return "Test";
+		}
+
 	}
 
 }

@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.NoChance.PvPManager.Settings.Settings;
@@ -23,8 +24,16 @@ public final class Log {
 		logger.severe(message);
 	}
 
+	public static void severe(final String message, final Throwable thrown) {
+		logger.log(Level.SEVERE, message, thrown);
+	}
+
 	public static void warning(final String message) {
 		logger.warning(message);
+	}
+
+	public static void warning(final String message, final Throwable thrown) {
+		logger.log(Level.WARNING, message, thrown);
 	}
 
 	public static void debug(final String message) {

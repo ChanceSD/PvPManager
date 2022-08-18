@@ -38,7 +38,6 @@ public class BukkitUpdater extends Updater {
 			this.setResult(UpdateResult.FAIL_BADID);
 			e.printStackTrace();
 		}
-		this.getThread().start();
 	}
 
 	@SuppressWarnings("resource")
@@ -98,6 +97,11 @@ public class BukkitUpdater extends Updater {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public String getUpdateLink() {
+		return "https://dev.bukkit.org/projects/pvpmanager";
 	}
 
 }

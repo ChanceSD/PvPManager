@@ -13,7 +13,6 @@ public class SpigotUpdater extends Updater {
 
 	public SpigotUpdater(final Plugin plugin, final int id, final UpdateType type) {
 		super(plugin, id, type);
-		this.getThread().start();
 	}
 
 	@Override
@@ -34,6 +33,11 @@ public class SpigotUpdater extends Updater {
 	@Override
 	public final boolean downloadFile() {
 		return false;
+	}
+
+	@Override
+	public String getUpdateLink() {
+		return "https://www.spigotmc.org/resources/pvpmanager.845";
 	}
 
 }

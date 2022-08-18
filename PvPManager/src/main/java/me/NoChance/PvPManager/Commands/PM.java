@@ -42,11 +42,7 @@ public class PM implements CommandExecutor {
 		}
 		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("reload")) {
-				if (sender.hasPermission("pvpmanager.reload")) {
-					reload(sender);
-					return true;
-				}
-				sender.sendMessage(Messages.getErrorPermission());
+				reload(sender);
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("update") && sender.hasPermission("pvpmanager.admin")) {
@@ -135,7 +131,12 @@ public class PM implements CommandExecutor {
 		return false;
 	}
 
-	private void reload(final CommandSender player) {
+	private void reload(final CommandSender sender) {
+		if (!sender.hasPermission("pvpmanager.reload")) {
+			sender.sendMessage(Messages.getErrorPermission());
+			return;
+		}
+
 		Settings.setReloading(true);
 		Settings.setUpdate(false);
 		Bukkit.getScheduler().cancelTasks(plugin);
@@ -143,7 +144,7 @@ public class PM implements CommandExecutor {
 		plugin.onDisable();
 		plugin.onEnable();
 		Settings.setReloading(false);
-		player.sendMessage("§2PvPManager Reloaded!");
+		sender.sendMessage(Messages.PREFIXMSG + " §aPvPManager reloaded!");
 	}
 
 }

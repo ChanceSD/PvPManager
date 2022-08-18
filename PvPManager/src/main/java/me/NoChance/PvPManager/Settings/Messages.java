@@ -26,6 +26,8 @@ public class Messages {
 
 	private static PvPManager plugin;
 	private static final Properties LANG = new Properties();
+	private static final Queue<String> messageQueue = new LinkedList<>();
+	public static final String PREFIXMSG = "§c[§8PvPManager§c]";
 	private static File messagesFile;
 	private static String errorPermission;
 	private static String errorPvpCooldown;
@@ -62,7 +64,6 @@ public class Messages {
 	private static String moneyPenalty;
 	private static String moneySteal;
 	private static Locale locale;
-	private static final Queue<String> messageQueue = new LinkedList<>();
 	private static String newVersion;
 	private static String pvpListTitle;
 	private static String pvpListEnabled;
@@ -92,6 +93,7 @@ public class Messages {
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
 		currentVersion = plugin.getDescription().getVersion();
+		messageQueue.clear();
 		try {
 			locale = Locale.valueOf(Settings.getLocale());
 		} catch (final IllegalArgumentException e) {
@@ -114,7 +116,7 @@ public class Messages {
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
-			Log.info("New Messages File Created Successfully!");
+			Log.info("New messages file created successfully!");
 		}
 		final File[] listFiles = plugin.getDataFolder().listFiles();
 		if (listFiles != null) {
@@ -416,8 +418,12 @@ public class Messages {
 		return pvpForceEnabledWG;
 	}
 
-	public static Queue<String> getMessageQueue() {
-		return messageQueue;
+	public static void sendQueuedMsgs(final PvPlayer player) {
+		messageQueue.forEach(player::message);
+	}
+
+	public static void queueAdminMsg(final String message) {
+		messageQueue.add(message);
 	}
 
 	public static String getErrorNotNewbie() {

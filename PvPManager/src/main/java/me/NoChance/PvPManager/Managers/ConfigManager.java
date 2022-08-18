@@ -60,36 +60,8 @@ public class ConfigManager {
 	}
 
 	private void loadConfig() {
-		plugin.reloadConfig();
-		// This version can't be auto updated, so let's backup
-		if (getConfigVersion() < 38) {
-			if (configFile.exists()) {
-				resetConfig();
-			} else {
-				initConfig();
-			}
-		} else if (getConfigVersion() < Integer.parseInt(Version.getConfigVersion())) {
-			if (configFile.exists()) {
-				try {
-					ConfigUpdater.update(plugin, "config.yml", configFile, Arrays.asList("Config Version", "Metrics", "Update Check.Enabled"));
-					initConfig();
-				} catch (final IOException e) {
-					e.printStackTrace();
-				}
-				Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
-				Log.warning("It's recommended that you check the file and adjust the new settings");
-//				if (Settings.isAutoUpdate()) {
-//					Log.warning(
-//					        "§6[§fPvPManager§6] §4A future update will greatly change the messages file and require it to be reset, consider disabling auto update if this concerns you");
-//					Messages.getMessageQueue().add(
-//					        "§6[§fPvPManager§6] §4A future update will greatly change the messages file and require it to be reset, consider disabling auto update if this concerns you");
-//				}
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
-				Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2It's recommended that you check the file and adjust the new settings");
-			}
-		} else {
-			initConfig();
-		}
+		checkConfig();
+		initConfig();
 		if (Settings.isUpdateCheck()) {
 			new BukkitRunnable() {
 				@Override
@@ -100,11 +72,37 @@ public class ConfigManager {
 		}
 	}
 
+	private void checkConfig() {
+		if (!configFile.exists())
+			return;
+
+		plugin.reloadConfig();
+		final int oldVersion = getConfigVersion();
+		final int currentVersion = Integer.parseInt(Version.getConfigVersion());
+
+		if (oldVersion == 0) {
+			resetConfig();
+			return;
+		}
+		if (oldVersion < currentVersion) {
+			try {
+				ConfigUpdater.update(plugin, "config.yml", configFile, Arrays.asList("Config Version", "Metrics", "Update Check.Enabled"));
+				Log.warning("Config file updated from version " + oldVersion + " to version " + currentVersion);
+				Log.warning("Checking the config file and adjusting the new settings is highly recommended");
+				Messages.queueAdminMsg(Messages.PREFIXMSG + " §aConfiguration updated from version §c" + oldVersion + " §ato §c" + currentVersion);
+				Messages.queueAdminMsg(Messages.PREFIXMSG + " §aChecking the config file and adjusting the new settings is highly recommended");
+			} catch (final IOException e) {
+				Log.severe("Error reading the config file!", e);
+				resetConfig();
+			}
+		}
+	}
+
 	private void initConfig() {
 		try {
 			config = new Config(plugin, "config.yml");
 		} catch (final FileNotFoundException e) {
-			e.printStackTrace();
+			Log.severe("Config file not found", e);
 		}
 		Settings.initizalizeVariables(config);
 	}
@@ -113,7 +111,7 @@ public class ConfigManager {
 		try {
 			if (!usersFile.exists()) {
 				plugin.saveResource("users.yml", false);
-				Log.info("New Users File Created Successfully!");
+				Log.info("New users file created successfully!");
 			}
 			users.load(usersFile);
 			// replace old users file
@@ -123,8 +121,7 @@ public class ConfigManager {
 			this.userSection = users.getConfigurationSection("players");
 			Log.info("Loaded " + getUserStorage().getKeys(false).size() + " players from users file");
 		} catch (final Exception e) {
-			Log.severe("Error loading users file! Error: ");
-			e.printStackTrace();
+			Log.severe("Error loading users file!", e);
 			resetUsersFile();
 		}
 	}
@@ -133,15 +130,15 @@ public class ConfigManager {
 		try {
 			Files.move(configFile.toPath(), configFile.toPath().resolveSibling("config.old.yml"), StandardCopyOption.REPLACE_EXISTING);
 		} catch (final IOException e) {
-			e.printStackTrace();
+			Log.severe("Error resetting config file", e);
 		}
 		initConfig();
-		Log.warning("Configuration file updated to version: " + Settings.getConfigVersion());
-		Log.warning("Due to big changes, your config file was renamed to config.old.yml");
-		Log.warning("Please copy your settings manually to the new config file");
-		Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Configuration file updated to version §e" + Settings.getConfigVersion());
-		Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Due to big changes, your config file was renamed to config.old.yml");
-		Messages.getMessageQueue().add("§6[§fPvPManager§6] " + "§2Please copy your settings manually to the new config file");
+		Log.warning("Due to an error reading the config, it was reset to default settings");
+		Log.warning("This was likely caused by a mistake while you changed settings, like an extra space or missing quotes");
+		Log.warning("The broken config was renamed to config.old.yml, you can copy your old settings manually if you need them");
+		Messages.queueAdminMsg(Messages.PREFIXMSG + " §cDue to an error reading the config, it was reset to default settings"
+		        + "\n§cThis was likely caused by a mistake while you changed settings, like an extra space or missing quotes");
+		Messages.queueAdminMsg(Messages.PREFIXMSG + "§cThe broken config was renamed to config.old.yml, you can copy your old settings manually if you need them");
 	}
 
 	private void resetUsersFile() {
@@ -152,8 +149,7 @@ public class ConfigManager {
 			Log.warning("Users file was reset due to corruption. A backup was saved as 'users_error.yml'");
 			Log.warning("If you believe this error wasn't caused by you please report it on github");
 		} catch (IOException | InvalidConfigurationException e) {
-			Log.severe("Error loading users file after reset! Error: ");
-			e.printStackTrace();
+			Log.severe("Error loading users file after reset!", e);
 		}
 	}
 

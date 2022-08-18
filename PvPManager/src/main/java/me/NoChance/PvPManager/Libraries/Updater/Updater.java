@@ -37,7 +37,7 @@ public abstract class Updater {
 		if (!Bukkit.getUpdateFolderFile().exists()) {
 			Bukkit.getUpdateFolderFile().mkdirs();
 		}
-		this.file = new File(Bukkit.getUpdateFolderFile(), "PvPManager.jar");
+		this.file = new File(Bukkit.getUpdateFolderFile(), plugin.getName() + ".jar");
 		this.thread = new Thread() {
 			@Override
 			public void run() {
@@ -52,25 +52,27 @@ public abstract class Updater {
 	}
 
 	protected final void runUpdater() {
-		if (this.read()) {
-			if (this.versionName.matches("^\\d.*")) {
-				if (this.versionCheck(this.versionName)) {
-					if (this.versionLink != null && this.getType() == UpdateType.DOWNLOAD) {
-						try {
-							this.downloadFile();
-						} catch (final Exception e) {
-							Log.warning("The auto-updater tried to download a new update, but was unsuccessful.");
-							this.setResult(UpdateResult.FAIL_DOWNLOAD);
-						}
-					} else {
-						this.setResult(UpdateResult.UPDATE_AVAILABLE);
-					}
-				} else {
-					this.setResult(UpdateResult.NO_UPDATE);
+		if (!this.read())
+			return;
+
+		if (!this.versionName.matches("^\\d.*")) {
+			this.setResult(UpdateResult.FAIL_NOVERSION);
+			return;
+		}
+
+		if (this.versionCheck(this.versionName)) {
+			if (this.versionLink != null && this.getType() == UpdateType.DOWNLOAD) {
+				try {
+					this.downloadFile();
+				} catch (final Exception e) {
+					Log.warning("The auto-updater tried to download a new update, but was unsuccessful.");
+					this.setResult(UpdateResult.FAIL_DOWNLOAD);
 				}
 			} else {
-				this.setResult(UpdateResult.FAIL_NOVERSION);
+				this.setResult(UpdateResult.UPDATE_AVAILABLE);
 			}
+		} else {
+			this.setResult(UpdateResult.NO_UPDATE);
 		}
 	}
 
@@ -170,6 +172,13 @@ public abstract class Updater {
 		this.waitForThread();
 		return this.versionGameVersion;
 	}
+
+	public final Updater check() {
+		this.thread.start();
+		return this;
+	}
+
+	public abstract String getUpdateLink();
 
 	protected abstract boolean read();
 

@@ -205,11 +205,10 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public final void onPlayerJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
-		ph.get(player).updatePlayer(player);
-		if ((player.isOp() || player.hasPermission("pvpmanager.admin")) && !Messages.getMessageQueue().isEmpty()) {
-			for (final String s : Messages.getMessageQueue()) {
-				player.sendMessage(s);
-			}
+		final PvPlayer pvPlayer = ph.get(player);
+		pvPlayer.updatePlayer(player);
+		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
+			Messages.sendQueuedMsgs(pvPlayer);
 		}
 	}
 
