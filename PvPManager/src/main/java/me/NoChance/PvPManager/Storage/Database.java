@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Database;
+package me.NoChance.PvPManager.Storage;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -6,9 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
@@ -19,18 +21,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import me.NoChance.PvPManager.Storage.DatabaseConfigBuilder.DatabaseType;
+
 public class Database {
 
 	private static final String MYSQL_URL_TEMPLATE = "jdbc:mysql://%s/%s";
 	private static final String SQLITE_URL_TEMPLATE = "jdbc:sqlite:%s";
 	private final JavaPlugin plugin;
+	private final DatabaseType databaseType;
 	private boolean converted;
 	private final HikariDataSource connectionPool;
 
 	protected Database(final DatabaseFactory databaseFactory, final DatabaseConfigBuilder builder) {
 		this.plugin = databaseFactory.getPlugin();
+		this.databaseType = builder.getType();
 		final HikariConfig config = new HikariConfig();
-		if (builder.getFile() != null) {
+		if (databaseType == DatabaseType.SQLITE) {
 			// Use SQLITE
 			config.setJdbcUrl(String.format(SQLITE_URL_TEMPLATE, builder.getFile()));
 			config.addDataSourceProperty("journal_mode", "wal");
@@ -60,8 +66,8 @@ public class Database {
 	 * @param table Table to register.
 	 */
 	public void registerTable(final Table table) {
-		try (Connection connection = getConnection()) {
-			final PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + table.getName() + table.getUsage());
+		try (Connection connection = getConnection();
+		        PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + table.getName() + table.getUsage())) {
 			ps.executeUpdate();
 		} catch (final SQLException e) {
 			log("Failed to register table", e);
@@ -74,8 +80,7 @@ public class Database {
 	 * @param table Name of table
 	 */
 	public void deleteTable(final String table) {
-		try (Connection connection = getConnection()) {
-			final PreparedStatement ps = connection.prepareStatement("DROP TABLE " + table);
+		try (Connection connection = getConnection(); PreparedStatement ps = connection.prepareStatement("DROP TABLE " + table)) {
 			ps.executeUpdate();
 		} catch (final SQLException e) {
 			log("Failed to delete table", e);
@@ -89,8 +94,7 @@ public class Database {
 	 * @param newName New name
 	 */
 	public void renameTable(final String oldName, final String newName) {
-		try (Connection connection = getConnection()) {
-			final PreparedStatement ps = connection.prepareStatement("RENAME " + oldName + " TO " + newName);
+		try (Connection connection = getConnection(); PreparedStatement ps = connection.prepareStatement("RENAME " + oldName + " TO " + newName)) {
 			ps.executeUpdate();
 		} catch (final SQLException e) {
 			log("Failed to rename table", e);
@@ -106,10 +110,11 @@ public class Database {
 	public boolean tableExists(final String table) {
 		try (Connection connection = getConnection()) {
 			final DatabaseMetaData metadata = connection.getMetaData();
-			final ResultSet result = metadata.getTables(null, null, table, null);
-			return result.next();
+			try (ResultSet result = metadata.getTables(null, null, table, null)) {
+				return result.next();
+			}
 		} catch (final SQLException e) {
-			log("Failed to check database", e);
+			log("Failed to check if table exists", e);
 			return false;
 		}
 	}
@@ -124,10 +129,11 @@ public class Database {
 	public boolean columnExists(final String table, final String column) {
 		try (Connection connection = getConnection()) {
 			final DatabaseMetaData metadata = connection.getMetaData();
-			final ResultSet result = metadata.getColumns(null, null, table, column);
-			return result.next();
+			try (ResultSet result = metadata.getColumns(null, null, table, column)) {
+				return result.next();
+			}
 		} catch (final SQLException e) {
-			log("Failed to check database", e);
+			log("Failed to check database if column exists", e);
 			return false;
 		}
 	}
@@ -147,12 +153,13 @@ public class Database {
 					valueCount += ",";
 				}
 			}
-			final PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + " VALUES(" + valueCount + ");");
-			for (int i = 0; i < values.length; i++) {
-				ps.setObject(i + 1, values[i]);
-			}
+			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + " VALUES(" + valueCount + ");")) {
+				for (int i = 0; i < values.length; i++) {
+					ps.setObject(i + 1, values[i]);
+				}
 
-			ps.executeUpdate();
+				ps.executeUpdate();
+			}
 		} catch (final SQLException e) {
 			log("Failed to insert data to database", e);
 		}
@@ -184,13 +191,14 @@ public class Database {
 				}
 			}
 			columnList += ")";
-			final PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");");
-			int i = 0;
-			for (final Object object : values) {
-				ps.setObject(++i, object);
-			}
+			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");")) {
+				int i = 0;
+				for (final Object object : values) {
+					ps.setObject(++i, object);
+				}
 
-			ps.executeUpdate();
+				ps.executeUpdate();
+			}
 		} catch (final SQLException e) {
 			log("Failed to insert data to database", e);
 		}
@@ -225,17 +233,18 @@ public class Database {
 				}
 			}
 			columnList += ")";
-			final PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");");
-			int inserts = 0;
-			for (final Collection<Object> object : values) {
-				int i = 0;
-				for (final Object value : object) {
-					ps.setObject(++i, value);
-				}
-				ps.addBatch();
-				inserts++;
-				if (inserts % 1000 == 0 || inserts == values.size()) {
-					ps.executeBatch();
+			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");")) {
+				int inserts = 0;
+				for (final Collection<Object> object : values) {
+					int i = 0;
+					for (final Object value : object) {
+						ps.setObject(++i, value);
+					}
+					ps.addBatch();
+					inserts++;
+					if (inserts % 1000 == 0 || inserts == values.size()) {
+						ps.executeBatch();
+					}
 				}
 			}
 		} catch (final SQLException e) {
@@ -256,11 +265,12 @@ public class Database {
 		try (Connection connection = getConnection();
 		        final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
-			final ResultSet result = ps.executeQuery();
-			if (result.next())
-				return result.getObject(toGet);
+			try (ResultSet result = ps.executeQuery()) {
+				if (result.next())
+					return result.getObject(toGet);
+			}
 		} catch (final SQLException e) {
-			log("Failed to get data from database", e);
+			log("Failed to get value from database", e);
 		}
 
 		return null;
@@ -272,7 +282,7 @@ public class Database {
 	 * @param table Table to get value from
 	 * @param index Column to search with.
 	 * @param value The value to search with.
-	 * @return Value of found, NULL if not.
+	 * @return Value of found, empty map if not.
 	 */
 	public Map<String, Object> getRow(final Table table, final String index, final Object value) {
 		try (Connection connection = getConnection();
@@ -296,6 +306,32 @@ public class Database {
 	}
 
 	/**
+	 * Get a ResultSet from a table.
+	 *
+	 * @param table Table to get values from
+	 * @return All rows found, empty map if none.
+	 */
+	public List<Map<String, Object>> getAllRows(final Table table) {
+		try (Connection connection = getConnection(); final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + ";")) {
+			try (final ResultSet result = ps.executeQuery()) {
+				final List<Map<String, Object>> rows = new ArrayList<>();
+				while (result.next()) {
+					final ResultSetMetaData metaData = result.getMetaData();
+					final Map<String, Object> row = new HashMap<>();
+					for (int i = 1; i <= metaData.getColumnCount(); i++) {
+						row.put(metaData.getColumnName(i), result.getObject(i));
+					}
+					rows.add(row);
+				}
+				return rows;
+			}
+		} catch (final SQLException e) {
+			log("Failed to get data from database", e);
+		}
+		return Collections.emptyList();
+	}
+
+	/**
 	 * Check if a value exists in the database
 	 *
 	 * @param table Table to check from.
@@ -307,8 +343,9 @@ public class Database {
 		try (Connection connection = getConnection();
 		        PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
-			final ResultSet result = ps.executeQuery();
-			return result.next();
+			try (ResultSet result = ps.executeQuery()) {
+				return result.next();
+			}
 		} catch (final SQLException e) {
 			log("Failed to check database", e);
 			return false;
@@ -328,14 +365,15 @@ public class Database {
 	public void update(final Table table, final String index, final String toUpdate, final Object indexValue, final Object updateValue, final String extra) {
 		try (Connection connection = getConnection()) {
 			final String update = extra.isEmpty() ? "?" : updateValue + extra;
-			final PreparedStatement ps = connection.prepareStatement("UPDATE " + table.getName() + " SET " + toUpdate + "=" + update + " WHERE " + index + "=?;");
-			if (extra.isEmpty()) {
-				ps.setObject(1, updateValue);
-				ps.setObject(2, indexValue);
-			} else {
-				ps.setObject(1, indexValue);
+			try (PreparedStatement ps = connection.prepareStatement("UPDATE " + table.getName() + " SET " + toUpdate + "=" + update + " WHERE " + index + "=?;")) {
+				if (extra.isEmpty()) {
+					ps.setObject(1, updateValue);
+					ps.setObject(2, indexValue);
+				} else {
+					ps.setObject(1, indexValue);
+				}
+				ps.executeUpdate();
 			}
-			ps.executeUpdate();
 		} catch (final SQLException e) {
 			log("Failed to update database", e);
 		}
@@ -374,13 +412,14 @@ public class Database {
 					updateString += ",";
 				}
 			}
-			final PreparedStatement ps = connection.prepareStatement("UPDATE " + table.getName() + " SET " + updateString + " WHERE " + index + "=?;");
-			i = 0;
-			for (final Object object : values) {
-				ps.setObject(++i, object);
+			try (PreparedStatement ps = connection.prepareStatement("UPDATE " + table.getName() + " SET " + updateString + " WHERE " + index + "=?;")) {
+				i = 0;
+				for (final Object object : values) {
+					ps.setObject(++i, object);
+				}
+				ps.setObject(values.size() + 1, indexValue);
+				ps.executeUpdate();
 			}
-			ps.setObject(values.size() + 1, indexValue);
-			ps.executeUpdate();
 		} catch (final SQLException e) {
 			log("Failed to update database", e);
 		}
@@ -394,8 +433,8 @@ public class Database {
 	 * @param value Value to search with.
 	 */
 	public void remove(final Table table, final String index, final Object value) {
-		try (Connection connection = getConnection()) {
-			final PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table.getName() + " WHERE " + index + "=?;");
+		try (Connection connection = getConnection();
+		        PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
 			ps.executeUpdate();
 		} catch (final SQLException e) {
@@ -410,7 +449,7 @@ public class Database {
 			if (result.next())
 				return result.getInt(1);
 		} catch (final Exception e) {
-			e.printStackTrace();
+			log("Failed to get row count", e);
 		}
 		return 0;
 	}
@@ -424,7 +463,7 @@ public class Database {
 		try {
 			return connectionPool.getConnection();
 		} catch (final SQLException e) {
-			e.printStackTrace();
+			log("Error getting database connection", e);
 		}
 		return null;
 	}
@@ -434,6 +473,10 @@ public class Database {
 	 */
 	public void close() {
 		connectionPool.close();
+	}
+
+	public DatabaseType getDatabaseType() {
+		return databaseType;
 	}
 
 	private void log(final String message, final Throwable t) {

@@ -20,6 +20,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Storage.DatabaseConfigBuilder.DatabaseType;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
@@ -105,7 +106,23 @@ public class PM implements CommandExecutor {
 			sender.sendMessage(Messages.PREFIXMSG + "§cCurrently the types are SQLite or MySQL");
 			return;
 		}
+
 		final String dbType = args[1];
+		final DatabaseType databaseType;
+		try {
+			databaseType = DatabaseType.valueOf(dbType.toUpperCase());
+		} catch (final IllegalArgumentException e) {
+			sender.sendMessage(Messages.PREFIXMSG + "§cInvalid database type. Types are: " + DatabaseType.values());
+			return;
+		}
+
+		if (plugin.getDatabaseManager().getDatabaseType() == databaseType) {
+			sender.sendMessage(Messages.PREFIXMSG + "§cCan't convert. You are already on " + databaseType);
+			return;
+		}
+
+		plugin.getDatabaseManager().convertFromCurrent(databaseType, sender instanceof Player ? sender : null, System.currentTimeMillis());
+		sender.sendMessage(Messages.PREFIXMSG + "§aNow please change the databse type in the config to: " + databaseType);
 	}
 
 	private void debug(final CommandSender sender, final String[] args) {

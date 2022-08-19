@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Database;
+package me.NoChance.PvPManager.Storage;
 
 public class Table {
 	private final String name;

@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Database;
+package me.NoChance.PvPManager.Storage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,27 +6,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
-public abstract class Converter {
+public interface Converter {
 
-	void onDatabaseLoad(final Database database) {
+	default void onDatabaseLoad(final Database database) {
 		try (Connection connection = database.getConnection()) {
 			if (needsConversion(database)) {
 				final Table oldTable = getOldTable();
 
 				//Load entries
-				final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + oldTable.getName());
-				final ResultSet entries = ps.executeQuery();
+				try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + oldTable.getName()); ResultSet entries = ps.executeQuery()) {
 
-				//Convert
-				convertAll(database, entries);
+					//Convert
+					convertAll(database, entries);
+				}
 			}
 		} catch (final SQLException e) {
 			database.getPlugin().getLogger().log(Level.WARNING, "Failed to convert database", e);
 		}
 	}
 
-	public void onComplete() {
-	}
+	public void onComplete();
 
 	/**
 	 * Does this database need conversion from this converter?
@@ -35,21 +34,21 @@ public abstract class Converter {
 	 * @return Needs conversion?
 	 * @throws SQLException
 	 */
-	public abstract boolean needsConversion(Database database) throws SQLException;
+	public boolean needsConversion(Database database) throws SQLException;
 
 	/**
 	 * Old table format.
 	 *
 	 * @return Table
 	 */
-	public abstract Table getOldTable();
+	public Table getOldTable();
 
 	/**
 	 * New table format.
 	 *
 	 * @return Table
 	 */
-	public abstract Table getNewTable();
+	public Table getNewTable();
 
 	/**
 	 * Convert all loaded entries
@@ -58,5 +57,5 @@ public abstract class Converter {
 	 * @param results Loaded entries
 	 * @throws SQLException
 	 */
-	public abstract void convertAll(Database database, ResultSet results) throws SQLException;
+	public void convertAll(Database database, ResultSet results) throws SQLException;
 }

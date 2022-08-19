@@ -37,7 +37,6 @@ public class PlayerHandler {
 	private final PvPManager plugin;
 	private final TagTask tagTask;
 	private final WorldGuardHook worldguard;
-	private final DatabaseManager database;
 
 	public PlayerHandler(final PvPManager plugin) {
 		this.plugin = plugin;
@@ -45,7 +44,6 @@ public class PlayerHandler {
 		this.dependencyManager = plugin.getDependencyManager();
 		this.tagTask = new TagTask(plugin.getDisplayManager());
 		this.worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
-		this.database = plugin.getDatabaseManager();
 		if (Settings.isKillAbuseEnabled()) {
 			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20L);
 		}

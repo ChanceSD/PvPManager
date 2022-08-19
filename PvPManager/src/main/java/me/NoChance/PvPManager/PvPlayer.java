@@ -308,6 +308,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public final Map<String, Object> getUserData() {
 		final Map<String, Object> userData = new HashMap<>();
+		userData.put(UserDataFields.UUID, getUUID());
 		userData.put(UserDataFields.NAME, getName());
 		userData.put(UserDataFields.DISPLAYNAME, getPlayer().getDisplayName());
 		userData.put(UserDataFields.PVPSTATUS, hasPvPEnabled());
@@ -357,7 +358,7 @@ public class PvPlayer extends EcoPlayer {
 			executor.shutdown();
 			executor.awaitTermination(3, TimeUnit.SECONDS);
 		} catch (final InterruptedException e) {
-			e.printStackTrace();
+			Log.severe(e.getMessage(), e);
 			Thread.currentThread().interrupt();
 		}
 	}

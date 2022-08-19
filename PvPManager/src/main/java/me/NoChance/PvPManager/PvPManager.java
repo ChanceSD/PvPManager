@@ -66,7 +66,7 @@ public class PvPManager extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		playerHandler.handlePluginDisable();
-		databaseManager.close();
+		databaseManager.shutdown();
 		instance = null;
 	}
 

@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Database;
+package me.NoChance.PvPManager.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
