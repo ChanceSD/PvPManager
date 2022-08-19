@@ -1,11 +1,9 @@
 package me.NoChance.PvPManager.Commands;
 
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -82,16 +80,17 @@ public class PM implements CommandExecutor {
 				@Override
 				public void run() {
 					final ArrayList<String> ids = new ArrayList<>();
-					for (final String id : plugin.getConfigM().getUserStorage().getKeys(false)) {
-						final OfflinePlayer p = Bukkit.getOfflinePlayer(UUID.fromString(id));
-						if (p.isOnline()) {
-							continue;
-						}
-						if (System.currentTimeMillis() - p.getLastPlayed() > days) {
-							ids.add(id);
-						}
-					}
-					plugin.getConfigM().removeUsers(ids);
+// 					TODO convert cleanup to new system
+//					for (final String id : plugin.getConfigM().getUserStorage().getKeys(false)) {
+//						final OfflinePlayer p = Bukkit.getOfflinePlayer(UUID.fromString(id));
+//						if (p.isOnline()) {
+//							continue;
+//						}
+//						if (System.currentTimeMillis() - p.getLastPlayed() > days) {
+//							ids.add(id);
+//						}
+//					}
+//					plugin.getConfigM().removeUsers(ids);
 					sender.sendMessage(Messages.PREFIXMSG + " §2Finished. Cleaned up " + ids.size() + " inactive users.");
 				}
 			}.runTaskAsynchronously(plugin);

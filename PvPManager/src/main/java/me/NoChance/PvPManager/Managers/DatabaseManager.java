@@ -18,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitTask;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
@@ -38,6 +39,7 @@ public class DatabaseManager {
 	private Table usersTable;
 	private final File sqliteFile;
 	private final ConfigurationSection dbConfigSection;
+	private final BukkitTask saveTask;
 
 	public DatabaseManager(final PvPManager plugin) {
 		this.plugin = plugin;
@@ -45,7 +47,7 @@ public class DatabaseManager {
 		this.dbConfigSection = plugin.getConfig().getConfigurationSection("Database");
 		this.database = setupDatabase();
 		convertYMLToSQL();
-		Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> plugin.getPlayerHandler().getPlayers().values().forEach(this::saveUser), 600, 600);
+		saveTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> plugin.getPlayerHandler().getPlayers().values().forEach(this::saveUser), 600, 600);
 	}
 
 	private Database setupDatabase() {
@@ -69,6 +71,8 @@ public class DatabaseManager {
 	}
 
 	public void saveUser(final PvPlayer player) {
+		final long start = System.currentTimeMillis();
+		Log.debug("Started async player save for " + player);
 		final UUID uuid = player.getUUID();
 		final Map<String, Object> data = player.getUserData();
 		if (userExists(uuid)) {
@@ -76,6 +80,7 @@ public class DatabaseManager {
 		} else {
 			database.insertColumns(usersTable, data.keySet(), data.values());
 		}
+		Log.debug("Finished saving " + player + " - " + (System.currentTimeMillis() - start) + " ms");
 	}
 
 	public void increment(final String toUpdate, final UUID uuid) {
@@ -83,6 +88,7 @@ public class DatabaseManager {
 	}
 
 	public void shutdown() {
+		saveTask.cancel();
 		database.close();
 	}
 
