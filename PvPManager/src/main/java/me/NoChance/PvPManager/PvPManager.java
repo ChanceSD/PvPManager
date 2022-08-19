@@ -26,9 +26,11 @@ import me.NoChance.PvPManager.Listeners.EntityListener1_9;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener1_11;
 import me.NoChance.PvPManager.Managers.ConfigManager;
+import me.NoChance.PvPManager.Managers.DatabaseManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.MySQL.Database;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -39,6 +41,7 @@ public class PvPManager extends JavaPlugin {
 	private ConfigManager configM;
 	private PlayerHandler playerHandler;
 	private Updater updater;
+	private DatabaseManager databaseManager;
 	private DependencyManager dependencyManager;
 	private DisplayManager displayManager;
 	private EntityListener entityListener;
@@ -50,6 +53,7 @@ public class PvPManager extends JavaPlugin {
 		instance = this;
 		Log.setup(getLogger());
 		loadFiles();
+		databaseManager = new DatabaseManager(this);
 		dependencyManager = new DependencyManager();
 		displayManager = new DisplayManager(this);
 		playerHandler = new PlayerHandler(this);
@@ -179,12 +183,20 @@ public class PvPManager extends JavaPlugin {
 		return playerHandler;
 	}
 
+	public DatabaseManager getDatabaseManager() {
+		return databaseManager;
+	}
+
 	public DependencyManager getDependencyManager() {
 		return dependencyManager;
 	}
 
 	public Updater getUpdater() {
 		return updater;
+	}
+
+	public Database getDataBase() {
+		return database;
 	}
 
 	public DisplayManager getDisplayManager() {

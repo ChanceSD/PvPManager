@@ -118,6 +118,8 @@ public class PlayerListener implements Listener {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
 				}
 			}
+			ph.addKill(killer.getUniqueId());
+			ph.addDeath(player.getUniqueId());
 		}
 
 		if (pvPlayer.isInCombat()) {
