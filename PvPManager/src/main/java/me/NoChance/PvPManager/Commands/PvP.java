@@ -72,12 +72,15 @@ public class PvP implements TabExecutor {
 			return;
 		}
 
-		if (state && player.getPlayer().hasPermission("pvpmanager.nopvp")) {
-			player.message(Messages.getErrorPvPToggleNoPvP());
-			return;
-		} else if (!state && player.getPlayer().hasPermission("pvpmanager.forcepvp")) {
-			player.message(Messages.getErrorPvPToggleForcePvP());
-			return;
+		// temporary since some people like to add the * permission on their servers for some reason
+		if (!player.getPlayer().hasPermission("*")) {
+			if (state && player.getPlayer().hasPermission("pvpmanager.nopvp")) {
+				player.message(Messages.getErrorPvPToggleNoPvP());
+				return;
+			} else if (!state && player.getPlayer().hasPermission("pvpmanager.forcepvp")) {
+				player.message(Messages.getErrorPvPToggleForcePvP());
+				return;
+			}
 		}
 
 		player.setPvP(state);

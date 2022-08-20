@@ -291,15 +291,17 @@ public class PlayerListener implements Listener {
 			return;
 
 		final PvPlayer pvPlayer = ph.get(player);
-		if (!pvPlayer.hasPvPEnabled() && player.hasPermission("pvpmanager.forcepvp")) {
-			pvPlayer.setPvP(true);
-			pvPlayer.message(Messages.getErrorPvPToggleForcePvP());
-			return;
-		}
-		if (pvPlayer.hasPvPEnabled() && player.hasPermission("pvpmanager.nopvp")) {
-			pvPlayer.setPvP(false);
-			pvPlayer.message(Messages.getErrorPvPToggleNoPvP());
-			return;
+		if (!player.hasPermission("*")) {
+			if (!pvPlayer.hasPvPEnabled() && player.hasPermission("pvpmanager.forcepvp")) {
+				pvPlayer.setPvP(true);
+				pvPlayer.message(Messages.getErrorPvPToggleForcePvP());
+				return;
+			}
+			if (pvPlayer.hasPvPEnabled() && player.hasPermission("pvpmanager.nopvp")) {
+				pvPlayer.setPvP(false);
+				pvPlayer.message(Messages.getErrorPvPToggleNoPvP());
+				return;
+			}
 		}
 		if (Settings.isForcePvPOnWorldChange()) {
 			pvPlayer.setPvP(Settings.isDefaultPvp());

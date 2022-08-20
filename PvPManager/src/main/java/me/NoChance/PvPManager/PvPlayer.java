@@ -257,10 +257,12 @@ public class PvPlayer extends EcoPlayer {
 		} else if (CombatUtils.isReal(getUUID()) && Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
-		if (getPlayer().hasPermission("pvpmanager.forcepvp")) {
-			this.pvpState = true;
-		} else if (getPlayer().hasPermission("pvpmanager.nopvp")) {
-			this.pvpState = false;
+		if (!getPlayer().hasPermission("*")) {
+			if (getPlayer().hasPermission("pvpmanager.forcepvp")) {
+				this.pvpState = true;
+			} else if (getPlayer().hasPermission("pvpmanager.nopvp")) {
+				this.pvpState = false;
+			}
 		}
 		if (Settings.isUseCombatTeam() || Settings.isToggleNametagsEnabled()) {
 			try {
