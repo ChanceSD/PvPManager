@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,9 +52,9 @@ public class Database {
 		config.addDataSourceProperty("cachePrepStmts", "true");
 		config.addDataSourceProperty("prepStmtCacheSize", "250");
 		config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-		ctx.getConfiguration().getLoggerConfig("com.zaxxer.hikari.HikariDataSource").setLevel(Level.WARN);
+		setLogLevel(Level.WARN);
 		this.connectionPool = new HikariDataSource(config);
+		setLogLevel(Level.INFO);
 		if (!converted) {
 			databaseFactory.doConversion(this);
 			this.converted = true;
@@ -146,13 +147,7 @@ public class Database {
 	 */
 	public void insertDefault(final Table table, final Object... values) {
 		try (Connection connection = getConnection()) {
-			final StringBuilder valueCount = new StringBuilder();
-			for (int i = 0; i < values.length; i++) {
-				valueCount.append("?");
-				if (i < values.length - 1) {
-					valueCount.append(",");
-				}
-			}
+			final StringBuilder valueCount = getValueParameteres(Arrays.asList(values));
 			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + " VALUES(" + valueCount + ");")) {
 				for (int i = 0; i < values.length; i++) {
 					ps.setObject(i + 1, values[i]);
@@ -174,13 +169,7 @@ public class Database {
 	 */
 	public void insertColumns(final Table table, final Collection<String> columns, final Collection<Object> values) {
 		try (Connection connection = getConnection()) {
-			final StringBuilder valueCount = new StringBuilder();
-			for (int i = 0; i < values.size(); i++) {
-				valueCount.append("?");
-				if (i < values.size() - 1) {
-					valueCount.append(",");
-				}
-			}
+			final StringBuilder valueCount = getValueParameteres(values);
 			final StringBuilder columnList = new StringBuilder("(");
 			int index = 0;
 			for (final String col : columns) {
@@ -216,13 +205,7 @@ public class Database {
 	public void insertColumnsBatch(final Table table, final Collection<String> columns, final Collection<Collection<Object>> values) {
 		try (Connection connection = getConnection()) {
 			final Collection<Object> collection = values.stream().findFirst().orElse(Collections.emptyList());
-			final StringBuilder valueCount = new StringBuilder();
-			for (int i = 0; i < collection.size(); i++) {
-				valueCount.append("?");
-				if (i < collection.size() - 1) {
-					valueCount.append(",");
-				}
-			}
+			final StringBuilder valueCount = getValueParameteres(collection);
 			final StringBuilder columnList = new StringBuilder("(");
 			int index = 0;
 			for (final String col : columns) {
@@ -472,11 +455,29 @@ public class Database {
 	 * Closes the database.
 	 */
 	public void close() {
+		setLogLevel(Level.WARN);
 		connectionPool.close();
+		setLogLevel(Level.INFO);
 	}
 
 	public DatabaseType getDatabaseType() {
 		return databaseType;
+	}
+
+	private void setLogLevel(final Level level) {
+		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+		ctx.getConfiguration().getLoggerConfig("com.zaxxer.hikari.HikariDataSource").setLevel(level);
+	}
+
+	private StringBuilder getValueParameteres(final Collection<Object> values) {
+		final StringBuilder valueParams = new StringBuilder();
+		for (int i = 0; i < values.size(); i++) {
+			valueParams.append("?");
+			if (i < values.size() - 1) {
+				valueParams.append(",");
+			}
+		}
+		return valueParams;
 	}
 
 	private void log(final String message, final Throwable t) {
