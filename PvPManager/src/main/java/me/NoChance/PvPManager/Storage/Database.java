@@ -146,11 +146,11 @@ public class Database {
 	 */
 	public void insertDefault(final Table table, final Object... values) {
 		try (Connection connection = getConnection()) {
-			String valueCount = "";
+			final StringBuilder valueCount = new StringBuilder();
 			for (int i = 0; i < values.length; i++) {
-				valueCount += "?";
+				valueCount.append("?");
 				if (i < values.length - 1) {
-					valueCount += ",";
+					valueCount.append(",");
 				}
 			}
 			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + " VALUES(" + valueCount + ");")) {
@@ -174,23 +174,23 @@ public class Database {
 	 */
 	public void insertColumns(final Table table, final Collection<String> columns, final Collection<Object> values) {
 		try (Connection connection = getConnection()) {
-			String valueCount = "";
+			final StringBuilder valueCount = new StringBuilder();
 			for (int i = 0; i < values.size(); i++) {
-				valueCount += "?";
+				valueCount.append("?");
 				if (i < values.size() - 1) {
-					valueCount += ",";
+					valueCount.append(",");
 				}
 			}
-			String columnList = "(";
+			final StringBuilder columnList = new StringBuilder("(");
 			int index = 0;
 			for (final String col : columns) {
-				columnList += col;
+				columnList.append(col);
 				index++;
 				if (index < columns.size()) {
-					columnList += ",";
+					columnList.append(",");
 				}
 			}
-			columnList += ")";
+			columnList.append(")");
 			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");")) {
 				int i = 0;
 				for (final Object object : values) {
@@ -215,24 +215,24 @@ public class Database {
 	 */
 	public void insertColumnsBatch(final Table table, final Collection<String> columns, final Collection<Collection<Object>> values) {
 		try (Connection connection = getConnection()) {
-			String valueCount = "";
 			final Collection<Object> collection = values.stream().findFirst().orElse(Collections.emptyList());
+			final StringBuilder valueCount = new StringBuilder();
 			for (int i = 0; i < collection.size(); i++) {
-				valueCount += "?";
+				valueCount.append("?");
 				if (i < collection.size() - 1) {
-					valueCount += ",";
+					valueCount.append(",");
 				}
 			}
-			String columnList = "(";
+			final StringBuilder columnList = new StringBuilder("(");
 			int index = 0;
 			for (final String col : columns) {
-				columnList += col;
+				columnList.append(col);
 				index++;
 				if (index < columns.size()) {
-					columnList += ",";
+					columnList.append(",");
 				}
 			}
-			columnList += ")";
+			columnList.append(")");
 			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");")) {
 				int inserts = 0;
 				for (final Collection<Object> object : values) {
@@ -248,7 +248,7 @@ public class Database {
 				}
 			}
 		} catch (final SQLException e) {
-			log("Failed to insert data to database", e);
+			log("Failed to insert batch data to database", e);
 		}
 	}
 
@@ -403,13 +403,13 @@ public class Database {
 	 */
 	public void updateValues(final Table table, final String index, final Object indexValue, final Collection<String> columns, final Collection<Object> values) {
 		try (Connection connection = getConnection()) {
-			String updateString = "";
+			final StringBuilder updateString = new StringBuilder();
 			int i = 0;
 			for (final String col : columns) {
-				updateString += col + "=?";
+				updateString.append(col + "=?");
 				i++;
 				if (i < columns.size()) {
-					updateString += ",";
+					updateString.append(",");
 				}
 			}
 			try (PreparedStatement ps = connection.prepareStatement("UPDATE " + table.getName() + " SET " + updateString + " WHERE " + index + "=?;")) {

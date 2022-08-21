@@ -1,9 +1,12 @@
 package me.NoChance.PvPManager.Commands;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +21,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Settings.UserDataFields;
 import me.NoChance.PvPManager.Storage.DatabaseConfigBuilder.DatabaseType;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
@@ -75,22 +79,23 @@ public class PM implements CommandExecutor {
 		try {
 			final long days = TimeUnit.DAYS.toMillis(Integer.parseInt(args[1]));
 			sender.sendMessage("§2Cleaning up users that haven't logged in the past " + Integer.parseInt(args[1]) + " days");
-			sender.sendMessage("§2This might take a while depending on the size of your users.yml file");
+			sender.sendMessage("§2This might take a while depending on the size of your database");
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					final ArrayList<String> ids = new ArrayList<>();
-// 					TODO convert cleanup to new system
-//					for (final String id : plugin.getConfigM().getUserStorage().getKeys(false)) {
-//						final OfflinePlayer p = Bukkit.getOfflinePlayer(UUID.fromString(id));
-//						if (p.isOnline()) {
-//							continue;
-//						}
-//						if (System.currentTimeMillis() - p.getLastPlayed() > days) {
-//							ids.add(id);
-//						}
-//					}
-//					plugin.getConfigM().removeUsers(ids);
+					final ArrayList<UUID> ids = new ArrayList<>();
+					for (final Map<String, Object> userData : plugin.getDatabaseManager().getAllUserData()) {
+						final String id = (String) userData.get(UserDataFields.UUID);
+						final UUID uuid = UUID.fromString(id);
+						final OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
+						if (p.isOnline()) {
+							continue;
+						}
+						if (System.currentTimeMillis() - p.getLastPlayed() > days) {
+							ids.add(uuid);
+						}
+					}
+					ids.forEach(plugin.getDatabaseManager()::removeUserData);
 					sender.sendMessage(Messages.PREFIXMSG + " §2Finished. Cleaned up " + ids.size() + " inactive users.");
 				}
 			}.runTaskAsynchronously(plugin);
@@ -141,7 +146,9 @@ public class PM implements CommandExecutor {
 		if (p == null)
 			return;
 		final PermissionAttachment attachment = sender.addAttachment(plugin, 1200);
-		attachment.setPermission("pvpmanager.nocombattag", false);
+		if (attachment != null) {
+			attachment.setPermission("pvpmanager.nocombattag", false);
+		}
 		if (args[1].equalsIgnoreCase("tag")) {
 			p.setTagged(true, p);
 		} else if (args[1].equalsIgnoreCase("ct")) {

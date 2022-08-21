@@ -18,14 +18,18 @@ public class Table {
 	}
 
 	public String getValues() {
-		String v = "";
+		final StringBuilder v = new StringBuilder();
 		final String[] a = usage.split(",");
 		int i = 0;
 		for (final String b : a) {
 			i += 1;
 			final String[] c = b.split(" ");
 			final String f = c[0] == null || c[0].isEmpty() ? c[1] : c[0];
-			v += f == null ? "" : f + (i <= a.length - 1 ? "," : "");
+			String next = "";
+			if (f != null) {
+				next = f + (i <= a.length - 1 ? "," : "");
+			}
+			v.append(next);
 		}
 
 		return "(" + v + ")";

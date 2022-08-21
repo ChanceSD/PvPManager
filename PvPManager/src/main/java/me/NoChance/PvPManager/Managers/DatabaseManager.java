@@ -83,6 +83,10 @@ public class DatabaseManager {
 		Log.debug("Finished saving " + player + " - " + (System.currentTimeMillis() - start) + " ms");
 	}
 
+	public void removeUserData(final UUID uuid) {
+		database.remove(usersTable, UserDataFields.UUID, uuid.toString());
+	}
+
 	public void increment(final String toUpdate, final UUID uuid) {
 		database.update(usersTable, UserDataFields.UUID, toUpdate, uuid, toUpdate, "+1");
 	}
@@ -94,6 +98,10 @@ public class DatabaseManager {
 
 	public DatabaseType getDatabaseType() {
 		return database.getDatabaseType();
+	}
+
+	public List<Map<String, Object>> getAllUserData() {
+		return database.getAllRows(usersTable);
 	}
 
 	public void convertFromCurrent(final DatabaseType dbType, final CommandSender sender, final long start) {
