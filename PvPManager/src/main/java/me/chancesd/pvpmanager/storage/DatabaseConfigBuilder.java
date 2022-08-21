@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Storage;
+package me.chancesd.pvpmanager.storage;
 
 import java.io.File;
 
@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 public class DatabaseConfigBuilder {
 
 	public enum DatabaseType {
-		SQLITE, MYSQL
+		SQLITE, MYSQL;
 	}
 
 	private String driver;

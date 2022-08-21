@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Storage;
+package me.chancesd.pvpmanager.storage;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Storage;
+package me.chancesd.pvpmanager.storage;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -22,7 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import me.NoChance.PvPManager.Storage.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 
 public class Database {
 
@@ -376,7 +376,7 @@ public class Database {
 	}
 
 	/**
-	 * Update multiple value in the database
+	 * Update multiple values in the database
 	 *
 	 * @param table Table to update
 	 * @param index Index to search with

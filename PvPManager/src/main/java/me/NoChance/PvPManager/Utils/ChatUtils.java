@@ -47,7 +47,7 @@ public class ChatUtils {
 	}
 
 	public static void logAndSend(@Nullable final CommandSender sender, @NotNull final String message) {
-		Log.info(message);
+		Log.info(ChatColor.stripColor(message));
 		if (sender != null) {
 			sender.sendMessage(message);
 		}

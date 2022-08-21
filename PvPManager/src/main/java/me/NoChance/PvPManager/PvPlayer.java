@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import me.NoChance.PvPManager.Events.PlayerTagEvent;
 import me.NoChance.PvPManager.Events.PlayerTogglePvPEvent;
 import me.NoChance.PvPManager.Events.PlayerUntagEvent;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.EcoPlayer;
 import me.NoChance.PvPManager.Player.nametag.NameTag;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -40,7 +39,7 @@ public class PvPlayer extends EcoPlayer {
 	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
 	private NameTag nametag;
-	private static final ExecutorService executor = Executors.newCachedThreadPool();
+	private static ExecutorService executor = Executors.newCachedThreadPool();
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
 		super(player, plugin.getDependencyManager().getEconomy());
@@ -95,8 +94,6 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
-			if (PlayerHandler.isRemovedNewbie(this))
-				return;
 			message(Messages.getNewbieProtection().replace("%", Integer.toString(Settings.getNewbieProtectionTime())));
 			this.newbieTask = new NewbieTask(this, plugin, 0);
 		} else if (this.newbie && newbieTask != null) {
@@ -253,8 +250,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	private synchronized void loadData() {
-		if (plugin.getDatabaseManager().userExists(getUUID())) {
-			loadUserData(plugin.getDatabaseManager().getUserData(getUUID()));
+		if (plugin.getDatabaseManager().getStorage().userExists(this)) {
+			loadUserData(plugin.getDatabaseManager().getStorage().getUserData(this));
 		} else if (CombatUtils.isReal(getUUID()) && Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
@@ -308,13 +305,13 @@ public class PvPlayer extends EcoPlayer {
 
 	public final Map<String, Object> getUserData() {
 		final Map<String, Object> userData = new HashMap<>();
-		userData.put(UserDataFields.UUID, getUUID());
+		userData.put(UserDataFields.UUID, getUUID().toString());
 		userData.put(UserDataFields.NAME, getName());
 		userData.put(UserDataFields.DISPLAYNAME, getPlayer().getDisplayName());
 		userData.put(UserDataFields.PVPSTATUS, hasPvPEnabled());
 		userData.put(UserDataFields.TOGGLETIME, getToggleTime());
 		userData.put(UserDataFields.NEWBIE, isNewbie());
-		userData.put(UserDataFields.NEWBIETIMELEFT, newbieTask != null ? newbieTask.getTimeleft() : 0);
+		userData.put(UserDataFields.NEWBIETIMELEFT, getNewbieTimeLeft());
 		return userData;
 	}
 
@@ -334,7 +331,7 @@ public class PvPlayer extends EcoPlayer {
 		if (nametag != null && Settings.isUseCombatTeam()) {
 			nametag.removeCombatTeam();
 		}
-		executor.execute(() -> plugin.getDatabaseManager().saveUser(this));
+		executor.execute(() -> plugin.getDatabaseManager().getStorage().saveUserData(this));
 	}
 
 	public boolean isLoaded() {
@@ -357,6 +354,7 @@ public class PvPlayer extends EcoPlayer {
 		try {
 			executor.shutdown();
 			executor.awaitTermination(3, TimeUnit.SECONDS);
+			executor = Executors.newCachedThreadPool();
 		} catch (final InterruptedException e) {
 			Log.severe(e.getMessage(), e);
 			Thread.currentThread().interrupt();

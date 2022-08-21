@@ -1,6 +1,9 @@
 package me.NoChance.PvPManager.Commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -8,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -17,16 +20,19 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.google.common.collect.Lists;
+
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Settings.UserDataFields;
-import me.NoChance.PvPManager.Storage.DatabaseConfigBuilder.DatabaseType;
+import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 
-public class PM implements CommandExecutor {
+public class PM implements TabExecutor {
 
 	private final PvPManager plugin;
 
@@ -52,7 +58,8 @@ public class PM implements CommandExecutor {
 				update(sender);
 				return true;
 			}
-		} else if (args.length >= 1) {
+		}
+		if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("cleanup") && sender.hasPermission("pvpmanager.admin")) {
 				cleanup(sender, args);
 				return true;
@@ -84,7 +91,7 @@ public class PM implements CommandExecutor {
 				@Override
 				public void run() {
 					final ArrayList<UUID> ids = new ArrayList<>();
-					for (final Map<String, Object> userData : plugin.getDatabaseManager().getAllUserData()) {
+					for (final Map<String, Object> userData : plugin.getDatabaseManager().getStorage().getAllUserData()) {
 						final String id = (String) userData.get(UserDataFields.UUID);
 						final UUID uuid = UUID.fromString(id);
 						final OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
@@ -95,7 +102,7 @@ public class PM implements CommandExecutor {
 							ids.add(uuid);
 						}
 					}
-					ids.forEach(plugin.getDatabaseManager()::removeUserData);
+					ids.forEach(plugin.getDatabaseManager().getStorage()::removeUserData);
 					sender.sendMessage(Messages.PREFIXMSG + " §2Finished. Cleaned up " + ids.size() + " inactive users.");
 				}
 			}.runTaskAsynchronously(plugin);
@@ -106,8 +113,8 @@ public class PM implements CommandExecutor {
 
 	private void convert(final CommandSender sender, final String[] args) {
 		if (args.length == 1) {
-			sender.sendMessage(Messages.PREFIXMSG + "§4§lUsage: §e/pmr convert <databaseType>");
-			sender.sendMessage(Messages.PREFIXMSG + "§cCurrently the types are SQLite or MySQL");
+			sender.sendMessage(Messages.PREFIXMSG + " §4§lUsage: §e/pmr convert <databaseType>");
+			sender.sendMessage(Messages.PREFIXMSG + " §cCurrently the database types are: " + Arrays.asList(DatabaseType.values()));
 			return;
 		}
 
@@ -116,17 +123,29 @@ public class PM implements CommandExecutor {
 		try {
 			databaseType = DatabaseType.valueOf(dbType.toUpperCase());
 		} catch (final IllegalArgumentException e) {
-			sender.sendMessage(Messages.PREFIXMSG + "§cInvalid database type. Types are: " + DatabaseType.values());
+			sender.sendMessage(Messages.PREFIXMSG + " §cInvalid database type. Available types are: " + Arrays.asList(DatabaseType.values()));
 			return;
 		}
 
-		if (plugin.getDatabaseManager().getDatabaseType() == databaseType) {
-			sender.sendMessage(Messages.PREFIXMSG + "§cCan't convert. You are already on " + databaseType);
+		final DatabaseType currentType = plugin.getDatabaseManager().getStorage().getDatabaseType();
+		if (currentType == databaseType) {
+			sender.sendMessage(Messages.PREFIXMSG + " §cCan't convert. You are already running on " + databaseType);
 			return;
 		}
 
-		plugin.getDatabaseManager().convertFromCurrent(databaseType, sender instanceof Player ? sender : null, System.currentTimeMillis());
-		sender.sendMessage(Messages.PREFIXMSG + "§aNow please change the databse type in the config to: " + databaseType);
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+			sender.sendMessage("§2Starting database conversion from " + currentType + " to " + databaseType);
+			try {
+				plugin.getDatabaseManager().convertFromCurrent(databaseType, sender instanceof Player ? sender : null, System.currentTimeMillis());
+			} catch (final Exception e) {
+				sender.sendMessage(Messages.PREFIXMSG + " §cError! Make sure you entered the correct MySQL details in the config");
+				return;
+			}
+			plugin.getConfig().set("Database.Type", databaseType.toString());
+			plugin.saveConfig();
+			reload(sender);
+			sender.sendMessage(Messages.PREFIXMSG + " §aYou are now running on " + plugin.getDatabaseManager().getStorage().getDatabaseType());
+		});
 	}
 
 	private void debug(final CommandSender sender, final String[] args) {
@@ -190,6 +209,16 @@ public class PM implements CommandExecutor {
 		} else {
 			sender.sendMessage("§4Update Checking is disabled, enable it in the Config file");
 		}
+	}
+
+	@Override
+	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
+		if (args.length == 1)
+			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "reload", "update"));
+		if (args.length == 2 && args[0].equalsIgnoreCase("convert"))
+			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
+
+		return Collections.emptyList();
 	}
 
 }

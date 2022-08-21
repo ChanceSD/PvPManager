@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -31,7 +30,6 @@ import me.NoChance.PvPManager.Utils.Log;
 public class PlayerHandler {
 
 	private final HashMap<UUID, PvPlayer> players = new HashMap<>();
-	private static final HashSet<UUID> newbiesDisabled = new HashSet<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
@@ -209,23 +207,17 @@ public class PlayerHandler {
 			}
 		}
 		for (final Player p : plugin.getServer().getOnlinePlayers()) {
-			final PvPlayer pvPlayer = get(p);
-			pvPlayer.waitForPlayerToLoad();
+			get(p);
 		}
-		newbiesDisabled.clear();
 	}
 
 	public void handlePluginDisable() {
 		tagTask.cancel();
 		for (final PvPlayer p : players.values()) {
-			final Player player = p.getPlayer();
-			if (player != null && !player.hasPlayedBefore() && !p.isNewbie()) {
-				newbiesDisabled.add(p.getUUID());
-			}
 			p.cleanForRemoval();
 		}
 		removeTeams();
-		Log.info("Saving player data to database");
+		Log.info("Saving player data to storage...");
 		PvPlayer.shutdownExecutorAndWait();
 	}
 
@@ -255,10 +247,6 @@ public class PlayerHandler {
 
 	public final Set<PvPlayer> getPlayersInCombat() {
 		return tagTask.getTaggedPlayers();
-	}
-
-	public static boolean isRemovedNewbie(final PvPlayer p) {
-		return newbiesDisabled.contains(p.getUUID());
 	}
 
 	public final PvPManager getPlugin() {

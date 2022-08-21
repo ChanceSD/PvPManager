@@ -26,7 +26,6 @@ import me.NoChance.PvPManager.Listeners.EntityListener1_9;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
 import me.NoChance.PvPManager.Listeners.PlayerListener1_11;
 import me.NoChance.PvPManager.Managers.ConfigManager;
-import me.NoChance.PvPManager.Managers.DatabaseManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
@@ -34,6 +33,7 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.pvpmanager.managers.DatabaseManager;
 
 public class PvPManager extends JavaPlugin {
 
