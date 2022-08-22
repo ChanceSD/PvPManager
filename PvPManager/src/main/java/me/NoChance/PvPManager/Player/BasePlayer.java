@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -28,6 +29,7 @@ public abstract class BasePlayer {
 		this.player = new WeakReference<>(player);
 	}
 
+	@NotNull
 	public final String getName() {
 		return getPlayer().getName();
 	}

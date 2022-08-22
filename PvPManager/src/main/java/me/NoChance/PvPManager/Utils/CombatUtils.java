@@ -101,6 +101,12 @@ public final class CombatUtils {
 		return p.isFlying() || p.getAllowFlight();
 	}
 
+	public static void checkGlide(final Player p) {
+		if (p.isGliding()) {
+			p.setGliding(false);
+		}
+	}
+
 	public static void fakeItemStackDrop(final Player player, final ItemStack[] inventory) {
 		final Location playerLocation = player.getLocation();
 		final World playerWorld = player.getWorld();

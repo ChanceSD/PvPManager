@@ -12,6 +12,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
@@ -106,11 +107,13 @@ public class PlayerHandler {
 	 * @param player
 	 * @return PvPlayer instance for the provided player
 	 */
+	@NotNull
 	public final PvPlayer get(final Player player) {
 		final PvPlayer pvPlayer = players.get(player.getUniqueId());
 		return pvPlayer != null ? pvPlayer : addUser(new PvPlayer(player, plugin));
 	}
 
+	@NotNull
 	private PvPlayer addUser(final PvPlayer p) {
 		// Save only if player actually exists
 		if (Bukkit.getPlayer(p.getUUID()) != null) {

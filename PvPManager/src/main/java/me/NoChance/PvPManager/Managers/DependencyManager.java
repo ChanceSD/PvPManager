@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Dependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
@@ -29,7 +30,8 @@ import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.VaultHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
-import me.NoChance.PvPManager.Listeners.PlayerMoveListener;
+import me.NoChance.PvPManager.Listeners.MoveListener;
+import me.NoChance.PvPManager.Listeners.MoveListener1_9;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
@@ -162,17 +164,19 @@ public class DependencyManager {
 		return false;
 	}
 
-	public void startListeners(final PlayerHandler ph) {
+	public void startListeners(final PvPManager plugin) {
 		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
-			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.8")) {
-				Bukkit.getPluginManager().registerEvents(new PlayerMoveListener(ph), ph.getPlugin());
+			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+				Bukkit.getPluginManager().registerEvents(new MoveListener1_9(plugin.getPlayerHandler()), plugin);
+			} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.8")) {
+				Bukkit.getPluginManager().registerEvents(new MoveListener(plugin.getPlayerHandler()), plugin);
 			} else {
 				Log.warning("Pushback on border hopping not available for 1.7.10 or below! Feature disabled!");
 				Settings.setBorderHoppingPushback(false);
 			}
 		}
 		if (isDependencyEnabled(Hook.WORLDGUARD)) {
-			((WorldGuardHook) getDependency(Hook.WORLDGUARD)).startListener(ph);
+			((WorldGuardHook) getDependency(Hook.WORLDGUARD)).startListener(plugin.getPlayerHandler());
 		}
 	}
 

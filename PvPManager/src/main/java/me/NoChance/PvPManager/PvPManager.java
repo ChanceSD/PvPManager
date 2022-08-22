@@ -77,7 +77,7 @@ public class PvPManager extends JavaPlugin {
 		entityListener = new EntityListener(playerHandler);
 		registerListener(entityListener);
 		registerListener(new PlayerListener(playerHandler));
-		dependencyManager.startListeners(playerHandler);
+		dependencyManager.startListeners(this);
 	}
 
 	private void registerCommands() {

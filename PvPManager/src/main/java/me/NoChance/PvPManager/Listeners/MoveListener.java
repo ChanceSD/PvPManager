@@ -12,39 +12,41 @@ import org.bukkit.util.Vector;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 
-public class PlayerMoveListener implements Listener {
+public class MoveListener implements Listener {
 
 	private final PlayerHandler ph;
 	private final RegionDependency wg;
-	private final Cache<UUID, Player> cache = CacheBuilder.newBuilder().weakValues().expireAfterWrite(250, TimeUnit.MILLISECONDS).build();
+	private final Cache<UUID, Player> cache = CacheBuilder.newBuilder().weakValues().expireAfterWrite(1, TimeUnit.SECONDS).build();
 
-	public PlayerMoveListener(final PlayerHandler ph) {
+	public MoveListener(final PlayerHandler ph) {
 		this.ph = ph;
 		wg = (RegionDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerMove(final PlayerMoveEvent event) {
-		if (!ph.get(event.getPlayer()).isInCombat())
+		final Player player = event.getPlayer();
+		final PvPlayer pvplayer = ph.get(player);
+		if (!pvplayer.isInCombat())
 			return;
+
 		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ()
 		        && event.getFrom().getBlockY() == event.getTo().getBlockY())
 			return;
 
 		if (!wg.canAttackAt(null, event.getTo()) && wg.canAttackAt(null, event.getFrom())) {
+			final Vector newVel = event.getFrom().toVector().subtract(event.getTo().toVector());
+			newVel.setY(newVel.getY() + 0.1).normalize().multiply(1.5);
+			player.setVelocity(newVel);
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {
-				final Vector newVel = event.getFrom().toVector().subtract(event.getTo().toVector());
-				newVel.setY(newVel.getY() + 0.1).normalize().multiply(1.5);
-
-				event.getPlayer().setVelocity(newVel);
-				event.getPlayer().sendMessage(Messages.getPushbackWarning());
-
-				cache.put(event.getPlayer().getUniqueId(), event.getPlayer());
+				pvplayer.message(Messages.getPushbackWarning());
+				cache.put(player.getUniqueId(), player);
 			}
 		}
 	}

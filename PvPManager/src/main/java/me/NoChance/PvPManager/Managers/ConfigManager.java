@@ -18,6 +18,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,7 +27,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Version;
 import me.NoChance.PvPManager.Libraries.Config.ConfigUpdater;
 import me.NoChance.PvPManager.Settings.Config;
 import me.NoChance.PvPManager.Settings.LogFile;
@@ -77,8 +77,9 @@ public class ConfigManager {
 			return;
 
 		plugin.reloadConfig();
-		final int oldVersion = getConfigVersion();
-		final int currentVersion = Integer.parseInt(Version.getConfigVersion());
+		final Configuration defaults = plugin.getConfig().getDefaults();
+		final int oldVersion = plugin.getConfig().getInt("Config Version", 0);
+		final int currentVersion = defaults != null ? defaults.getInt("Config Version") : 0;
 
 		if (oldVersion == 0) {
 			resetConfig();
@@ -246,10 +247,6 @@ public class ConfigManager {
 
 	public ConfigurationSection getUserStorage() {
 		return userSection;
-	}
-
-	public final int getConfigVersion() {
-		return plugin.getConfig().getInt("Config Version", 0);
 	}
 
 }

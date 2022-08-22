@@ -223,7 +223,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
 		final PvPlayer player = ph.get(event.getPlayer());
-		if (player != null && Settings.isInCombatEnabled() && player.isInCombat())
+		if (Settings.isInCombatEnabled() && player.isInCombat())
 			if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
 				event.setCancelled(true);
 				player.message(Messages.getEnderpearlBlockedIncombat());
