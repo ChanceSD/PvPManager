@@ -33,8 +33,6 @@ public class Messages {
 	private static String errorPvpCooldown;
 	private static String errorPvpToggleNoPvp;
 	private static String errorPvpToggleForcePvp;
-	private static String alreadyDisabled;
-	private static String alreadyEnabled;
 	private static String otherStatusEnabled;
 	private static String othersStatusDisabled;
 	private static String pvpDisabled;
@@ -64,12 +62,15 @@ public class Messages {
 	private static String moneyPenalty;
 	private static String moneySteal;
 	private static Locale locale;
+	private static String tagTimeLeft;
 	private static String newVersion;
 	private static String pvpListTitle;
 	private static String pvpListEnabled;
 	private static String pvpListDisabled;
 	private static String pvpListNoResults;
 	private static String pvpToggleAdminChanged;
+	private static String pvpToggleAlreadyDisabled;
+	private static String pvpToggleAlreadyEnabled;
 	private static String errorPlayerNotFound;
 	private static String errorNotNewbie;
 	private static String errorNotInCombat;
@@ -85,7 +86,6 @@ public class Messages {
 	private static String eatBlockedInCombat;
 	private static String interactBlockedInCombat;
 	private static String newbiePickupItemBlocked;
-	private static String tagRemaining;
 	private static String enabled;
 	private static String disabled;
 	private static String pvpDisabledFee;
@@ -150,8 +150,6 @@ public class Messages {
 	}
 
 	private static void getMessages() {
-		alreadyDisabled = getString("Already_Disabled");
-		alreadyEnabled = getString("Already_Enabled");
 		otherStatusEnabled = getString("Other_Status_Enabled");
 		othersStatusDisabled = getString("Others_Status_Disabled");
 		pvpDisabled = getString("PvP_Disabled");
@@ -200,11 +198,13 @@ public class Messages {
 		pvpListDisabled = getString("PvPList_Disabled");
 		pvpListNoResults = getString("PvPList_Nothing_Found");
 		pvpToggleAdminChanged = getString("PvPToggle_Admin_Changed");
+		pvpToggleAlreadyDisabled = getString("PvPToggle_Already_Disabled");
+		pvpToggleAlreadyEnabled = getString("PvPToggle_Already_Enabled");
 		errorPlayerNotFound = getString("Error_Player_Not_Found");
+		tagTimeLeft = getString("Tag_Timeleft");
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
 		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorldGuard");
-		tagRemaining = getString("Tag_Remaining");
 		enabled = getString("Enabled");
 		disabled = getString("Disabled");
 	}
@@ -295,11 +295,11 @@ public class Messages {
 	}
 
 	public static String getAlreadyDisabled() {
-		return alreadyDisabled;
+		return pvpToggleAlreadyDisabled;
 	}
 
 	public static String getAlreadyEnabled() {
-		return alreadyEnabled;
+		return pvpToggleAlreadyEnabled;
 	}
 
 	public static String getOtherStatusEnabled() {
@@ -402,6 +402,10 @@ public class Messages {
 		return locale;
 	}
 
+	public static String getTagTimeLeft() {
+		return tagTimeLeft;
+	}
+
 	public static String getNewVersion() {
 		return newVersion;
 	}
@@ -488,10 +492,6 @@ public class Messages {
 
 	public static String getNewbiePickupItemBlocked() {
 		return newbiePickupItemBlocked;
-	}
-
-	public static String getTagRemaining() {
-		return tagRemaining;
 	}
 
 	public static String getEnabled() {

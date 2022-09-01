@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Player;
+package me.NoChance.PvPManager.Player.nametag;
 
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Scoreboard;
@@ -9,7 +9,7 @@ import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
-public class TeamProfile {
+public class NameTag {
 
 	private Team inCombat;
 	private Team pvpOn;
@@ -19,7 +19,7 @@ public class TeamProfile {
 	private final PvPlayer pvPlayer;
 	private Scoreboard scoreboard;
 
-	public TeamProfile(final PvPlayer p) {
+	public NameTag(final PvPlayer p) {
 		this.pvPlayer = p;
 		setupScoreboard();
 		setupTeams();

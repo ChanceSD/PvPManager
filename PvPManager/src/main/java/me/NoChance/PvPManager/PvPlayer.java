@@ -15,7 +15,7 @@ import me.NoChance.PvPManager.Events.PlayerTogglePvPEvent;
 import me.NoChance.PvPManager.Events.PlayerUntagEvent;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.EcoPlayer;
-import me.NoChance.PvPManager.Player.TeamProfile;
+import me.NoChance.PvPManager.Player.nametag.NameTag;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Settings.UserDataFields;
@@ -38,7 +38,7 @@ public class PvPlayer extends EcoPlayer {
 	private PvPlayer enemy;
 	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
-	private TeamProfile teamProfile;
+	private NameTag nametag;
 	private static final ExecutorService executor = Executors.newCachedThreadPool();
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
@@ -126,8 +126,8 @@ public class PvPlayer extends EcoPlayer {
 		if (event.isCancelled())
 			return;
 
-		if (teamProfile != null && Settings.isUseCombatTeam()) {
-			teamProfile.setInCombat();
+		if (nametag != null && Settings.isUseCombatTeam()) {
+			nametag.setInCombat();
 		}
 		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
 			getPlayer().setGlowing(true);
@@ -152,8 +152,8 @@ public class PvPlayer extends EcoPlayer {
 			return;
 
 		if (isOnline()) {
-			if (teamProfile != null && Settings.isUseCombatTeam()) {
-				teamProfile.restoreTeam();
+			if (nametag != null && Settings.isUseCombatTeam()) {
+				nametag.restoreTeam();
 			}
 			if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
 				getPlayer().setGlowing(false); // effect should pass by itself but now players can get untagged before tag expires
@@ -178,8 +178,8 @@ public class PvPlayer extends EcoPlayer {
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
 
-		if (teamProfile != null && Settings.isToggleNametagsEnabled()) {
-			teamProfile.setPvP(pvpState);
+		if (nametag != null && Settings.isToggleNametagsEnabled()) {
+			nametag.setPvP(pvpState);
 		}
 		if (!pvpState) {
 			message(Messages.getPvpDisabled());
@@ -266,11 +266,11 @@ public class PvPlayer extends EcoPlayer {
 		}
 		if (Settings.isUseCombatTeam() || Settings.isToggleNametagsEnabled()) {
 			try {
-				this.teamProfile = new TeamProfile(this);
+				this.nametag = new NameTag(this);
 			} catch (final NoSuchMethodError e) {
 				Settings.setUseCombatTeam(false);
 				Settings.setToggleNametagsEnabled(false);
-				this.teamProfile = null;
+				this.nametag = null;
 				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
 			}
 		}
@@ -312,8 +312,8 @@ public class PvPlayer extends EcoPlayer {
 	public final void updatePlayer(final Player p) {
 		if (!p.equals(getPlayer())) {
 			setPlayer(p);
-			if (teamProfile != null) {
-				teamProfile = new TeamProfile(this);
+			if (nametag != null) {
+				nametag = new NameTag(this);
 			}
 		}
 	}
@@ -322,8 +322,8 @@ public class PvPlayer extends EcoPlayer {
 		if (newbieTask != null) {
 			newbieTask.cancel();
 		}
-		if (teamProfile != null && Settings.isUseCombatTeam()) {
-			teamProfile.removeCombatTeam();
+		if (nametag != null && Settings.isUseCombatTeam()) {
+			nametag.removeCombatTeam();
 		}
 	}
 
