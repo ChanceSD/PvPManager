@@ -1,0 +1,3 @@
+files:
+  - source: /PvPManager/src/main/resources/locale/messages.properties
+    translation: /PvPManager/src/main/resources/locale/%file_name%_%locale%.%file_extension%
