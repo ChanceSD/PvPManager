@@ -3,6 +3,7 @@ PvPManager
 [![Discord](https://discordapp.com/api/guilds/622559860705198108/widget.png)](https://discord.gg/QFTjs3g)
 [![Spiget Downloads](https://img.shields.io/spiget/downloads/845?label=spigot%20downloads)](https://www.spigotmc.org/resources/pvpmanager-lite.845/)
 [![Build Status](https://travis-ci.org/NoChanceSD/PvPManager.svg)](https://travis-ci.org/NoChanceSD/PvPManager)
+[![Crowdin](https://badges.crowdin.net/pvpmanager/localized.svg)](https://crowdin.com/project/pvpmanager)
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/nochancesd/pvpmanager/latest)](https://github.com/NoChanceSD/PvPManager/commits/master)
 ![GitHub Releases](https://img.shields.io/github/downloads/nochancesd/pvpmanager/latest/total)
 ***
@@ -12,7 +13,7 @@ Useful Links
 **Spigot:** https://www.spigotmc.org/resources/pvpmanager-lite.845/  
 **Bukkit:** http://dev.bukkit.org/bukkit-plugins/pvpmanager/  
 **Discord:** https://discord.gg/QFTjs3g  
-**Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/
+**Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/  
 **Help translating PvPManager:** https://crowdin.com/project/pvpmanager
 
 Developers
