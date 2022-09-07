@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Settings;
+package me.chancesd.pvpmanager.storage.fields;
 
 public class UserDataFields {
 
@@ -9,6 +9,8 @@ public class UserDataFields {
 	public static final String TOGGLETIME = "toggletime";
 	public static final String NEWBIE = "newbie";
 	public static final String NEWBIETIMELEFT = "newbie_timeleft";
+	public static final String LASTSEEN = "last_seen";
 
-	private UserDataFields() {}
+	private UserDataFields() {
+	}
 }

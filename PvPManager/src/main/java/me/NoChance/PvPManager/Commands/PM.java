@@ -26,11 +26,11 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Settings.UserDataFields;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 
 public class PM implements TabExecutor {
 
@@ -91,7 +91,7 @@ public class PM implements TabExecutor {
 				@Override
 				public void run() {
 					final ArrayList<UUID> ids = new ArrayList<>();
-					for (final Map<String, Object> userData : plugin.getDatabaseManager().getStorage().getAllUserData()) {
+					for (final Map<String, Object> userData : plugin.getStorageManager().getStorage().getAllUserData()) {
 						final String id = (String) userData.get(UserDataFields.UUID);
 						final UUID uuid = UUID.fromString(id);
 						final OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
@@ -102,7 +102,7 @@ public class PM implements TabExecutor {
 							ids.add(uuid);
 						}
 					}
-					ids.forEach(plugin.getDatabaseManager().getStorage()::removeUserData);
+					ids.forEach(plugin.getStorageManager().getStorage()::removeUserData);
 					sender.sendMessage(Messages.PREFIXMSG + " §2Finished. Cleaned up " + ids.size() + " inactive users.");
 				}
 			}.runTaskAsynchronously(plugin);
@@ -127,7 +127,7 @@ public class PM implements TabExecutor {
 			return;
 		}
 
-		final DatabaseType currentType = plugin.getDatabaseManager().getStorage().getDatabaseType();
+		final DatabaseType currentType = plugin.getStorageManager().getStorage().getDatabaseType();
 		if (currentType == databaseType) {
 			sender.sendMessage(Messages.PREFIXMSG + " §cCan't convert. You are already running on " + databaseType);
 			return;
@@ -136,7 +136,7 @@ public class PM implements TabExecutor {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			sender.sendMessage("§2Starting database conversion from " + currentType + " to " + databaseType);
 			try {
-				plugin.getDatabaseManager().convertFromCurrent(databaseType, sender instanceof Player ? sender : null, System.currentTimeMillis());
+				plugin.getStorageManager().convertFromCurrent(databaseType, sender instanceof Player ? sender : null, System.currentTimeMillis());
 			} catch (final Exception e) {
 				sender.sendMessage(Messages.PREFIXMSG + " §cError! Make sure you entered the correct MySQL details in the config");
 				return;
@@ -144,7 +144,7 @@ public class PM implements TabExecutor {
 			plugin.getConfig().set("Database.Type", databaseType.toString());
 			plugin.saveConfig();
 			reload(sender);
-			sender.sendMessage(Messages.PREFIXMSG + " §aYou are now running on " + plugin.getDatabaseManager().getStorage().getDatabaseType());
+			sender.sendMessage(Messages.PREFIXMSG + " §aYou are now running on " + plugin.getStorageManager().getStorage().getDatabaseType());
 		});
 	}
 

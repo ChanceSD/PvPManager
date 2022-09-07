@@ -18,10 +18,10 @@ import me.NoChance.PvPManager.Player.EcoPlayer;
 import me.NoChance.PvPManager.Player.nametag.NameTag;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Settings.UserDataFields;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 
 public class PvPlayer extends EcoPlayer {
 
@@ -250,8 +250,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	private synchronized void loadData() {
-		if (plugin.getDatabaseManager().getStorage().userExists(this)) {
-			loadUserData(plugin.getDatabaseManager().getStorage().getUserData(this));
+		if (plugin.getStorageManager().getStorage().userExists(this)) {
+			loadUserData(plugin.getStorageManager().getStorage().getUserData(this));
 		} else if (CombatUtils.isReal(getUUID()) && Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
@@ -312,6 +312,7 @@ public class PvPlayer extends EcoPlayer {
 		userData.put(UserDataFields.TOGGLETIME, getToggleTime());
 		userData.put(UserDataFields.NEWBIE, isNewbie());
 		userData.put(UserDataFields.NEWBIETIMELEFT, getNewbieTimeLeft());
+		userData.put(UserDataFields.LASTSEEN, System.currentTimeMillis());
 		return userData;
 	}
 
@@ -331,7 +332,7 @@ public class PvPlayer extends EcoPlayer {
 		if (nametag != null && Settings.isUseCombatTeam()) {
 			nametag.removeCombatTeam();
 		}
-		executor.execute(() -> plugin.getDatabaseManager().getStorage().saveUserData(this));
+		executor.execute(() -> plugin.getStorageManager().getStorage().saveUserData(this));
 	}
 
 	public boolean isLoaded() {

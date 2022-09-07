@@ -72,7 +72,7 @@ public class PlayerHandler {
 					attacked.setPvP(true);
 					attacked.message(Messages.getPvpForceEnabledWG());
 				}
-			} else if (dependencyManager.shouldDisableProtection(damager, defender))
+			} else if (dependencyManager.shouldDisableProtection(damager, defender)) // TODO add worldguard overrides in this
 				return CancelResult.FAIL;
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 		}
@@ -233,6 +233,7 @@ public class PlayerHandler {
 		}
 	}
 
+	// TODO replace untag and tag with gettagtask
 	public final void untag(final PvPlayer p) {
 		tagTask.untag(p);
 	}

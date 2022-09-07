@@ -9,9 +9,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Settings.UserDataFields;
 import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 
 public class SQLStorage implements Storage {
 
@@ -42,7 +42,7 @@ public class SQLStorage implements Storage {
 		final Database db = new DatabaseFactory(plugin).getDatabase(config);
 		usersTable = new Table("pmr_users",
 		        "uuid CHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), displayname VARCHAR(75), kills INT UNSIGNED DEFAULT 0, deaths INT UNSIGNED DEFAULT 0, pvpstatus BOOLEAN DEFAULT 1, "
-		                + "toggletime BIGINT DEFAULT 0, newbie BOOLEAN DEFAULT 0, newbie_timeleft BIGINT DEFAULT 0");
+		                + "toggletime BIGINT DEFAULT 0, newbie BOOLEAN DEFAULT 0, newbie_timeleft BIGINT DEFAULT 0, last_seen BIGINT DEFAULT 0");
 		db.registerTable(usersTable);
 		Log.info("Connected to " + config.getType() + " database successfully");
 		Log.info("Players stored: " + db.getRowCount(usersTable));

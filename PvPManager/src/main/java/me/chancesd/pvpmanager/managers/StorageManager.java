@@ -21,30 +21,27 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Settings.UserDataFields;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.storage.SQLStorage;
 import me.chancesd.pvpmanager.storage.Storage;
+import me.chancesd.pvpmanager.tasks.StorageSaveTask;
 import net.md_5.bungee.api.ChatColor;
 
-public class DatabaseManager {
+public class StorageManager {
 
 	private final PvPManager plugin;
 	private final Storage storage;
 	private final BukkitTask saveTask;
 
-	public DatabaseManager(final PvPManager plugin) {
+	public StorageManager(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.storage = new SQLStorage(plugin);
 		convertYMLToSQL();
-		saveTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-			final long start = System.currentTimeMillis();
-			Log.debug("Saving all player data to storage");
-			plugin.getPlayerHandler().getPlayers().values().forEach(storage::saveUserData);
-			Log.debug("Finished saving all player data" + " - " + (System.currentTimeMillis() - start) + " ms");
-		}, 600, 600);
+		saveTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new StorageSaveTask(plugin, storage), 600, 600);
+
 	}
 
 	public void shutdown() {
