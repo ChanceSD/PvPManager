@@ -112,7 +112,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void setTagged(final boolean attacker, final PvPlayer tagger) {
-		if (getPlayer().hasPermission("pvpmanager.nocombat"))
+		if (getPlayer().hasPermission("pvpmanager.nocombattag"))
 			return;
 
 		this.taggedTime = System.currentTimeMillis();
