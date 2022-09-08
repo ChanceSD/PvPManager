@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,14 +36,14 @@ public class PvPInfo implements CommandExecutor {
 	}
 
 	private void sendInfo(final CommandSender sender, final PvPlayer target) {
-		sender.sendMessage(ChatColor.YELLOW + "§lPvPManager Info");
-		sender.sendMessage(ChatColor.GREEN + "- Name: §f" + target.getName());
-		sender.sendMessage(ChatColor.GREEN + "- UUID: §f" + target.getUUID());
-		sender.sendMessage(ChatColor.GREEN + "- PvP Status: §f" + target.hasPvPEnabled());
-		sender.sendMessage(ChatColor.GREEN + "- In Combat: §f" + target.isInCombat());
-		sender.sendMessage(ChatColor.GREEN + "- Newbie: §f" + target.isNewbie());
-		sender.sendMessage(ChatColor.GREEN + "- World: §f" + target.getPlayer().getWorld().getName());
-		sender.sendMessage(ChatColor.GREEN + "- Override PvP: §f" + target.hasOverride());
+		sender.sendMessage(Messages.getString("PvPInfo_Title"));
+		sender.sendMessage(Messages.getString("PvPInfo_Line1") + target.getName());
+		sender.sendMessage(Messages.getString("PvPInfo_Line2") + target.getUUID());
+		sender.sendMessage(Messages.getString("PvPInfo_Line3") + target.hasPvPEnabled());
+		sender.sendMessage(Messages.getString("PvPInfo_Line4") + target.isInCombat());
+		sender.sendMessage(Messages.getString("PvPInfo_Line5") + target.isNewbie());
+		sender.sendMessage(Messages.getString("PvPInfo_Line6") + target.getPlayer().getWorld().getName());
+		sender.sendMessage(Messages.getString("PvPInfo_Line7") + target.hasOverride());
 	}
 
 }

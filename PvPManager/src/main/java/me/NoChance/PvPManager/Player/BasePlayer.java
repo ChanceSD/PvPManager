@@ -50,7 +50,11 @@ public abstract class BasePlayer {
 
 	public void sendActionBar(final String message) {
 		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.10") && !message.isEmpty()) { // Premium PvPManager supports lower versions with NMS
-			getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.16.5")) {
+				getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+			} else {
+				getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+			}
 		}
 	}
 

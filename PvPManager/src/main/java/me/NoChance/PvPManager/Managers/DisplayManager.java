@@ -5,8 +5,8 @@ import java.util.Map;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Player.display.ProgressBar;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.ProgressBar;
 
 public class DisplayManager {
 
