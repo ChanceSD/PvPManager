@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Utils;
+package me.NoChance.PvPManager.Player.display;
 
 import com.google.common.base.Strings;
 

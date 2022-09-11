@@ -114,7 +114,7 @@ public class PM implements CommandExecutor {
 				if (p == null)
 					return true;
 				final PermissionAttachment attachment = sender.addAttachment(plugin, 1200);
-				attachment.setPermission("pvpmanager.nocombat", false);
+				attachment.setPermission("pvpmanager.nocombattag", false);
 				if (args[1].equalsIgnoreCase("tag")) {
 					p.setTagged(true, p);
 				} else if (args[1].equalsIgnoreCase("ct")) {

@@ -66,7 +66,8 @@ permissions:
      description: Exempts player from consequences during combat
      default: false
      children:
-       pvpmanager.nocombat: true
+       pvpmanager.nocombattag: true
+       pvpmanager.nocombatlog: true
        pvpmanager.nodisable: true
        pvpmanager.nokillabuse: true
    pvpmanager.user:
@@ -87,8 +88,11 @@ permissions:
    pvpmanager.reload:
      description: Allows acess to the PvPManager reload command
      default: false
-   pvpmanager.nocombat:
+   pvpmanager.nocombattag:
      description: Exempts a player from being tagged in combat
+     default: false
+   pvpmanager.nocombatlog:
+     description: Exempts a player from combat log punishments
      default: false
    pvpmanager.forcepvp:
      description: Players with this permission always have PvP force enabled on login and world change

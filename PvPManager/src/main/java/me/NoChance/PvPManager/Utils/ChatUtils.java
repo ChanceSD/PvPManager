@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 public class ChatUtils {
 
@@ -23,11 +24,13 @@ public class ChatUtils {
 		return true;
 	}
 
-	public static String colorize(final String message) {
+	@NotNull
+	public static String colorize(@NotNull final String message) {
 		return colorizeHex(ChatColor.translateAlternateColorCodes('&', message));
 	}
 
-	private static String colorizeHex(final String message) {
+	@NotNull
+	private static String colorizeHex(@NotNull final String message) {
 		if (!hexSupported)
 			return message;
 

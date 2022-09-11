@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.Queue;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
@@ -138,7 +139,8 @@ public class Messages {
 		}
 	}
 
-	private static String getString(final String key) {
+	@NotNull
+	public static String getString(final String key) {
 		String message;
 		try {
 			message = new String(LANG.getProperty(key).getBytes("ISO-8859-1"), "UTF-8");

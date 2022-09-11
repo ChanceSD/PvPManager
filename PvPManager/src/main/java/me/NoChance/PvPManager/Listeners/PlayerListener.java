@@ -80,7 +80,7 @@ public class PlayerListener implements Listener {
 	public final void onPlayerLogout(final PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
-		if (pvPlayer.isInCombat()) {
+		if (pvPlayer.isInCombat() && !player.hasPermission("pvpmanager.nocombatlog")) {
 			if (Settings.isLogToFile()) {
 				ph.getConfigManager().getLog().log(player.getName() + " tried to escape combat!");
 			}
