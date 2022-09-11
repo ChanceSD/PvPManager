@@ -19,14 +19,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
-import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.storage.SQLStorage;
 import me.chancesd.pvpmanager.storage.Storage;
+import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.tasks.StorageSaveTask;
 import net.md_5.bungee.api.ChatColor;
 
@@ -53,7 +54,7 @@ public class StorageManager {
 		return storage;
 	}
 
-	public void convertFromCurrent(final DatabaseType dbType, final CommandSender sender, final long start) {
+	public void convertFromCurrent(final DatabaseType dbType, @NotNull final CommandSender sender, final long start) {
 		final Storage destinationStorage = new SQLStorage(plugin, dbType);
 		convertTo(destinationStorage, storage.getAllUserData(), sender, start);
 		destinationStorage.shutdown();
@@ -88,7 +89,7 @@ public class StorageManager {
 			rows.add(values);
 		}
 
-		convertTo(storage, rows, null, start);
+		convertTo(storage, rows, Bukkit.getConsoleSender(), start);
 		try {
 			Files.delete(usersFile.toPath());
 		} catch (final IOException e) {
@@ -96,7 +97,7 @@ public class StorageManager {
 		}
 	}
 
-	private void convertTo(final Storage destination, final List<Map<String, Object>> allRows, final CommandSender sender, final long start) {
+	private void convertTo(final Storage destination, final List<Map<String, Object>> allRows, @NotNull final CommandSender sender, final long start) {
 		final AtomicInteger usersConverted = new AtomicInteger();
 		new Timer().schedule(new TimerTask() {
 			@Override
@@ -105,7 +106,7 @@ public class StorageManager {
 					this.cancel();
 					return;
 				}
-				ChatUtils.logAndSend(sender, ChatColor.GOLD + "Converting database... " + usersConverted + "/" + allRows.size());
+				ChatUtils.send(sender, ChatColor.GOLD + "Converting database... " + usersConverted + "/" + allRows.size());
 			}
 		}, 0, 1000);
 		for (final Map<String, Object> row : allRows) {
@@ -114,8 +115,8 @@ public class StorageManager {
 			usersConverted.incrementAndGet();
 		}
 
-		ChatUtils.logAndSend(sender, ChatColor.DARK_GREEN + "Converted " + usersConverted + " out of " + allRows.size() + " users to the new database");
-		ChatUtils.logAndSend(sender,
+		ChatUtils.send(sender, ChatColor.DARK_GREEN + "Converted " + usersConverted + " out of " + allRows.size() + " users to the new database");
+		ChatUtils.send(sender,
 		        ChatColor.DARK_GREEN + "Database conversion finished in " + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - start) + " seconds");
 	}
 

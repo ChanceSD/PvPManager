@@ -136,7 +136,7 @@ public class PM implements TabExecutor {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			sender.sendMessage("§2Starting database conversion from " + currentType + " to " + databaseType);
 			try {
-				plugin.getStorageManager().convertFromCurrent(databaseType, sender instanceof Player ? sender : null, System.currentTimeMillis());
+				plugin.getStorageManager().convertFromCurrent(databaseType, sender, System.currentTimeMillis());
 			} catch (final Exception e) {
 				sender.sendMessage(Messages.PREFIXMSG + " §cError! Make sure you entered the correct MySQL details in the config");
 				return;

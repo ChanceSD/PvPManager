@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ChatUtils {
 
@@ -46,11 +45,8 @@ public class ChatUtils {
 		return matcher.appendTail(buffer).toString();
 	}
 
-	public static void logAndSend(@Nullable final CommandSender sender, @NotNull final String message) {
-		Log.info(ChatColor.stripColor(message));
-		if (sender != null) {
-			sender.sendMessage(message);
-		}
+	public static void send(@NotNull final CommandSender sender, @NotNull final String message) {
+		sender.sendMessage(message);
 	}
 
 	public static List<String> getMatchingEntries(final String token, final List<String> toFilter) {
