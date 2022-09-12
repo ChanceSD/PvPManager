@@ -89,6 +89,7 @@ public final class Settings {
 	private static boolean borderHoppingResetCombatTag;
 	private static boolean worldguardOverrides;
 	private static Set<String> worldguardOverridesList;
+	private static int enderPearlCooldown;
 	private static boolean glowingInCombat;
 	private static boolean selfTag;
 	private static boolean blockInteractInCombat;
@@ -212,6 +213,7 @@ public final class Settings {
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
+		enderPearlCooldown = PVPTOGGLE.getInt("Ender Pearl Cooldown");
 
 		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() == null ? false : PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
 
@@ -578,6 +580,10 @@ public final class Settings {
 
 	public static boolean isWorldguardOverrides() {
 		return worldguardOverrides;
+	}
+
+	public static int getEnderPearlCooldown() {
+		return enderPearlCooldown;
 	}
 
 	public static boolean isGlowingInCombat() {
