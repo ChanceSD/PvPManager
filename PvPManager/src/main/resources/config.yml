@@ -179,6 +179,7 @@ PvP Toggle:
   WorldGuard Overrides: true
   WorldGuard Overrides Region List:
     - 'example'
+  Ender Pearl Cooldown: 15
 
 # Section to configure interactions with other plugins
 Plugin Hooks:
