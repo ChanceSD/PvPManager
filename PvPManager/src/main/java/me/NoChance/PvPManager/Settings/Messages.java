@@ -429,6 +429,8 @@ public class Messages {
 	}
 
 	public static void queueAdminMsg(final String message) {
+		if (messageQueue.contains(message))
+			return;
 		messageQueue.add(message);
 	}
 
