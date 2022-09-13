@@ -6,7 +6,7 @@
 # <                  or Discord https://discord.gg/w7gyBuw                   > #
 # +--------------------------------------------------------------------------+ #
 
-# Locale -> Changes messages language, options are - en ru zh zhtw es it de br
+# Locale -> Changes messages language, options are - en ru zh zh_tw es it de pt_br
 # Default PvP -> Leave it at true unless you want no PvP for new players
 # PvP Blood -> Enable blood particles on PvP
 # Player Drop Mode -> What happens to a player's drops and exp on death
