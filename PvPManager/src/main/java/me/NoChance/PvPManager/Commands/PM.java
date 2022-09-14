@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Settings.Locale;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.ChatUtils;
@@ -68,6 +69,9 @@ public class PM implements TabExecutor {
 				return true;
 			} else if (args[0].equalsIgnoreCase("debug") && sender.hasPermission("pvpmanager.debug")) {
 				debug(sender, args);
+				return true;
+			} else if (args[0].equalsIgnoreCase("locale") && sender.hasPermission("pvpmanager.admin")) {
+				locale(sender, args);
 				return true;
 			}
 		}
@@ -179,6 +183,32 @@ public class PM implements TabExecutor {
 		}
 	}
 
+	private void locale(final CommandSender sender, final String[] args) {
+		if (args.length == 1) {
+			sender.sendMessage(Messages.PREFIXMSG + " §aYour current Locale is: §c" + Settings.getLocale());
+			sender.sendMessage(Messages.PREFIXMSG + " §aAvailable languages are: §c" + Locale.asStringList());
+			return;
+		}
+
+		Locale locale;
+		try {
+			locale = Locale.valueOf(args[1].toUpperCase());
+		} catch (final IllegalArgumentException e) {
+			sender.sendMessage(Messages.PREFIXMSG + " §cInvalid Locale. Available languages are: " + Locale.asStringList());
+			return;
+		}
+		if (Messages.getLocale() == locale) {
+			sender.sendMessage(Messages.PREFIXMSG + " §cCan't change Locale. You are already using " + locale);
+			return;
+		}
+
+		Settings.setLocale(locale.name());
+		plugin.getConfig().set("General.Locale", locale.name());
+		plugin.saveConfig();
+		Messages.setup(plugin);
+		sender.sendMessage(Messages.PREFIXMSG + " §aLanguage changed to " + Messages.getLocale().name() + " - Filename: " + Messages.getLocale());
+	}
+
 	private void reload(final CommandSender sender) {
 		if (!sender.hasPermission("pvpmanager.reload")) {
 			sender.sendMessage(Messages.getErrorPermission());
@@ -214,9 +244,11 @@ public class PM implements TabExecutor {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 1)
-			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "reload", "update"));
+			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "reload", "update", "locale"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("convert"))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
+		if (args.length == 2 && args[0].equalsIgnoreCase("locale"))
+			return ChatUtils.getMatchingEntries(args[1], Locale.asStringList());
 
 		return Collections.emptyList();
 	}
