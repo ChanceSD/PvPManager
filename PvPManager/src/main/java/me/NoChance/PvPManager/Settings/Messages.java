@@ -115,7 +115,7 @@ public class Messages {
 					resStreamOut.write(buffer, 0, readBytes);
 				}
 			} catch (final IOException e) {
-				e.printStackTrace();
+				Log.severe("Error reading default locale from jar", e);
 			}
 			Log.info("New messages file created successfully!");
 		}
@@ -135,7 +135,7 @@ public class Messages {
 				getMessages();
 			}
 		} catch (final IOException e) {
-			e.printStackTrace();
+			Log.severe("Error reading locale file", e);
 		}
 	}
 
@@ -212,16 +212,20 @@ public class Messages {
 	}
 
 	private static void checkChanges() {
+		final Properties originalEN = new Properties();
 		final Properties original = new Properties();
-		try {
-			original.load(plugin.getResource("locale/" + Locale.EN.toString()));
-			final Enumeration<Object> originalKeys = original.keys();
+		try (InputStream inputStreamEN = plugin.getResource("locale/" + Locale.EN.toString());
+		        InputStream inputStream = plugin.getResource("locale/" + locale.toString())) {
+			originalEN.load(inputStreamEN);
+			original.load(inputStream);
+			final Enumeration<Object> originalKeys = originalEN.keys();
 			while (originalKeys.hasMoreElements()) {
 				final String a = (String) originalKeys.nextElement();
 				if (!LANG.containsKey(a)) {
 					Log.info("Added missing '" + a + "' key to messages file.");
-					addMessage(a + " = " + new String(original.getProperty(a).getBytes("ISO-8859-1"), "UTF-8"));
-					LANG.setProperty(a, original.getProperty(a));
+					final String newProperty = original.getProperty(a) != null ? original.getProperty(a) : originalEN.getProperty(a);
+					addMessage(a + " = " + new String(newProperty.getBytes("ISO-8859-1"), "UTF-8"));
+					LANG.setProperty(a, newProperty);
 				}
 			}
 		} catch (final IOException e) {
