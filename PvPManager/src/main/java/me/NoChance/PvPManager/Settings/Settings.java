@@ -213,7 +213,7 @@ public final class Settings {
 		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
-		enderPearlCooldown = PVPTOGGLE.getInt("Ender Pearl Cooldown");
+		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl Cooldown");
 
 		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() == null ? false : PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
 

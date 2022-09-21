@@ -24,6 +24,7 @@ import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.EntityListener1_9;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
+import me.NoChance.PvPManager.Listeners.PlayerListener1_11;
 import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.DisplayManager;
@@ -76,6 +77,9 @@ public class PvPManager extends JavaPlugin {
 		}
 		entityListener = new EntityListener(playerHandler);
 		registerListener(entityListener);
+		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.11.2")) {
+			registerListener(new PlayerListener1_11(playerHandler));
+		}
 		registerListener(new PlayerListener(playerHandler));
 		dependencyManager.startListeners(this);
 	}

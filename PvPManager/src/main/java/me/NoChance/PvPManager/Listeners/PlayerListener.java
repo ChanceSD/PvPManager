@@ -1,20 +1,16 @@
 package me.NoChance.PvPManager.Listeners;
 
-import me.NoChance.PvPManager.PvPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -139,21 +135,6 @@ public class PlayerListener implements Listener {
 		}
 
 		ph.handlePlayerDrops(event, player, killer);
-	}
-
-	@EventHandler
-	public void onProjectileLaunchEvent(ProjectileLaunchEvent event) {
-		Projectile entity = event.getEntity();
-		if (!(entity.getShooter() instanceof Player) || entity.getType() != EntityType.ENDER_PEARL) {
-			return;
-		}
-
-		Player player = (Player) entity.getShooter();
-		PvPlayer pvPlayer = ph.get(player);
-
-		if (pvPlayer.isInCombat()) {
-			Bukkit.getScheduler().runTask(PvPManager.getInstance(), () -> player.setCooldown(Material.ENDER_PEARL, Settings.getEnderPearlCooldown() * 20));
-		}
 	}
 
 	@EventHandler
