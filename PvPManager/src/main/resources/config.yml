@@ -110,6 +110,7 @@ Tagged In Combat:
         Armor: true
     Commands On PvPLog:
       - 'announce &6[&8PvPManager&6]&c %p tried to escape combat and died!'
+  EnderPearl Cooldown: 15
 
 # Should new players on your server be protected from PvP (If they want to PvP they can use /newbie disable)
 Newbie Protection:
