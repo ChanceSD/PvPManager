@@ -26,7 +26,7 @@ public class PlayerListener1_11 implements Listener {
 	public void onProjectileLaunchEvent(final ProjectileLaunchEvent event) {
 		final Projectile entity = event.getEntity();
 		final ProjectileSource shooter = entity.getShooter();
-		if (entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof Player))
+		if (Settings.getEnderPearlCooldown() < 0 || entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof Player))
 			return;
 
 		final Player player = (Player) shooter;
