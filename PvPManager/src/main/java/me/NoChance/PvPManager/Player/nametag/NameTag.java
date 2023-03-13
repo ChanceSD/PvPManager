@@ -1,5 +1,7 @@
 package me.NoChance.PvPManager.Player.nametag;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -30,7 +32,7 @@ public class NameTag {
 	}
 
 	private void setupTeams() {
-		final String id = "PVP-" + pvPlayer.getUUID().toString().replace("-", "").substring(0, 12);
+		final String id = "PVP-" + processPlayerID(pvPlayer.getUUID());
 		if (Settings.isUseCombatTeam()) {
 			if (scoreboard.getTeam(id) != null) {
 				inCombat = scoreboard.getTeam(id);
@@ -82,6 +84,14 @@ public class NameTag {
 			// set pvp tag if player has pvp nametags on
 			setPvP(pvPlayer.hasPvPEnabled());
 		}
+	}
+
+	private String processPlayerID(final UUID uuid) {
+		final String idResult = uuid.toString().replace("-", "");
+		if (idResult.startsWith("000000000000"))
+			return idResult.substring(17, 29);
+		else
+			return idResult.substring(0, 12);
 	}
 
 	private ChatColor getLastColor(final String string) {
