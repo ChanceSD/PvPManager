@@ -100,6 +100,10 @@ Tagged In Combat:
         - 'tag'
   Punishments:
     Punish On Kick: true
+    # Even if Punish On Kick is false, punishment will be applied if kick reason matches.
+    Force Punish Kick Reason:
+      - 'Kicked for spamming'
+      - 'disconnect.spam'
     Money Penalty: 0
     Log To File: true
     Kill on Logout:

@@ -69,6 +69,7 @@ public final class Settings {
 	private static int newbieProtectionTime;
 	private static boolean newbieAllowDisable;
 	private static boolean punishOnKick;
+	private static List<String> forcePunishKickReason;
 	private static boolean pvpBlood;
 	private static int respawnProtection;
 	private static boolean stopCommands;
@@ -176,6 +177,7 @@ public final class Settings {
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
 		commandsAllowed = getList(TAGGEDCOMBAT.getStringList("Block.Commands.Command List"));
 		punishOnKick = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick", true);
+		forcePunishKickReason = getList(TAGGEDCOMBAT.getStringList("Punishments.Force Punish Kick Reason"));
 		fineAmount = TAGGEDCOMBAT.getDouble("Punishments.Money Penalty", 0.00);
 		logToFile = TAGGEDCOMBAT.getBoolean("Punishments.Log To File", true);
 		killOnLogout = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Enabled", true);
@@ -516,6 +518,10 @@ public final class Settings {
 
 	public static boolean punishOnKick() {
 		return punishOnKick;
+	}
+
+	public static List<String> getforcePunishKickReason() {
+		return forcePunishKickReason;
 	}
 
 	public static boolean isDisableGodMode() {

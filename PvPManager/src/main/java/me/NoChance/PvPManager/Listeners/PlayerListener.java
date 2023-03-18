@@ -215,7 +215,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public final void onPlayerKick(final PlayerKickEvent event) {
 		final PvPlayer pvPlayer = ph.get(event.getPlayer());
-		if (pvPlayer.isInCombat() && !Settings.punishOnKick() && !event.getReason().equals("Kicked for spamming")) {
+		if (pvPlayer.isInCombat() && !Settings.punishOnKick() && !Settings.getforcePunishKickReason().contains(event.getReason())) {
 			ph.untag(pvPlayer);
 		}
 	}
