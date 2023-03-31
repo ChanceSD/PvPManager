@@ -84,6 +84,7 @@ Tagged In Combat:
     Total Bars: 20
   Self Tag: false
   Untag Enemy: false
+  EnderPearl Cooldown: 15
   Block:
     EnderPearls: true
     ChorusFruits: true
@@ -99,7 +100,13 @@ Tagged In Combat:
         - 'tell'
         - 'tag'
   Punishments:
-    Punish On Kick: true
+    Punish On Kick:
+      Enabled: true
+      # If Match Kick Reason is enabled, the punishment will be applied only if the kick reason matches the list below
+      Match Kick Reason: false
+      Kick Reasons:
+      - 'Kicked for spamming'
+      - 'disconnect.spam'
     Money Penalty: 0
     Log To File: true
     Kill on Logout:
@@ -110,7 +117,6 @@ Tagged In Combat:
         Armor: true
     Commands On PvPLog:
       - 'announce &6[&8PvPManager&6]&c %p tried to escape combat and died!'
-  EnderPearl Cooldown: 15
 
 # Should new players on your server be protected from PvP (If they want to PvP they can use /newbie disable)
 Newbie Protection:

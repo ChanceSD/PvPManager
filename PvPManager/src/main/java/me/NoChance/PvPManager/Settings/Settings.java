@@ -69,6 +69,8 @@ public final class Settings {
 	private static int newbieProtectionTime;
 	private static boolean newbieAllowDisable;
 	private static boolean punishOnKick;
+	private static boolean matchKickReason;
+	private static List<String> forcePunishKickReason;
 	private static boolean pvpBlood;
 	private static int respawnProtection;
 	private static boolean stopCommands;
@@ -175,7 +177,9 @@ public final class Settings {
 		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
 		commandsAllowed = getList(TAGGEDCOMBAT.getStringList("Block.Commands.Command List"));
-		punishOnKick = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick", true);
+		punishOnKick = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick.Enabled", true);
+		matchKickReason = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick.Match Kick Reason", false);
+		forcePunishKickReason = getList(TAGGEDCOMBAT.getStringList("Punishments.Punish On Kick.Kick Reasons"));
 		fineAmount = TAGGEDCOMBAT.getDouble("Punishments.Money Penalty", 0.00);
 		logToFile = TAGGEDCOMBAT.getBoolean("Punishments.Log To File", true);
 		killOnLogout = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Enabled", true);
@@ -516,6 +520,18 @@ public final class Settings {
 
 	public static boolean punishOnKick() {
 		return punishOnKick;
+	}
+
+	public static boolean matchKickReason() {
+		return matchKickReason;
+	}
+
+	public static void setMatchKickReason(final boolean matchKickReason) {
+		Settings.matchKickReason = matchKickReason;
+	}
+
+	public static List<String> getPunishKickReasons() {
+		return forcePunishKickReason;
 	}
 
 	public static boolean isDisableGodMode() {

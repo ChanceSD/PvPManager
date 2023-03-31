@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,6 +48,15 @@ public class PlayerListenerTest {
 		ph.getPlayers().clear();
 	}
 
+	private void tagPlayer(final PvPlayer player, final PvPlayer enemy) {
+		player.setTagged(true, enemy);
+		assertTrue(player.isInCombat());
+	}
+
+	private void tagPlayer(final PvPlayer player) {
+		tagPlayer(player, ph.get(attacker));
+	}
+
 	@Test
 	void onPlayerJoinTest() {
 		assertEquals(0, ph.getPlayers().size());
@@ -58,8 +68,7 @@ public class PlayerListenerTest {
 	@Test
 	void onPlayerLogoutTest() {
 		final PvPlayer pvPlayer = ph.get(defender);
-		pvPlayer.setTagged(true, ph.get(attacker));
-		assertTrue(pvPlayer.isInCombat());
+		tagPlayer(pvPlayer);
 
 		listener.onPlayerLogout(new PlayerQuitEvent(defender, ""));
 		verify(defender, times(1)).setHealth(0);
@@ -68,6 +77,24 @@ public class PlayerListenerTest {
 		assertEquals(1, ph.getPlayers().size());
 		listener.onPlayerLogout(new PlayerQuitEvent(attacker, ""));
 		assertEquals(0, ph.getPlayers().size());
+	}
+
+	@Test
+	void onPlayerKickTest() {
+		final PvPlayer pvPlayer = ph.get(defender);
+
+		tagPlayer(pvPlayer);
+		listener.onPlayerKick(new PlayerKickEvent(defender, "", ""));
+		assertTrue(pvPlayer.isInCombat());
+
+		Settings.setMatchKickReason(true);
+		tagPlayer(pvPlayer);
+		listener.onPlayerKick(new PlayerKickEvent(defender, "", ""));
+		assertFalse(pvPlayer.isInCombat());
+
+		tagPlayer(pvPlayer);
+		listener.onPlayerKick(new PlayerKickEvent(defender, "Kicked for spamming", ""));
+		assertTrue(pvPlayer.isInCombat());
 	}
 
 	@Test
@@ -82,16 +109,13 @@ public class PlayerListenerTest {
 		final PvPlayer pAttacker = ph.get(attacker);
 		final PvPlayer pDefender = ph.get(defender);
 
-		pDefender.setTagged(false, pAttacker);
-		assertTrue(pDefender.isInCombat());
+		tagPlayer(pDefender);
 		listener.onPlayerDeath(event);
 		assertFalse(pDefender.isInCombat());
 
 		Settings.setUntagEnemy(true);
-		pAttacker.setTagged(true, pDefender);
-		pDefender.setTagged(false, pAttacker);
-		assertTrue(pAttacker.isInCombat());
-		assertTrue(pDefender.isInCombat());
+		tagPlayer(pDefender, pAttacker);
+		tagPlayer(pAttacker, pDefender);
 		listener.onPlayerDeath(event);
 		assertFalse(pDefender.isInCombat());
 		assertFalse(pAttacker.isInCombat());
