@@ -6,7 +6,9 @@ import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.Log;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 public abstract class EcoPlayer extends BasePlayer {
 
@@ -20,11 +22,14 @@ public abstract class EcoPlayer extends BasePlayer {
 	}
 
 	private void withdrawMoney(final double amount) {
-		economy.withdrawPlayer(getPlayer(), amount);
+		final EconomyResponse response = economy.withdrawPlayer(getPlayer(), amount);
+		Log.debug(
+		        "Withdraw money from " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " " + response.errorMessage);
 	}
 
 	private void depositMoney(final double amount) {
-		economy.depositPlayer(getPlayer(), amount);
+		final EconomyResponse response = economy.depositPlayer(getPlayer(), amount);
+		Log.debug("Deposit money to " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " " + response.errorMessage);
 	}
 
 	public final void applyFine() {
