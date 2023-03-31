@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Listeners.DebugEntityListener;
 import me.NoChance.PvPManager.Settings.Locale;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -36,6 +37,7 @@ import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 public class PM implements TabExecutor {
 
 	private final PvPManager plugin;
+	private DebugEntityListener damageListener;
 
 	public PM(final PvPManager plugin) {
 		this.plugin = plugin;
@@ -156,9 +158,27 @@ public class PM implements TabExecutor {
 		PvPlayer p = null;
 		if (args.length == 2 && sender instanceof Player) {
 			p = plugin.getPlayerHandler().get((Player) sender);
-		} else if (args.length == 2 && args[1].equalsIgnoreCase("toggle")) {
+		}
+		if (args.length == 2 && args[1].equalsIgnoreCase("toggle")) {
 			Settings.setDEBUG(!Settings.DEBUG);
 			Log.info("Debug mode: " + Settings.DEBUG);
+			sender.sendMessage("Debug mode: " + Settings.DEBUG);
+		} else if (args.length == 2 && args[1].equalsIgnoreCase("damagedebug")) {
+			if (damageListener == null) {
+				sender.sendMessage("§4Warning §f- Some plugin features are disabled while in this mode");
+				sender.sendMessage("Enabling a damage listener for debugging, check the console for details on every entity hit");
+				sender.sendMessage("§cRun this command again §fafter you are done to disable debugging or reload the plugin");
+				Settings.setDEBUG(true);
+				damageListener = new DebugEntityListener(plugin.getPlayerHandler());
+				HandlerList.unregisterAll(plugin.getEntityListener());
+				Bukkit.getServer().getPluginManager().registerEvents(damageListener, plugin);
+			} else {
+				HandlerList.unregisterAll(damageListener);
+				Bukkit.getServer().getPluginManager().registerEvents(plugin.getEntityListener(), plugin);
+				damageListener = null;
+				Settings.setDEBUG(false);
+				sender.sendMessage("Debug damage listener disabled");
+			}
 		} else if (args.length == 3) {
 			if (!CombatUtils.isOnline(args[2])) {
 				sender.sendMessage("§4Player not online!");
@@ -244,9 +264,11 @@ public class PM implements TabExecutor {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 1)
-			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "reload", "update", "locale"));
+			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "debug", "reload", "update", "locale"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("convert"))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
+		if (args.length == 2 && args[0].equalsIgnoreCase("debug"))
+			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "tag", "ct", "newbie", "attack"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("locale"))
 			return ChatUtils.getMatchingEntries(args[1], Locale.asStringList());
 

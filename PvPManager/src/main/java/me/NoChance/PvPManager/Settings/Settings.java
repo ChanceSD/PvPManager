@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Utils.ChatUtils;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public final class Settings {
 
@@ -96,7 +95,6 @@ public final class Settings {
 	private static boolean selfTag;
 	private static boolean blockInteractInCombat;
 	private static boolean untagEnemy;
-	private static ChatColor teamColor;
 	private static String actionBarMessage;
 	private static String actionBarSymbol;
 	private static int actionBarTotalBars;
@@ -158,9 +156,8 @@ public final class Settings {
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
 		final String tColor = TAGGEDCOMBAT.getString("Color", "&c").replace("&", "");
-		teamColor = tColor.isEmpty() || !CombatUtils.isVersionAtLeast(minecraftVersion, "1.13") ? null : ChatColor.getByChar(tColor);
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
-		useCombatTeam = useNameTag || teamColor != null;
+		useCombatTeam = useNameTag;
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		selfTag = TAGGEDCOMBAT.getBoolean("Self Tag", false);
 		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
@@ -334,7 +331,7 @@ public final class Settings {
 		return moneyReward;
 	}
 
-	public static String getNameTagColor() {
+	public static String getNameTagPrefix() {
 		return nameTagPrefix;
 	}
 
@@ -612,10 +609,6 @@ public final class Settings {
 
 	public static boolean blockInteract() {
 		return blockInteractInCombat;
-	}
-
-	public static ChatColor getTeamColor() {
-		return teamColor;
 	}
 
 	public static String getActionBarMessage() {

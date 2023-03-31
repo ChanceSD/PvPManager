@@ -110,8 +110,10 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void setTagged(final boolean attacker, final PvPlayer tagger) {
-		if (getPlayer().hasPermission("pvpmanager.nocombattag"))
+		if (getPlayer().hasPermission("pvpmanager.nocombattag")) {
+			Log.debug("Not tagging " + getName() + " because player has permission: pvpmanager.nocombattag");
 			return;
+		}
 
 		this.taggedTime = System.currentTimeMillis();
 		this.enemy = tagger;

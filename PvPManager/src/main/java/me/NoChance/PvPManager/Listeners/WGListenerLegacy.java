@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.events.DisallowedPVPEvent;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class WGListenerLegacy implements Listener {
 
@@ -22,6 +23,7 @@ public class WGListenerLegacy implements Listener {
 			return;
 		if (ph.tryCancel(event.getAttacker(), event.getDefender()) == CancelResult.FAIL_OVERRIDE) {
 			event.setCancelled(true);
+			Log.debug("Force allowing PvP even though WorldGuard blocked it because a player has override or Vulnerable is enabled");
 		}
 	}
 

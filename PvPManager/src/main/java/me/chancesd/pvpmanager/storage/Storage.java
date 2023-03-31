@@ -32,7 +32,6 @@ public interface Storage {
 
 	public default void saveUserData(final PvPlayer player) {
 		final long start = System.currentTimeMillis();
-		Log.debug("Started async player save for " + player);
 		saveUserData(player.getUUID(), player.getUserData());
 		Log.debug("Finished saving " + player + " - " + (System.currentTimeMillis() - start) + " ms");
 	}

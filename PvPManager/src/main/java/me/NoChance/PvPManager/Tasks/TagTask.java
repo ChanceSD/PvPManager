@@ -23,7 +23,7 @@ public class TagTask extends TimerTask {
 	public TagTask(final DisplayManager display) {
 		this.display = display;
 		this.timer = new Timer();
-		timer.scheduleAtFixedRate(this, 1000, 500);
+		timer.scheduleAtFixedRate(this, 1000, 100);
 	}
 
 	@Override
@@ -35,10 +35,14 @@ public class TagTask extends TimerTask {
 				final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
 				if (timePassed >= time) {
 					Bukkit.getScheduler().runTask(display.getPlugin(), p::unTag);
+					display.discardBossbar(p);
 					iterator.remove();
-				} else if (!Settings.getActionBarMessage().isEmpty()) {
+					return;
+				}
+				if (!Settings.getActionBarMessage().isEmpty()) {
 					display.showProgress(p, timePassed / 1000D);
 				}
+				display.updateBossbar(p, timePassed / 1000D);
 			}
 		}
 	}
@@ -48,6 +52,7 @@ public class TagTask extends TimerTask {
 		synchronized (tagged) {
 			for (final PvPlayer pvPlayer : tagged)
 				if (pvPlayer.isInCombat()) {
+					display.discardBossbar(pvPlayer);
 					pvPlayer.unTag();
 				}
 		}
@@ -62,6 +67,7 @@ public class TagTask extends TimerTask {
 	}
 
 	public final void untag(final PvPlayer p) {
+		display.discardBossbar(p);
 		tagged.remove(p);
 		if (p.isInCombat()) {
 			p.unTag();
