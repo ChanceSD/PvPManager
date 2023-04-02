@@ -10,6 +10,9 @@ import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,7 +21,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
@@ -35,18 +37,20 @@ public class StorageManager {
 
 	private final PvPManager plugin;
 	private final Storage storage;
-	private final BukkitTask saveTask;
+	private final ScheduledExecutorService executor;
+	private final ScheduledFuture<?> saveTask;
 
 	public StorageManager(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.storage = new SQLStorage(plugin);
 		convertYMLToSQL();
-		saveTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new StorageSaveTask(plugin, storage), 600, 600);
-
+		executor = Executors.newSingleThreadScheduledExecutor();
+		saveTask = executor.scheduleAtFixedRate(new StorageSaveTask(plugin, storage), 30, 30, TimeUnit.SECONDS);
 	}
 
 	public void shutdown() {
-		saveTask.cancel();
+		saveTask.cancel(false);
+		executor.shutdown();
 		storage.shutdown();
 	}
 

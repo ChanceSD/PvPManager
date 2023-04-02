@@ -44,7 +44,7 @@ public class PlayerListenerTest {
 
 	@BeforeEach
 	public final void setup() {
-		event = new PlayerDeathEvent(defender, null, 0, null);
+		event = new PlayerDeathEvent(defender, null, 0, (String) null);
 		ph.getPlayers().clear();
 	}
 

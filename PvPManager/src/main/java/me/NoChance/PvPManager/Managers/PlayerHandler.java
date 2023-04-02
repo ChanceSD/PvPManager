@@ -26,6 +26,7 @@ import me.NoChance.PvPManager.Tasks.PvPToggleFeeTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PlayerHandler {
 
@@ -43,10 +44,10 @@ public class PlayerHandler {
 		this.tagTask = new TagTask(plugin.getDisplayManager());
 		this.worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
 		if (Settings.isKillAbuseEnabled()) {
-			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20L);
+			ScheduleUtils.runTaskTimer(plugin, new CleanKillersTask(this), Settings.getKillAbuseTime() * 20L, Settings.getKillAbuseTime() * 20L);
 		}
 		if (Settings.getPvPDisabledFee() != 0) {
-			new PvPToggleFeeTask(this).runTaskTimerAsynchronously(plugin, 0, 60 * 60 * 20L);
+			ScheduleUtils.runAsyncTimer(new PvPToggleFeeTask(this), 0, 60 * 60L);
 		}
 
 		addOnlinePlayers();
@@ -125,6 +126,8 @@ public class PlayerHandler {
 		players.remove(player.getUUID());
 		if (player.hasPvPLogged()) {
 			player.setPvpLogged(false);
+		}
+		if (player.isInCombat()) {
 			untag(player);
 		}
 	}

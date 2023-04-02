@@ -95,9 +95,9 @@ public class PvPlayer extends EcoPlayer {
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
 			message(Messages.getNewbieProtection().replace("%", Integer.toString(Settings.getNewbieProtectionTime())));
-			this.newbieTask = new NewbieTask(this, plugin, 0);
+			this.newbieTask = new NewbieTask(this, 0);
 		} else if (this.newbie && newbieTask != null) {
-			if (Bukkit.getScheduler().isCurrentlyRunning(newbieTask.getTaskId())) {
+			if (newbieTask.isScheduled()) {
 				message(Messages.getNewbieProtectionEnd());
 			} else {
 				message(Messages.getNewbieProtectionRemoved());
@@ -272,6 +272,9 @@ public class PvPlayer extends EcoPlayer {
 				Settings.setToggleNametagsEnabled(false);
 				this.nametag = null;
 				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
+			} catch (final UnsupportedOperationException e) {
+				this.nametag = null;
+				Log.info("Nametag support disabled until Folia supports the scoreboard API");
 			}
 		}
 		this.loaded = true;
@@ -300,7 +303,7 @@ public class PvPlayer extends EcoPlayer {
 			final Object newbieTime = userData.get(UserDataFields.NEWBIETIMELEFT);
 			if (newbieTime instanceof Integer || newbieTime instanceof Long) {
 				final long timeleft = ((Number) newbieTime).longValue();
-				this.newbieTask = new NewbieTask(this, plugin, timeleft);
+				this.newbieTask = new NewbieTask(this, timeleft);
 			}
 		}
 	}

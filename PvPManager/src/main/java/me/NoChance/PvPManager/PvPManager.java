@@ -34,6 +34,7 @@ import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.managers.StorageManager;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PvPManager extends JavaPlugin {
 
@@ -51,6 +52,7 @@ public class PvPManager extends JavaPlugin {
 		final long start = System.currentTimeMillis();
 		instance = this;
 		Log.setup(getLogger());
+		ScheduleUtils.setupExecutor();
 		loadFiles();
 		storageManager = new StorageManager(this);
 		dependencyManager = new DependencyManager();
@@ -67,6 +69,7 @@ public class PvPManager extends JavaPlugin {
 	public void onDisable() {
 		playerHandler.handlePluginDisable();
 		storageManager.shutdown();
+		ScheduleUtils.cancelAllTasks(this);
 		instance = null;
 	}
 

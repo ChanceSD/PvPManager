@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
@@ -33,6 +32,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PM implements TabExecutor {
 
@@ -188,10 +188,6 @@ public class PM implements TabExecutor {
 		}
 		if (p == null)
 			return;
-		final PermissionAttachment attachment = sender.addAttachment(plugin, 1200);
-		if (attachment != null) {
-			attachment.setPermission("pvpmanager.nocombattag", false);
-		}
 		if (args[1].equalsIgnoreCase("tag")) {
 			p.setTagged(true, p);
 		} else if (args[1].equalsIgnoreCase("ct")) {
@@ -237,7 +233,7 @@ public class PM implements TabExecutor {
 
 		Settings.setReloading(true);
 		Settings.setUpdate(false);
-		Bukkit.getScheduler().cancelTasks(plugin);
+		ScheduleUtils.cancelAllTasks(plugin);
 		HandlerList.unregisterAll(plugin);
 		plugin.onDisable();
 		plugin.onEnable();

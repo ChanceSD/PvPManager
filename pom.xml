@@ -3,12 +3,12 @@
 	<groupId>me.NoChance.PvPManager</groupId>
 	<artifactId>PvPManager-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>3.11</version>
+	<version>3.12</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<pvpmanager.version>${project.version}</pvpmanager.version>
-		<config.version>62</config.version>
+		<config.version>63</config.version>
 	</properties>
 
 	<distributionManagement>
@@ -24,6 +24,7 @@
 
 	<modules>
 		<module>PvPManager</module>
+		<module>pvpmanager-folia</module>
 	</modules>
 
 	<build>

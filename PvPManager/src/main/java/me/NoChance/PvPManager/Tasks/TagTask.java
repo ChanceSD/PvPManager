@@ -7,11 +7,10 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.bukkit.Bukkit;
-
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class TagTask extends TimerTask {
 
@@ -34,7 +33,7 @@ public class TagTask extends TimerTask {
 				final PvPlayer p = iterator.next();
 				final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
 				if (timePassed >= time) {
-					Bukkit.getScheduler().runTask(display.getPlugin(), p::unTag);
+					ScheduleUtils.runTask(display.getPlugin(), p::unTag, p.getPlayer());
 					display.discardBossbar(p);
 					iterator.remove();
 					return;
@@ -42,7 +41,9 @@ public class TagTask extends TimerTask {
 				if (!Settings.getActionBarMessage().isEmpty()) {
 					display.showProgress(p, timePassed / 1000D);
 				}
-				display.updateBossbar(p, timePassed / 1000D);
+				if (Settings.isBossBarEnabled()) {
+					display.updateBossbar(p, timePassed / 1000D);
+				}
 			}
 		}
 	}

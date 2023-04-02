@@ -18,6 +18,7 @@ import me.NoChance.PvPManager.Settings.LogFile;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class ConfigManager {
 
@@ -39,13 +40,14 @@ public class ConfigManager {
 		checkConfig();
 		initConfig();
 		if (Settings.isUpdateCheck()) {
-			new BukkitRunnable() {
+			ScheduleUtils.runAsyncTimer(new BukkitRunnable() {
 				@Override
 				public void run() {
 					plugin.checkForUpdates();
 				}
-			}.runTaskTimerAsynchronously(plugin, 0, 360000);
+			}, 0, 18000);
 		}
+
 	}
 
 	private void checkConfig() {

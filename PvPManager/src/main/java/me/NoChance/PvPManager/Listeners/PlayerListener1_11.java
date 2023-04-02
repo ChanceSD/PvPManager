@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager.Listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -13,6 +12,7 @@ import org.bukkit.projectiles.ProjectileSource;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PlayerListener1_11 implements Listener {
 
@@ -33,7 +33,7 @@ public class PlayerListener1_11 implements Listener {
 		final PvPlayer pvPlayer = playerHandler.get(player);
 
 		if (pvPlayer.isInCombat()) {
-			Bukkit.getScheduler().runTask(playerHandler.getPlugin(), () -> player.setCooldown(Material.ENDER_PEARL, Settings.getEnderPearlCooldown() * 20));
+			ScheduleUtils.runTask(playerHandler.getPlugin(), () -> player.setCooldown(Material.ENDER_PEARL, Settings.getEnderPearlCooldown() * 20), player);
 		}
 	}
 
