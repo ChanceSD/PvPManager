@@ -22,6 +22,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 
 public class Database {
@@ -39,8 +41,18 @@ public class Database {
 		final HikariConfig config = new HikariConfig();
 		if (databaseType == DatabaseType.SQLITE) {
 			// Use SQLITE
+			if (!CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+				try {
+					Class.forName("org.sqlite.JDBC"); // got to do this for 1.8 sigh
+					config.setConnectionTestQuery("SELECT 1;");
+				} catch (final ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
 			config.setJdbcUrl(String.format(SQLITE_URL_TEMPLATE, builder.getFile()));
-			config.addDataSourceProperty("journal_mode", "wal");
+			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+				config.addDataSourceProperty("journal_mode", "wal");
+			}
 			config.addDataSourceProperty("synchronous", "normal");
 		} else {
 			// Use MYSQL

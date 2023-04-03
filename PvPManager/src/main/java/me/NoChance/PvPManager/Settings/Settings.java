@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Utils.ChatUtils;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public final class Settings {
 
@@ -168,10 +169,13 @@ public final class Settings {
 		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
-		bossBarEnabled = TAGGEDCOMBAT.getBoolean("Boss Bar.Enabled", true);
+		bossBarEnabled = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && TAGGEDCOMBAT.getBoolean("Boss Bar.Enabled", true);
 		bossBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Boss Bar.Message", ""));
-		bossBarColor = BarColor.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarColor", "RED"));
-		bossBarStyle = BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10"));
+		bossBarColor = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") ? BarColor.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarColor", "RED"))
+		        : null;
+		bossBarStyle = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")
+		        ? BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10"))
+		        : null;
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
