@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -98,6 +100,10 @@ public final class Settings {
 	private static String actionBarMessage;
 	private static String actionBarSymbol;
 	private static int actionBarTotalBars;
+	private static boolean bossBarEnabled;
+	private static String bossBarMessage;
+	private static BarColor bossBarColor;
+	private static BarStyle bossBarStyle;
 	private static List<String> newbieBlacklist;
 	private static Set<String> worldsExcluded;
 	private static Set<String> playerKillsWGExclusions;
@@ -155,7 +161,6 @@ public final class Settings {
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
-		final String tColor = TAGGEDCOMBAT.getString("Color", "&c").replace("&", "");
 		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
 		useCombatTeam = useNameTag;
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
@@ -163,6 +168,10 @@ public final class Settings {
 		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
+		bossBarEnabled = TAGGEDCOMBAT.getBoolean("Boss Bar.Enabled", true);
+		bossBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Boss Bar.Message", ""));
+		bossBarColor = BarColor.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarColor", "RED"));
+		bossBarStyle = BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10"));
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
@@ -621,6 +630,22 @@ public final class Settings {
 
 	public static int getActionBarBars() {
 		return actionBarTotalBars;
+	}
+
+	public static boolean isBossBarEnabled() {
+		return bossBarEnabled;
+	}
+
+	public static String getBossBarMessage() {
+		return bossBarMessage;
+	}
+
+	public static BarColor getBossBarColor() {
+		return bossBarColor;
+	}
+
+	public static BarStyle getBossBarStyle() {
+		return bossBarStyle;
 	}
 
 	public static Set<String> getKillsWGExclusions() {

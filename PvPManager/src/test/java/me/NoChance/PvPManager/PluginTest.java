@@ -65,6 +65,15 @@ public class PluginTest {
 		when(defender.getKiller()).thenReturn(attacker);
 	}
 
+	public final Player createPlayer(final String name) {
+		final Player player = mock(Player.class, Mockito.RETURNS_MOCKS);
+		when(player.hasPlayedBefore()).thenReturn(true);
+		when(player.getName()).thenReturn(name);
+		when(player.getUniqueId()).thenReturn(UUID.randomUUID());
+		when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);
+		return player;
+	}
+
 	public final void tearDown() {
 		plugin.onDisable();
 		deleteDir(new File(filePath + "TestServer"));

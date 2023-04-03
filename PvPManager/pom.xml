@@ -1,9 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>me.NoChance.PvPManager</groupId>
 		<artifactId>PvPManager-parent</artifactId>
-		<version>3.11</version>
+		<version>3.12</version>
 	</parent>
 
 	<artifactId>PvPManager</artifactId>
@@ -182,6 +184,10 @@
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr4</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.spigotmc</groupId>
+					<artifactId>spigot-api</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -229,6 +235,12 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>me.NoChance.PvPManager</groupId>
+			<artifactId>pvpmanager-folia</artifactId>
+			<version>3.12</version>
+		</dependency>
+
 		<!-- Database -->
 		<dependency>
 			<groupId>com.zaxxer</groupId>
@@ -247,13 +259,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.9.1</version>
+			<version>5.9.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite</artifactId>
-			<version>1.9.1</version>
+			<version>1.9.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -4,15 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Player.display.ProgressBar;
 import me.NoChance.PvPManager.Settings.Settings;
-import net.md_5.bungee.api.ChatColor;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class DisplayManager {
 
@@ -27,19 +25,23 @@ public class DisplayManager {
 
 	public void updateBossbar(final PvPlayer player, final double timePassed) {
 		final BossBar bossBar = bossBars.computeIfAbsent(player, this::setupBossbar);
-		bossBar.setTitle(
-		        ChatColor.translateAlternateColorCodes('&', "&c&lIn Combat - &6") + (Settings.getTimeInCombat() - Math.round(timePassed)) + " seconds remaining");
+		bossBar.setTitle(Settings.getBossBarMessage().replace("<time>", Long.toString(Settings.getTimeInCombat() - Math.round(timePassed))));
 		bossBar.setProgress((Settings.getTimeInCombat() - timePassed) / Settings.getTimeInCombat());
 	}
 
 	private BossBar setupBossbar(final PvPlayer player) {
-		final BossBar bossBar = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_10);
+		final BossBar bossBar = Bukkit.createBossBar("", Settings.getBossBarColor(), Settings.getBossBarStyle());
 		bossBar.addPlayer(player.getPlayer());
 		return bossBar;
 	}
 
 	public void discardBossbar(final PvPlayer player) {
-		bossBars.get(player).removePlayer(player.getPlayer());
+		final BossBar bossBar = bossBars.get(player);
+		if (bossBar == null) {
+			Log.info("Tried to discard bossbar that didn't exist"); // display task might not have created one yet
+			return;
+		}
+		bossBar.removePlayer(player.getPlayer());
 		bossBars.remove(player);
 	}
 

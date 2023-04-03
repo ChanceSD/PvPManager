@@ -80,6 +80,13 @@ Tagged In Combat:
     Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec]'
     Symbol: '▊'
     Total Bars: 20
+  Boss Bar:
+    Enabled: true
+    Message: '&8&l[&c&lIn Combat&8&l] &6&l<time> seconds'
+    # See here for bar color options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
+    BarColor: RED
+    # See here for bar style options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarStyle.html
+    BarStyle: SOLID
   Self Tag: false
   Untag Enemy: false
   EnderPearl Cooldown: 15

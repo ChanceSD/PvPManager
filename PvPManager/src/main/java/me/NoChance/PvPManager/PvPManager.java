@@ -53,6 +53,9 @@ public class PvPManager extends JavaPlugin {
 		instance = this;
 		Log.setup(getLogger());
 		ScheduleUtils.setupExecutor();
+		if (ScheduleUtils.checkFolia()) {
+			Log.info("Running on Folia. Support for Folia is still experimental");
+		}
 		loadFiles();
 		storageManager = new StorageManager(this);
 		dependencyManager = new DependencyManager();
