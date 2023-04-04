@@ -189,13 +189,27 @@ public class PM implements TabExecutor {
 		if (p == null)
 			return;
 		if (args[1].equalsIgnoreCase("tag")) {
-			p.setTagged(true, p);
+			if (args.length == 3 && args[2].equalsIgnoreCase("all")) {
+				for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
+					player.setTagged(true, p);
+				}
+			} else {
+				p.setTagged(true, p);
+			}
 		} else if (args[1].equalsIgnoreCase("ct")) {
 			p.message("Tagged: " + p.isInCombat());
 		} else if (args[1].equalsIgnoreCase("newbie")) {
 			p.setNewbie(true);
 		} else if (args[1].equalsIgnoreCase("attack")) {
 			plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
+			sender.sendMessage("Attacked player with 5 damage");
+		} else if (args[1].equalsIgnoreCase("players")) {
+			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
+				if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
+					Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
+				}
+			}
+			Log.info("Players: " + plugin.getPlayerHandler().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
 		}
 	}
 

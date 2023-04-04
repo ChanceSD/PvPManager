@@ -2,10 +2,10 @@ PvPManager
 ===========
 [![Discord](https://discordapp.com/api/guilds/622559860705198108/widget.png)](https://discord.gg/QFTjs3g)
 [![Spiget Downloads](https://img.shields.io/spiget/downloads/845?label=spigot%20downloads)](https://www.spigotmc.org/resources/pvpmanager-lite.845/)
-[![Build Status](https://travis-ci.org/NoChanceSD/PvPManager.svg)](https://travis-ci.org/NoChanceSD/PvPManager)
+[![Build Status](https://github.com/ChanceSD/PvPManager/actions/workflows/maven.yml/badge.svg)](https://ci.codemc.io/job/ChanceSD/job/PvPManager/)
 [![Crowdin](https://badges.crowdin.net/pvpmanager/localized.svg)](https://crowdin.com/project/pvpmanager)
-[![GitHub commits since latest release](https://img.shields.io/github/commits-since/nochancesd/pvpmanager/latest)](https://github.com/NoChanceSD/PvPManager/commits/master)
-![GitHub Releases](https://img.shields.io/github/downloads/nochancesd/pvpmanager/latest/total)
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/chancesd/pvpmanager/latest)](https://github.com/ChanceSD/PvPManager/commits/master)
+![GitHub Releases](https://img.shields.io/github/downloads/chancesd/pvpmanager/latest/total)
 ***
 
 Useful Links
@@ -30,7 +30,7 @@ Artifact Information:
 <dependency>
     <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>PvPManager</artifactId>
-    <version>3.10.9</version>
+    <version>3.12</version>
     <scope>provided</scope>
 </dependency>
  ```

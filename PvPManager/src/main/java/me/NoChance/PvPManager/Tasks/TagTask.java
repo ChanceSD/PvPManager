@@ -36,7 +36,7 @@ public class TagTask extends TimerTask {
 					ScheduleUtils.runTask(display.getPlugin(), p::unTag, p.getPlayer());
 					display.discardBossbar(p);
 					iterator.remove();
-					return;
+					continue;
 				}
 				if (!Settings.getActionBarMessage().isEmpty()) {
 					display.showProgress(p, timePassed / 1000D);
