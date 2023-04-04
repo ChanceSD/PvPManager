@@ -33,12 +33,15 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.pvpmanager.managers.StorageManager;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
 	private PlayerHandler playerHandler;
 	private Updater updater;
+	private StorageManager storageManager;
 	private DependencyManager dependencyManager;
 	private DisplayManager displayManager;
 	private EntityListener entityListener;
@@ -49,7 +52,12 @@ public class PvPManager extends JavaPlugin {
 		final long start = System.currentTimeMillis();
 		instance = this;
 		Log.setup(getLogger());
+		ScheduleUtils.setupExecutor();
+		if (ScheduleUtils.checkFolia()) {
+			Log.info("Running on Folia. Support for Folia is still experimental");
+		}
 		loadFiles();
+		storageManager = new StorageManager(this);
 		dependencyManager = new DependencyManager();
 		displayManager = new DisplayManager(this);
 		playerHandler = new PlayerHandler(this);
@@ -63,6 +71,8 @@ public class PvPManager extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		playerHandler.handlePluginDisable();
+		storageManager.shutdown();
+		ScheduleUtils.cancelAllTasks(this);
 		instance = null;
 	}
 
@@ -152,8 +162,8 @@ public class PvPManager extends JavaPlugin {
 			return;
 		}
 		if (javaVersion <= 8) {
-			Log.warning("You appear to be using Java 8 or lower. For now the plugin still works but please update to Java 16+");
-			Log.warning("In the future PvPManager might stop supporting Java versions this old");
+			Log.severe("You appear to be using Java 8 or lower. For now the plugin still works but please update to Java 17+");
+			Log.severe("In the future PvPManager will stop supporting Java versions this old");
 		}
 	}
 
@@ -177,6 +187,10 @@ public class PvPManager extends JavaPlugin {
 
 	public PlayerHandler getPlayerHandler() {
 		return playerHandler;
+	}
+
+	public StorageManager getStorageManager() {
+		return storageManager;
 	}
 
 	public DependencyManager getDependencyManager() {

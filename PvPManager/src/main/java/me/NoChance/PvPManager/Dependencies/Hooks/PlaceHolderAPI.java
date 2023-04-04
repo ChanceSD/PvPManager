@@ -28,7 +28,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		registerPlaceholder("has_override");
 		registerPlaceholder("has_respawn_prot");
 		registerPlaceholder("current_enemy");
-		registerPlaceholder("combat_color");
+		registerPlaceholder("combat_prefix");
 	}
 
 	@Override
@@ -48,8 +48,8 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 			return getPAPIBoolean(p.hasOverride());
 		case "has_respawn_prot":
 			return getPAPIBoolean(p.hasRespawnProtection());
-		case "combat_color":
-			return p.isInCombat() ? Settings.getTeamColor().toString() : "";
+		case "combat_prefix":
+			return p.isInCombat() ? Settings.getNameTagPrefix() : "";
 		case "combat_timeleft":
 			return String.valueOf(p.getTagTimeLeft() / 1000);
 		case "newbie_timeleft":

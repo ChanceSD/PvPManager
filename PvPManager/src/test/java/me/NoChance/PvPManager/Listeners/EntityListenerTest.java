@@ -199,6 +199,8 @@ public class EntityListenerTest {
 
 		when(attacker.isFlying()).thenReturn(true);
 		when(defender.isFlying()).thenReturn(true);
+		assertTrue(attacker.isFlying());
+		assertTrue(defender.isFlying());
 		assertEquals(CancelResult.FAIL, ph.tryCancel(attacker, defender));
 		createAttack(false);
 		assertTrue(ph.get(attacker).isInCombat());

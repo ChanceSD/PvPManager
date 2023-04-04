@@ -31,10 +31,11 @@ public class PlayerListenerTest {
 	private PlayerDeathEvent event;
 	private static Player attacker;
 	private static Player defender;
+	private static PluginTest pt;
 
 	@BeforeAll
 	public static void setupClass() {
-		final PluginTest pt = InstanceCreator.getPt();
+		pt = InstanceCreator.getPt();
 		final PvPManager plugin = pt.getPlugin();
 		ph = plugin.getPlayerHandler();
 		listener = new PlayerListener(plugin.getPlayerHandler());
@@ -44,7 +45,7 @@ public class PlayerListenerTest {
 
 	@BeforeEach
 	public final void setup() {
-		event = new PlayerDeathEvent(defender, null, 0, null);
+		event = new PlayerDeathEvent(defender, null, 0, "");
 		ph.getPlayers().clear();
 	}
 
@@ -81,19 +82,20 @@ public class PlayerListenerTest {
 
 	@Test
 	void onPlayerKickTest() {
-		final PvPlayer pvPlayer = ph.get(defender);
+		final Player kickPlayer = pt.createPlayer("PlayerKickTest");
+		final PvPlayer pvPlayer = ph.get(kickPlayer);
 
 		tagPlayer(pvPlayer);
-		listener.onPlayerKick(new PlayerKickEvent(defender, "", ""));
+		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "", ""));
 		assertTrue(pvPlayer.isInCombat());
 
 		Settings.setMatchKickReason(true);
 		tagPlayer(pvPlayer);
-		listener.onPlayerKick(new PlayerKickEvent(defender, "", ""));
+		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "", ""));
 		assertFalse(pvPlayer.isInCombat());
 
 		tagPlayer(pvPlayer);
-		listener.onPlayerKick(new PlayerKickEvent(defender, "Kicked for spamming", ""));
+		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "Kicked for spamming", ""));
 		assertTrue(pvPlayer.isInCombat());
 	}
 

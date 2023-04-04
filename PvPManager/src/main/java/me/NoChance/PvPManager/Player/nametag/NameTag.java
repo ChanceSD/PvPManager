@@ -8,6 +8,7 @@ import org.bukkit.scoreboard.Team;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
@@ -19,10 +20,18 @@ public class NameTag {
 	private Team previousTeam;
 	private String previousTeamName;
 	private final PvPlayer pvPlayer;
+	private final String id;
+	private final String prefix;
+	private final String pvpOnPrefix;
+	private final String pvpOffPrefix;
 	private Scoreboard scoreboard;
 
 	public NameTag(final PvPlayer p) {
 		this.pvPlayer = p;
+		this.id = "PVP-" + processPlayerID(pvPlayer.getUUID());
+		this.prefix = ChatUtils.colorize(Settings.getNameTagPrefix());
+		this.pvpOnPrefix = Settings.getToggleColorOn().equalsIgnoreCase("none") ? "" : ChatUtils.colorize(Settings.getToggleColorOn());
+		this.pvpOffPrefix = Settings.getToggleColorOff().equalsIgnoreCase("none") ? "" : ChatUtils.colorize(Settings.getToggleColorOff());
 		setupScoreboard();
 		setupTeams();
 	}
@@ -32,7 +41,6 @@ public class NameTag {
 	}
 
 	private void setupTeams() {
-		final String id = "PVP-" + processPlayerID(pvPlayer.getUUID());
 		if (Settings.isUseCombatTeam()) {
 			if (scoreboard.getTeam(id) != null) {
 				inCombat = scoreboard.getTeam(id);
@@ -41,21 +49,23 @@ public class NameTag {
 				inCombat = scoreboard.registerNewTeam(id);
 				Log.debug("Creating combat team with name " + id);
 				if (Settings.isUseNameTag()) {
-					inCombat.setPrefix(ChatColor.translateAlternateColorCodes('&', Settings.getNameTagColor()));
+					inCombat.setPrefix(prefix);
 				}
-				if (Settings.getTeamColor() != null) {
-					inCombat.setColor(Settings.getTeamColor());
+				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+					final ChatColor nameColor = getLastColor(Settings.getNameTagPrefix());
+					if (nameColor != null) {
+						inCombat.setColor(nameColor);
+					}
 				}
 			}
 		}
 		if (Settings.isToggleNametagsEnabled()) {
-			if (!Settings.getToggleColorOn().equalsIgnoreCase("none")) {
+			if (!pvpOnPrefix.isEmpty()) {
 				if (scoreboard.getTeam("PvPOn") != null) {
 					pvpOn = scoreboard.getTeam("PvPOn");
 				} else {
 					pvpOn = scoreboard.registerNewTeam("PvPOn");
 					pvpOn.setCanSeeFriendlyInvisibles(false);
-					final String pvpOnPrefix = ChatColor.translateAlternateColorCodes('&', Settings.getToggleColorOn());
 					pvpOn.setPrefix(pvpOnPrefix);
 					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
 						final ChatColor nameColor = getLastColor(pvpOnPrefix);
@@ -65,13 +75,12 @@ public class NameTag {
 					}
 				}
 			}
-			if (!Settings.getToggleColorOff().equalsIgnoreCase("none")) {
+			if (!pvpOffPrefix.isEmpty()) {
 				if (scoreboard.getTeam("PvPOff") != null) {
 					pvpOff = scoreboard.getTeam("PvPOff");
 				} else {
 					pvpOff = scoreboard.registerNewTeam("PvPOff");
 					pvpOff.setCanSeeFriendlyInvisibles(false);
-					final String pvpOffPrefix = ChatColor.translateAlternateColorCodes('&', Settings.getToggleColorOff());
 					pvpOff.setPrefix(pvpOffPrefix);
 					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
 						final ChatColor nameColor = getLastColor(pvpOffPrefix);

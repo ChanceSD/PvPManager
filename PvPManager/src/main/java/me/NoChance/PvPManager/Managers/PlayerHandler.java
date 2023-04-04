@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -27,11 +26,11 @@ import me.NoChance.PvPManager.Tasks.PvPToggleFeeTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PlayerHandler {
 
 	private final HashMap<UUID, PvPlayer> players = new HashMap<>();
-	private static final HashSet<UUID> newbiesDisabled = new HashSet<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
@@ -45,10 +44,10 @@ public class PlayerHandler {
 		this.tagTask = new TagTask(plugin.getDisplayManager());
 		this.worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
 		if (Settings.isKillAbuseEnabled()) {
-			new CleanKillersTask(this).runTaskTimer(plugin, 0, Settings.getKillAbuseTime() * 20L);
+			ScheduleUtils.runTaskTimer(plugin, new CleanKillersTask(this), Settings.getKillAbuseTime() * 20L, Settings.getKillAbuseTime() * 20L);
 		}
 		if (Settings.getPvPDisabledFee() != 0) {
-			new PvPToggleFeeTask(this).runTaskTimerAsynchronously(plugin, 0, 60 * 60 * 20L);
+			ScheduleUtils.runAsyncTimer(new PvPToggleFeeTask(this), 0, 60 * 60L);
 		}
 
 		addOnlinePlayers();
@@ -74,7 +73,7 @@ public class PlayerHandler {
 					attacked.setPvP(true);
 					attacked.message(Messages.getPvpForceEnabledWG());
 				}
-			} else if (dependencyManager.shouldDisableProtection(damager, defender))
+			} else if (dependencyManager.shouldDisableProtection(damager, defender)) // TODO add worldguard overrides in this
 				return CancelResult.FAIL;
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 		}
@@ -127,9 +126,10 @@ public class PlayerHandler {
 		players.remove(player.getUUID());
 		if (player.hasPvPLogged()) {
 			player.setPvpLogged(false);
+		}
+		if (player.isInCombat()) {
 			untag(player);
 		}
-		configManager.markForSave(player);
 	}
 
 	public final void applyPunishments(final PvPlayer player) {
@@ -210,25 +210,18 @@ public class PlayerHandler {
 			}
 		}
 		for (final Player p : plugin.getServer().getOnlinePlayers()) {
-			final PvPlayer pvPlayer = get(p);
-			pvPlayer.waitForPlayerToLoad();
+			get(p);
 		}
-		newbiesDisabled.clear();
 	}
 
 	public void handlePluginDisable() {
 		tagTask.cancel();
 		for (final PvPlayer p : players.values()) {
-			final Player player = p.getPlayer();
-			if (player != null && !player.hasPlayedBefore() && !p.isNewbie()) {
-				newbiesDisabled.add(p.getUUID());
-			}
-			configManager.markForSave(p);
 			p.cleanForRemoval();
 		}
 		removeTeams();
-		Log.info("Saving player data to users file");
-		configManager.awaitSave();
+		Log.info("Saving player data to storage...");
+		PvPlayer.shutdownExecutorAndWait();
 	}
 
 	private final void removeTeams() {
@@ -243,6 +236,7 @@ public class PlayerHandler {
 		}
 	}
 
+	// TODO replace untag and tag with gettagtask
 	public final void untag(final PvPlayer p) {
 		tagTask.untag(p);
 	}
@@ -257,10 +251,6 @@ public class PlayerHandler {
 
 	public final Set<PvPlayer> getPlayersInCombat() {
 		return tagTask.getTaggedPlayers();
-	}
-
-	public static boolean isRemovedNewbie(final PvPlayer p) {
-		return newbiesDisabled.contains(p.getUUID());
 	}
 
 	public final PvPManager getPlugin() {

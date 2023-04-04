@@ -3,7 +3,7 @@ package me.NoChance.PvPManager.Dependencies;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.Settings.Settings;
 
@@ -14,17 +14,17 @@ public enum Hook {
 		Settings.setMoneyReward(0);
 	}), SIMPLECLANS("SimpleClans"), PLACEHOLDERAPI("PlaceholderAPI"), LIBSDISGUISES("LibsDisguises"), MCMMO("mcMMO");
 
-	@NonNull
+	@NotNull
 	private final String pluginName;
 	private String disabledWarning;
 	private Runnable disabledAction;
 
-	private Hook(@NonNull final String name) {
+	private Hook(@NotNull final String name) {
 		this(name, null, () -> {
 		});
 	}
 
-	private Hook(@NonNull final String name, final String disabledWarning, final Runnable disabledAction) {
+	private Hook(@NotNull final String name, final String disabledWarning, final Runnable disabledAction) {
 		this.pluginName = name;
 		this.disabledWarning = disabledWarning;
 		this.disabledAction = disabledAction;

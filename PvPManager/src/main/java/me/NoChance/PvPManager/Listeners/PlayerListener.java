@@ -214,8 +214,11 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public final void onPlayerKick(final PlayerKickEvent event) {
+		if (Settings.punishOnKick() && (!Settings.matchKickReason() || Settings.getPunishKickReasons().contains(event.getReason())))
+			return;
+
 		final PvPlayer pvPlayer = ph.get(event.getPlayer());
-		if (pvPlayer.isInCombat() && (!Settings.punishOnKick() || Settings.matchKickReason() && !Settings.getPunishKickReasons().contains(event.getReason()))) {
+		if (pvPlayer.isInCombat()) {
 			ph.untag(pvPlayer);
 		}
 	}
@@ -223,18 +226,20 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
 		final PvPlayer player = ph.get(event.getPlayer());
-		if (Settings.isInCombatEnabled() && player.isInCombat())
-			if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
-				event.setCancelled(true);
-				player.message(Messages.getEnderpearlBlockedIncombat());
-			} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && event.getCause().equals(TeleportCause.CHORUS_FRUIT)
-			        && Settings.isBlockChorusFruit()) {
-				event.setCancelled(true);
-				player.message(Messages.getChorusBlockedInCombat());
-			} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
-				event.setCancelled(true);
-				player.message(Messages.getTeleportBlockedInCombat());
-			}
+		if (!Settings.isInCombatEnabled() || !player.isInCombat())
+			return;
+
+		if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
+			event.setCancelled(true);
+			player.message(Messages.getEnderpearlBlockedIncombat());
+		} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && event.getCause() == TeleportCause.CHORUS_FRUIT
+		        && Settings.isBlockChorusFruit()) {
+			event.setCancelled(true);
+			player.message(Messages.getChorusBlockedInCombat());
+		} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
+			event.setCancelled(true);
+			player.message(Messages.getTeleportBlockedInCombat());
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

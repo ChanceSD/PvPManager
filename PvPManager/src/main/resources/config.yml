@@ -59,7 +59,6 @@ Disable:
 # Time -> How long should the tag last in seconds
 # NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color his name red
 # while 'none' or empty quotes '' will disable this feature completely
-# Color -> Necessary on 1.13+, changes name color and glowing color, leave empty '' for no color
 # Glowing -> For 1.9+ only, sets the player glowing while tagged
 # Action Bar -> Symbol to use for the bar and how many times to repeat it. Leave message empty to disable. Other symbols ▊,▮,▯,|
 # Self Tag -> Allow players to tag themselves with a bow
@@ -76,12 +75,18 @@ Tagged In Combat:
   Enabled: true
   Time: 10
   NameTag Prefix: '&4&lCombat '
-  Color: '&c'
   Glowing: true
   Action Bar:
     Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec]'
     Symbol: '▊'
     Total Bars: 20
+  Boss Bar:
+    Enabled: true
+    Message: '&8&l[&c&lIn Combat&8&l] &6&l<time> seconds'
+    # See here for bar color options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
+    BarColor: RED
+    # See here for bar style options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarStyle.html
+    BarStyle: SOLID
   Self Tag: false
   Untag Enemy: false
   EnderPearl Cooldown: 15
@@ -192,6 +197,17 @@ Plugin Hooks:
   SimpleClans:
     # Disable PvP protection if the players are in a SimpleClans war
     No Protection In War: true
+
+Database:
+  # Database type, supported databases: SQLite or MySQL
+  Type: SQLite
+  # Only fill this section if using MySQL
+  MySQL:
+    Host: 127.0.0.1
+    Port: 3306
+    Username: root
+    Password: '12345'
+    Database: minecraft
 
 # Should PvPManager be allowed to check for updates and tell you about them
 # Auto Update - After checking should we download it automatically for you?

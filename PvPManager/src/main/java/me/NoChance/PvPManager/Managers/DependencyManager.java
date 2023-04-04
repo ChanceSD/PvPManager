@@ -157,7 +157,7 @@ public class DependencyManager {
 	}
 
 	public final boolean shouldDisableProtection(final Player attacker, final Player defender) {
-		for (final WarDependency warPlugin : warChecks) {
+		for (final WarDependency warPlugin : warChecks) { // TODO change to something like forcetogglehook
 			if (warPlugin.isInWar(attacker, defender))
 				return true;
 		}

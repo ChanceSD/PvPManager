@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>PvPManager-parent</artifactId>
+		<groupId>me.NoChance.PvPManager</groupId>
+		<version>3.12</version>
+	</parent>
+
+	<artifactId>pvpmanager-folia</artifactId>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<repositories>
+		<!-- Folia -->
+		<repository>
+			<id>papermc</id>
+			<url>https://repo.papermc.io/repository/maven-public/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- Folia -->
+		<dependency>
+			<groupId>dev.folia</groupId>
+			<artifactId>folia-api</artifactId>
+			<version>1.19.4-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+</project>

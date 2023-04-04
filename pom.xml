@@ -1,14 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.NoChance.PvPManager</groupId>
 	<artifactId>PvPManager-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>3.11</version>
+	<version>3.12</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<pvpmanager.version>${project.version}</pvpmanager.version>
-		<config.version>62</config.version>
+		<config.version>63</config.version>
+		<sonar.organization>chancesd</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<distributionManagement>
@@ -24,6 +28,7 @@
 
 	<modules>
 		<module>PvPManager</module>
+		<module>pvpmanager-folia</module>
 	</modules>
 
 	<build>

@@ -10,6 +10,7 @@ import java.util.Date;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class LogFile {
 
@@ -29,7 +30,7 @@ public class LogFile {
 	}
 
 	private void write(final String line) {
-		new BukkitRunnable() {
+		ScheduleUtils.runAsync(PvPManager.getInstance(), new BukkitRunnable() {
 			@Override
 			public void run() {
 				try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
@@ -39,7 +40,7 @@ public class LogFile {
 					e.printStackTrace();
 				}
 			}
-		}.runTaskAsynchronously(PvPManager.getInstance());
+		});
 	}
 
 	public final void log(final String line) {

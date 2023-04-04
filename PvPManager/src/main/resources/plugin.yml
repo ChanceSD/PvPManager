@@ -6,6 +6,7 @@ author: ChanceSD
 description: Allows Administrators To Change Their PvP Mechanics.
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, SimpleClans, EZRanksLite, Essentials, PlaceholderAPI, Towny, mcMMO]
 api-version: 1.13
+folia-supported: true
 
 commands:
    pvpmanager:

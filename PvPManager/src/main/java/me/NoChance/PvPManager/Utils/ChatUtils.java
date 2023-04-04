@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public class ChatUtils {
@@ -42,6 +43,10 @@ public class ChatUtils {
 		}
 
 		return matcher.appendTail(buffer).toString();
+	}
+
+	public static void send(@NotNull final CommandSender sender, @NotNull final String message) {
+		sender.sendMessage(message);
 	}
 
 	public static List<String> getMatchingEntries(final String token, final List<String> toFilter) {

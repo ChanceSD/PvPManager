@@ -404,7 +404,7 @@ public class Messages {
 		return moneySteal;
 	}
 
-	public final Locale getLocale() {
+	public static Locale getLocale() {
 		return locale;
 	}
 
