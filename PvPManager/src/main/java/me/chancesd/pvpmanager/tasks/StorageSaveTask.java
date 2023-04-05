@@ -21,10 +21,10 @@ public class StorageSaveTask implements Runnable {
 
 	@Override
 	public void run() {
-		final long start = System.currentTimeMillis();
+		final long start = System.nanoTime();
 		Log.debug("Saving all player data to storage asynchronously");
 		final Map<UUID, PvPlayer> players = new HashMap<>(plugin.getPlayerHandler().getPlayers());
 		players.values().forEach(storage::saveUserData);
-		Log.debug("Finished saving all player data" + " - " + (System.currentTimeMillis() - start) + " ms");
+		Log.debug("Finished saving all player data" + " - " + (System.nanoTime() - start) / 1_000_000D + " ms");
 	}
 }

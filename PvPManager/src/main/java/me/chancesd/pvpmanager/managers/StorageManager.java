@@ -45,7 +45,7 @@ public class StorageManager {
 		this.storage = new SQLStorage(plugin);
 		convertYMLToSQL();
 		executor = Executors.newSingleThreadScheduledExecutor();
-		saveTask = executor.scheduleAtFixedRate(new StorageSaveTask(plugin, storage), 30, 30, TimeUnit.SECONDS);
+		saveTask = executor.scheduleAtFixedRate(new StorageSaveTask(plugin, storage), 60, 60, TimeUnit.SECONDS);
 	}
 
 	public void shutdown() {

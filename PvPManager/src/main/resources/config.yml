@@ -82,7 +82,7 @@ Tagged In Combat:
     Total Bars: 20
   Boss Bar:
     Enabled: true
-    Message: '&8&l[&c&lIn Combat&8&l] &6&l<time> seconds'
+    Message: '&8&l[&c&lIn Combat&8&l] &e&l<time> seconds'
     # See here for bar color options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
     BarColor: RED
     # See here for bar style options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarStyle.html
@@ -197,6 +197,10 @@ Plugin Hooks:
   SimpleClans:
     # Disable PvP protection if the players are in a SimpleClans war
     No Protection In War: true
+  CooldownsX:
+    # Change this into the cooldown id for enderpearls in CooldownsX, by default they have it as exampleOne in cooldowns.yml
+    # If setup correctly PvPManager will use a different cooldown while in combat and then revert back to CooldownsX
+    Enderpearl: exampleOne
 
 Database:
   # Database type, supported databases: SQLite or MySQL

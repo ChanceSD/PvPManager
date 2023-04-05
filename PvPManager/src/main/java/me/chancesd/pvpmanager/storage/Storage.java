@@ -31,9 +31,9 @@ public interface Storage {
 	public void saveUserData(UUID uuid, Map<String, Object> userData);
 
 	public default void saveUserData(final PvPlayer player) {
-		final long start = System.currentTimeMillis();
+		final long start = System.nanoTime();
 		saveUserData(player.getUUID(), player.getUserData());
-		Log.debug("Finished saving " + player + " - " + (System.currentTimeMillis() - start) + " ms");
+		Log.debug("Finished saving " + player + " - " + (System.nanoTime() - start) / 1_000_000D + " ms");
 	}
 
 	public List<Map<String, Object>> getAllUserData();

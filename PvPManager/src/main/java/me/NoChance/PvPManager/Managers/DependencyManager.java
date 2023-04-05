@@ -20,6 +20,7 @@ import me.NoChance.PvPManager.Dependencies.PvPDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.WarDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.CooldownsXHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUIDHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
@@ -118,6 +119,9 @@ public class DependencyManager {
 			break;
 		case LIBSDISGUISES:
 			registerDependency(new LibsDisguisesHook(hook));
+			break;
+		case COOLDOWNSX:
+			registerDependency(new CooldownsXHook(hook));
 			break;
 		default:
 			registerDependency(new BaseDependency(hook));

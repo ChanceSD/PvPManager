@@ -28,8 +28,8 @@ Maven Repo:
 Artifact Information:
 ```xml
 <dependency>
-    <groupId>me.NoChance.PvPManager</groupId>
-    <artifactId>PvPManager</artifactId>
+    <groupId>me.chancesd.pvpmanager</groupId>
+    <artifactId>pvpmanager</artifactId>
     <version>3.12</version>
     <scope>provided</scope>
 </dependency>
@@ -45,12 +45,12 @@ There are certainly some features that are better covered by a dedicated separat
 - Stop combat logging by issuing punishments
 - Disable several actions while in combat such as fly, gamemode, blocking commands, etc
 - Stop what we named as "border hopping" which happens when a player enters combat and attempts to run away to a safezone
-- Protect new players from PvP
+- Protect new players from being killed by other players
 - Stop spawn killing or KDR abuse by issuing a kick or any other custom command
 - Give money rewards, penalties, steal money or execute commands when a player kills another
 - Keep/Drop player inventory depending whether they died in PvP or transfer drops directly to the killer
 
-You can find a detailed description of all features on the plugin page or in the config.  
+You can find a detailed description of all features on the plugin page and in the config.  
 
 bStats
 -----------

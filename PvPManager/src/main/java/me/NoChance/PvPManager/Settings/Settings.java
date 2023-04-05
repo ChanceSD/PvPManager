@@ -109,6 +109,7 @@ public final class Settings {
 	private static Set<String> worldsExcluded;
 	private static Set<String> playerKillsWGExclusions;
 	private static boolean simpleClansNoPvPInWar;
+	private static String cooldownsxEnderpearlID;
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection BORDERHOPPING;
 	private static ConfigurationSection DISABLE;
@@ -229,7 +230,8 @@ public final class Settings {
 		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
 		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl Cooldown");
 
-		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() == null ? false : PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
+		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() != null && PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
+		cooldownsxEnderpearlID = PLUGINHOOKS.getString("CooldownsX.Enderpearl", "");
 
 		checkUpdates = UPDATECHECK.getBoolean("Enabled", true);
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
@@ -662,6 +664,10 @@ public final class Settings {
 
 	public static boolean isSimpleClansNoPvPInWar() {
 		return simpleClansNoPvPInWar;
+	}
+
+	public static String getCooldownsxEnderpearlID() {
+		return cooldownsxEnderpearlID;
 	}
 
 	public static boolean isSelfTag() {

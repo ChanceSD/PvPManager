@@ -1,4 +1,3 @@
-*/
 !PvPManager
 !PvPManager/**
 bin
@@ -6,3 +5,5 @@ target
 .*
 *.jar
 *.iml
+*.bat
+*.sh

@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ScheduleUtils {
 
-	private static boolean foliaSupport = checkFolia();
+	private static final boolean FOLIA_SUPPORT = checkFolia();
 	private static ScheduledExecutorService executor;
 	private static final List<ScheduledFuture<?>> scheduledTasks = new ArrayList<>();
 
@@ -22,11 +22,10 @@ public class ScheduleUtils {
 	}
 
 	public static void runAsync(final JavaPlugin plugin, final Runnable task) {
-		if (foliaSupport) {
-			Bukkit.getAsyncScheduler().runNow(plugin, scheduledTask -> task.run());
-		} else {
+		if (!FOLIA_SUPPORT)
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, task);
-		}
+		else
+			Bukkit.getAsyncScheduler().runNow(plugin, scheduledTask -> task.run());
 	}
 
 	public static ScheduledFuture<?> runAsyncLater(final Runnable task, final long delay) {
@@ -34,11 +33,10 @@ public class ScheduleUtils {
 	}
 
 	public static void runAsyncTimer(final JavaPlugin plugin, final Runnable task, final long delay, final long period) {
-		if (foliaSupport) {
-			Bukkit.getAsyncScheduler().runAtFixedRate(plugin, scheduledTask -> task.run(), delay / 20, period / 20, TimeUnit.SECONDS);
-		} else {
+		if (!FOLIA_SUPPORT)
 			Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task, delay, period);
-		}
+		else
+			Bukkit.getAsyncScheduler().runAtFixedRate(plugin, scheduledTask -> task.run(), delay / 20, period / 20, TimeUnit.SECONDS);
 	}
 
 	public static void runAsyncTimer(final Runnable task, final long delay, final long period) {
@@ -46,29 +44,27 @@ public class ScheduleUtils {
 	}
 
 	public static void runTask(final JavaPlugin plugin, final Runnable task, final Entity entity) {
-		if (foliaSupport) {
-			entity.getScheduler().run(plugin, scheduledTask -> task.run(), task);
-		} else {
+		if (!FOLIA_SUPPORT)
 			Bukkit.getScheduler().runTask(plugin, task);
-		}
+		else
+			entity.getScheduler().run(plugin, scheduledTask -> task.run(), task);
 	}
 
 	public static void runTaskTimer(final JavaPlugin plugin, final Runnable task, final long delay, final long period) {
-		if (foliaSupport) {
-			Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, scheduledTask -> task.run(), delay, period);
-		} else {
+		if (!FOLIA_SUPPORT)
 			Bukkit.getScheduler().runTaskTimer(plugin, task, delay, period);
-		}
+		else
+			Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, scheduledTask -> task.run(), delay, period);
 	}
 
 	public static void cancelAllTasks(final JavaPlugin plugin) {
 		scheduledTasks.forEach(scheduledTask -> scheduledTask.cancel(false));
 		executor.shutdown();
-		if (foliaSupport) {
+		if (!FOLIA_SUPPORT) {
+			Bukkit.getScheduler().cancelTasks(plugin);
+		} else {
 			Bukkit.getAsyncScheduler().cancelTasks(plugin);
 			Bukkit.getGlobalRegionScheduler().cancelTasks(plugin);
-		} else {
-			Bukkit.getScheduler().cancelTasks(plugin);
 		}
 	}
 
