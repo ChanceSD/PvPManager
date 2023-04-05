@@ -14,14 +14,14 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Dependencies.API.BaseDependency;
+import me.NoChance.PvPManager.Dependencies.API.WorldGuardDependency;
 import me.NoChance.PvPManager.Listeners.WGListenerLegacy;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 
-public class WorldGuardLegacyHook extends BaseDependency implements WorldGuardHook {
+public class WorldGuardLegacyHook extends BaseDependency implements WorldGuardDependency {
 
 	private RegionQuery regionQuery;
 

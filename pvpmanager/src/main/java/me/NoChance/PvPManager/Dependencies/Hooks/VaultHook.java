@@ -3,9 +3,9 @@ package me.NoChance.PvPManager.Dependencies.Hooks;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.API.BaseDependency;
 import net.milkbowl.vault.economy.Economy;
 
 public class VaultHook extends BaseDependency {
@@ -19,13 +19,10 @@ public class VaultHook extends BaseDependency {
 
 	private Economy setupEconomy() {
 		final RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(Economy.class);
-		Economy eco = null;
-		if (economyProvider != null) {
-			eco = economyProvider.getProvider();
-		} else {
+		if (economyProvider != null)
+			return economyProvider.getProvider();
+		else
 			throw new DependencyException("Error loading Vault! No Economy plugin found", Hook.VAULT);
-		}
-		return eco;
 	}
 
 	@Override

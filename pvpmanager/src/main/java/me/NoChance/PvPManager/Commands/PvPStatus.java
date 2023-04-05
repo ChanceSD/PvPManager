@@ -32,16 +32,17 @@ public class PvPStatus implements CommandExecutor {
 			pvpPlayer.message(Messages.getSelfStatusEnabled());
 			return true;
 		} else if (args.length == 1 && sender.hasPermission("pvpmanager.pvpstatus.others")) {
-			if (CombatUtils.isOnline(args[0])) {
-				target = ph.get(Bukkit.getPlayer(args[0]));
+			final String name = args[0];
+			if (CombatUtils.isOnline(name)) {
+				target = ph.get(Bukkit.getPlayer(name));
 				if (!target.hasPvPEnabled()) {
-					sender.sendMessage(Messages.getOthersStatusDisabled().replace("%p", args[0]));
+					sender.sendMessage(Messages.getOthersStatusDisabled(name));
 					return true;
 				}
-				sender.sendMessage(Messages.getOtherStatusEnabled().replace("%p", args[0]));
+				sender.sendMessage(Messages.getOtherStatusEnabled(name));
 				return true;
 			}
-			sender.sendMessage(Messages.getErrorPlayerNotFound().replace("%p", args[0]));
+			sender.sendMessage(Messages.getErrorPlayerNotFound(name));
 			return true;
 		}
 		return false;

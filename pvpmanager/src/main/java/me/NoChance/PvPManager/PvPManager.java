@@ -34,6 +34,7 @@ import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.managers.StorageManager;
 import me.chancesd.pvpmanager.managers.UpdateManager;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.NoChance.PvPManager.Utils.MCVersion;
 
 public class PvPManager extends JavaPlugin {
 
@@ -91,7 +92,7 @@ public class PvPManager extends JavaPlugin {
 	}
 
 	private void startListeners() {
-		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+		if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_9)) {
 			registerListener(new EntityListener1_9(playerHandler));
 		}
 		entityListener = new EntityListener(playerHandler);

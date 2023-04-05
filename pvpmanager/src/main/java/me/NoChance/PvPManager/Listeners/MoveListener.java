@@ -14,7 +14,7 @@ import com.google.common.cache.CacheBuilder;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.RegionDependency;
+import me.NoChance.PvPManager.Dependencies.API.RegionDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 

@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Dependencies;
+package me.NoChance.PvPManager.Dependencies.API;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

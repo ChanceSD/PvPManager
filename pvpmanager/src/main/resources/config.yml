@@ -15,6 +15,7 @@
 # mode 'TRANSFER' - (Same as 'DROP' but transfer items(not exp) directly to killer's inventory without drops)
 # mode 'CLEAR' - (Clear all drops and exp on death, this deletes everything on death so make sure it is what you want)
 # Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
+# Show health under name -> Show player health, uses scoreboards so might conflict with other plugins
 # World Exclusions -> List of worlds where PvPManager will have no effect
 General:
   # Changes messages language, options are - EN | BG | DE | ES | FI | FR | HR | IT | JA | KO | NL | PL | pt_BR | RU | TR | zh_TW | ZH
@@ -32,6 +33,9 @@ General:
   Recycling:
     Potion Bottle: false
     Milk Bucket: false
+  Show health under name:
+    Enabled: true
+    Display Name: '❤'
   World Exclusions:
     - 'example'
     
@@ -165,6 +169,13 @@ Tagged In Combat:
     Commands On PvPLog:
       - 'announce &6[&8PvPManager&6]&c %p tried to escape combat and died!'
 
+# Here you can set a cooldown, in seconds, to any item such as golden apples and enchanted golden apples
+# You can check for other material types here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+# If the item is not edible the cooldown will only be activated for right clicks
+Item Cooldowns:
+   GOLDEN_APPLE: 30
+   ENCHANTED_GOLDEN_APPLE: 60
+
 # Should new players on your server be protected from PvP (If they want to PvP they can use /newbie disable)
 Newbie Protection:
   Enabled: true
@@ -184,11 +195,13 @@ Newbie Protection:
 # Prevent player abuse by killing the same player several times to rise in rank or even just grief
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
 # In this case, it would check every 30 seconds for abusers
+# Warn Before - Warn the player 1 kill before he is punished with the commands
 # Respawn Protection - After respawn, how many seconds should players be protected (0 to disable)
 Kill Abuse:
   Enabled: true
   Max Kills: 5
-  Time Limit: 30
+  Time Limit: 20
+  Warn Before: true
   # Possible variables are <player> and <victim>
   Commands on Abuse:
     - 'kick <player> &cKill Abuse Is Not Allowed!'

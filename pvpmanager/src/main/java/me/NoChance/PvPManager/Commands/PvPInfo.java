@@ -32,11 +32,12 @@ public class PvPInfo implements CommandExecutor {
 			sendInfo(sender, ph.get((Player) sender));
 			return true;
 		} else if (args.length == 1 && sender.hasPermission("pvpmanager.info.others")) {
-			if (CombatUtils.isOnline(args[0])) {
-				sendInfo(sender, ph.get(Bukkit.getPlayer(args[0])));
+			final String name = args[0];
+			if (CombatUtils.isOnline(name)) {
+				sendInfo(sender, ph.get(Bukkit.getPlayer(name)));
 				return true;
 			}
-			sender.sendMessage(Messages.getErrorPlayerNotFound().replace("%p", args[0]));
+			sender.sendMessage(Messages.getErrorPlayerNotFound(name));
 			return true;
 		}
 		return false;

@@ -45,10 +45,10 @@ public class DependencyTest {
 	void versionTags() {
 		final String v1 = CombatUtils.stripTags("1.0.2-SNAPSHOT");
 		final String v2 = CombatUtils.stripTags("1.0.2;1994-9adac4f");
-		final String v3 = CombatUtils.stripTags("1.0.2+3827266");
-		assertTrue(v1.equals("1.0.2"));
-		assertTrue(v2.equals("1.0.2"));
-		assertTrue(v3.equals("1.0.2"));
+		final String v3 = CombatUtils.stripTags("1.0.2+9adac4f");
+		assertEquals("1.0.2", v1);
+		assertEquals("1.0.2", v2);
+		assertEquals("1.0.2", v3);
 	}
 
 	@AfterAll
