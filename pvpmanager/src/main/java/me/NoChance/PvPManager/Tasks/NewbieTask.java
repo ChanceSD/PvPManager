@@ -43,4 +43,8 @@ public class NewbieTask implements Runnable {
 		return Math.max(0, finishTime - System.currentTimeMillis());
 	}
 
+	public long getFinishTime() {
+		return finishTime;
+	}
+
 }

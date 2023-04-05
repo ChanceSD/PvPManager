@@ -56,10 +56,10 @@ public abstract class EcoPlayer extends BasePlayer {
 				moneyWon = vbalance;
 			}
 			victim.withdrawMoney(moneyWon);
-			victim.message(Messages.getMoneySteal().replace("%p", getPlayer().getName()).replace("%m", CombatUtils.formatTo2Digits(moneyWon)));
+			victim.message(Messages.getMoneySteal(getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
 		}
 		depositMoney(moneyWon);
-		message(Messages.getMoneyReward().replace("%m", CombatUtils.formatTo2Digits(moneyWon)).replace("%p", victim.getPlayer().getName()));
+		message(Messages.getMoneyReward(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
 	}
 
 	private double getMoneyPercentage(final double percentage) {

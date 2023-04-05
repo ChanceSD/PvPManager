@@ -43,7 +43,7 @@ class UpdaterTest {
 		assertFalse(updater.versionCheck("1.2.3-SNAPSHOT", "1.2.2-SNAPSHOT"));
 	}
 
-	public class UpdaterMock extends Updater {
+	public static class UpdaterMock extends Updater {
 
 		protected UpdaterMock(final Plugin plugin, final UpdateType type) {
 			super(plugin, 0, type, plugin.getName());

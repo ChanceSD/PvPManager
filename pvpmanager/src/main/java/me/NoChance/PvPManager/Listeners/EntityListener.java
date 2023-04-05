@@ -34,23 +34,24 @@ import com.google.common.cache.CacheBuilder;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Dependencies.API.WorldGuardDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.setting.Permissions;
+import me.NoChance.PvPManager.Utils.MCVersion;
 
 public class EntityListener implements Listener {
 
 	private final PlayerHandler ph;
-	private final WorldGuardHook wg;
+	private final WorldGuardDependency wg;
 	private final Cache<LightningStrike, Location> lightningCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.SECONDS).build();
 
 	public EntityListener(final PlayerHandler ph) {
 		this.ph = ph;
-		this.wg = (WorldGuardHook) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
+		this.wg = (WorldGuardDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -77,7 +78,7 @@ public class EntityListener implements Listener {
 
 		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
-		final CancelResult result = ph.tryCancel(attacker, attacked);
+		final ProtectionResult result = ph.tryCancel(attacker, attacked);
 
 		if (result.isProtected()) {
 			event.setCancelled(true);
@@ -90,7 +91,7 @@ public class EntityListener implements Listener {
 		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (ph.tryCancel(getAttacker(event.getDamager()), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE)) {
+		if (ph.tryCancel(getAttacker(event.getDamager()), (Player) event.getEntity()).equals(ProtectionResult.FAIL_OVERRIDE)) {
 			event.setCancelled(false);
 		}
 	}
@@ -187,7 +188,7 @@ public class EntityListener implements Listener {
 				continue;
 			}
 			final Player attacked = (Player) e;
-			final CancelResult result = ph.tryCancel(player, attacked);
+			final ProtectionResult result = ph.tryCancel(player, attacked);
 
 			if (result.isProtected()) {
 				event.setIntensity(attacked, 0);
@@ -231,7 +232,7 @@ public class EntityListener implements Listener {
 	public void onLightningStrike(final LightningStrikeEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getLightning().getWorld().getName()))
 			return;
-		if (!CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13.1"))
+		if (!CombatUtils.isMCVersionAtLeast(MCVersion.V1_13_1))
 			return;
 		if (event.getCause() != Cause.TRIDENT)
 			return;

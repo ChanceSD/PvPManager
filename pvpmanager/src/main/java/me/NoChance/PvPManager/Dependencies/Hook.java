@@ -18,6 +18,7 @@ public enum Hook {
 	SIMPLECLANS("SimpleClans"),
 	PLACEHOLDERAPI("PlaceholderAPI"),
 	LIBSDISGUISES("LibsDisguises"),
+	GRIEFPREVENTION("GriefPrevention"),
 	TOWNY("Towny"),
 	KINGDOMSX("Kingdoms");
 

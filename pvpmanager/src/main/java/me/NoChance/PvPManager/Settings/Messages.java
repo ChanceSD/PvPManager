@@ -8,7 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.time.temporal.ChronoUnit;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
 
@@ -99,6 +100,14 @@ public class Messages {
 	private static String disabled;
 	private static String pvpDisabledFee;
 	private static String pvpFeeNotEnough;
+	private static String killAbuseWarning;
+	private static String timeDays;
+	private static String timeHours;
+	private static String timeMinutes;
+	private static String timeSeconds;
+	private static String timeNow;
+	private static String itemCooldown;
+	private static String prefix;
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -150,18 +159,13 @@ public class Messages {
 	}
 
 	@NotNull
-	public static String getString(final String key) {
-		String message;
-		try {
-			message = new String(LANG.getProperty(key).getBytes("ISO-8859-1"), "UTF-8");
-		} catch (final UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-			return "Encoding error! Please report this bug!";
-		}
-		return ChatUtils.colorize(message);
+	private static String getString(final String key) {
+		final String message = new String(LANG.getProperty(key).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+		return ChatUtils.colorize(message).replace("%prefix%", Messages.getPrefix());
 	}
 
 	private static void getMessages() {
+		prefix = getString("Prefix");
 		otherStatusEnabled = getString("Other_Status_Enabled");
 		othersStatusDisabled = getString("Others_Status_Disabled");
 		pvpDisabled = getString("PvP_Disabled");
@@ -227,6 +231,13 @@ public class Messages {
 		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorldGuard");
 		enabled = getString("Enabled");
 		disabled = getString("Disabled");
+		killAbuseWarning = getString("Kill_Abuse_Warning");
+		timeDays = getString("Time_Days");
+		timeHours = getString("Time_Hours");
+		timeMinutes = getString("Time_Minutes");
+		timeSeconds = getString("Time_Seconds");
+		timeNow = getString("Time_Now");
+		itemCooldown = getString("Item_Cooldown");
 	}
 
 	private static void checkChanges() {
@@ -242,7 +253,7 @@ public class Messages {
 				if (!LANG.containsKey(a)) {
 					Log.info("Added missing '" + a + "' key to messages file.");
 					final String newProperty = original.getProperty(a) != null ? original.getProperty(a) : originalEN.getProperty(a);
-					addMessage(a + " = " + new String(newProperty.getBytes("ISO-8859-1"), "UTF-8"));
+					addMessage(a + " = " + new String(newProperty.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
 					LANG.setProperty(a, newProperty);
 				}
 			}
@@ -252,20 +263,20 @@ public class Messages {
 	}
 
 	private static void addMessage(final String a) {
-		try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), "UTF-8"))) {
+		try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), StandardCharsets.UTF_8))) {
 			pw.println(a);
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void messageProtection(final CancelResult result, final Player player, final Player attacked) {
+	public static void messageProtection(final ProtectionResult result, final Player player, final Player attacked) {
 		final String message = getProtectionMessage(result, attacked);
 		final PvPlayer receiver = plugin.getPlayerHandler().get(player);
 		receiver.message(message);
 	}
 
-	public static String getProtectionMessage(final CancelResult result, final Player attacked) {
+	public static String getProtectionMessage(final ProtectionResult result, final Player attacked) {
 		switch (result) {
 		case NEWBIE:
 			return result.attackerCaused() ? newbieBlocked() : newbieBlockedOther(attacked.getName());
@@ -284,8 +295,46 @@ public class Messages {
 		}
 	}
 
-	public static String getErrorPlayerNotFound() {
-		return errorPlayerNotFound;
+	public static String getTime(final ChronoUnit time) {
+		switch (time) {
+		case DAYS:
+			return timeDays;
+		case HOURS:
+			return timeHours;
+		case MINUTES:
+			return timeMinutes;
+		case SECONDS:
+			return timeSeconds;
+		default:
+			return timeNow;
+		}
+	}
+
+	public static String replaceTime(final String message, final long time) {
+		return message.replace("%time%", TimeUtil.getDiffMsg(time));
+	}
+
+	@NonNull
+	public static String replacePlayer(final String message, final String player) {
+		return message.replace("%player%", player);
+	}
+
+	@NonNull
+	public static String replaceVictim(final String message, final String player) {
+		return message.replace("<victim>", player);
+	}
+
+	public static String replaceMoney(final String message, final String money) {
+		return message.replace("%money%", money);
+	}
+
+	public static String getPrefix() {
+		return prefix;
+	}
+
+	@NonNull
+	public static String getErrorPlayerNotFound(final String name) {
+		return replacePlayer(errorPlayerNotFound, name);
 	}
 
 	public static String getPvpListNoResults() {
@@ -312,8 +361,12 @@ public class Messages {
 		return errorPermission;
 	}
 
+	public static String getErrorPvpCooldown(final long time) {
+		return replaceTime(errorPvpCooldown, time);
+	}
+
 	public static String getErrorPvpCooldown() {
-		return errorPvpCooldown;
+		return errorPvpCooldown; // TODO use replacetime above
 	}
 
 	public static String getErrorPvPToggleNoPvP() {
@@ -332,12 +385,12 @@ public class Messages {
 		return pvpToggleAlreadyEnabled;
 	}
 
-	public static String getOtherStatusEnabled() {
-		return otherStatusEnabled;
+	public static String getOtherStatusEnabled(final String name) {
+		return replacePlayer(otherStatusEnabled, name);
 	}
 
-	public static String getOthersStatusDisabled() {
-		return othersStatusDisabled;
+	public static String getOthersStatusDisabled(final String name) {
+		return replacePlayer(othersStatusDisabled, name);
 	}
 
 	public static String getPvpDisabled() {
@@ -365,23 +418,23 @@ public class Messages {
 	}
 
 	public static String pvpDisabledOther(final String name) {
-		return attackDeniedOther.replace("%p", name);
+		return replacePlayer(attackDeniedOther, name);
 	}
 
-	public static String getTaggedAttacker() {
-		return taggedAttacker;
+	public static String getTaggedAttacker(final String name) {
+		return replacePlayer(taggedAttacker, name);
 	}
 
-	public static String getTaggedDefender() {
-		return taggedDefender;
+	public static String getTaggedDefender(final String name) {
+		return replacePlayer(taggedDefender, name);
 	}
 
 	public static String getOutOfCombat() {
 		return outOfCombat;
 	}
 
-	public static String getNewbieProtection() {
-		return newbieProtection;
+	public static String getNewbieProtection(final long time) {
+		return replaceTime(newbieProtection, time);
 	}
 
 	public static String getNewbieProtectionEnd() {
@@ -393,7 +446,7 @@ public class Messages {
 	}
 
 	public static String newbieBlockedOther(final String name) {
-		return newbieProtectionAttacker.replace("%p", name);
+		return replacePlayer(newbieProtectionAttacker, name);
 	}
 
 	public static String getEnderpearlBlockedIncombat() {
@@ -408,6 +461,7 @@ public class Messages {
 		return pushbackWarning;
 	}
 
+	@NonNull
 	public static String getErrorCommand() {
 		return errorCommand;
 	}
@@ -416,16 +470,16 @@ public class Messages {
 		return currentVersion;
 	}
 
-	public static String getMoneyReward() {
-		return moneyReward;
+	public static String getMoneyReward(final String name, final String money) {
+		return replaceMoney(replacePlayer(moneyReward, name), money);
 	}
 
 	public static String getMoneyPenalty() {
 		return moneyPenalty;
 	}
 
-	public static String getMoneySteal() {
-		return moneySteal;
+	public static String getMoneySteal(final String name, final String money) {
+		return replaceMoney(replacePlayer(moneySteal, name), money);
 	}
 
 	public static Locale getLocale() {
@@ -495,7 +549,7 @@ public class Messages {
 	}
 
 	public static String respawnProtOther(final String name) {
-		return respawnProtectionOther.replace("%p", name);
+		return replacePlayer(respawnProtectionOther, name);
 	}
 
 	public static String worldProtection() {
@@ -510,12 +564,12 @@ public class Messages {
 		return globalProtection;
 	}
 
-	public static String getTaggedAttackerABar() {
-		return taggedAttackerActionbar;
+	public static String getTaggedAttackerABar(final String name) {
+		return replacePlayer(taggedAttackerActionbar, name);
 	}
 
-	public static String getTaggedDefenderABar() {
-		return taggedDefenderActionbar;
+	public static String getTaggedDefenderABar(final String name) {
+		return replacePlayer(taggedDefenderActionbar, name);
 	}
 
 	public static String getOutOfCombatABar() {
@@ -569,4 +623,13 @@ public class Messages {
 	public static String getPvpFeeNotEnough() {
 		return pvpFeeNotEnough;
 	}
+	
+	public static String getKillAbuseWarning() {
+		return killAbuseWarning;
+	}
+
+	public static String getItemCooldown(final long time) {
+		return replaceTime(itemCooldown, time);
+	}
+
 }

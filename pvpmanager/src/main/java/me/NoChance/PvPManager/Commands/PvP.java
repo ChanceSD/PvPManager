@@ -100,7 +100,7 @@ public class PvP implements TabExecutor {
 		final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(playerName));
 		specifiedPlayer.setPvP(toggle ? !specifiedPlayer.hasPvPEnabled() : state);
 		final String stateMessage = specifiedPlayer.hasPvPEnabled() ? Messages.getEnabled() : Messages.getDisabled();
-		sender.sendMessage(Messages.getPvPToggleAdminChanged().replace("%p", playerName).replace("%state", stateMessage));
+		sender.sendMessage(Messages.getPvPToggleAdminChanged().replace("%p", playerName).replace("%state", stateMessage)); // TODO add replace variables
 	}
 
 	private void togglePvPAll(final CommandSender sender, final boolean state, final boolean toggle) {

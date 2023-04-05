@@ -24,8 +24,18 @@ import me.NoChance.PvPManager.Dependencies.GroupDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.API.BaseDependency;
+import me.NoChance.PvPManager.Dependencies.API.Dependency;
+import me.NoChance.PvPManager.Dependencies.API.DisguiseDependency;
+import me.NoChance.PvPManager.Dependencies.API.GodDependency;
+import me.NoChance.PvPManager.Dependencies.API.PvPDependency;
+import me.NoChance.PvPManager.Dependencies.API.RegionDependency;
+import me.NoChance.PvPManager.Dependencies.API.WorldGuardDependency;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.KingdomsXHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.GriefPreventionHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
@@ -35,7 +45,7 @@ import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
 import me.NoChance.PvPManager.Listeners.MoveListener;
 import me.NoChance.PvPManager.Listeners.MoveListener1_9;
-import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -53,11 +63,6 @@ public class DependencyManager {
 	private final ArrayList<AFKDependency> afkChecks = new ArrayList<>();
 
 	public DependencyManager() {
-		if (Bukkit.getPluginManager().getPlugin("GriefPrevention") != null) {
-			Log.warning("GriefPrevention has been detected. GriefPrevention has some combat features without showing any feedback messages. "
-					+ "Make sure to disable Punish Logout and set tag time to 0 seconds in GP config. "
-					+ "Issues with those features often get wrongly blamed on PvPManager and cause conflicts due to the lack of GP feedback messages.");
-		}
 		if (Bukkit.getPluginManager().getPlugin("TAB") != null && Settings.useNameTag()) {
 			Log.info("TAB detected. If you want nametags to change while in combat, set 'anti-override' to false in TAB's config."
 					+ " (Doing that will prevent TAB from changing nametags)");
@@ -142,6 +147,9 @@ public class DependencyManager {
 		case KINGDOMSX:
 			registerDependency(new KingdomsXHook(hook));
 			break;
+		case GRIEFPREVENTION:
+			registerDependency(new GriefPreventionHook(hook));
+			break;
 		default:
 			registerDependency(new BaseDependency(hook));
 			break;
@@ -179,7 +187,7 @@ public class DependencyManager {
 		}
 	}
 
-	public final boolean shouldDisableProtection(final Player attacker, final Player defender, final CancelResult reason) {
+	public final boolean shouldDisableProtection(final Player attacker, final Player defender, final ProtectionResult reason) {
 		for (final ForceToggleDependency togglePvPPlugin : togglePvPChecks) {
 			if (togglePvPPlugin.shouldDisable(attacker, defender, reason))
 				return true;
@@ -197,9 +205,9 @@ public class DependencyManager {
 
 	public void startListeners(final PvPManager plugin) {
 		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
-			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
-				Bukkit.getPluginManager().registerEvents(new MoveListener1_9(plugin.getPlayerHandler(), this), plugin);
-			} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.8")) {
+			if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_9)) {
+				Bukkit.getPluginManager().registerEvents(new MoveListener1_9(plugin.getPlayerHandler()), plugin);
+			} else if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_8)) {
 				Bukkit.getPluginManager().registerEvents(new MoveListener(plugin.getPlayerHandler()), plugin);
 			} else {
 				Log.warning("Pushback on border hopping not available for 1.7.10 or below! Feature disabled!");
@@ -207,7 +215,7 @@ public class DependencyManager {
 			}
 		}
 		if (isDependencyEnabled(Hook.WORLDGUARD)) {
-			((WorldGuardHook) getDependency(Hook.WORLDGUARD)).startListener(plugin.getPlayerHandler());
+			((WorldGuardDependency) getDependency(Hook.WORLDGUARD)).startListener(plugin.getPlayerHandler());
 		}
 	}
 
