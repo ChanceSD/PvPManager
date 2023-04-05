@@ -26,7 +26,7 @@ import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -184,7 +184,7 @@ public class EntityListenerTest {
 		ph.get(attacker).setNewbie(true);
 		createAttack(false);
 
-		assertEquals(CancelResult.NEWBIE, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionResult.NEWBIE, ph.tryCancel(attacker, defender));
 		verify(attacker, times(2)).sendMessage(Messages.newbieBlocked());
 
 		verify(mockEvent).setCancelled(true);
@@ -196,7 +196,7 @@ public class EntityListenerTest {
 		ph.get(defender).setPvP(false);
 		createAttack(false);
 
-		assertEquals(CancelResult.PVPDISABLED, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionResult.PVPDISABLED, ph.tryCancel(attacker, defender));
 		verify(attacker, times(2)).sendMessage(Messages.pvpDisabledOther(defender.getName()));
 
 		verify(mockEvent).setCancelled(true);
@@ -210,7 +210,7 @@ public class EntityListenerTest {
 
 		when(attacker.isFlying()).thenReturn(true);
 		when(defender.isFlying()).thenReturn(true);
-		assertEquals(CancelResult.FAIL, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionResult.FAIL, ph.tryCancel(attacker, defender));
 		createAttack(false);
 		assertTrue(ph.get(attacker).isInCombat());
 		assertTrue(ph.get(defender).isInCombat());
@@ -226,7 +226,7 @@ public class EntityListenerTest {
 		ph.get(attacker).toggleOverride();
 		createAttack(false);
 
-		assertEquals(CancelResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
 		assertTrue(ph.get(attacker).isInCombat());
 		assertTrue(ph.get(defender).isInCombat());
 
@@ -239,7 +239,7 @@ public class EntityListenerTest {
 		ph.get(attacker).toggleOverride();
 		createAttack(true);
 
-		assertEquals(CancelResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionResult.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
 		assertTrue(ph.get(attacker).isInCombat());
 		assertTrue(ph.get(defender).isInCombat());
 

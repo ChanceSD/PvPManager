@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Dependencies;
+package me.NoChance.PvPManager.Dependencies.API;
 
 import java.util.Set;
 
@@ -10,7 +10,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 
-public interface WorldGuardHook extends GroupDependency, RegionDependency {
+public interface WorldGuardDependency extends GroupDependency, RegionDependency {
 
 	public boolean hasAllowPvPFlag(Player player);
 

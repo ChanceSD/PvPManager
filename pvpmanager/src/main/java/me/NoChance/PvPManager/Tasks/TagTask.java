@@ -72,9 +72,6 @@ public class TagTask extends TimerTask {
 	public final void untag(final PvPlayer p) {
 		display.discardBossbar(p);
 		tagged.remove(p);
-		if (p.isInCombat()) {
-			p.unTag();
-		}
 	}
 
 	public Set<PvPlayer> getTaggedPlayers() {
