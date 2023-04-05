@@ -1,6 +1,6 @@
 package me.NoChance.PvPManager.Player;
 
-public enum CancelResult {
+public enum ProtectionResult {
 	NEWBIE, PVPDISABLED, RESPAWN_PROTECTION, FAIL, FAIL_PLUGIN_HOOK, FAIL_OVERRIDE, WORLD_PROTECTION, AFK_PROTECTION, GLOBAL_PROTECTION;
 
 	private boolean isAttacker;
@@ -10,7 +10,8 @@ public enum CancelResult {
 		return isAttacker;
 	}
 
-	public CancelResult setAttackerCaused(final boolean attacker) {
+	// Must not be set async
+	public ProtectionResult setAttackerCaused(final boolean attacker) {
 		isAttacker = attacker;
 		return this;
 	}

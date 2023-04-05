@@ -1,13 +1,13 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.API.BaseDependency;
 
 public class PlaceHolderAPIHook extends BaseDependency {
 
-	final PlaceHolderAPI placeHolderAPI;
+	private final PlaceHolderAPI placeHolderAPI;
 
 	public PlaceHolderAPIHook(final Hook hook) {
 		super(hook);
