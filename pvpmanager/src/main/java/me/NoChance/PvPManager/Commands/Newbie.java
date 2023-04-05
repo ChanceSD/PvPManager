@@ -60,7 +60,7 @@ public class Newbie implements TabExecutor {
 					return true;
 				}
 			}
-		} else if (!(sender instanceof Player)) {
+		} else {
 			sender.sendMessage("This command is only available for players.");
 		}
 		return false;

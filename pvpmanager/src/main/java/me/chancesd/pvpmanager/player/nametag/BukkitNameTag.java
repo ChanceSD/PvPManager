@@ -3,6 +3,8 @@ package me.chancesd.pvpmanager.player.nametag;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -20,6 +22,10 @@ public class BukkitNameTag extends NameTag {
 	private String previousTeamName;
 	private final String combatTeamID;
 	private final Scoreboard scoreboard;
+	private static final String PVPOFF = "PvPOff";
+	private static final String PVPON = "PvPOn";
+	private static final String HEALTHOBJ = "PvP_Health";
+	private static Objective health;
 
 	public BukkitNameTag(final PvPlayer p) {
 		super(p);
@@ -42,10 +48,10 @@ public class BukkitNameTag extends NameTag {
 		}
 		if (Settings.isToggleNametagsEnabled()) {
 			if (!pvpOnPrefix.isEmpty()) {
-				pvpOn = registerTeam("PvPOn");
+				pvpOn = registerTeam(PVPON);
 				pvpOn.setCanSeeFriendlyInvisibles(false);
 				pvpOn.setPrefix(pvpOnPrefix);
-				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+				if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_13)) {
 					final ChatColor nameColor = getLastColor(pvpOnPrefix);
 					if (nameColor != null) {
 						pvpOn.setColor(nameColor);
@@ -53,10 +59,10 @@ public class BukkitNameTag extends NameTag {
 				}
 			}
 			if (!pvpOffPrefix.isEmpty()) {
-				pvpOff = registerTeam("PvPOff");
+				pvpOff = registerTeam(PVPOFF);
 				pvpOff.setCanSeeFriendlyInvisibles(false);
 				pvpOff.setPrefix(pvpOffPrefix);
-				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+				if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_13)) {
 					final ChatColor nameColor = getLastColor(pvpOffPrefix);
 					if (nameColor != null) {
 						pvpOff.setColor(nameColor);
@@ -65,6 +71,14 @@ public class BukkitNameTag extends NameTag {
 			}
 			// set pvp tag if player has pvp nametags on
 			setPvP(pvPlayer.hasPvPEnabled());
+		}
+		if (Settings.isHealthBelowName() && health == null) {
+			if (scoreboard.getObjective(HEALTHOBJ) != null) {
+				health = scoreboard.getObjective(HEALTHOBJ);
+			} else {
+				health = scoreboard.registerNewObjective(HEALTHOBJ, "health", Settings.getHealthBelowNameSymbol());
+				health.setDisplaySlot(DisplaySlot.BELOW_NAME);
+			}
 		}
 	}
 
@@ -135,7 +149,7 @@ public class BukkitNameTag extends NameTag {
 			}
 		} catch (final IllegalStateException e) {
 			// Some plugin is unregistering teams when it shouldn't
-			Log.severe("Error restoring nametag for: " + pvPlayer.getName(), e);
+			Log.warning("Error restoring nametag for: " + pvPlayer.getName(), e);
 		} finally {
 			previousTeamName = null;
 		}

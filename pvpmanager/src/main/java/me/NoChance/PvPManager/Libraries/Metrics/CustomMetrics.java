@@ -10,8 +10,8 @@ import java.util.concurrent.Callable;
 import org.bukkit.Bukkit;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Dependencies.Dependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.API.Dependency;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.chancesd.sdutils.metrics.Metrics;
 
@@ -36,7 +36,7 @@ public class CustomMetrics {
 
 		metrics.addCustomChart(new Metrics.DrilldownPie("features", new Callable<Map<String, Map<String, Integer>>>() {
 			@Override
-			public Map<String, Map<String, Integer>> call() throws Exception {
+			public Map<String, Map<String, Integer>> call() {
 				final Map<String, Map<String, Integer>> map = new HashMap<>();
 
 				map.put("Newbie Protection", getMapEntry(Settings.isNewbieProtectionEnabled() ? "Enabled" : "Disabled"));

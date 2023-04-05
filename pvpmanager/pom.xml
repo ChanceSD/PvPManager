@@ -250,6 +250,15 @@
 			<version>1.16.8.1.1</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<!-- GriefPrevention -->
+		<dependency>
+			<groupId>com.github.TechFortress</groupId>
+			<artifactId>GriefPrevention</artifactId>
+			<version>16.14.0</version>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
 
 		<!-- Database -->
 		<dependency>
