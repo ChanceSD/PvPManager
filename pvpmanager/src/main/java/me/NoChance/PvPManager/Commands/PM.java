@@ -233,6 +233,7 @@ public class PM implements TabExecutor {
 		}
 
 		Settings.setLocale(locale.name());
+		plugin.reloadConfig();
 		plugin.getConfig().set("General.Locale", locale.name());
 		plugin.saveConfig();
 		Messages.setup(plugin);

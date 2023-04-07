@@ -74,7 +74,7 @@ Disable:
 Tagged In Combat:
   Enabled: true
   Time: 10
-  NameTag Prefix: '&4&lCombat '
+  NameTag Prefix: '&4&lCombat &c'
   Glowing: true
   Action Bar:
     Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec]'
