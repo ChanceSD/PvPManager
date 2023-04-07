@@ -203,13 +203,10 @@ public final class Settings {
 		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
-		bossBarEnabled = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && TAGGEDCOMBAT.getBoolean("Boss Bar.Enabled", true);
+		bossBarEnabled = MCVersion.isAtLeast(MCVersion.V1_9) && TAGGEDCOMBAT.getBoolean("Boss Bar.Enabled", true);
 		bossBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Boss Bar.Message", ""));
-		bossBarColor = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") ? BarColor.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarColor", "RED"))
-		        : null;
-		bossBarStyle = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")
-		        ? BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10"))
-		        : null;
+		bossBarColor = MCVersion.isAtLeast(MCVersion.V1_9) ? BarColor.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarColor", "RED")) : null;
+		bossBarStyle = MCVersion.isAtLeast(MCVersion.V1_9) ? BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10")) : null;
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
 		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl.Cooldown", 15);
 		enderPearlRenewTag = TAGGEDCOMBAT.getBoolean("EnderPearl.Renew Tag", true);
@@ -244,7 +241,7 @@ public final class Settings {
 			final Material material = Material.getMaterial(e.getKey().toUpperCase());
 			if (material == null) {
 				Log.warning("The material " + e.getKey()
-				        + " in Item Cooldowns doesn't exist. You might have typed it incorrectly or it might not exist in this MC version");
+						+ " in Item Cooldowns doesn't exist. You might have typed it incorrectly or it might not exist in this MC version");
 				continue;
 			}
 			itemCooldowns.put(material, (Integer) e.getValue());

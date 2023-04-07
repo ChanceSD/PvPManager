@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Player.ProtectionResult;
@@ -135,7 +137,7 @@ public class PlayerHandler {
 
 	public final void removeUser(final PvPlayer player) {
 		if (player.isInCombat()) {
-			untag(player);
+			player.unTag();
 		}
 		player.cleanForRemoval();
 		players.remove(player.getUUID());

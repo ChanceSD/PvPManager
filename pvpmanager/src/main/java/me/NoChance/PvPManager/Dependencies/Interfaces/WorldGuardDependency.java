@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Dependencies.API;
+package me.NoChance.PvPManager.Dependencies.Interfaces;
 
 import java.util.Set;
 

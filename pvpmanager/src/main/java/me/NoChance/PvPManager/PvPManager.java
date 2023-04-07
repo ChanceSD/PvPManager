@@ -92,12 +92,12 @@ public class PvPManager extends JavaPlugin {
 	}
 
 	private void startListeners() {
-		if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_9)) {
+		if (MCVersion.isAtLeast(MCVersion.V1_9)) {
 			registerListener(new EntityListener1_9(playerHandler));
 		}
 		entityListener = new EntityListener(playerHandler);
 		registerListener(entityListener);
-		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.11.2")) {
+		if (MCVersion.isAtLeast(MCVersion.V1_11_2)) {
 			registerListener(new PlayerListener1_11(playerHandler));
 		}
 		registerListener(new PlayerListener(playerHandler));
