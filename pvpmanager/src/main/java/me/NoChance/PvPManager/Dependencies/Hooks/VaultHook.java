@@ -3,9 +3,9 @@ package me.NoChance.PvPManager.Dependencies.Hooks;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.API.BaseDependency;
 import net.milkbowl.vault.economy.Economy;
 
 public class VaultHook extends BaseDependency {

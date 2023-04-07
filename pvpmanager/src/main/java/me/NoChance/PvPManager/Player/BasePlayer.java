@@ -76,8 +76,8 @@ public abstract class BasePlayer {
 		if (System.currentTimeMillis() < actionBarCooldown || message.isEmpty()
 				|| System.currentTimeMillis() - actionBarCooldown < 1000 && message.equals(lastActionBarMessage))
 			return;
-		if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_10)) { // Premium PvPManager supports lower versions with NMS
-			if (CombatUtils.isMCVersionAtLeast("1.16.5")) {
+		if (MCVersion.isAtLeast(MCVersion.V1_10)) { // Premium PvPManager supports lower versions with NMS
+			if (MCVersion.isAtLeast(MCVersion.V1_16_5)) {
 				getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
 			} else {
 				getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));

@@ -24,8 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.MCVersion;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 
 public class Database {
@@ -45,7 +44,7 @@ public class Database {
 		final HikariConfig config = new HikariConfig();
 		if (databaseType == DatabaseType.SQLITE) {
 			// Use SQLITE
-			if (!CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+			if (MCVersion.isLessThan(MCVersion.V1_9)) {
 				try {
 					Class.forName("org.sqlite.JDBC"); // got to do this for 1.8 sigh
 					config.setConnectionTestQuery("SELECT 1;");
@@ -54,7 +53,7 @@ public class Database {
 				}
 			}
 			config.setJdbcUrl(String.format(SQLITE_URL_TEMPLATE, builder.getFile()));
-			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+			if (MCVersion.isAtLeast(MCVersion.V1_9)) {
 				config.addDataSourceProperty("journal_mode", "wal");
 			}
 			config.addDataSourceProperty("synchronous", "normal");

@@ -16,7 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Dependencies.AFKDependency;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
-import me.NoChance.PvPManager.Dependencies.Dependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.DisguiseDependency;
 import me.NoChance.PvPManager.Dependencies.GodDependency;
@@ -26,12 +25,31 @@ import me.NoChance.PvPManager.Dependencies.GroupDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.Hooks.CooldownsXHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.KingdomsXHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.GriefPreventionHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.TownyHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.VaultHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
+import me.NoChance.PvPManager.Dependencies.Interfaces.Dependency;
+import me.NoChance.PvPManager.Dependencies.Interfaces.DisguiseDependency;
+import me.NoChance.PvPManager.Dependencies.Interfaces.GodDependency;
+import me.NoChance.PvPManager.Dependencies.Interfaces.PvPDependency;
+import me.NoChance.PvPManager.Dependencies.Interfaces.RegionDependency;
+import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Listeners.MoveListener;
 import me.NoChance.PvPManager.Listeners.MoveListener1_9;
 import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.NoChance.PvPManager.Utils.MCVersion;
 import me.chancesd.sdutils.utils.Log;
 import net.milkbowl.vault.economy.Economy;
 
@@ -207,9 +225,9 @@ public class DependencyManager {
 
 	public void startListeners(final PvPManager plugin) {
 		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
-			if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_9)) {
+			if (MCVersion.isAtLeast(MCVersion.V1_9)) {
 				Bukkit.getPluginManager().registerEvents(new MoveListener1_9(plugin.getPlayerHandler()), plugin);
-			} else if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_8)) {
+			} else if (MCVersion.isAtLeast(MCVersion.V1_8)) {
 				Bukkit.getPluginManager().registerEvents(new MoveListener(plugin.getPlayerHandler()), plugin);
 			} else {
 				Log.warning("Pushback on border hopping not available for 1.7.10 or below! Feature disabled!");
