@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 
 
 import me.NoChance.PvPManager.Utils.ChatUtils;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -118,7 +117,6 @@ public final class Settings {
 	private static List<String> blockInteractItemList;
 	private static boolean untagEnemy;
 	private static boolean killAbuseWarn;
-	private static ChatColor teamColor;
 	private static boolean actionBarEnabled;
 	private static String actionBarMessage;
 	private static String actionBarSymbol;
@@ -136,105 +134,105 @@ public final class Settings {
 	private static String cooldownsxEnderpearlID;
 	private static Set<String> harmfulPotions;
 	private static Map<Material, Integer> itemCooldowns;
-	private static ConfigurationSection GENERAL;
-	private static ConfigurationSection BORDERHOPPING;
-	private static ConfigurationSection DISABLE;
-	private static ConfigurationSection TAGGEDCOMBAT;
-	private static ConfigurationSection NEWBIEPROTECTION;
-	private static ConfigurationSection KILLABUSE;
-	private static ConfigurationSection PLAYERKILLS;
-	private static ConfigurationSection PVPTOGGLE;
-	private static ConfigurationSection PLUGINHOOKS;
-	private static ConfigurationSection UPDATECHECK;
+	private static ConfigurationSection generalSection;
+	private static ConfigurationSection borderHoppingSection;
+	private static ConfigurationSection disableActionsSection;
+	private static ConfigurationSection combatTagSection;
+	private static ConfigurationSection newbieSection;
+	private static ConfigurationSection killAbuseSection;
+	private static ConfigurationSection playerKillsSection;
+	private static ConfigurationSection pvpToggleSection;
+	private static ConfigurationSection pluginHookSection;
+	private static ConfigurationSection updateSection;
 
 	private Settings() {
 	}
 
 	private static void assignSections(final YamlConfiguration config) {
-		GENERAL = config.getConfigurationSection("General");
-		BORDERHOPPING = config.getConfigurationSection("Anti Border Hopping");
-		DISABLE = config.getConfigurationSection("Disable");
-		TAGGEDCOMBAT = config.getConfigurationSection("Tagged In Combat");
-		NEWBIEPROTECTION = config.getConfigurationSection("Newbie Protection");
-		KILLABUSE = config.getConfigurationSection("Kill Abuse");
-		PLAYERKILLS = config.getConfigurationSection("Player Kills");
-		PVPTOGGLE = config.getConfigurationSection("PvP Toggle");
-		PLUGINHOOKS = config.getConfigurationSection("Plugin Hooks");
-		UPDATECHECK = config.getConfigurationSection("Update Check");
+		generalSection = config.getConfigurationSection("General");
+		borderHoppingSection = config.getConfigurationSection("Anti Border Hopping");
+		disableActionsSection = config.getConfigurationSection("Disable");
+		combatTagSection = config.getConfigurationSection("Tagged In Combat");
+		newbieSection = config.getConfigurationSection("Newbie Protection");
+		killAbuseSection = config.getConfigurationSection("Kill Abuse");
+		playerKillsSection = config.getConfigurationSection("Player Kills");
+		pvpToggleSection = config.getConfigurationSection("PvP Toggle");
+		pluginHookSection = config.getConfigurationSection("Plugin Hooks");
+		updateSection = config.getConfigurationSection("Update Check");
 	}
 
 	public static void initizalizeVariables(final YamlConfiguration c) {
 		assignSections(c);
 
 		minecraftVersion = MCVersion.getMCVersion(Bukkit.getBukkitVersion().isEmpty() ? "0" : Bukkit.getBukkitVersion().replaceAll("-.+", ""));
-		locale = GENERAL.getString("Locale", "en").toUpperCase();
-		defaultPvp = GENERAL.getBoolean("Default PvP", true);
-		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
-		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
-		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", true);
-		soupHealth = GENERAL.getDouble("Auto Soup.Health", 0);
-		soupBowlDisappear = GENERAL.getBoolean("Auto Soup.Bowl Disappear", false);
-		recyclePotionBottles = GENERAL.getBoolean("Recycling.Potion Bottle", false);
-		recycleMilkBucket = GENERAL.getBoolean("Recycling.Milk Bucket", false);
-		healthBelowName = GENERAL.getBoolean("Show health under name.Enabled", true);
-		healthBelowNameSymbol = GENERAL.getString("Show health under name.Display Name", "❤");
-		worldsExcluded = new HashSet<>(getList(GENERAL.getStringList("World Exclusions")));
+		locale = generalSection.getString("Locale", "en").toUpperCase();
+		defaultPvp = generalSection.getBoolean("Default PvP", true);
+		pvpBlood = generalSection.getBoolean("PvP Blood", true);
+		dropMode = DropMode.valueOf(generalSection.getString("Player Drop Mode", "ALWAYS").toUpperCase());
+		ignoreNoDamageHits = generalSection.getBoolean("Ignore No Damage Hits", true);
+		soupHealth = generalSection.getDouble("Auto Soup.Health", 0);
+		soupBowlDisappear = generalSection.getBoolean("Auto Soup.Bowl Disappear", false);
+		recyclePotionBottles = generalSection.getBoolean("Recycling.Potion Bottle", false);
+		recycleMilkBucket = generalSection.getBoolean("Recycling.Milk Bucket", false);
+		healthBelowName = generalSection.getBoolean("Show health under name.Enabled", true);
+		healthBelowNameSymbol = generalSection.getString("Show health under name.Display Name", "❤");
+		worldsExcluded = new HashSet<>(getList(generalSection.getStringList("World Exclusions")));
 
-		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
-		borderHoppingPushback = BORDERHOPPING.getBoolean("Push Back.Enabled", true);
-		borderPushbackTakeElytra = BORDERHOPPING.getBoolean("Push Back.Remove Elytra", false);
-		borderHoppingResetCombatTag = BORDERHOPPING.getBoolean("Reset Combat Tag", true);
+		borderHoppingVulnerable = borderHoppingSection.getBoolean("Vulnerable", true);
+		borderHoppingPushback = borderHoppingSection.getBoolean("Push Back.Enabled", true);
+		borderPushbackTakeElytra = borderHoppingSection.getBoolean("Push Back.Remove Elytra", false);
+		borderHoppingResetCombatTag = borderHoppingSection.getBoolean("Reset Combat Tag", true);
 
-		disableFly = DISABLE.getBoolean("Fly", true);
-		disableGamemode = DISABLE.getBoolean("GameMode", true);
-		disableDisguise = DISABLE.getBoolean("Disguise", true);
-		disableGodMode = DISABLE.getBoolean("GodMode", true);
-		disableELytra = MCVersion.isAtLeast(MCVersion.V1_9) && DISABLE.getBoolean("Elytra", false);
-		disableInvisibility = DISABLE.getBoolean("Invisibility", false);
+		disableFly = disableActionsSection.getBoolean("Fly", true);
+		disableGamemode = disableActionsSection.getBoolean("GameMode", true);
+		disableDisguise = disableActionsSection.getBoolean("Disguise", true);
+		disableGodMode = disableActionsSection.getBoolean("GodMode", true);
+		disableELytra = MCVersion.isAtLeast(MCVersion.V1_9) && disableActionsSection.getBoolean("Elytra", false);
+		disableInvisibility = disableActionsSection.getBoolean("Invisibility", false);
 
-		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
-		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
+		inCombatEnabled = combatTagSection.getBoolean("Enabled", true);
+		timeInCombat = combatTagSection.getInt("Time", 10);
 		timeInCombatMs = timeInCombat * 1000L;
-		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
-		nameTagSuffix = TAGGEDCOMBAT.getString("NameTag Suffix", "");
-		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
-		selfTag = TAGGEDCOMBAT.getBoolean("Self Tag", false);
-		actionBarEnabled = TAGGEDCOMBAT.getBoolean("Action Bar.Enabled", true);
-		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
-		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
-		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
-		bossBarEnabled = MCVersion.isAtLeast(MCVersion.V1_9) && TAGGEDCOMBAT.getBoolean("Boss Bar.Enabled", true);
-		bossBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Boss Bar.Message", ""));
-		bossBarColor = MCVersion.isAtLeast(MCVersion.V1_9) ? BarColor.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarColor", "RED")) : null;
-		bossBarStyle = MCVersion.isAtLeast(MCVersion.V1_9) ? BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10")) : null;
-		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
-		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl.Cooldown", 15);
-		enderPearlRenewTag = TAGGEDCOMBAT.getBoolean("EnderPearl.Renew Tag", true);
+		nameTagPrefix = combatTagSection.getString("NameTag Prefix", "&c");
+		nameTagSuffix = combatTagSection.getString("NameTag Suffix", "");
+		glowingInCombat = combatTagSection.getBoolean("Glowing", true);
+		selfTag = combatTagSection.getBoolean("Self Tag", false);
+		actionBarEnabled = combatTagSection.getBoolean("Action Bar.Enabled", true);
+		actionBarMessage = ChatUtils.colorize(combatTagSection.getString("Action Bar.Message", ""));
+		actionBarSymbol = combatTagSection.getString("Action Bar.Symbol", "▊");
+		actionBarTotalBars = combatTagSection.getInt("Action Bar.Total Bars", 10);
+		bossBarEnabled = MCVersion.isAtLeast(MCVersion.V1_9) && combatTagSection.getBoolean("Boss Bar.Enabled", true);
+		bossBarMessage = ChatUtils.colorize(combatTagSection.getString("Boss Bar.Message", ""));
+		bossBarColor = MCVersion.isAtLeast(MCVersion.V1_9) ? BarColor.valueOf(combatTagSection.getString("Boss Bar.BarColor", "RED")) : null;
+		bossBarStyle = MCVersion.isAtLeast(MCVersion.V1_9) ? BarStyle.valueOf(combatTagSection.getString("Boss Bar.BarStyle", "SEGMENTED_10")) : null;
+		untagEnemy = combatTagSection.getBoolean("Untag Enemy", false);
+		enderPearlCooldown = combatTagSection.getInt("EnderPearl.Cooldown", 15);
+		enderPearlRenewTag = combatTagSection.getBoolean("EnderPearl.Renew Tag", true);
 
-		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
-		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
-		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
-		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
-		blockBreakBlocks = TAGGEDCOMBAT.getBoolean("Block.Break Blocks", false);
-		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact.Enabled", false);
-		blockInteractItemList = TAGGEDCOMBAT.getStringList("Block.Interact.List");
-		blockGlideInCombat = TAGGEDCOMBAT.getBoolean("Block.Elytra", false);
-		blockEat = TAGGEDCOMBAT.getBoolean("Block.Eat", false);
-		blockTotemUndying = TAGGEDCOMBAT.getBoolean("Block.Totem of Undying", false);
-		blockInventoryOpen = TAGGEDCOMBAT.getBoolean("Block.Open Inventory", true);
-		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
-		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
-		commandsAllowed = getList(TAGGEDCOMBAT.getStringList("Block.Commands.Command List"));
-		punishOnKick = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick.Enabled", true);
-		matchKickReason = TAGGEDCOMBAT.getBoolean("Punishments.Punish On Kick.Match Kick Reason", false);
-		forcePunishKickReason = getList(TAGGEDCOMBAT.getStringList("Punishments.Punish On Kick.Kick Reasons"));
-		fineAmount = TAGGEDCOMBAT.getDouble("Punishments.Money Penalty", 0.00);
-		logToFile = TAGGEDCOMBAT.getBoolean("Punishments.Log To File", true);
-		killOnLogout = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Enabled", true);
-		dropInventory = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Inventory", true);
-		dropExp = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Experience", true);
-		dropArmor = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Armor", true);
-		commandsOnPvPLog = getCommandList(TAGGEDCOMBAT.getStringList("Punishments.Commands On PvPLog"));
+		blockEnderPearl = combatTagSection.getBoolean("Block.EnderPearls", true);
+		blockChorusFruit = combatTagSection.getBoolean("Block.ChorusFruits", true);
+		blockTeleport = combatTagSection.getBoolean("Block.Teleport", true);
+		blockPlaceBlocks = combatTagSection.getBoolean("Block.Place Blocks", false);
+		blockBreakBlocks = combatTagSection.getBoolean("Block.Break Blocks", false);
+		blockInteractInCombat = combatTagSection.getBoolean("Block.Interact.Enabled", false);
+		blockInteractItemList = combatTagSection.getStringList("Block.Interact.List");
+		blockGlideInCombat = combatTagSection.getBoolean("Block.Elytra", false);
+		blockEat = combatTagSection.getBoolean("Block.Eat", false);
+		blockTotemUndying = combatTagSection.getBoolean("Block.Totem of Undying", false);
+		blockInventoryOpen = combatTagSection.getBoolean("Block.Open Inventory", true);
+		stopCommands = combatTagSection.getBoolean("Block.Commands.Enabled", true);
+		commandsWhitelist = combatTagSection.getBoolean("Block.Commands.Whitelist", true);
+		commandsAllowed = getList(combatTagSection.getStringList("Block.Commands.Command List"));
+		punishOnKick = combatTagSection.getBoolean("Punishments.Punish On Kick.Enabled", true);
+		matchKickReason = combatTagSection.getBoolean("Punishments.Punish On Kick.Match Kick Reason", false);
+		forcePunishKickReason = getList(combatTagSection.getStringList("Punishments.Punish On Kick.Kick Reasons"));
+		fineAmount = combatTagSection.getDouble("Punishments.Money Penalty", 0.00);
+		logToFile = combatTagSection.getBoolean("Punishments.Log To File", true);
+		killOnLogout = combatTagSection.getBoolean("Punishments.Kill on Logout.Enabled", true);
+		dropInventory = combatTagSection.getBoolean("Punishments.Kill on Logout.Player Drops.Inventory", true);
+		dropExp = combatTagSection.getBoolean("Punishments.Kill on Logout.Player Drops.Experience", true);
+		dropArmor = combatTagSection.getBoolean("Punishments.Kill on Logout.Player Drops.Armor", true);
+		commandsOnPvPLog = getCommandList(combatTagSection.getStringList("Punishments.Commands On PvPLog"));
 
 		itemCooldowns = new EnumMap<>(Material.class);
 		for (final Entry<String, Object> e : c.getConfigurationSection("Item Cooldowns").getValues(false).entrySet()) {
@@ -247,45 +245,45 @@ public final class Settings {
 			itemCooldowns.put(material, (Integer) e.getValue());
 		}
 
-		newbieProtectionEnabled = NEWBIEPROTECTION.getBoolean("Enabled", true);
-		newbieProtectionTime = NEWBIEPROTECTION.getInt("Time(minutes)", 5);
-		newbieAllowDisable = NEWBIEPROTECTION.getBoolean("Allow Player Disable", true);
-		blockPickNewbies = NEWBIEPROTECTION.getBoolean("Block Pick Items", false);
-		blockPlaceBlocksNewbie = NEWBIEPROTECTION.getBoolean("Block Place Blocks", false);
-		blockBreakBlocksNewbie = NEWBIEPROTECTION.getBoolean("Block Break Blocks", false);
-		newbieGodMode = NEWBIEPROTECTION.getBoolean("Protect From Everything", false);
-		newbieBlacklist = getList(NEWBIEPROTECTION.getStringList("Command Blacklist"));
+		newbieProtectionEnabled = newbieSection.getBoolean("Enabled", true);
+		newbieProtectionTime = newbieSection.getInt("Time(minutes)", 5);
+		newbieAllowDisable = newbieSection.getBoolean("Allow Player Disable", true);
+		blockPickNewbies = newbieSection.getBoolean("Block Pick Items", false);
+		blockPlaceBlocksNewbie = newbieSection.getBoolean("Block Place Blocks", false);
+		blockBreakBlocksNewbie = newbieSection.getBoolean("Block Break Blocks", false);
+		newbieGodMode = newbieSection.getBoolean("Protect From Everything", false);
+		newbieBlacklist = getList(newbieSection.getStringList("Command Blacklist"));
 
-		killAbuseEnabled = KILLABUSE.getBoolean("Enabled", true);
-		killAbuseMaxKills = KILLABUSE.getInt("Max Kills", 5);
-		killAbuseTime = KILLABUSE.getInt("Time Limit", 60);
-		killAbuseWarn = KILLABUSE.getBoolean("Warn Before", true);
-		killAbuseCommands = getCommandList(KILLABUSE.getStringList("Commands on Abuse"));
-		respawnProtection = KILLABUSE.getInt("Respawn Protection", 5);
+		killAbuseEnabled = killAbuseSection.getBoolean("Enabled", true);
+		killAbuseMaxKills = killAbuseSection.getInt("Max Kills", 5);
+		killAbuseTime = killAbuseSection.getInt("Time Limit", 60);
+		killAbuseWarn = killAbuseSection.getBoolean("Warn Before", true);
+		killAbuseCommands = getCommandList(killAbuseSection.getStringList("Commands on Abuse"));
+		respawnProtection = killAbuseSection.getInt("Respawn Protection", 5);
 
-		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 10));
-		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 10));
-		moneySteal = PLAYERKILLS.getBoolean("Money Steal", false);
-		commandsOnKill = getCommandList(PLAYERKILLS.getStringList("Commands On Kill"));
-		playerKillsWGExclusions = new HashSet<>(getList(PLAYERKILLS.getStringList("WorldGuard Exclusions")));
+		setMoneyReward(playerKillsSection.getDouble("Money Reward", 10));
+		setMoneyPenalty(playerKillsSection.getDouble("Money Penalty", 10));
+		moneySteal = playerKillsSection.getBoolean("Money Steal", false);
+		commandsOnKill = getCommandList(playerKillsSection.getStringList("Commands On Kill"));
+		playerKillsWGExclusions = new HashSet<>(getList(playerKillsSection.getStringList("WorldGuard Exclusions")));
 
-		toggleCooldown = PVPTOGGLE.getInt("Cooldown", 15);
-		setToggleNametagsEnabled(PVPTOGGLE.getBoolean("NameTags.Enabled", false));
-		toggleColorOn = PVPTOGGLE.getString("NameTags.Prefix On", "&1");
-		toggleColorOff = PVPTOGGLE.getString("NameTags.Prefix Off", "&2");
-		pvpDisabledFee = PVPTOGGLE.getInt("PvP Disabled Money Fee", 0);
-		commandsPvPOn = getCommandList(PVPTOGGLE.getStringList("Commands PvP On"));
-		commandsPvPOff = getCommandList(PVPTOGGLE.getStringList("Commands PvP Off"));
-		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
-		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
+		toggleCooldown = pvpToggleSection.getInt("Cooldown", 15);
+		setToggleNametagsEnabled(pvpToggleSection.getBoolean("NameTags.Enabled", false));
+		toggleColorOn = pvpToggleSection.getString("NameTags.Prefix On", "&1");
+		toggleColorOff = pvpToggleSection.getString("NameTags.Prefix Off", "&2");
+		pvpDisabledFee = pvpToggleSection.getInt("PvP Disabled Money Fee", 0);
+		commandsPvPOn = getCommandList(pvpToggleSection.getStringList("Commands PvP On"));
+		commandsPvPOff = getCommandList(pvpToggleSection.getStringList("Commands PvP Off"));
+		worldguardOverrides = pvpToggleSection.getBoolean("WorldGuard Overrides", true);
+		worldguardOverridesList = new HashSet<>(getList(pvpToggleSection.getStringList("WorldGuard Overrides Region List")));
 
-		cooldownsxEnderpearlID = PLUGINHOOKS.getString("CooldownsX.Enderpearl", "");
+		cooldownsxEnderpearlID = pluginHookSection.getString("CooldownsX.Enderpearl", "");
 
 		useNameTag = !nameTagPrefix.isEmpty() || !nameTagSuffix.isEmpty() || toggleNametagsEnabled;
 		Log.infoColor(ChatColor.GREEN + "Using player nametags: " + ChatColor.AQUA + useNameTag);
 
-		checkUpdates = UPDATECHECK.getBoolean("Enabled", true);
-		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
+		checkUpdates = updateSection.getBoolean("Enabled", true);
+		autoUpdate = updateSection.getBoolean("Auto Update", true);
 
 		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
 
@@ -828,6 +826,6 @@ public final class Settings {
 	}
 
 	public static ConfigurationSection getPLUGINHOOKS() {
-		return PLUGINHOOKS;
+		return pluginHookSection;
 	}
 }

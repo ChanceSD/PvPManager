@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -53,9 +54,9 @@ public class PvPlayer extends EcoPlayer {
 	private long totalTagTime;
 	private NewbieTask newbieTask;
 	private PvPlayer enemy;
-	private final Set<PvPlayer> lastHitters = new HashSet<>();
-	private final HashMap<String, Integer> victim = new HashMap<>();
-	private final HashMap<Material, Long> itemCooldown = new HashMap<>();
+	private final Set<PvPlayer> lastHitters = new HashSet<>();	
+	private final Map<String, Integer> victim = new HashMap<>();
+	private final Map<Material, Long> itemCooldown = new EnumMap<>(Material.class);
 	private final PvPManager plugin;
 	private NameTag nametag;
 	private static ExecutorService executor;
