@@ -1,9 +1,9 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
+import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.API.BaseDependency;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 public class GriefPreventionHook extends BaseDependency {

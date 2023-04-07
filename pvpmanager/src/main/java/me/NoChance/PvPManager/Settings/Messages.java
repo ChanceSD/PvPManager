@@ -23,6 +23,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Utils.ChatUtils;
+import me.NoChance.PvPManager.Utils.TimeUtil;
 import me.chancesd.sdutils.utils.Log;
 
 public class Messages {
@@ -106,7 +107,7 @@ public class Messages {
 	private static String timeSeconds;
 	private static String timeNow;
 	private static String itemCooldown;
-	private static String prefix;
+	private static String prefix = "&6[&8PvPManager&6]";
 
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
@@ -158,7 +159,7 @@ public class Messages {
 	}
 
 	@NotNull
-	private static String getString(final String key) {
+	public static String getString(final String key) {
 		final String message = new String(LANG.getProperty(key).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 		return ChatUtils.colorize(message).replace("%prefix%", Messages.getPrefix());
 	}
@@ -312,12 +313,12 @@ public class Messages {
 		return message.replace("%time%", TimeUtil.getDiffMsg(time));
 	}
 
-	@NonNull
+	@NotNull
 	public static String replacePlayer(final String message, final String player) {
 		return message.replace("%player%", player);
 	}
 
-	@NonNull
+	@NotNull
 	public static String replaceVictim(final String message, final String player) {
 		return message.replace("<victim>", player);
 	}
@@ -330,7 +331,7 @@ public class Messages {
 		return prefix;
 	}
 
-	@NonNull
+	@NotNull
 	public static String getErrorPlayerNotFound(final String name) {
 		return replacePlayer(errorPlayerNotFound, name);
 	}
@@ -459,7 +460,7 @@ public class Messages {
 		return pushbackWarning;
 	}
 
-	@NonNull
+	@NotNull
 	public static String getErrorCommand() {
 		return errorCommand;
 	}

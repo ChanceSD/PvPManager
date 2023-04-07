@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -23,8 +24,8 @@ import me.NoChance.PvPManager.Player.EcoPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
-import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.MCVersion;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.setting.Permissions;
@@ -137,7 +138,7 @@ public class PvPlayer extends EcoPlayer {
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
 			this.newbieTask = new NewbieTask(this, 0);
-			message(Messages.getNewbieProtection(newbieTask.getFinishTime()));			
+			message(Messages.getNewbieProtection(newbieTask.getFinishTime()));
 		} else if (this.newbie && newbieTask != null) {
 			if (newbieTask.isExpired()) {
 				message(Messages.getNewbieProtectionEnd());
@@ -169,7 +170,7 @@ public class PvPlayer extends EcoPlayer {
 		if (event.isCancelled())
 			return;
 
-		if (Settings.isGlowingInCombat() && CombatUtils.isMCVersionAtLeast(MCVersion.V1_9)) {
+		if (Settings.isGlowingInCombat() && MCVersion.isAtLeast(MCVersion.V1_9)) {
 			getPlayer().setGlowing(true);
 		}
 
@@ -206,7 +207,7 @@ public class PvPlayer extends EcoPlayer {
 			if (nametag != null && Settings.useNameTag()) {
 				nametag.restoreNametag();
 			}
-			if (Settings.isGlowingInCombat() && CombatUtils.isMCVersionAtLeast(MCVersion.V1_9)) {
+			if (Settings.isGlowingInCombat() && MCVersion.isAtLeast(MCVersion.V1_9)) {
 				getPlayer().setGlowing(false); // effect should pass by itself but now players can get untagged before tag expires
 			}
 
@@ -274,7 +275,7 @@ public class PvPlayer extends EcoPlayer {
 	public final int getKillAbuseCount(final Player victimPlayer) {
 		return victim.getOrDefault(victimPlayer.getName(), 0);
 	}
-	
+
 	public final boolean hasItemCooldown(final Material material) {
 		final Long time = itemCooldown.get(material);
 		if (time == null)
@@ -286,9 +287,9 @@ public class PvPlayer extends EcoPlayer {
 		return true;
 	}
 
-	public final void setItemCooldown(@NonNull final Material material, final int time) {
+	public final void setItemCooldown(@NotNull final Material material, final int time) {
 		itemCooldown.put(material, System.currentTimeMillis() + time * 1000);
-		if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_11_2)) {
+		if (MCVersion.isAtLeast(MCVersion.V1_11_2)) {
 			getPlayer().setCooldown(material, time * 20);
 		}
 	}
