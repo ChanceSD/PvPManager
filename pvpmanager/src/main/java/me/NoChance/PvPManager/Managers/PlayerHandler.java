@@ -21,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Player.ProtectionResult;
