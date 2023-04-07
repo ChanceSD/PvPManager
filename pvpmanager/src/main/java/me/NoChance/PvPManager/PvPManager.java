@@ -27,8 +27,6 @@ import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.library.PluginLibraries;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.managers.StorageManager;

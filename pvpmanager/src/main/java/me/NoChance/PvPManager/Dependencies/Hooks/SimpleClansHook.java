@@ -11,12 +11,10 @@ import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.PvPDependency;
 import me.NoChance.PvPManager.Player.ProtectionResult;
-import me.NoChance.PvPManager.Settings.Settings;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
-@SuppressWarnings("null")
 public class SimpleClansHook extends BaseDependency implements GroupDependency, ForceToggleDependency {
 
 	private final ClanManager clanManager;

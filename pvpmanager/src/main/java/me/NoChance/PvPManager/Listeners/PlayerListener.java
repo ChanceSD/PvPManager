@@ -48,7 +48,6 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -504,7 +503,6 @@ public class PlayerListener implements Listener {
 		if (!pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.ON) {
 			pvPlayer.setPvP(true);
 			pvPlayer.message(Messages.getErrorPvPToggleForcePvP());
-			return;
 		}
 	}
 
