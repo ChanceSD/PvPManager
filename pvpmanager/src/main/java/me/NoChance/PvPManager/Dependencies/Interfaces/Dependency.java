@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Dependencies.API;
+package me.NoChance.PvPManager.Dependencies.Interfaces;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

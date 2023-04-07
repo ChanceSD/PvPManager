@@ -25,7 +25,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.projectiles.ProjectileSource;
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -108,7 +108,7 @@ public final class CombatUtils {
 		if (defender instanceof Player && !isNPC(defender)) {
 			if (attacker instanceof Player && !isNPC(attacker))
 				return true;
-			if (attacker instanceof Projectile || CombatUtils.isMCVersionAtLeast(MCVersion.V1_9) && attacker instanceof AreaEffectCloud) {
+			if (attacker instanceof Projectile || MCVersion.isAtLeast(MCVersion.V1_9) && attacker instanceof AreaEffectCloud) {
 				final ProjectileSource projSource = getSource(attacker);
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
@@ -182,19 +182,19 @@ public final class CombatUtils {
 		}
 	}
 
-	public static boolean isOnline(@NonNull final String name) {
+	public static boolean isOnline(@NotNull final String name) {
 		return Bukkit.getPlayer(name) != null;
 	}
 
 	public static boolean isOnlineWithFeedback(final CommandSender sender, final String name) {
 		if (!isOnline(name)) {
-			sender.sendMessage(Messages.getErrorPlayerNotFound().replace("%p", name));
+			sender.sendMessage(Messages.getErrorPlayerNotFound(name));
 			return false;
 		}
 		return true;
 	}
 
-	public static boolean isOnline(@NonNull final UUID uuid) {
+	public static boolean isOnline(@NotNull final UUID uuid) {
 		return Bukkit.getPlayer(uuid) != null;
 	}
 
@@ -262,10 +262,6 @@ public final class CombatUtils {
 			Log.severe("Error reading version number! Comparing " + v1 + " to " + v2);
 		}
 		return true;
-	}
-
-	public static final boolean isMCVersionAtLeast(final MCVersion version) {
-		return Settings.getMinecraftVersion().ordinal() >= version.ordinal();
 	}
 
 	public static String stripTags(final String version) {

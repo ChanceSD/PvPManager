@@ -10,8 +10,8 @@ import org.bukkit.scoreboard.Team;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.NoChance.PvPManager.Utils.MCVersion;
 
 public class BukkitNameTag extends NameTag {
 
@@ -42,7 +42,7 @@ public class BukkitNameTag extends NameTag {
 				inCombat = scoreboard.registerNewTeam(combatTeamID);
 				Log.debug("Creating combat team with name " + combatTeamID);
 				inCombat.setPrefix(combatPrefix);
-				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+				if (MCVersion.isAtLeast(MCVersion.V1_13)) {
 					final ChatColor nameColor = getLastColor(combatPrefix);
 					if (nameColor != null) {
 						inCombat.setColor(nameColor);
@@ -58,7 +58,7 @@ public class BukkitNameTag extends NameTag {
 					pvpOn = scoreboard.registerNewTeam(PVPON);
 					pvpOn.setCanSeeFriendlyInvisibles(false);
 					pvpOn.setPrefix(pvpOnPrefix);
-					if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_13)) {
+					if (MCVersion.isAtLeast(MCVersion.V1_13)) {
 						final ChatColor nameColor = getLastColor(pvpOnPrefix);
 						if (nameColor != null) {
 							pvpOn.setColor(nameColor);
@@ -73,7 +73,7 @@ public class BukkitNameTag extends NameTag {
 					pvpOff = scoreboard.registerNewTeam(PVPOFF);
 					pvpOff.setCanSeeFriendlyInvisibles(false);
 					pvpOff.setPrefix(pvpOffPrefix);
-					if (CombatUtils.isMCVersionAtLeast(MCVersion.V1_13)) {
+					if (MCVersion.isAtLeast(MCVersion.V1_13)) {
 						final ChatColor nameColor = getLastColor(pvpOffPrefix);
 						if (nameColor != null) {
 							pvpOff.setColor(nameColor);
