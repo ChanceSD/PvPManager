@@ -6,10 +6,8 @@ import com.earth2me.essentials.Essentials;
 
 import me.NoChance.PvPManager.Dependencies.AFKDependency;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
-import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.API.BaseDependency;
-import me.NoChance.PvPManager.Dependencies.API.GodDependency;
+import me.NoChance.PvPManager.Dependencies.Interfaces.GodDependency;
 
 public class EssentialsHook extends BaseDependency implements AFKDependency, GodDependency {
 

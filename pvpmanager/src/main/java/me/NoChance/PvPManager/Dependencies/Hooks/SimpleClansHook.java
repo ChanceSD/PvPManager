@@ -2,11 +2,16 @@ package me.NoChance.PvPManager.Dependencies.Hooks;
 
 import org.bukkit.entity.Player;
 
+import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.GroupDependency;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.Interfaces.PvPDependency;
+import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Settings.Settings;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
@@ -36,7 +41,7 @@ public class SimpleClansHook extends BaseDependency implements GroupDependency, 
 	}
 
 	@Override
-	public boolean shouldDisable(final Player attacker, final Player defender, final CancelResult reason) {
+	public boolean shouldDisable(final Player attacker, final Player defender, final ProtectionResult reason) {
 		final ClanPlayer cAttacker = clanManager.getClanPlayer(attacker);
 		final ClanPlayer cDefender = clanManager.getClanPlayer(defender);
 		return cAttacker != null && cDefender != null && cAttacker.getClan().isWarring(cDefender.getClan());
