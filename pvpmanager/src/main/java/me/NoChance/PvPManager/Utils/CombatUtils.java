@@ -105,23 +105,24 @@ public final class CombatUtils {
 		final Entity attacker = event.getDamager();
 		final Entity defender = event.getEntity();
 
-		if (defender instanceof Player && !isNPC(defender)) {
-			if (attacker instanceof Player && !isNPC(attacker))
-				return true;
-			if (attacker instanceof Projectile || MCVersion.isAtLeast(MCVersion.V1_9) && attacker instanceof AreaEffectCloud) {
-				final ProjectileSource projSource = getSource(attacker);
-				if (projSource instanceof Player) {
-					final Entity shooter = (Entity) projSource;
-					if (Settings.isSelfTag() || !shooter.equals(defender) && !isNPC(shooter))
-						return !Settings.isIgnoreNoDamageHits() || event.getDamage() != 0;
-				}
+		if (!(defender instanceof Player) || isNPC(defender))
+			return false;
+		if (attacker instanceof Player && !isNPC(attacker))
+			return true;
+
+		if (attacker instanceof Projectile || MCVersion.isAtLeast(MCVersion.V1_9) && attacker instanceof AreaEffectCloud) {
+			final ProjectileSource projSource = getSource(attacker);
+			if (projSource instanceof Player) {
+				final Entity shooter = (Entity) projSource;
+				if (Settings.isSelfTag() || !shooter.equals(defender) && !isNPC(shooter))
+					return !Settings.isIgnoreNoDamageHits() || event.getDamage() != 0;
 			}
-			if (attacker instanceof TNTPrimed) {
-				final TNTPrimed tnt = (TNTPrimed) attacker;
-				final Entity tntAttacker = tnt.getSource();
-				if (tntAttacker instanceof Player && (Settings.isSelfTag() || !tntAttacker.equals(defender))) {
-					return true;
-				}
+		}
+		if (attacker instanceof TNTPrimed) {
+			final TNTPrimed tnt = (TNTPrimed) attacker;
+			final Entity tntAttacker = tnt.getSource();
+			if (tntAttacker instanceof Player && (Settings.isSelfTag() || !tntAttacker.equals(defender))) {
+				return true;
 			}
 		}
 
@@ -132,15 +133,16 @@ public final class CombatUtils {
 		final Entity attacker = event.getCombuster();
 		final Entity defender = event.getEntity();
 
-		if (defender instanceof Player && !isNPC(defender)) {
-			if (attacker instanceof Player && !isNPC(attacker))
-				return true;
-			if (attacker instanceof Projectile) {
-				final ProjectileSource projSource = ((Projectile) attacker).getShooter();
-				if (projSource instanceof Player) {
-					final Entity shooter = (Entity) projSource;
-					return !shooter.equals(defender) && !isNPC(shooter);
-				}
+		if (!(defender instanceof Player) || isNPC(defender))
+			return false;
+		if (attacker instanceof Player && !isNPC(attacker))
+			return true;
+
+		if (attacker instanceof Projectile) {
+			final ProjectileSource projSource = ((Projectile) attacker).getShooter();
+			if (projSource instanceof Player) {
+				final Entity shooter = (Entity) projSource;
+				return !shooter.equals(defender) && !isNPC(shooter);
 			}
 		}
 
