@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +24,7 @@ import me.NoChance.PvPManager.Settings.Settings;
 public final class CombatUtils {
 
 	private static final List<String> harmfulPotions = new ArrayList<>();
+	private static final DecimalFormat decimalFormat = new DecimalFormat();
 
 	private CombatUtils() {
 	}
@@ -40,6 +42,11 @@ public final class CombatUtils {
 		harmfulPotions.add("LEVITATION");
 		harmfulPotions.add("UNLUCK");
 		harmfulPotions.add("BAD_OMEN");
+		decimalFormat.setMaximumFractionDigits(2);
+	}
+
+	public static String formatTo2Digits(final double value) {
+		return decimalFormat.format(value);
 	}
 
 	public static boolean hasTimePassed(final long toggleTime, final int cooldown) {
@@ -70,7 +77,7 @@ public final class CombatUtils {
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
 					if (Settings.isSelfTag() || !shooter.equals(defender) && !shooter.hasMetadata("NPC"))
-						return !(Settings.isIgnoreNoDamageHits() && event.getDamage() == 0);
+						return !Settings.isIgnoreNoDamageHits() || event.getDamage() != 0;
 				}
 			}
 		}

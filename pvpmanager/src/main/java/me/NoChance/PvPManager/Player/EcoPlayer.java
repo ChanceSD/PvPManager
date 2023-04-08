@@ -1,11 +1,10 @@
 package me.NoChance.PvPManager.Player;
 
-import java.text.DecimalFormat;
-
 import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -13,12 +12,10 @@ import net.milkbowl.vault.economy.EconomyResponse;
 public abstract class EcoPlayer extends BasePlayer {
 
 	private final Economy economy;
-	private final DecimalFormat df = new DecimalFormat();
 
 	protected EcoPlayer(final Player player, final Economy economy) {
 		super(player);
 		this.economy = economy;
-		df.setMaximumFractionDigits(2);
 	}
 
 	private void withdrawMoney(final double amount) {
@@ -40,12 +37,12 @@ public abstract class EcoPlayer extends BasePlayer {
 	public final void applyPenalty() {
 		final double penalty = getMoneyPercentage(Settings.getMoneyPenalty());
 		withdrawMoney(penalty);
-		message(Messages.getMoneyPenalty().replace("%m", df.format(penalty)));
+		message(Messages.getMoneyPenalty().replace("%m", CombatUtils.formatTo2Digits(penalty)));
 	}
 
 	public final void applyPvPDisabledFee() {
 		withdrawMoney(Settings.getPvPDisabledFee());
-		message(Messages.getPvPDisabledFee().replace("%money", df.format(Settings.getPvPDisabledFee())));
+		message(Messages.getPvPDisabledFee().replace("%money", CombatUtils.formatTo2Digits(Settings.getPvPDisabledFee())));
 	}
 
 	public final void giveReward(final EcoPlayer victim) {
@@ -58,10 +55,10 @@ public abstract class EcoPlayer extends BasePlayer {
 				moneyWon = vbalance;
 			}
 			victim.withdrawMoney(moneyWon);
-			victim.message(Messages.getMoneySteal().replace("%p", getPlayer().getName()).replace("%m", df.format(moneyWon)));
+			victim.message(Messages.getMoneySteal().replace("%p", getPlayer().getName()).replace("%m", CombatUtils.formatTo2Digits(moneyWon)));
 		}
 		depositMoney(moneyWon);
-		message(Messages.getMoneyReward().replace("%m", df.format(moneyWon)).replace("%p", victim.getPlayer().getName()));
+		message(Messages.getMoneyReward().replace("%m", CombatUtils.formatTo2Digits(moneyWon)).replace("%p", victim.getPlayer().getName()));
 	}
 
 	private double getMoneyPercentage(final double percentage) {
