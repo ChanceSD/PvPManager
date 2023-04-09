@@ -40,7 +40,7 @@ public class DatabaseConfigBuilder {
 	 * drivers auto-generated.
 	 *
 	 * @param section Configuration section.
-	 * @param backup SQLIte file backup.
+	 * @param backup SQLite file backup.
 	 */
 	@SuppressWarnings("null")
 	public DatabaseConfigBuilder(final ConfigurationSection section, final File backup) {
