@@ -14,7 +14,7 @@ commands:
       aliases: [pm, pvpm, pmr]
    pvp:
       description: Change your PvP status.
-      aliases: [toggle, pvptoggle]
+      aliases: [togglepvp, pvptoggle]
       usage: "Usage: /<command> [on|off] or /<command> [player] [on|off]"
    newbie:
       description: Check time left as a newbie or force disable newbie
