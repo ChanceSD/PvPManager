@@ -105,12 +105,12 @@ public class Messages {
 	}
 
 	private static void load() {
-		messagesFile = new File(plugin.getDataFolder(), locale.toString());
+		messagesFile = new File(plugin.getDataFolder(), locale.fileName());
 		if (!messagesFile.exists()) {
 			int readBytes;
 			final byte[] buffer = new byte[4096];
-			try (InputStream input = plugin.getResource("locale/" + locale.toString());
-			        OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.toString()))) {
+			try (InputStream input = plugin.getResource("locale/" + locale.fileName());
+					OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.fileName()))) {
 				while ((readBytes = input.read(buffer)) != -1) {
 					resStreamOut.write(buffer, 0, readBytes);
 				}
@@ -123,7 +123,7 @@ public class Messages {
 		if (listFiles != null) {
 			for (final File file : listFiles) {
 				final String fileName = file.getName();
-				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.toString())) {
+				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.fileName())) {
 					file.delete();
 				}
 			}
@@ -214,8 +214,8 @@ public class Messages {
 	private static void checkChanges() {
 		final Properties originalEN = new Properties();
 		final Properties original = new Properties();
-		try (InputStream inputStreamEN = plugin.getResource("locale/" + Locale.EN.toString());
-		        InputStream inputStream = plugin.getResource("locale/" + locale.toString())) {
+		try (InputStream inputStreamEN = plugin.getResource("locale/" + Locale.EN.fileName());
+				InputStream inputStream = plugin.getResource("locale/" + locale.fileName())) {
 			originalEN.load(inputStreamEN);
 			original.load(inputStream);
 			final Enumeration<Object> originalKeys = originalEN.keys();

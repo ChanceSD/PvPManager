@@ -215,7 +215,7 @@ public class PM implements TabExecutor {
 
 	private void locale(final CommandSender sender, final String[] args) {
 		if (args.length == 1) {
-			sender.sendMessage(Messages.PREFIXMSG + " §aYour current Locale is: §c" + Settings.getLocale());
+			sender.sendMessage(Messages.PREFIXMSG + " §aYour current Locale is: §c" + Messages.getLocale());
 			sender.sendMessage(Messages.PREFIXMSG + " §aAvailable languages are: §c" + Locale.asStringList());
 			return;
 		}
@@ -237,7 +237,7 @@ public class PM implements TabExecutor {
 		plugin.getConfig().set("General.Locale", locale.name());
 		plugin.saveConfig();
 		Messages.setup(plugin);
-		sender.sendMessage(Messages.PREFIXMSG + " §aLanguage changed to " + Messages.getLocale().name() + " - Filename: " + Messages.getLocale());
+		sender.sendMessage(Messages.PREFIXMSG + " §aLanguage changed to " + Messages.getLocale() + " - Filename: " + Messages.getLocale().fileName());
 	}
 
 	private void reload(final CommandSender sender) {

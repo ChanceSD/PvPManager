@@ -11,7 +11,7 @@
 	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
 	<name>PvPManager</name>
 	<artifactId>pvpmanager</artifactId>
-	<version>3.12</version>
+	<version>3.12.2</version>
 	<packaging>jar</packaging>
 
 	<properties>
