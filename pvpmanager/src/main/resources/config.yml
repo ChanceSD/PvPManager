@@ -6,7 +6,7 @@
 # <                  or Discord https://discord.gg/w7gyBuw                   > #
 # +--------------------------------------------------------------------------+ #
 
-# Locale -> Changes messages language, options are - en ru zh zh_tw es it de pt_br
+# Locale -> Changes messages language, options are - EN | BG | DE | ES | FR | IT | PL | pt_BR | RU | zh_TW | ZH
 # Default PvP -> Leave it at true unless you want no PvP for new players
 # PvP Blood -> Enable blood particles on PvP
 # Player Drop Mode -> What happens to a player's drops and exp on death
@@ -21,7 +21,7 @@
 # Bowl Disappear -> Should empty bowls just be deleted
 # World Exclusions -> List of worlds where PvPManager will have no effect
 General:
-  Locale: en
+  Locale: EN
   Default PvP: true
   PvP Blood: true
   Player Drop Mode: ALWAYS
