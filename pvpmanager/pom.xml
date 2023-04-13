@@ -11,7 +11,7 @@
 	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
 	<name>PvPManager</name>
 	<artifactId>pvpmanager</artifactId>
-	<version>3.12.2</version>
+	<version>3.12.3</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -95,6 +95,12 @@
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<minimizeJar>true</minimizeJar>
+					<relocations>
+						<relocation>
+							<pattern>com.zaxxer.hikari</pattern>
+							<shadedPattern>me.NoChance.PvPManager.Libraries.hikari</shadedPattern>
+						</relocation>
+					</relocations>
 				</configuration>
 				<executions>
 					<execution>

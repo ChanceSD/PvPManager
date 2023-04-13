@@ -3,17 +3,17 @@ main: ${project.groupId}.PvPManager
 version: ${project.version}
 website: https://www.spigotmc.org/resources/pvpmanager-lite.845/
 author: ChanceSD
-description: Allows Administrators To Change Their PvP Mechanics.
+description: A powerful tool to manage PvP combat
 softdepend: [Vault, WorldGuard, DisguiseCraft, LibsDisguises, Factions, SimpleClans, EZRanksLite, Essentials, PlaceholderAPI, Towny, mcMMO, CooldownsX]
 api-version: 1.13
 folia-supported: true
 
 commands:
    pvpmanager:
-      description: Shows Main PvPManager Page.
+      description: Shows the main PvPManager help page
       aliases: [pm, pvpm, pmr]
    pvp:
-      description: Change your PvP status.
+      description: Toggles PvP status
       aliases: [togglepvp, pvptoggle]
       usage: "Usage: /<command> [on|off] or /<command> [player] [on|off]"
    newbie:
