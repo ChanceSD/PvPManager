@@ -129,35 +129,40 @@ public class EntityListener implements Listener {
 		if (Settings.isPvpBlood()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 		}
-		if (!attacker.hasPermission("pvpmanager.nodisable")) {
-			if (Settings.isDisableFly()) {
-				if (CombatUtils.canFly(attacker)) {
-					pvpAttacker.disableFly();
-				}
-				if (!defender.hasPermission("pvpmanager.nodisable") && CombatUtils.canFly(defender)) {
-					pvpDefender.disableFly();
-				}
-			}
-			if (Settings.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
-				attacker.setGameMode(GameMode.SURVIVAL);
-			}
-			if (Settings.isDisableDisguise()) {
-				ph.getPlugin().getDependencyManager().disableDisguise(attacker);
-			}
-			if (Settings.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
-			}
-			if (Settings.isDisableGodMode()) {
-				ph.getPlugin().getDependencyManager().disableGodMode(attacker);
-			}
-		}
+		disableActions(attacker, defender, pvpAttacker, pvpDefender);
 		if (Settings.isInCombatEnabled()) {
-			if (Settings.borderHoppingVulnerable() && wg != null && !Settings.borderHoppingResetCombatTag()) {
-				if (wg.hasDenyPvPFlag(attacker) && wg.hasDenyPvPFlag(defender))
-					return;
+			if (Settings.borderHoppingVulnerable() && wg != null && !Settings.borderHoppingResetCombatTag() && wg.hasDenyPvPFlag(attacker)
+					&& wg.hasDenyPvPFlag(defender)) {
+				return;
 			}
 			pvpAttacker.setTagged(true, pvpDefender);
 			pvpDefender.setTagged(false, pvpAttacker);
+		}
+	}
+
+	private void disableActions(final Player attacker, final Player defender, final PvPlayer pvpAttacker, final PvPlayer pvpDefender) {
+		if (attacker.hasPermission("pvpmanager.nodisable"))
+			return;
+
+		if (Settings.isDisableFly()) {
+			if (CombatUtils.canFly(attacker)) {
+				pvpAttacker.disableFly();
+			}
+			if (!defender.hasPermission("pvpmanager.nodisable") && CombatUtils.canFly(defender)) {
+				pvpDefender.disableFly();
+			}
+		}
+		if (Settings.isDisableGamemode() && attacker.getGameMode() != GameMode.SURVIVAL) {
+			attacker.setGameMode(GameMode.SURVIVAL);
+		}
+		if (Settings.isDisableDisguise()) {
+			ph.getPlugin().getDependencyManager().disableDisguise(attacker);
+		}
+		if (Settings.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+			attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
+		}
+		if (Settings.isDisableGodMode()) {
+			ph.getPlugin().getDependencyManager().disableGodMode(attacker);
 		}
 	}
 
