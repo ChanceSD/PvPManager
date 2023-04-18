@@ -237,6 +237,7 @@ public final class Settings {
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
 
 		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
+		DEBUG = c.getBoolean("Debug Mode", false);
 		configVersion = c.getInt("Config Version");
 
 	}

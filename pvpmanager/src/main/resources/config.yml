@@ -222,5 +222,7 @@ Update Check:
 Metrics:
   Opt-out: false
 
+Debug Mode: false
+
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
 Config Version: ${config.version}
