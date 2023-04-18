@@ -11,7 +11,7 @@
 	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
 	<name>PvPManager</name>
 	<artifactId>pvpmanager</artifactId>
-	<version>3.12.3</version>
+	<version>3.12.5</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -259,7 +259,7 @@
 		<dependency>
 			<groupId>com.github.sirblobman.plugin.cooldowns</groupId>
 			<artifactId>cooldowns-api</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
+			<version>5.1.0-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 

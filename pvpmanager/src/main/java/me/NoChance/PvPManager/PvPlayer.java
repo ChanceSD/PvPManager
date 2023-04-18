@@ -45,7 +45,8 @@ public class PvPlayer extends EcoPlayer {
 		super(player, plugin.getDependencyManager().getEconomy());
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
-		executor.execute(this::loadData);
+		if (!CombatUtils.isNPC(player))
+			executor.execute(this::loadData);
 	}
 
 	public final long getToggleTime() {
@@ -55,8 +56,8 @@ public class PvPlayer extends EcoPlayer {
 	public final boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Settings.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = CombatUtils.getTimeLeft(toggleTime, Settings.getToggleCooldown());
-			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - secondsLeft / 60 * 60)).replace("%t",
-			        Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60)));
+			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - secondsLeft / 60 * 60))
+					.replace("%t", Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60)));
 			return false;
 		}
 		return true;
@@ -254,7 +255,7 @@ public class PvPlayer extends EcoPlayer {
 	private synchronized void loadData() {
 		if (plugin.getStorageManager().getStorage().userExists(this)) {
 			loadUserData(plugin.getStorageManager().getStorage().getUserData(this));
-		} else if (CombatUtils.isReal(getUUID()) && Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
+		} else if (Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
 		if (!getPlayer().hasPermission("*")) {

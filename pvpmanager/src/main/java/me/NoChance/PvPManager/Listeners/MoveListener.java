@@ -31,13 +31,13 @@ public class MoveListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerMove(final PlayerMoveEvent event) {
+		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ()
+				&& event.getFrom().getBlockY() == event.getTo().getBlockY())
+			return;
+
 		final Player player = event.getPlayer();
 		final PvPlayer pvplayer = ph.get(player);
 		if (!pvplayer.isInCombat())
-			return;
-
-		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ()
-		        && event.getFrom().getBlockY() == event.getTo().getBlockY())
 			return;
 
 		if (!wg.canAttackAt(null, event.getTo()) && wg.canAttackAt(null, event.getFrom())) {

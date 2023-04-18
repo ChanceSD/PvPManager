@@ -100,7 +100,7 @@ public class EntityListener implements Listener {
 		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
 
-		onDamageActions(attacker, attacked);
+		processDamage(attacker, attacked);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -122,7 +122,7 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	public void onDamageActions(final Player attacker, final Player defender) {
+	public void processDamage(final Player attacker, final Player defender) {
 		final PvPlayer pvpAttacker = ph.get(attacker);
 		final PvPlayer pvpDefender = ph.get(defender);
 
@@ -187,7 +187,7 @@ public class EntityListener implements Listener {
 				event.setIntensity(attacked, 0);
 				Messages.messageProtection(result, player, attacked);
 			} else {
-				onDamageActions(player, attacked);
+				processDamage(player, attacked);
 			}
 		}
 	}

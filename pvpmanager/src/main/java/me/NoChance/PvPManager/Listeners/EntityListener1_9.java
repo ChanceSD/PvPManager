@@ -82,7 +82,7 @@ public class EntityListener1_9 implements Listener {
 					potionMessageCache.put(player.getUniqueId(), newClouds);
 				}
 			} else {
-				ph.getPlugin().getEntityListener().onDamageActions(player, attacked);
+				ph.getPlugin().getEntityListener().processDamage(player, attacked);
 			}
 		}
 		event.getAffectedEntities().removeAll(toRemove);

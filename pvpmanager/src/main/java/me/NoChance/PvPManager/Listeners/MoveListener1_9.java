@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Listeners;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,22 +33,23 @@ public class MoveListener1_9 implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerMove(final PlayerMoveEvent event) {
+		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ()
+				&& event.getFrom().getBlockY() == event.getTo().getBlockY())
+			return;
+
 		final Player player = event.getPlayer();
 		final PvPlayer pvplayer = ph.get(player);
 		if (!pvplayer.isInCombat())
 			return;
 
-		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ()
-		        && event.getFrom().getBlockY() == event.getTo().getBlockY())
-			return;
-
 		if (!wg.canAttackAt(null, event.getTo()) && wg.canAttackAt(null, event.getFrom())) {
 			final Vector newVel = event.getFrom().toVector().subtract(event.getTo().toVector());
-			newVel.setY(0.1).normalize().multiply(1.5);
+			newVel.setY(0).normalize().multiply(1.6).setY(0.5);
 			CombatUtils.checkGlide(player);
 			player.setVelocity(newVel);
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {
 				pvplayer.message(Messages.getPushbackWarning());
+				event.getFrom().getWorld().playEffect(player.getEyeLocation(), Effect.SMOKE, 3);
 				cache.put(player.getUniqueId(), player);
 			}
 		}
