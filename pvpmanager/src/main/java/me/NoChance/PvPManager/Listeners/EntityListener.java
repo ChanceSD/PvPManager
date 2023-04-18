@@ -13,6 +13,7 @@ import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -160,7 +161,7 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) // Towny uses high for some reason
 	public final void onPotionSplash(final PotionSplashEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
@@ -230,6 +231,8 @@ public class EntityListener implements Listener {
 			return (Player) damager;
 		if (damager instanceof Projectile)
 			return (Player) ((Projectile) damager).getShooter();
+		if (damager instanceof TNTPrimed)
+			return (Player) ((TNTPrimed) damager).getSource();
 		return (Player) ((AreaEffectCloud) damager).getSource();
 	}
 

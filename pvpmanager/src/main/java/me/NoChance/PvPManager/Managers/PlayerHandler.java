@@ -114,10 +114,12 @@ public class PlayerHandler {
 
 	@NotNull
 	private PvPlayer addUser(final PvPlayer p) {
+		boolean saved;
 		// Save only if player actually exists
-		if (Bukkit.getPlayer(p.getUUID()) != null) {
+		if (saved = Bukkit.getPlayer(p.getUUID()) != null) {
 			players.put(p.getUUID(), p);
 		}
+		Log.debug("Adding " + p + " to online players. Saved: " + saved);
 		return p;
 	}
 
