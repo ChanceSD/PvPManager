@@ -13,6 +13,7 @@ import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -65,19 +66,26 @@ public final class CombatUtils {
 		return startTime + time - System.currentTimeMillis();
 	}
 
-	public static boolean isPvP(final EntityDamageByEntityEvent event) {
+	public static final boolean isPvP(final EntityDamageByEntityEvent event) {
 		final Entity attacker = event.getDamager();
 		final Entity defender = event.getEntity();
 
-		if (defender instanceof Player && !defender.hasMetadata("NPC")) {
-			if (attacker instanceof Player && !attacker.hasMetadata("NPC"))
+		if (defender instanceof Player && !isNPC(defender)) {
+			if (attacker instanceof Player && !isNPC(attacker))
 				return true;
 			if (attacker instanceof Projectile || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && attacker instanceof AreaEffectCloud) {
 				final ProjectileSource projSource = getSource(attacker);
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					if (Settings.isSelfTag() || !shooter.equals(defender) && !shooter.hasMetadata("NPC"))
+					if (Settings.isSelfTag() || !shooter.equals(defender) && !isNPC(shooter))
 						return !Settings.isIgnoreNoDamageHits() || event.getDamage() != 0;
+				}
+			}
+			if (attacker instanceof TNTPrimed) {
+				final TNTPrimed tnt = (TNTPrimed) attacker;
+				final Entity tntAttacker = tnt.getSource();
+				if (tntAttacker instanceof Player && (Settings.isSelfTag() || !tntAttacker.equals(defender))) {
+					return true;
 				}
 			}
 		}
@@ -85,23 +93,27 @@ public final class CombatUtils {
 		return false;
 	}
 
-	public static boolean isPvP(final EntityCombustByEntityEvent event) {
+	public static final boolean isPvP(final EntityCombustByEntityEvent event) {
 		final Entity attacker = event.getCombuster();
 		final Entity defender = event.getEntity();
 
-		if (defender instanceof Player && !defender.hasMetadata("NPC")) {
-			if (attacker instanceof Player && !attacker.hasMetadata("NPC"))
+		if (defender instanceof Player && !isNPC(defender)) {
+			if (attacker instanceof Player && !isNPC(attacker))
 				return true;
 			if (attacker instanceof Projectile) {
 				final ProjectileSource projSource = ((Projectile) attacker).getShooter();
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					return !shooter.equals(defender) && !shooter.hasMetadata("NPC");
+					return !shooter.equals(defender) && !isNPC(shooter);
 				}
 			}
 		}
 
 		return false;
+	}
+
+	public static final boolean isNPC(final Entity entity) {
+		return entity.hasMetadata("NPC");
 	}
 
 	public static boolean canFly(final Player p) {
@@ -111,6 +123,7 @@ public final class CombatUtils {
 	public static void checkGlide(final Player p) {
 		if (p.isGliding()) {
 			p.setGliding(false);
+			p.teleport(p.getLocation());
 		}
 	}
 

@@ -50,6 +50,13 @@ public class ScheduleUtils {
 			entity.getScheduler().run(plugin, scheduledTask -> task.run(), task);
 	}
 
+	public static void runTaskLater(final JavaPlugin plugin, final Runnable task, final Entity entity, final long delay) {
+		if (!FOLIA_SUPPORT)
+			Bukkit.getScheduler().runTaskLater(plugin, task, delay);
+		else
+			entity.getScheduler().runDelayed(plugin, scheduledTask -> task.run(), task, delay);
+	}
+
 	public static void runTaskTimer(final JavaPlugin plugin, final Runnable task, final long delay, final long period) {
 		if (!FOLIA_SUPPORT)
 			Bukkit.getScheduler().runTaskTimer(plugin, task, delay, period);

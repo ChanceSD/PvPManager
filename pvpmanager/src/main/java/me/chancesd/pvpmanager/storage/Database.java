@@ -13,7 +13,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -73,6 +74,21 @@ public class Database {
 		}
 	}
 
+	public <T> void doQuery(final String sql, final Consumer<T> consumer, final String field, final Class<T> type) {
+		CompletableFuture.runAsync(() -> {
+			try (Connection connection = getConnection();
+					PreparedStatement ps = connection.prepareStatement(sql);
+					ResultSet result = ps.executeQuery()) {
+				if (result.next()) {
+					final T value = result.getObject(field, type);
+					consumer.accept(value);
+				}
+			} catch (final SQLException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
 	/**
 	 * Register a table.
 	 *
@@ -80,7 +96,7 @@ public class Database {
 	 */
 	public void registerTable(final Table table) {
 		try (Connection connection = getConnection();
-		        PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + table.getName() + table.getUsage())) {
+				PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + table.getName() + table.getUsage())) {
 			ps.executeUpdate();
 		} catch (final SQLException e) {
 			log("Failed to register table", e);
@@ -135,7 +151,7 @@ public class Database {
 	/**
 	 * Check if a certain column in a table exists
 	 *
-	 * @param table Name of table
+	 * @param table  Name of table
 	 * @param column Name of column
 	 * @return Column exists?
 	 */
@@ -154,7 +170,7 @@ public class Database {
 	/**
 	 * Insert new data to the database
 	 *
-	 * @param table Table to insert data in
+	 * @param table  Table to insert data in
 	 * @param values Values to insert
 	 */
 	public void insertDefault(final Table table, final Object... values) {
@@ -175,9 +191,9 @@ public class Database {
 	/**
 	 * Insert new data to the database
 	 *
-	 * @param table Table to insert data in
+	 * @param table   Table to insert data in
 	 * @param columns Collection of column names
-	 * @param values Values to insert
+	 * @param values  Values to insert
 	 */
 	public void insertColumns(final Table table, final Collection<String> columns, final Collection<Object> values) {
 		try (Connection connection = getConnection()) {
@@ -210,9 +226,9 @@ public class Database {
 	 *
 	 * All the collections of values must have the same size and the same object order
 	 *
-	 * @param table Table to insert data in
+	 * @param table   Table to insert data in
 	 * @param columns Collection of column names
-	 * @param values Collection of values to insert
+	 * @param values  Collection of values to insert
 	 */
 	public void insertColumnsBatch(final Table table, final Collection<String> columns, final Collection<Collection<Object>> values) {
 		try (Connection connection = getConnection()) {
@@ -258,7 +274,7 @@ public class Database {
 	 */
 	public Object getValue(final Table table, final String index, final String toGet, final Object value) {
 		try (Connection connection = getConnection();
-		        final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
+				final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
 			try (ResultSet result = ps.executeQuery()) {
 				if (result.next())
@@ -281,7 +297,7 @@ public class Database {
 	 */
 	public Map<String, Object> getRow(final Table table, final String index, final Object value) {
 		try (Connection connection = getConnection();
-		        final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
+				final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
 			try (final ResultSet result = ps.executeQuery()) {
 				if (result.next()) {
@@ -307,7 +323,8 @@ public class Database {
 	 * @return All rows found, empty map if none.
 	 */
 	public List<Map<String, Object>> getAllRows(final Table table) {
-		try (Connection connection = getConnection(); final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + ";")) {
+		try (Connection connection = getConnection();
+				final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + ";")) {
 			try (final ResultSet result = ps.executeQuery()) {
 				final List<Map<String, Object>> rows = new ArrayList<>();
 				while (result.next()) {
@@ -336,7 +353,7 @@ public class Database {
 	 */
 	public boolean contains(final Table table, final String index, final Object value) {
 		try (Connection connection = getConnection();
-		        PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
+				PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
 			try (ResultSet result = ps.executeQuery()) {
 				return result.next();
@@ -350,17 +367,19 @@ public class Database {
 	/**
 	 * Update a value in the database
 	 *
-	 * @param table Table to update
-	 * @param index Index to search with
-	 * @param toUpdate Index to update
-	 * @param indexValue Value to search with.
+	 * @param table       Table to update
+	 * @param index       Index to search with
+	 * @param toUpdate    Index to update
+	 * @param indexValue  Value to search with.
 	 * @param updateValue New value to update.
-	 * @param extra Extra such as increment or decrement.
+	 * @param extra       Extra such as increment or decrement.
 	 */
-	public void update(final Table table, final String index, final String toUpdate, final Object indexValue, final Object updateValue, final String extra) {
+	public void update(final Table table, final String index, final String toUpdate, final Object indexValue, final Object updateValue,
+			final String extra) {
 		try (Connection connection = getConnection()) {
 			final String update = extra.isEmpty() ? "?" : updateValue + extra;
-			try (PreparedStatement ps = connection.prepareStatement("UPDATE " + table.getName() + " SET " + toUpdate + "=" + update + " WHERE " + index + "=?;")) {
+			try (PreparedStatement ps = connection
+					.prepareStatement("UPDATE " + table.getName() + " SET " + toUpdate + "=" + update + " WHERE " + index + "=?;")) {
 				if (extra.isEmpty()) {
 					ps.setObject(1, updateValue);
 					ps.setObject(2, indexValue);
@@ -377,10 +396,10 @@ public class Database {
 	/**
 	 * Update a value in the database
 	 *
-	 * @param table Table to update
-	 * @param index Index to search with
-	 * @param toUpdate Index to update
-	 * @param indexValue Value to search with.
+	 * @param table       Table to update
+	 * @param index       Index to search with
+	 * @param toUpdate    Index to update
+	 * @param indexValue  Value to search with.
 	 * @param updateValue New value to update.
 	 */
 	public void update(final Table table, final String index, final String toUpdate, final Object indexValue, final Object updateValue) {
@@ -390,13 +409,14 @@ public class Database {
 	/**
 	 * Update multiple values in the database
 	 *
-	 * @param table Table to update
-	 * @param index Index to search with
+	 * @param table      Table to update
+	 * @param index      Index to search with
 	 * @param indexValue Value to search with.
-	 * @param columns Columns to update
-	 * @param values New values to update
+	 * @param columns    Columns to update
+	 * @param values     New values to update
 	 */
-	public void updateValues(final Table table, final String index, final Object indexValue, final Collection<String> columns, final Collection<Object> values) {
+	public void updateValues(final Table table, final String index, final Object indexValue, final Collection<String> columns,
+			final Collection<Object> values) {
 		try (Connection connection = getConnection()) {
 			final StringBuilder updateString = new StringBuilder();
 			int i = 0;
@@ -407,7 +427,8 @@ public class Database {
 					updateString.append(",");
 				}
 			}
-			try (PreparedStatement ps = connection.prepareStatement("UPDATE " + table.getName() + " SET " + updateString + " WHERE " + index + "=?;")) {
+			try (PreparedStatement ps = connection
+					.prepareStatement("UPDATE " + table.getName() + " SET " + updateString + " WHERE " + index + "=?;")) {
 				i = 0;
 				for (final Object object : values) {
 					ps.setObject(++i, object);
@@ -429,7 +450,7 @@ public class Database {
 	 */
 	public void remove(final Table table, final String index, final Object value) {
 		try (Connection connection = getConnection();
-		        PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table.getName() + " WHERE " + index + "=?;")) {
+				PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table.getName() + " WHERE " + index + "=?;")) {
 			ps.setObject(1, value);
 			ps.executeUpdate();
 		} catch (final SQLException e) {
@@ -439,8 +460,8 @@ public class Database {
 
 	public int getRowCount(final Table table) {
 		try (final Connection connection = getConnection();
-		        final PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM " + table.getName());
-		        final ResultSet result = ps.executeQuery()) {
+				final PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM " + table.getName());
+				final ResultSet result = ps.executeQuery()) {
 			if (result.next())
 				return result.getInt(1);
 		} catch (final Exception e) {
