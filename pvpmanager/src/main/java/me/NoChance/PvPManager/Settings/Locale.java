@@ -9,6 +9,7 @@ public enum Locale {
 	DE("messages_de.properties", "German"),
 	ES("messages_es.properties", "Spanish"),
 	FR("messages_fr.properties", "French"),
+	HR("messages_hr.properties", "Croatian"),
 	IT("messages_it.properties", "Italian"),
 	PL("messages_pl.properties", "Polish"),
 	PT_BR("messages_pt_BR.properties", "Portuguese Brazilian"),
