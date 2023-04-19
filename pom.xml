@@ -5,12 +5,13 @@
 	<groupId>me.chancesd.pvpmanager</groupId>
 	<artifactId>pvpmanager-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>3.12</version>
+	<version>${revision}</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.organization>chancesd</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<revision>3.12.6</revision>
 	</properties>
 
 	<distributionManagement>

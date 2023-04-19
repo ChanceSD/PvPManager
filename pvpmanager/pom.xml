@@ -5,19 +5,16 @@
 	<parent>
 		<groupId>me.chancesd.pvpmanager</groupId>
 		<artifactId>pvpmanager-parent</artifactId>
-		<version>3.12</version>
+		<version>${revision}</version>
 	</parent>
 
 	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
 	<name>PvPManager</name>
 	<artifactId>pvpmanager</artifactId>
-	<version>3.12.6</version>
 	<packaging>jar</packaging>
 
 	<properties>
 		<config.version>65</config.version>
-		<pvpmanager.version>${project.version}</pvpmanager.version>
-		<sonar.projectVersion>${pvpmanager.version}</sonar.projectVersion>
 	</properties>
 
 	<repositories>

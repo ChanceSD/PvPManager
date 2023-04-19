@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>me.chancesd.pvpmanager</groupId>
 		<artifactId>pvpmanager-parent</artifactId>
-		<version>3.12</version>
+		<version>${revision}</version>
 	</parent>
 
 	<artifactId>pvpmanager-folia</artifactId>
