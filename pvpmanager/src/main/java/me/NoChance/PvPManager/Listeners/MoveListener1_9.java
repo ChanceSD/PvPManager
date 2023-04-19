@@ -44,7 +44,7 @@ public class MoveListener1_9 implements Listener {
 
 		if (!wg.canAttackAt(null, event.getTo()) && wg.canAttackAt(null, event.getFrom())) {
 			final Vector newVel = event.getFrom().toVector().subtract(event.getTo().toVector());
-			newVel.setY(0).normalize().multiply(2).setY(0.5);
+			newVel.setY(0).normalize().multiply(1.6).setY(0.5);
 			CombatUtils.checkGlide(player);
 			player.setVelocity(newVel);
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {

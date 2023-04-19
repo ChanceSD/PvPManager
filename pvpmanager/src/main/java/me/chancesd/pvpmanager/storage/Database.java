@@ -84,7 +84,7 @@ public class Database {
 					consumer.accept(value);
 				}
 			} catch (final SQLException e) {
-				e.printStackTrace();
+				log("Failed to do query", e);
 			}
 		});
 	}

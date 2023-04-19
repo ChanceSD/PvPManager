@@ -90,6 +90,7 @@ public final class Settings {
 	private static boolean soupBowlDisappear;
 	private static boolean borderHoppingVulnerable;
 	private static boolean borderHoppingPushback;
+	private static boolean borderPushbackTakeElytra;
 	private static boolean borderHoppingResetCombatTag;
 	private static boolean worldguardOverrides;
 	private static Set<String> worldguardOverridesList;
@@ -151,7 +152,8 @@ public final class Settings {
 		worldsExcluded = new HashSet<>(getList(GENERAL.getStringList("World Exclusions")));
 
 		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
-		borderHoppingPushback = BORDERHOPPING.getBoolean("Push Back", true);
+		borderHoppingPushback = BORDERHOPPING.getBoolean("Push Back.Enabled", true);
+		borderPushbackTakeElytra = BORDERHOPPING.getBoolean("Push Back.Remove Elytra", false);
 		borderHoppingResetCombatTag = BORDERHOPPING.getBoolean("Reset Combat Tag", true);
 
 		disableFly = DISABLE.getBoolean("Fly", true);
@@ -505,6 +507,10 @@ public final class Settings {
 
 	public static void setBorderHoppingPushback(final boolean borderHoppingPushback) {
 		Settings.borderHoppingPushback = borderHoppingPushback;
+	}
+
+	public static boolean isBorderPushbackTakeElytra() {
+		return borderPushbackTakeElytra;
 	}
 
 	public static boolean borderHoppingResetCombatTag() {
