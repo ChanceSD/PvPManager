@@ -11,7 +11,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.organization>chancesd</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.projectVersion>${pvpmanager.version}</sonar.projectVersion>
 	</properties>
 
 	<distributionManagement>

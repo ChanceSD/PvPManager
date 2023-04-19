@@ -17,6 +17,7 @@
 	<properties>
 		<config.version>65</config.version>
 		<pvpmanager.version>${project.version}</pvpmanager.version>
+		<sonar.projectVersion>${pvpmanager.version}</sonar.projectVersion>
 	</properties>
 
 	<repositories>
