@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Utils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -124,6 +125,15 @@ public final class CombatUtils {
 		if (p.isGliding()) {
 			p.setGliding(false);
 			p.teleport(p.getLocation());
+			if (!Settings.isBorderPushbackTakeElytra())
+				return;
+			final ItemStack chestplate = p.getInventory().getChestplate();
+			if (chestplate == null || chestplate.getType() != Material.ELYTRA)
+				return;
+			p.getInventory().setChestplate(null);
+			final Map<Integer, ItemStack> item = p.getInventory().addItem(chestplate);
+			if (!item.isEmpty())
+				p.getWorld().dropItemNaturally(p.getLocation(), item.values().stream().findFirst().orElse(chestplate));
 		}
 	}
 

@@ -11,11 +11,12 @@
 	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
 	<name>PvPManager</name>
 	<artifactId>pvpmanager</artifactId>
-	<version>3.12.5</version>
+	<version>3.12.6</version>
 	<packaging>jar</packaging>
 
 	<properties>
-		<config.version>64</config.version>
+		<config.version>65</config.version>
+		<pvpmanager.version>${project.version}</pvpmanager.version>
 	</properties>
 
 	<repositories>
@@ -127,7 +128,7 @@
 		<dependency>
 			<groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
 			<artifactId>SimpleClans</artifactId>
-			<version>2.17.0</version>
+			<version>2.18.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -196,7 +197,7 @@
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard-bukkit</artifactId>
-			<version>7.0.7</version>
+			<version>7.1.0-SNAPSHOT</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 			<exclusions>
@@ -230,7 +231,7 @@
 		<dependency>
 			<groupId>com.gmail.nossr50.mcMMO</groupId>
 			<artifactId>mcMMO</artifactId>
-			<version>2.1.219</version>
+			<version>2.2.0-SNAPSHOT</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 			<exclusions>
@@ -273,7 +274,7 @@
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
-			<version>3.39.2.0</version>
+			<version>3.41.2.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -281,13 +282,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.9.2</version>
+			<version>5.10.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite</artifactId>
-			<version>1.9.2</version>
+			<version>1.10.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

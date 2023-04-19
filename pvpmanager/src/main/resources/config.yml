@@ -39,7 +39,10 @@ General:
 # Reset Combat Tag -> Only meant for when Vulnerable is true. Toggles whether combat tagging resets while fighting in a safe zone. Works for WorldGuard Only
 Anti Border Hopping:
   Vulnerable: true
-  Push Back: true
+  Push Back:
+    Enabled: true
+    # Takes elytra from player chest slot and puts it in their inventory
+    Remove Elytra: false
   Reset Combat Tag: true
 
 # What should be disabled when a player(except operators) enters PvP
