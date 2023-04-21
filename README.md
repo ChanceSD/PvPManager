@@ -28,17 +28,17 @@ Maven Repo:
 Artifact Information:
 ```xml
 <dependency>
-    <groupId>me.chancesd.pvpmanager</groupId>
+    <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>3.12</version>
+    <version>3.12.6</version>
     <scope>provided</scope>
 </dependency>
  ```
 
 Description
 ------------
-PvPManager is an all in one PvP plugin. Meaning that instead of using multiple plugins that change/customize the PvP experience in your server you would use just this one.  
-There are certainly some features that are better covered by a dedicated separate plugin. Still, PvPManager will try to cover most of those even if in a more superficial way, while always maintaining good performance in mind. 
+PvPManager is an all in one PvP plugin.
+There are certainly some features that are better covered by a dedicated separate plugin. Still, PvPManager will try to cover most of those even if in a more superficial way, always maintaining good performance in mind. 
 
 **Some of the plugin's main features are:**
 - Toggle PvP for each player  
