@@ -225,20 +225,24 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
-		final PvPlayer player = ph.get(event.getPlayer());
-		if (!Settings.isInCombatEnabled() || !player.isInCombat())
+		final Player player = event.getPlayer();
+		if (CombatUtils.isNPC(player)) // Citizens seems to teleport NPCs very often so let's avoid creating new PvPlayer instances
+			return;
+
+		final PvPlayer pvplayer = ph.get(player);
+		if (!Settings.isInCombatEnabled() || !pvplayer.isInCombat())
 			return;
 
 		if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
 			event.setCancelled(true);
-			player.message(Messages.getEnderpearlBlockedIncombat());
+			pvplayer.message(Messages.getEnderpearlBlockedIncombat());
 		} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && event.getCause() == TeleportCause.CHORUS_FRUIT
 		        && Settings.isBlockChorusFruit()) {
 			event.setCancelled(true);
-			player.message(Messages.getChorusBlockedInCombat());
+			pvplayer.message(Messages.getChorusBlockedInCombat());
 		} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
 			event.setCancelled(true);
-			player.message(Messages.getTeleportBlockedInCombat());
+			pvplayer.message(Messages.getTeleportBlockedInCombat());
 		}
 	}
 
