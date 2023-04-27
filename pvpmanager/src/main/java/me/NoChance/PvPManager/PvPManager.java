@@ -162,7 +162,7 @@ public class PvPManager extends JavaPlugin {
 			return;
 		}
 		if (javaVersion < 16) {
-			Log.severe("You appear to be using Java 15 or lower. For now the plugin still works but please update to Java 17+");
+			Log.severe("You appear to be using Java 15 or lower. For now the plugin still works but please update to Java 16+");
 			Log.severe("In the future PvPManager will stop supporting Java versions this old");
 		}
 	}
