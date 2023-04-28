@@ -28,6 +28,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		registerPlaceholder("has_override");
 		registerPlaceholder("has_respawn_prot");
 		registerPlaceholder("current_enemy");
+		registerPlaceholder("current_enemy_health");
 		registerPlaceholder("combat_prefix");
 	}
 
@@ -60,6 +61,9 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		case "current_enemy":
 			final PvPlayer pPlayer = p.getEnemy();
 			return pPlayer != null ? pPlayer.getName() : "None";
+		case "current_enemy_health":
+			final PvPlayer enemy = p.getEnemy();
+			return enemy != null ? String.valueOf(enemy.getPlayer().getHealth()) : "0";
 		default:
 			return null;
 		}
