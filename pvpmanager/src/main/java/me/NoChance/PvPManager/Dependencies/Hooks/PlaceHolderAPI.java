@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Dependencies.Hooks;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 
 	private final PvPManager plugin;
 	private final List<String> placeholders = new ArrayList<>();
+	private final DecimalFormat df = new DecimalFormat("#.##");
 
 	public PlaceHolderAPI(final PvPManager plugin) {
 		this.plugin = plugin;
@@ -63,7 +65,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 			return pPlayer != null ? pPlayer.getName() : "None";
 		case "current_enemy_health":
 			final PvPlayer enemy = p.getEnemy();
-			return enemy != null ? String.valueOf(enemy.getPlayer().getHealth()) : "0";
+			return enemy != null ? df.format(enemy.getPlayer().getHealth()) : "0";
 		default:
 			return null;
 		}
