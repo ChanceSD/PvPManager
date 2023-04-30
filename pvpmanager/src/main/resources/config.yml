@@ -63,7 +63,6 @@ Disable:
 # NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color his name red
 # while 'none' or empty quotes '' will disable this feature completely
 # Glowing -> For 1.9+ only, sets the player glowing while tagged
-# Action Bar -> Symbol to use for the bar and how many times to repeat it. Leave message empty to disable. Other symbols ▊,▮,▯,|
 # Self Tag -> Allow players to tag themselves with a bow
 # Untag Enemy -> When the player kills the enemy he was fighting he gets untagged
 # Block -> Section is self-explanatory, what to block in combat
@@ -79,12 +78,15 @@ Tagged In Combat:
   Time: 10
   NameTag Prefix: '&4&lCombat &c'
   Glowing: true
+  # Symbol to use for the bar and how many times to repeat it. Other symbols ▊,▮,▯,|
   Action Bar:
+    # You can use any PlaceholderAPI placeholders here. Leave message empty to disable
     Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec]'
     Symbol: '▊'
     Total Bars: 20
   Boss Bar:
     Enabled: true
+    # You can use any PlaceholderAPI placeholders here
     Message: '&8&l[&c&lIn Combat&8&l] &e&l<time> seconds'
     # See here for bar color options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
     BarColor: RED

@@ -10,6 +10,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Player.display.ProgressBar;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
 public class DisplayManager {
@@ -25,7 +26,8 @@ public class DisplayManager {
 
 	public void updateBossbar(final PvPlayer player, final double timePassed) {
 		final BossBar bossBar = bossBars.computeIfAbsent(player, this::setupBossbar);
-		bossBar.setTitle(Settings.getBossBarMessage().replace("<time>", Long.toString(Settings.getTimeInCombat() - Math.round(timePassed))));
+		final String message = Settings.getBossBarMessage().replace("<time>", Long.toString(Settings.getTimeInCombat() - Math.round(timePassed)));
+		bossBar.setTitle(ChatUtils.setPlaceholders(player.getPlayer(), message));
 		bossBar.setProgress((Settings.getTimeInCombat() - timePassed) / Settings.getTimeInCombat());
 	}
 
@@ -56,7 +58,8 @@ public class DisplayManager {
 	}
 
 	public void showProgress(final PvPlayer p, final double timePassed) {
-		p.sendActionBar(actionBars.get((int) (timePassed + 0.5)).getMessage());
+		final String message = actionBars.get((int) (timePassed + 0.5)).getMessage();
+		p.sendActionBar(ChatUtils.setPlaceholders(p.getPlayer(), message));
 	}
 
 	public PvPManager getPlugin() {

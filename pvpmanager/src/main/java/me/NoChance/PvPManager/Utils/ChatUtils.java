@@ -6,11 +6,16 @@ import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.clip.placeholderapi.PlaceholderAPI;
 
 public class ChatUtils {
 
 	private static final Pattern HEX_PATTERN = Pattern.compile("&(#[a-fA-F0-9]{6})");
+	private static final boolean USEPLACEHOLDERAPI = Hook.PLACEHOLDERAPI.isEnabled();
 	private static boolean hexSupported = checkForBungeeAPI();
 
 	private ChatUtils() {
@@ -23,6 +28,10 @@ public class ChatUtils {
 			return false;
 		}
 		return true;
+	}
+
+	public static String setPlaceholders(final Player player, final String message) {
+		return USEPLACEHOLDERAPI ? PlaceholderAPI.setPlaceholders(player, message) : message;
 	}
 
 	@NotNull
