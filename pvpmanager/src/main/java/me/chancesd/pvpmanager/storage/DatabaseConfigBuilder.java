@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import me.NoChance.PvPManager.Utils.Log;
+
 public class DatabaseConfigBuilder {
 
 	public enum DatabaseType {
@@ -44,7 +46,7 @@ public class DatabaseConfigBuilder {
 	 */
 	@SuppressWarnings("null")
 	public DatabaseConfigBuilder(final ConfigurationSection section, final File backup) {
-		this(section, backup, DatabaseType.valueOf(section.getString("Type", "SQLite").toUpperCase()));
+		this(section, backup, getDBTypeFrom(section));
 	}
 
 	/**
@@ -66,6 +68,18 @@ public class DatabaseConfigBuilder {
 		} else {
 			driver("org.sqlite.SQLiteDataSource").type(DatabaseType.SQLITE).sqlite(backup);
 		}
+	}
+
+	private static DatabaseType getDBTypeFrom(final ConfigurationSection section) {
+		final String dbType = section.getString("Type", "SQLite").toUpperCase();
+		DatabaseType databaseType;
+		try {
+			databaseType = DatabaseType.valueOf(dbType);
+		} catch (final IllegalArgumentException e) {
+			Log.severe("The database type you specified in the config does not exist: " + dbType + ". Defaulting to SQLite");
+			databaseType = DatabaseType.SQLITE;
+		}
+		return databaseType;
 	}
 
 	public DatabaseConfigBuilder driver(final String newDriver) {
