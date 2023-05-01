@@ -259,7 +259,7 @@ public class PM implements TabExecutor {
 	private void update(final CommandSender sender) {
 		if (Settings.isUpdateCheck()) {
 			if (Settings.isUpdate()) {
-				if (plugin.getUpdater().downloadFile()) {
+				if (plugin.getUpdateManager().getUpdater().downloadFile()) {
 					sender.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewVersion());
 				} else {
 					sender.sendMessage("§4An error ocurred while updating, please report to the developer");

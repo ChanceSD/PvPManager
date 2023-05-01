@@ -166,20 +166,12 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) // Towny uses high for some reason
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public final void onPotionSplash(final PotionSplashEvent event) {
-		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
+		if (!shouldCheckPotionEvent(event))
 			return;
 
 		final ThrownPotion potion = event.getPotion();
-		if (event.getAffectedEntities().isEmpty() || potion.getEffects().isEmpty() || !(potion.getShooter() instanceof Player))
-			return;
-
-		for (final PotionEffect effect : potion.getEffects()) {
-			if (!CombatUtils.isHarmfulPotion(effect.getType()))
-				return;
-		}
-
 		final Player player = (Player) potion.getShooter();
 		for (final LivingEntity e : event.getAffectedEntities()) {
 			if (e.getType() != EntityType.PLAYER || e.equals(player)) {
@@ -191,10 +183,39 @@ public class EntityListener implements Listener {
 			if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
 				event.setIntensity(attacked, 0);
 				Messages.messageProtection(result, player, attacked);
-			} else {
-				processDamage(player, attacked);
 			}
 		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public final void onPotionSplashMonitor(final PotionSplashEvent event) {
+		if (!shouldCheckPotionEvent(event))
+			return;
+
+		final ThrownPotion potion = event.getPotion();
+		final Player player = (Player) potion.getShooter();
+		for (final LivingEntity e : event.getAffectedEntities()) {
+			if (e.getType() != EntityType.PLAYER || e.equals(player)) {
+				continue;
+			}
+			final Player attacked = (Player) e;
+			processDamage(player, attacked);
+		}
+	}
+
+	private boolean shouldCheckPotionEvent(final PotionSplashEvent event) {
+		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
+			return false;
+
+		final ThrownPotion potion = event.getPotion();
+		if (event.getAffectedEntities().isEmpty() || potion.getEffects().isEmpty() || !(potion.getShooter() instanceof Player))
+			return false;
+
+		for (final PotionEffect effect : potion.getEffects()) {
+			if (!CombatUtils.isHarmfulPotion(effect.getType()))
+				return false;
+		}
+		return true;
 	}
 
 	@EventHandler(ignoreCancelled = true)

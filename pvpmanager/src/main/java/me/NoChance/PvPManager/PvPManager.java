@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
@@ -16,11 +15,6 @@ import me.NoChance.PvPManager.Commands.PvPOverride;
 import me.NoChance.PvPManager.Commands.PvPStatus;
 import me.NoChance.PvPManager.Commands.Tag;
 import me.NoChance.PvPManager.Libraries.Metrics.CustomMetrics;
-import me.NoChance.PvPManager.Libraries.Updater.BukkitUpdater;
-import me.NoChance.PvPManager.Libraries.Updater.SpigotUpdater;
-import me.NoChance.PvPManager.Libraries.Updater.Updater;
-import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateResult;
-import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.EntityListener1_9;
 import me.NoChance.PvPManager.Listeners.PlayerListener;
@@ -29,6 +23,7 @@ import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Managers.UpdateManager;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -40,7 +35,7 @@ public class PvPManager extends JavaPlugin {
 
 	private ConfigManager configM;
 	private PlayerHandler playerHandler;
-	private Updater updater;
+	private UpdateManager updateManager;
 	private StorageManager storageManager;
 	private DependencyManager dependencyManager;
 	private DisplayManager displayManager;
@@ -57,6 +52,7 @@ public class PvPManager extends JavaPlugin {
 			Log.info("Running on Folia. Support for Folia is still experimental");
 		}
 		loadFiles();
+		updateManager = new UpdateManager(this);
 		storageManager = new StorageManager(this);
 		dependencyManager = new DependencyManager();
 		displayManager = new DisplayManager(this);
@@ -110,36 +106,6 @@ public class PvPManager extends JavaPlugin {
 		new CustomMetrics(this);
 	}
 
-	public void checkForUpdates() {
-		Log.info("Checking for updates...");
-		updater = new BukkitUpdater(this, 63773, UpdateType.VERSION_CHECK).check();
-		if (updater.getResult() != UpdateResult.UPDATE_AVAILABLE) {
-			updater = new SpigotUpdater(this, 845, UpdateType.VERSION_CHECK).check();
-		}
-		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
-			Messages.setNewVersion(updater.getLatestName());
-			final String updateMsg = Messages.PREFIXMSG + " §aUpdate available: §c" + Messages.getNewVersion() + " §aCurrent version: §c"
-			        + Messages.getCurrentversion();
-			Messages.queueAdminMsg(updateMsg);
-			Bukkit.broadcast(updateMsg, "pvpmanager.admin");
-			if (Settings.isAutoUpdate()) {
-				if (updater.downloadFile()) {
-					Messages.queueAdminMsg(Messages.PREFIXMSG + " §aUpdate downloaded, it will be applied automatically on the next server restart");
-					Bukkit.broadcast(Messages.PREFIXMSG + " §aUpdate downloaded to your update folder, it will be applied automatically on the next server restart",
-					        "pvpmanager.admin");
-					return;
-				}
-				Log.info("Could not download latest update. Please update manually from one of the links below.");
-			}
-			Settings.setUpdate(true);
-			final String linkMsg = Messages.PREFIXMSG + " §aFollow the link to download: §8" + updater.getUpdateLink();
-			Messages.queueAdminMsg(linkMsg);
-			Bukkit.broadcast(linkMsg, "pvpmanager.admin");
-		} else {
-			Log.info("No update found");
-		}
-	}
-
 	private void checkJavaVersion() {
 		int javaVersion;
 		String version = System.getProperty("java.version");
@@ -189,16 +155,16 @@ public class PvPManager extends JavaPlugin {
 		return playerHandler;
 	}
 
+	public UpdateManager getUpdateManager() {
+		return updateManager;
+	}
+
 	public StorageManager getStorageManager() {
 		return storageManager;
 	}
 
 	public DependencyManager getDependencyManager() {
 		return dependencyManager;
-	}
-
-	public Updater getUpdater() {
-		return updater;
 	}
 
 	public DisplayManager getDisplayManager() {

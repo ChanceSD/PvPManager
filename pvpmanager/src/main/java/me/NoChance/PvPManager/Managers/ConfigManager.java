@@ -9,8 +9,6 @@ import java.util.Arrays;
 
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Libraries.Config.ConfigUpdater;
 import me.NoChance.PvPManager.Settings.Config;
@@ -18,7 +16,6 @@ import me.NoChance.PvPManager.Settings.LogFile;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.Log;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class ConfigManager {
 
@@ -39,15 +36,6 @@ public class ConfigManager {
 	private void loadConfig() {
 		checkConfig();
 		initConfig();
-		if (Settings.isUpdateCheck()) {
-			ScheduleUtils.runAsyncTimer(new BukkitRunnable() {
-				@Override
-				public void run() {
-					plugin.checkForUpdates();
-				}
-			}, 0, 18000);
-		}
-
 	}
 
 	private void checkConfig() {
