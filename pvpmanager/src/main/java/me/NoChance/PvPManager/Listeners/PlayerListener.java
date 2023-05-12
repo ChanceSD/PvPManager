@@ -1,7 +1,5 @@
 package me.NoChance.PvPManager.Listeners;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -84,9 +82,7 @@ public class PlayerListener implements Listener {
 			if (Settings.isLogToFile()) {
 				ph.getConfigManager().getLog().log(player.getName() + " tried to escape combat!");
 			}
-			for (final String s : Settings.getCommandsOnPvPLog()) {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", player.getName())));
-			}
+			CombatUtils.executeCommands(Settings.getCommandsOnPvPLog(), player, player.getName());
 			ph.applyPunishments(pvPlayer);
 		}
 		ph.removeUser(pvPlayer);
@@ -114,9 +110,7 @@ public class PlayerListener implements Listener {
 				if (Settings.getMoneyPenalty() > 0) {
 					pvPlayer.applyPenalty();
 				}
-				for (final String command : Settings.getCommandsOnKill()) {
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", killer.getName()).replace("<victim>", player.getName()));
-				}
+				CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
 			}
 		}
 

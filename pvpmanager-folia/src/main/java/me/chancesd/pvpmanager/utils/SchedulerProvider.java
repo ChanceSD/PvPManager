@@ -1,20 +1,24 @@
 package me.chancesd.pvpmanager.utils;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
 
 public interface SchedulerProvider {
 
-	public void runPlatformAsync(final JavaPlugin plugin, final Runnable task);
+	public void runPlatformAsync(final Runnable task);
 
-	public void runPlatformAsyncTimer(final JavaPlugin plugin, final Runnable task, final long delay, final long period);
+	public void runPlatformAsyncTimer(final Runnable task, final long delay, final long period);
 
-	public void runTask(final JavaPlugin plugin, final Runnable task, final Entity entity);
+	public void runTask(final Runnable task, final Entity entity);
 
-	public void runTaskLater(final JavaPlugin plugin, final Runnable task, final Entity entity, final long delay);
+	public void runTaskLater(final Runnable task, final Entity entity, final long delay);
 
-	public void runTaskTimer(final JavaPlugin plugin, final Runnable task, final long delay, final long period);
+	public void runTaskTimer(final Runnable task, final long delay, final long period);
 
-	public void cancelAllTasks(final JavaPlugin plugin);
+	public void executeConsoleCommand(final String command);
+
+	public void executePlayerCommand(final Player player, final String command);
+
+	public void cancelAllTasks();
 
 }

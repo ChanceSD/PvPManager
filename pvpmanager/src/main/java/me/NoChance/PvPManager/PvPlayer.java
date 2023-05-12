@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -184,14 +183,10 @@ public class PvPlayer extends EcoPlayer {
 		}
 		if (!pvpState) {
 			message(Messages.getPvpDisabled());
-			for (final String s : Settings.getCommandsPvPOff()) {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", getName())));
-			}
+			CombatUtils.executeCommands(Settings.getCommandsPvPOff(), getPlayer(), getName());
 		} else {
 			message(Messages.getPvpEnabled());
-			for (final String s : Settings.getCommandsPvPOn()) {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', s.replace("%p", getName())));
-			}
+			CombatUtils.executeCommands(Settings.getCommandsPvPOn(), getPlayer(), getName());
 		}
 	}
 
@@ -206,9 +201,7 @@ public class PvPlayer extends EcoPlayer {
 			}
 			if (totalKills >= Settings.getKillAbuseMaxKills()) {
 				unTag();
-				for (final String command : Settings.getKillAbuseCommands()) {
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("<player>", getName()));
-				}
+				CombatUtils.executeCommands(Settings.getKillAbuseCommands(), getPlayer(), getName());
 			}
 		}
 	}

@@ -248,7 +248,7 @@ public class PM implements TabExecutor {
 
 		Settings.setReloading(true);
 		Settings.setUpdate(false);
-		ScheduleUtils.cancelAllTasks(plugin);
+		ScheduleUtils.cancelAllTasks();
 		HandlerList.unregisterAll(plugin);
 		plugin.onDisable();
 		plugin.onEnable();

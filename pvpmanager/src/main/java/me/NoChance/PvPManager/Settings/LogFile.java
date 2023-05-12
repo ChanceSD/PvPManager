@@ -30,7 +30,7 @@ public class LogFile {
 	}
 
 	private void write(final String line) {
-		ScheduleUtils.runAsync(PvPManager.getInstance(), new BukkitRunnable() {
+		ScheduleUtils.runAsync(new BukkitRunnable() {
 			@Override
 			public void run() {
 				try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {

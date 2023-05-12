@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.command.CommandException;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -22,6 +23,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
 import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public final class CombatUtils {
 
@@ -65,6 +67,29 @@ public final class CombatUtils {
 
 	public static long getTimeLeftMs(final long startTime, final long time) {
 		return startTime + time - System.currentTimeMillis();
+	}
+
+	public static void executeCommands(final List<String> commands, final Player player, final String playerName, final String victim) {
+		for (final String command : commands) {
+			try {
+				final String preparedCommand = command.replace("<player>", playerName).replace("<victim>", victim).replace("%p", playerName);
+				if (preparedCommand.toLowerCase().startsWith("!console")) {
+					ScheduleUtils.executeConsoleCommand(preparedCommand.substring(9));
+				} else if (preparedCommand.toLowerCase().startsWith("!player")) {
+					player.performCommand(preparedCommand.substring(8));
+				} else {
+					ScheduleUtils.executeConsoleCommand(preparedCommand);
+				}
+			} catch (final CommandException e) {
+				Log.warning("Error executing command: \"" + command + "\" for player: " + playerName);
+				Log.warning("This error comes from the command and it's respective plugin below:");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void executeCommands(final List<String> commands, final Player player, final String playerName) {
+		executeCommands(commands, player, playerName, "");
 	}
 
 	public static final boolean isPvP(final EntityDamageByEntityEvent event) {

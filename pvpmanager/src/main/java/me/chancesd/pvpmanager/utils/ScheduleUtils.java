@@ -8,17 +8,26 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
+import me.NoChance.PvPManager.PvPManager;
 
 public class ScheduleUtils {
 
 	private static final boolean FOLIA_SUPPORT = checkFolia();
 	private static ScheduledExecutorService executor;
 	private static final List<ScheduledFuture<?>> scheduledTasks = new ArrayList<>();
-	private static SchedulerProvider provider = FOLIA_SUPPORT ? new FoliaProvider() : new BukkitProvider();
+	private static SchedulerProvider provider = FOLIA_SUPPORT ? new FoliaProvider(PvPManager.getInstance())
+			: new BukkitProvider(PvPManager.getInstance());
+
+	private ScheduleUtils() {
+	}
 
 	public static void setupExecutor() {
 		executor = Executors.newScheduledThreadPool(4);
+	}
+
+	public static void runAsync(final Runnable task) {
+		executor.submit(task);
 	}
 
 	public static ScheduledFuture<?> runAsyncLater(final Runnable task, final long delay) {
@@ -29,34 +38,38 @@ public class ScheduleUtils {
 		scheduledTasks.add(executor.scheduleAtFixedRate(task, delay, period, TimeUnit.SECONDS));
 	}
 
-	public static void runAsync(final JavaPlugin plugin, final Runnable task) {
-		provider.runPlatformAsync(plugin, task);
+	public static void runPlatformAsync(final Runnable task) {
+		provider.runPlatformAsync(task);
 	}
 
-	public static void runAsyncTimer(final JavaPlugin plugin, final Runnable task, final long delay, final long period) {
-		provider.runPlatformAsyncTimer(plugin, task, delay, period);
+	public static void runPlatformAsyncTimer(final Runnable task, final long delay, final long period) {
+		provider.runPlatformAsyncTimer(task, delay, period);
 	}
 
-	public static void runTask(final JavaPlugin plugin, final Runnable task, final Entity entity) {
-		provider.runTask(plugin, task, entity);
+	public static void runTask(final Runnable task, final Entity entity) {
+		provider.runTask(task, entity);
 	}
 
-	public static void runTaskLater(final JavaPlugin plugin, final Runnable task, final Entity entity, final long delay) {
-		provider.runTaskLater(plugin, task, entity, delay);
+	public static void runTaskLater(final Runnable task, final Entity entity, final long delay) {
+		provider.runTaskLater(task, entity, delay);
 	}
 
-	public static void runTaskTimer(final JavaPlugin plugin, final Runnable task, final long delay, final long period) {
-		provider.runTaskTimer(plugin, task, delay, period);
+	public static void runTaskTimer(final Runnable task, final long delay, final long period) {
+		provider.runTaskTimer(task, delay, period);
 	}
 
-	public static void dispatchCommand() {
-
+	public static void executeConsoleCommand(final String command) {
+		provider.executeConsoleCommand(command);
 	}
 
-	public static void cancelAllTasks(final JavaPlugin plugin) {
+	public static void executePlayerCommand(final Player player, final String command) {
+		provider.executePlayerCommand(player, command);
+	}
+
+	public static void cancelAllTasks() {
 		scheduledTasks.forEach(scheduledTask -> scheduledTask.cancel(false));
 		executor.shutdown();
-		provider.cancelAllTasks(plugin);
+		provider.cancelAllTasks();
 	}
 
 	public static boolean checkFolia() {

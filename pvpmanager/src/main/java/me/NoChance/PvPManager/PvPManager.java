@@ -4,7 +4,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import me.NoChance.PvPManager.Commands.Announce;
 import me.NoChance.PvPManager.Commands.Newbie;
 import me.NoChance.PvPManager.Commands.PM;
@@ -68,7 +67,7 @@ public class PvPManager extends JavaPlugin {
 	public void onDisable() {
 		playerHandler.handlePluginDisable();
 		storageManager.shutdown();
-		ScheduleUtils.cancelAllTasks(this);
+		ScheduleUtils.cancelAllTasks();
 		instance = null;
 	}
 

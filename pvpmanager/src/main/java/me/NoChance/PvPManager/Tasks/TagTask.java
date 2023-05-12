@@ -33,7 +33,7 @@ public class TagTask extends TimerTask {
 				final PvPlayer p = iterator.next();
 				final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
 				if (timePassed >= time) {
-					ScheduleUtils.runTask(display.getPlugin(), p::unTag, p.getPlayer());
+					ScheduleUtils.runTask(p::unTag, p.getPlayer());
 					display.discardBossbar(p);
 					iterator.remove();
 					continue;
