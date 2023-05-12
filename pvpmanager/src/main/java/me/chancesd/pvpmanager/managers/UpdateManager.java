@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Managers;
+package me.chancesd.pvpmanager.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;

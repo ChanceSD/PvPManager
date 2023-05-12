@@ -23,12 +23,12 @@ import me.NoChance.PvPManager.Managers.ConfigManager;
 import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Managers.UpdateManager;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.managers.StorageManager;
+import me.chancesd.pvpmanager.managers.UpdateManager;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PvPManager extends JavaPlugin {
