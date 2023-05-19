@@ -83,7 +83,7 @@ public final class CombatUtils {
 			} catch (final CommandException e) {
 				Log.warning("Error executing command: \"" + command + "\" for player: " + playerName);
 				Log.warning("This error comes from the command and it's respective plugin below:");
-				e.printStackTrace();
+				Log.warning(e.getMessage(), e);
 			}
 		}
 	}
