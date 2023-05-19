@@ -52,7 +52,7 @@ public class NameTag {
 					inCombat.setPrefix(prefix);
 				}
 				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-					final ChatColor nameColor = getLastColor(Settings.getNameTagPrefix());
+					final ChatColor nameColor = getLastColor(prefix);
 					if (nameColor != null) {
 						inCombat.setColor(nameColor);
 					}
