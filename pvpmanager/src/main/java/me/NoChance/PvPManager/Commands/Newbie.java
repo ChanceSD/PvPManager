@@ -38,7 +38,8 @@ public class Newbie implements TabExecutor {
 			}
 			return true;
 		} else if (args.length >= 1) {
-			if (Settings.isNewbieDisableAllowed() && args[0].equalsIgnoreCase("disable") && sender instanceof Player) {
+			final String subcommand = args[0];
+			if (Settings.isNewbieDisableAllowed() && subcommand.equalsIgnoreCase("disable") && sender instanceof Player) {
 				final PvPlayer player = ph.get((Player) sender);
 				if (player.isNewbie()) {
 					player.setNewbie(false);
@@ -46,15 +47,17 @@ public class Newbie implements TabExecutor {
 				}
 				player.message(Messages.getErrorNotNewbie());
 				return true;
-			} else if (sender.hasPermission("pvpmanager.admin")) {
-				if (!CombatUtils.isOnline(args[0])) {
-					sender.sendMessage(Messages.getErrorPlayerNotFound().replace("%p", args[0]));
+			} else if (sender.hasPermission("pvpmanager.admin") && args.length == 2) {
+				if (subcommand.equalsIgnoreCase("checktime")) {
+					checkNewbieTime(sender, args[1]);
+					return true;
+				} else if (subcommand.equalsIgnoreCase("add")) {
+					addNewbie(sender, args[1]);
+					return true;
+				} else if (subcommand.equalsIgnoreCase("remove")) {
+					removeNewbie(sender, args[1]);
 					return true;
 				}
-				final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(args[0]));
-				final long timeLeft = specifiedPlayer.getNewbieTimeLeft() / 1000;
-				sender.sendMessage(String.format(Messages.getNewbieTimeCheckOther(), specifiedPlayer.getName(), timeLeft));
-				return true;
 			}
 		} else if (!(sender instanceof Player)) {
 			sender.sendMessage("This command is only available for players.");
@@ -62,15 +65,44 @@ public class Newbie implements TabExecutor {
 		return false;
 	}
 
+	private void checkNewbieTime(final CommandSender sender, final String targetPlayerName) {
+		if (!CombatUtils.isOnlineWithFeedback(sender, targetPlayerName))
+			return;
+
+		final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(targetPlayerName));
+		final long timeLeft = specifiedPlayer.getNewbieTimeLeft() / 1000;
+		sender.sendMessage(String.format(Messages.getNewbieTimeCheckOther(), specifiedPlayer.getName(), timeLeft));
+	}
+
+	private void addNewbie(final CommandSender sender, final String targetPlayerName) {
+		if (!CombatUtils.isOnlineWithFeedback(sender, targetPlayerName))
+			return;
+
+		final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(targetPlayerName));
+		specifiedPlayer.setNewbie(true);
+		sender.sendMessage(
+				ChatUtils.colorize(String.format(Messages.PREFIXMSG + " Added newbie protection to &e%s", specifiedPlayer.getName())));
+	}
+
+	private void removeNewbie(final CommandSender sender, final String targetPlayerName) {
+		if (!CombatUtils.isOnlineWithFeedback(sender, targetPlayerName))
+			return;
+
+		final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(targetPlayerName));
+		specifiedPlayer.setNewbie(false);
+		sender.sendMessage(
+				ChatUtils.colorize(String.format(Messages.PREFIXMSG + " Removed newbie protection from &e%s", specifiedPlayer.getName())));
+	}
+
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 1) {
 			if (!sender.hasPermission("pvpmanager.admin"))
 				return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("disable"));
-			final List<String> list = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
-			list.add("disable");
-			return ChatUtils.getMatchingEntries(args[0], list);
+			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("add", "checktime", "disable", "remove"));
 		}
+		if (args.length == 2 && sender.hasPermission("pvpmanager.admin"))
+			return ChatUtils.getMatchingEntries(args[1], Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));
 
 		return Collections.emptyList();
 	}

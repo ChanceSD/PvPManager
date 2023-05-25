@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -22,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
+import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
@@ -174,6 +176,14 @@ public final class CombatUtils {
 
 	public static boolean isOnline(final String name) {
 		return Bukkit.getPlayer(name) != null;
+	}
+
+	public static boolean isOnlineWithFeedback(final CommandSender sender, final String name) {
+		if (!isOnline(name)) {
+			sender.sendMessage(Messages.getErrorPlayerNotFound().replace("%p", name));
+			return false;
+		}
+		return true;
 	}
 
 	public static boolean isOnline(final UUID id) {
