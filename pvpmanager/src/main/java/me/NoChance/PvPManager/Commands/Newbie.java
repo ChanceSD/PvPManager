@@ -1,18 +1,25 @@
 package me.NoChance.PvPManager.Commands;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+
+import com.google.common.collect.Lists;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
-public class Newbie implements CommandExecutor {
+public class Newbie implements TabExecutor {
 	private final PlayerHandler ph;
 
 	public Newbie(final PlayerHandler ph) {
@@ -53,5 +60,18 @@ public class Newbie implements CommandExecutor {
 			sender.sendMessage("This command is only available for players.");
 		}
 		return false;
+	}
+
+	@Override
+	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
+		if (args.length == 1) {
+			if (!sender.hasPermission("pvpmanager.admin"))
+				return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("disable"));
+			final List<String> list = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+			list.add("disable");
+			return ChatUtils.getMatchingEntries(args[0], list);
+		}
+
+		return Collections.emptyList();
 	}
 }
