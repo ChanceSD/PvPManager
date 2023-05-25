@@ -11,6 +11,8 @@ import me.NoChance.PvPManager.PvPlayer;
  * This event is called before a player is set as no longer in combat.
  * <br>
  * Canceling the event will keep the player in combat indefinitely.
+ * <br>
+ * This event may be called by different threads, it is up to the developer to make their code thread safe
  */
 public final class PlayerUntagEvent extends Event implements Cancellable {
 

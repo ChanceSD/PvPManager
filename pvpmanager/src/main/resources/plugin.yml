@@ -19,7 +19,7 @@ commands:
    newbie:
       description: Check time left as a newbie or force disable newbie
       aliases: [newbietime]
-      usage: "Usage: /<command> [name] or /<command> disable"
+      usage: "Usage: /<command> add/checktime/remove [name] or /<command> disable"
    pvpoverride:
       description: Allows the player to attack everyone everywhere
       aliases: [pvpo]

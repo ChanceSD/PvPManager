@@ -33,6 +33,7 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 @SuppressWarnings("deprecation")
 public class PlayerListener implements Listener {
@@ -142,7 +143,8 @@ public class PlayerListener implements Listener {
 			if (player.getHealth() == player.getMaxHealth())
 				return;
 			player.setHealth(
-			        player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth() : player.getHealth() + Settings.getSoupHealth());
+					player.getHealth() + Settings.getSoupHealth() > player.getMaxHealth() ? player.getMaxHealth()
+							: player.getHealth() + Settings.getSoupHealth());
 			if (Settings.isSoupBowlDisappear()) {
 				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
 					player.getInventory().getItemInMainHand().setAmount(0);
@@ -196,14 +198,17 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	public final void onPlayerJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
 		pvPlayer.updatePlayer(player);
-		if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
-			Messages.sendQueuedMsgs(pvPlayer);
-		}
+		ScheduleUtils.runAsync(() -> {
+			if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
+				Messages.sendQueuedMsgs(pvPlayer);
+			}
+		});
+
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -231,7 +236,7 @@ public class PlayerListener implements Listener {
 			event.setCancelled(true);
 			pvplayer.message(Messages.getEnderpearlBlockedIncombat());
 		} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && event.getCause() == TeleportCause.CHORUS_FRUIT
-		        && Settings.isBlockChorusFruit()) {
+				&& Settings.isBlockChorusFruit()) {
 			event.setCancelled(true);
 			pvplayer.message(Messages.getChorusBlockedInCombat());
 		} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {

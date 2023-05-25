@@ -30,7 +30,7 @@ Artifact Information:
 <dependency>
     <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>3.12.7</version>
+    <version>3.12.11</version>
     <scope>provided</scope>
 </dependency>
  ```

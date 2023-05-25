@@ -21,7 +21,7 @@ public class TagTask extends TimerTask {
 
 	public TagTask(final DisplayManager display) {
 		this.display = display;
-		this.timer = new Timer();
+		this.timer = new Timer("PvPManager Display Thread");
 		timer.scheduleAtFixedRate(this, 1000, 100);
 	}
 

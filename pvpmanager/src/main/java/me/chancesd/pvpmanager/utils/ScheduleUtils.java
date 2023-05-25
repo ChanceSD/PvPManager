@@ -9,6 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import me.NoChance.PvPManager.PvPManager;
 
 public class ScheduleUtils {
@@ -23,7 +26,8 @@ public class ScheduleUtils {
 	}
 
 	public static void setupExecutor() {
-		executor = Executors.newScheduledThreadPool(4);
+		executor = Executors.newScheduledThreadPool(Math.max(4, Runtime.getRuntime().availableProcessors() / 2),
+				new ThreadFactoryBuilder().setNameFormat("PvPManager Worker Thread - %d").build());
 	}
 
 	public static void runAsync(final Runnable task) {

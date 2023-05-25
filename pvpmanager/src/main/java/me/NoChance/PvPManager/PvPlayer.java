@@ -4,11 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import me.NoChance.PvPManager.Events.PlayerTagEvent;
 import me.NoChance.PvPManager.Events.PlayerTogglePvPEvent;
@@ -38,7 +42,10 @@ public class PvPlayer extends EcoPlayer {
 	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
 	private NameTag nametag;
-	private static ExecutorService executor = Executors.newCachedThreadPool();
+	private static ExecutorService executor = new ThreadPoolExecutor(2, Runtime.getRuntime().availableProcessors(),
+			60L, TimeUnit.SECONDS,
+			new SynchronousQueue<>(),
+			new ThreadFactoryBuilder().setNameFormat("PvPManager Player Thread - %d").build());
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
 		super(player, plugin.getDependencyManager().getEconomy());
