@@ -2,9 +2,15 @@ package me.chancesd.pvpmanager.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Entity;
@@ -74,6 +80,27 @@ public class ScheduleUtils {
 		scheduledTasks.forEach(scheduledTask -> scheduledTask.cancel(false));
 		executor.shutdown();
 		provider.cancelAllTasks();
+	}
+
+	public static ExecutorService newBoundedCachedThreadPool(final int corePoolSize, final int maxPoolSize, final ThreadFactory threadFactory) {
+		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<Runnable>() {
+			@Override
+			public boolean offer(final Runnable e) {
+				return tryTransfer(e);
+			}
+		};
+		final ThreadPoolExecutor threadPool = new ThreadPoolExecutor(corePoolSize, maxPoolSize, 60, TimeUnit.SECONDS, queue, threadFactory);
+		threadPool.setRejectedExecutionHandler(new RejectedExecutionHandler() {
+			@Override
+			public void rejectedExecution(final Runnable r, final ThreadPoolExecutor localExecutor) {
+				try {
+					localExecutor.getQueue().put(r);
+				} catch (final InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+		});
+		return threadPool;
 	}
 
 	public static boolean checkFolia() {

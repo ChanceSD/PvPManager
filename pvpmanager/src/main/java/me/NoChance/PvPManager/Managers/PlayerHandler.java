@@ -206,6 +206,7 @@ public class PlayerHandler {
 	}
 
 	private void addOnlinePlayers() {
+		PvPlayer.startExecutor();
 		for (final Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
 			if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
 				Log.debug("Unregistered leftover team: " + team.getName() + " Entries: " + team.getEntries());
