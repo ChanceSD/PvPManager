@@ -17,9 +17,11 @@ public class DatabaseFactory {
 	 * Register a new converter.
 	 *
 	 * @param converter Converter to register
+	 * @return this
 	 */
-	public void registerConverter(final Converter converter) {
+	public DatabaseFactory registerConverter(final Converter converter) {
 		converters.add(converter);
+		return this;
 	}
 
 	/**
@@ -34,7 +36,8 @@ public class DatabaseFactory {
 
 	protected void doConversion(final Database database) {
 		for (final Converter converter : converters) {
-			converter.onDatabaseLoad(database);
+			if (converter.onDatabaseLoad(database))
+				converter.onComplete();
 		}
 	}
 

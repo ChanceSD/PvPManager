@@ -8,21 +8,22 @@ import java.util.logging.Level;
 
 public interface Converter {
 
-	default void onDatabaseLoad(final Database database) {
+	default boolean onDatabaseLoad(final Database database) {
 		try (Connection connection = database.getConnection()) {
 			if (needsConversion(database)) {
 				final Table oldTable = getOldTable();
-
-				//Load entries
-				try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + oldTable.getName()); ResultSet entries = ps.executeQuery()) {
-
-					//Convert
+				// Load entries
+				try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + oldTable.getName());
+						ResultSet entries = ps.executeQuery()) {
+					// Convert
 					convertAll(database, entries);
 				}
+				return true;
 			}
 		} catch (final SQLException e) {
 			database.getPlugin().getLogger().log(Level.WARNING, "Failed to convert database", e);
 		}
+		return false;
 	}
 
 	public void onComplete();
@@ -54,7 +55,7 @@ public interface Converter {
 	 * Convert all loaded entries
 	 *
 	 * @param database Selected database
-	 * @param results Loaded entries
+	 * @param results  Loaded entries
 	 * @throws SQLException
 	 */
 	public void convertAll(Database database, ResultSet results) throws SQLException;

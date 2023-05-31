@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -33,6 +34,7 @@ public class Database {
 	private static final String SQLITE_URL_TEMPLATE = "jdbc:sqlite:%s";
 	private final JavaPlugin plugin;
 	private final DatabaseType databaseType;
+	private final Map<String, Table> tableRegister = new HashMap<>();
 	private boolean converted;
 	private final HikariDataSource connectionPool;
 
@@ -98,6 +100,7 @@ public class Database {
 		try (Connection connection = getConnection();
 				PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + table.getName() + table.getUsage())) {
 			ps.executeUpdate();
+			tableRegister.put(table.getName(), table);
 		} catch (final SQLException e) {
 			log("Failed to register table", e);
 		}
@@ -111,6 +114,7 @@ public class Database {
 	public void deleteTable(final String table) {
 		try (Connection connection = getConnection(); PreparedStatement ps = connection.prepareStatement("DROP TABLE " + table)) {
 			ps.executeUpdate();
+			tableRegister.remove(table);
 		} catch (final SQLException e) {
 			log("Failed to delete table", e);
 		}
@@ -125,6 +129,11 @@ public class Database {
 	public void renameTable(final String oldName, final String newName) {
 		try (Connection connection = getConnection(); PreparedStatement ps = connection.prepareStatement("RENAME " + oldName + " TO " + newName)) {
 			ps.executeUpdate();
+			final Table table = tableRegister.get(oldName);
+			if (table != null) {
+				tableRegister.remove(oldName);
+				tableRegister.put(newName, table);
+			}
 		} catch (final SQLException e) {
 			log("Failed to rename table", e);
 		}
@@ -468,6 +477,11 @@ public class Database {
 			log("Failed to get row count", e);
 		}
 		return 0;
+	}
+
+	@Nullable
+	public Table getTable(final String tableName) {
+		return tableRegister.get(tableName);
 	}
 
 	/**
