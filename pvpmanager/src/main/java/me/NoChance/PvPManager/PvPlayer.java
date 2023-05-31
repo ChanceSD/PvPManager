@@ -3,8 +3,7 @@ package me.NoChance.PvPManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -42,9 +41,9 @@ public class PvPlayer extends EcoPlayer {
 	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
 	private NameTag nametag;
-	private static ExecutorService executor = new ThreadPoolExecutor(2, Runtime.getRuntime().availableProcessors(),
+	private static ExecutorService executor = new ThreadPoolExecutor(4, Math.max(4, Runtime.getRuntime().availableProcessors()),
 			60L, TimeUnit.SECONDS,
-			new SynchronousQueue<>(),
+			new LinkedBlockingDeque<>(50),
 			new ThreadFactoryBuilder().setNameFormat("PvPManager Player Thread - %d").build());
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
@@ -360,8 +359,11 @@ public class PvPlayer extends EcoPlayer {
 	public static void shutdownExecutorAndWait() {
 		try {
 			executor.shutdown();
-			executor.awaitTermination(3, TimeUnit.SECONDS);
-			executor = Executors.newCachedThreadPool();
+			executor.awaitTermination(5, TimeUnit.SECONDS);
+			executor = new ThreadPoolExecutor(4, Math.max(4, Runtime.getRuntime().availableProcessors()),
+					60L, TimeUnit.SECONDS,
+					new LinkedBlockingDeque<>(50),
+					new ThreadFactoryBuilder().setNameFormat("PvPManager Player Thread - %d").build());
 		} catch (final InterruptedException e) {
 			Log.severe(e.getMessage(), e);
 			Thread.currentThread().interrupt();

@@ -31,7 +31,7 @@ public class UpdateManager {
 				public void run() {
 					checkForUpdates();
 				}
-			}, 0, 18000);
+			}, 1, 18000);
 		}
 	}
 
