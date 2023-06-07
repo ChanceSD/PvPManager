@@ -127,9 +127,6 @@ public class PlayerHandler {
 	public final void removeUser(final PvPlayer player) {
 		player.cleanForRemoval();
 		players.remove(player.getUUID());
-		if (player.hasPvPLogged()) {
-			player.setPvpLogged(false);
-		}
 		if (player.isInCombat()) {
 			untag(player);
 		}
@@ -142,6 +139,7 @@ public class PlayerHandler {
 		if (Settings.isKillOnLogout()) {
 			player.setPvpLogged(true);
 			p.setHealth(0);
+			player.setPvpLogged(false);
 		}
 		if (Settings.getFineAmount() != 0) {
 			player.applyFine();

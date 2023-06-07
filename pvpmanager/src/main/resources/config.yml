@@ -15,9 +15,6 @@
 # mode 'TRANSFER' - (Same as 'DROP' but transfer items(not exp) directly to killer's inventory without drops)
 # mode 'CLEAR' - (Clear all drops and exp on death, this deletes everything on death so make sure it is what you want)
 # Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
-# This prevents players from doing a hit and run between zone borders
-# Auto Soup Health -> How much health does soup heal, use 0 to disable
-# Bowl Disappear -> Should empty bowls just be deleted
 # World Exclusions -> List of worlds where PvPManager will have no effect
 General:
   # Changes messages language, options are - EN | BG | DE | ES | FR | HR | IT | PL | pt_BR | RU | TR | zh_TW | ZH
@@ -27,8 +24,14 @@ General:
   Player Drop Mode: ALWAYS
   Ignore No Damage Hits: false
   Auto Soup:
+     # How much health does soup heal, use 0 to disable
      Health: 0
+     # Should empty bowls just be deleted
      Bowl Disappear: false
+  # Removes empty potion bottles and milk buckets after they are consumed
+  Recycling:
+    Potion Bottle: false
+    Milk Bucket: false
   World Exclusions:
     - 'example'
     

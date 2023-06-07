@@ -7,15 +7,20 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.Material;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -27,6 +32,7 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class EntityListener1_9 implements Listener {
 
@@ -86,6 +92,27 @@ public class EntityListener1_9 implements Listener {
 			}
 		}
 		event.getAffectedEntities().removeAll(toRemove);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onConsume(final PlayerItemConsumeEvent e) {
+		if (!Settings.isRecyclePotionBottles() && !Settings.isRecycleMilkBucket())
+			return;
+
+		final Material type = e.getItem().getType();
+		if ((type != Material.POTION || !Settings.isRecyclePotionBottles()) && (type != Material.MILK_BUCKET || !Settings.isRecycleMilkBucket()))
+			return;
+		final Player player = e.getPlayer();
+		final PlayerInventory inventory = player.getInventory();
+		final int heldSlot = inventory.getHeldItemSlot();
+		ScheduleUtils.runTaskLater(() -> {
+			final ItemStack held = inventory.getItem(heldSlot);
+			final ItemStack off = inventory.getItemInOffHand();
+			if (held != null && (held.getType() == Material.GLASS_BOTTLE || held.getType() == Material.BUCKET))
+				held.setAmount(0);
+			if (off.getType() == Material.GLASS_BOTTLE || off.getType() == Material.BUCKET)
+				off.setAmount(0);
+		}, player, 1);
 	}
 
 }

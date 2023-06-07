@@ -88,6 +88,8 @@ public final class Settings {
 	private static boolean optOutMetrics;
 	private static double soupHealth;
 	private static boolean soupBowlDisappear;
+	private static boolean recyclePotionBottles;
+	private static boolean recycleMilkBucket;
 	private static boolean borderHoppingVulnerable;
 	private static boolean borderHoppingPushback;
 	private static boolean borderPushbackTakeElytra;
@@ -149,6 +151,8 @@ public final class Settings {
 		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
 		soupHealth = GENERAL.getDouble("Auto Soup.Health", 0);
 		soupBowlDisappear = GENERAL.getBoolean("Auto Soup.Bowl Disappear", false);
+		recyclePotionBottles = GENERAL.getBoolean("Recycling.Potion Bottle", false);
+		recycleMilkBucket = GENERAL.getBoolean("Recycling.Milk Bucket", false);
 		worldsExcluded = new HashSet<>(getList(GENERAL.getStringList("World Exclusions")));
 
 		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
@@ -607,6 +611,14 @@ public final class Settings {
 
 	public static boolean isSoupBowlDisappear() {
 		return soupBowlDisappear;
+	}
+	
+	public static boolean isRecyclePotionBottles() {
+		return recyclePotionBottles;
+	}
+	
+	public static boolean isRecycleMilkBucket() {
+		return recycleMilkBucket;
 	}
 
 	public static boolean isBlockTeleport() {
