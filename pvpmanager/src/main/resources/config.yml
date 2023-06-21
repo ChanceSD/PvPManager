@@ -120,7 +120,7 @@ Tagged In Combat:
       Kick Reasons:
       - 'Kicked for spamming'
       - 'disconnect.spam'
-    Money Penalty: 0
+    Money Penalty: 0.0
     Log To File: true
     Kill on Logout:
       Enabled: true
@@ -147,12 +147,12 @@ Newbie Protection:
 
 # Prevent player abuse by killing the same player several times to rise in rank or even just grief
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
-# In this case, it would check every 60 seconds for abusers
+# In this case, it would check every 20 seconds for abusers
 # Respawn Protection - After respawn, how many seconds should players be protected (0 to disable)
 Kill Abuse:
   Enabled: true
   Max Kills: 5
-  Time Limit: 60
+  Time Limit: 20
   Commands on Abuse:
     - 'kick <player> Kill Abuse Is Not Allowed!'
   Respawn Protection: 3
@@ -164,8 +164,8 @@ Kill Abuse:
 # Commands On Kill - Commands to execute on kill (<player> is the killer, <victim> is the victim)
 # WorldGuard Exclusions - WorldGuard regions where rewards, penalties and commands will not be executed
 Player Kills:
-  Money Reward: 0
-  Money Penalty: 0
+  Money Reward: 0.0
+  Money Penalty: 0.0
   Money Steal: false
   Commands On Kill:
     - 'examplecommand <player> killed <victim>'

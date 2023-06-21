@@ -75,7 +75,7 @@ public class EntityListener1_9 implements Listener {
 			final Player attacked = (Player) e;
 			final CancelResult result = ph.tryCancel(player, attacked);
 
-			if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
+			if (result.isProtected()) {
 				toRemove.add(e);
 				final Set<AreaEffectCloud> clouds = potionMessageCache.getIfPresent(player.getUniqueId());
 				if (clouds == null || !clouds.contains(areaCloud)) {

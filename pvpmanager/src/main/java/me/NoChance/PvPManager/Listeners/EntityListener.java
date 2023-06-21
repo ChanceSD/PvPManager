@@ -77,7 +77,7 @@ public class EntityListener implements Listener {
 		final Player attacked = (Player) event.getEntity();
 		final CancelResult result = ph.tryCancel(attacker, attacked);
 
-		if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
+		if (result.isProtected()) {
 			event.setCancelled(true);
 			Messages.messageProtection(result, attacker, attacked);
 		}
@@ -180,7 +180,7 @@ public class EntityListener implements Listener {
 			final Player attacked = (Player) e;
 			final CancelResult result = ph.tryCancel(player, attacked);
 
-			if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
+			if (result.isProtected()) {
 				event.setIntensity(attacked, 0);
 				Messages.messageProtection(result, player, attacked);
 			}

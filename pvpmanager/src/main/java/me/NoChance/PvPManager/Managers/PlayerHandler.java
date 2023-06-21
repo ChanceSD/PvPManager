@@ -73,9 +73,9 @@ public class PlayerHandler {
 					attacked.setPvP(true);
 					attacked.message(Messages.getPvpForceEnabledWG());
 				}
-				return CancelResult.FAIL;
+				return CancelResult.FAIL_PLUGIN_HOOK;
 			} else if (dependencyManager.shouldDisableProtection(damager, defender)) // TODO add worldguard overrides in this
-				return CancelResult.FAIL;
+				return CancelResult.FAIL_PLUGIN_HOOK;
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 		}
 		return CancelResult.FAIL;
@@ -94,7 +94,7 @@ public class PlayerHandler {
 	 */
 	public final boolean canAttack(final Player attacker, final Player defender) {
 		final CancelResult cr = tryCancel(attacker, defender);
-		return cr.equals(CancelResult.FAIL) || cr.equals(CancelResult.FAIL_OVERRIDE);
+		return cr.canAttack();
 	}
 
 	private boolean canAttackHooks(final PvPlayer attacker, final PvPlayer defender) {

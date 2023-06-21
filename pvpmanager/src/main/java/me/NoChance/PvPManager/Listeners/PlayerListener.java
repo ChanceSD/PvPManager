@@ -274,7 +274,7 @@ public class PlayerListener implements Listener {
 		if (event.getState() == State.CAUGHT_ENTITY && event.getCaught() instanceof Player) {
 			final Player caught = (Player) event.getCaught();
 			final CancelResult result = ph.tryCancel(player, caught);
-			if (result != CancelResult.FAIL && result != CancelResult.FAIL_OVERRIDE) {
+			if (result.isProtected()) {
 				event.setCancelled(true);
 				Messages.messageProtection(result, player, caught);
 			} // TODO trigger damage actions
