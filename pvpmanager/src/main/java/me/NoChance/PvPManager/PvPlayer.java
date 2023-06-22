@@ -15,12 +15,13 @@ import me.NoChance.PvPManager.Events.PlayerTagEvent;
 import me.NoChance.PvPManager.Events.PlayerTogglePvPEvent;
 import me.NoChance.PvPManager.Events.PlayerUntagEvent;
 import me.NoChance.PvPManager.Player.EcoPlayer;
-import me.NoChance.PvPManager.Player.nametag.NameTag;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
+import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
@@ -128,7 +129,7 @@ public class PvPlayer extends EcoPlayer {
 		if (event.isCancelled())
 			return;
 
-		if (nametag != null && Settings.isUseCombatTeam()) {
+		if (nametag != null && Settings.useNameTag()) {
 			nametag.setInCombat();
 		}
 		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
@@ -154,8 +155,8 @@ public class PvPlayer extends EcoPlayer {
 			return;
 
 		if (isOnline()) {
-			if (nametag != null && Settings.isUseCombatTeam()) {
-				nametag.restoreTeam();
+			if (nametag != null && Settings.useNameTag()) {
+				nametag.restoreNametag();
 			}
 			if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
 				getPlayer().setGlowing(false); // effect should pass by itself but now players can get untagged before tag expires
@@ -260,15 +261,15 @@ public class PvPlayer extends EcoPlayer {
 				this.pvpState = false;
 			}
 		}
-		if (Settings.isUseCombatTeam() || Settings.isToggleNametagsEnabled()) {
+		if (Settings.useNameTag()) {
 			try {
-				this.nametag = new NameTag(this);
+				this.nametag = new BukkitNameTag(this);
 			} catch (final NoSuchMethodError e) {
-				Settings.setUseCombatTeam(false);
-				Settings.setToggleNametagsEnabled(false);
+				Settings.setUseNameTag(false);
 				this.nametag = null;
 				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
 			} catch (final UnsupportedOperationException e) {
+				Settings.setUseNameTag(false);
 				this.nametag = null;
 				Log.info("Nametag support disabled until Folia supports the scoreboard API");
 			}
@@ -321,7 +322,7 @@ public class PvPlayer extends EcoPlayer {
 		if (!p.equals(getPlayer())) {
 			setPlayer(p);
 			if (nametag != null) {
-				nametag = new NameTag(this);
+				nametag = new BukkitNameTag(this);
 			}
 		}
 	}
@@ -330,8 +331,8 @@ public class PvPlayer extends EcoPlayer {
 		if (newbieTask != null) {
 			newbieTask.cancel();
 		}
-		if (nametag != null && Settings.isUseCombatTeam()) {
-			nametag.removeCombatTeam();
+		if (nametag != null && Settings.useNameTag()) {
+			nametag.cleanup();
 		}
 		executor.execute(() -> plugin.getStorageManager().getStorage().saveUserData(this));
 	}

@@ -12,9 +12,11 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.Log;
 
 public final class Settings {
 
@@ -54,7 +56,6 @@ public final class Settings {
 	private static boolean ignoreNoDamageHits;
 	private static boolean inCombatEnabled;
 	private static boolean useNameTag;
-	private static boolean useCombatTeam;
 	private static List<String> killAbuseCommands;
 	private static boolean killAbuseEnabled;
 	private static int killAbuseMaxKills;
@@ -66,6 +67,7 @@ public final class Settings {
 	private static double moneyReward;
 	private static boolean moneySteal;
 	private static String nameTagPrefix;
+	private static String nameTagSuffix;
 	private static boolean newbieGodMode;
 	private static boolean newbieProtectionEnabled;
 	private static int newbieProtectionTime;
@@ -169,8 +171,7 @@ public final class Settings {
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
-		useNameTag = !nameTagPrefix.equalsIgnoreCase("none") && !nameTagPrefix.isEmpty();
-		useCombatTeam = useNameTag;
+		nameTagSuffix = TAGGEDCOMBAT.getString("NameTag Suffix", "");
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		selfTag = TAGGEDCOMBAT.getBoolean("Self Tag", false);
 		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
@@ -238,6 +239,9 @@ public final class Settings {
 
 		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() != null && PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
 		cooldownsxEnderpearlID = PLUGINHOOKS.getString("CooldownsX.Enderpearl", "");
+
+		useNameTag = !nameTagPrefix.isEmpty() || !nameTagSuffix.isEmpty() || toggleNametagsEnabled;
+		Log.info("Using player nametags: " + useNameTag);
 
 		checkUpdates = UPDATECHECK.getBoolean("Enabled", true);
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
@@ -355,6 +359,10 @@ public final class Settings {
 
 	public static String getNameTagPrefix() {
 		return nameTagPrefix;
+	}
+
+	public static String getNameTagSuffix() {
+		return nameTagSuffix;
 	}
 
 	public static int getNewbieProtectionTime() {
@@ -585,16 +593,12 @@ public final class Settings {
 		Settings.update = update;
 	}
 
-	public static boolean isUseNameTag() {
+	public static boolean useNameTag() {
 		return useNameTag;
 	}
 
-	public static void setUseCombatTeam(final boolean useCombatTeam) {
-		Settings.useCombatTeam = useCombatTeam;
-	}
-
-	public static boolean isUseCombatTeam() {
-		return useCombatTeam;
+	public static void setUseNameTag(final boolean useNameTag) {
+		Settings.useNameTag = useNameTag;
 	}
 
 	public static int getConfigVersion() {
@@ -612,11 +616,11 @@ public final class Settings {
 	public static boolean isSoupBowlDisappear() {
 		return soupBowlDisappear;
 	}
-	
+
 	public static boolean isRecyclePotionBottles() {
 		return recyclePotionBottles;
 	}
-	
+
 	public static boolean isRecycleMilkBucket() {
 		return recycleMilkBucket;
 	}

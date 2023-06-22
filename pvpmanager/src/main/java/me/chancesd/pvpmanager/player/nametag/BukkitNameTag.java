@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Player.nametag;
+package me.chancesd.pvpmanager.player.nametag;
 
 import java.util.UUID;
 
@@ -8,51 +8,38 @@ import org.bukkit.scoreboard.Team;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
 
-public class NameTag {
+public class BukkitNameTag extends NameTag {
 
 	private Team inCombat;
 	private Team pvpOn;
 	private Team pvpOff;
 	private Team previousTeam;
 	private String previousTeamName;
-	private final PvPlayer pvPlayer;
-	private final String id;
-	private final String prefix;
-	private final String pvpOnPrefix;
-	private final String pvpOffPrefix;
-	private Scoreboard scoreboard;
+	private final String combatTeamID;
+	private final Scoreboard scoreboard;
 
-	public NameTag(final PvPlayer p) {
-		this.pvPlayer = p;
-		this.id = "PVP-" + processPlayerID(pvPlayer.getUUID());
-		this.prefix = ChatUtils.colorize(Settings.getNameTagPrefix());
-		this.pvpOnPrefix = Settings.getToggleColorOn().equalsIgnoreCase("none") ? "" : ChatUtils.colorize(Settings.getToggleColorOn());
-		this.pvpOffPrefix = Settings.getToggleColorOff().equalsIgnoreCase("none") ? "" : ChatUtils.colorize(Settings.getToggleColorOff());
-		setupScoreboard();
-		setupTeams();
+
+	public BukkitNameTag(final PvPlayer p) {
+		super(p);
+		this.combatTeamID = "PVP-" + processPlayerID(pvPlayer.getUUID());
+		this.scoreboard = pvPlayer.getPlayer().getScoreboard();
+		setup();
 	}
 
-	private void setupScoreboard() {
-		scoreboard = pvPlayer.getPlayer().getScoreboard();
-	}
-
-	private void setupTeams() {
-		if (Settings.isUseCombatTeam()) {
-			if (scoreboard.getTeam(id) != null) {
-				inCombat = scoreboard.getTeam(id);
-				Log.debug("Combat team with name " + id + " already existed");
+	private void setup() {
+		if (!Settings.getNameTagPrefix().isEmpty()) {
+			if (scoreboard.getTeam(combatTeamID) != null) {
+				inCombat = scoreboard.getTeam(combatTeamID);
+				Log.debug("Combat team with name " + combatTeamID + " already existed");
 			} else {
-				inCombat = scoreboard.registerNewTeam(id);
-				Log.debug("Creating combat team with name " + id);
-				if (Settings.isUseNameTag()) {
-					inCombat.setPrefix(prefix);
-				}
+				inCombat = scoreboard.registerNewTeam(combatTeamID);
+				Log.debug("Creating combat team with name " + combatTeamID);
+				inCombat.setPrefix(combatPrefix);
 				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-					final ChatColor nameColor = getLastColor(prefix);
+					final ChatColor nameColor = getLastColor(combatPrefix);
 					if (nameColor != null) {
 						inCombat.setColor(nameColor);
 					}
@@ -110,14 +97,16 @@ public class NameTag {
 		return ChatColor.getByChar(lastColors.replace("§", ""));
 	}
 
+	@Override
 	public final void setInCombat() {
 		storePreviousTeam();
 		try {
 			inCombat.addEntry(pvPlayer.getName());
 		} catch (final IllegalStateException e) {
 			Log.info("Failed to add player to combat team");
-			Log.info("This warning can be ignored but if it happens often it means one of your plugins is removing PvPManager teams and causing a conflict");
-			setupTeams();
+			Log.info(
+					"This warning can be ignored but if it happens often it means one of your plugins is removing PvPManager teams and causing a conflict");
+			setup();
 		}
 	}
 
@@ -136,7 +125,8 @@ public class NameTag {
 
 	private static boolean restoringSent;
 
-	public final void restoreTeam() {
+	@Override
+	public final void restoreNametag() {
 		try {
 			if (previousTeamName != null && scoreboard.getTeam(previousTeamName) != null) {
 				previousTeam.addEntry(pvPlayer.getName());
@@ -154,15 +144,16 @@ public class NameTag {
 		}
 	}
 
+	@Override
 	public final void setPvP(final boolean state) {
 		if (state) {
 			if (pvpOn == null) {
-				restoreTeam();
+				restoreNametag();
 			} else {
 				pvpOn.addEntry(pvPlayer.getName());
 			}
 		} else if (pvpOff == null) {
-			restoreTeam();
+			restoreNametag();
 		} else {
 			pvpOff.addEntry(pvPlayer.getName());
 		}
@@ -170,7 +161,8 @@ public class NameTag {
 
 	private static boolean unregisteredSent;
 
-	public void removeCombatTeam() {
+	@Override
+	public void cleanup() {
 		try {
 			Log.debug("Unregistering team: " + inCombat.getName());
 			inCombat.unregister();
@@ -181,4 +173,5 @@ public class NameTag {
 			Log.severe("Team was already unregistered for player: " + pvPlayer.getName());
 		}
 	}
+
 }

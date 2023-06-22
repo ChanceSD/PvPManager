@@ -63,8 +63,8 @@ Disable:
 
 # Section about the tag system
 # Time -> How long should the tag last in seconds
-# NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color his name red
-# while 'none' or empty quotes '' will disable this feature completely
+# NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color their name red
+# while empty quotes '' will disable this feature completely
 # Glowing -> For 1.9+ only, sets the player glowing while tagged
 # Self Tag -> Allow players to tag themselves with a bow
 # Untag Enemy -> When the player kills the enemy he was fighting he gets untagged
@@ -80,6 +80,8 @@ Tagged In Combat:
   Enabled: true
   Time: 10
   NameTag Prefix: '&4&lCombat &c'
+  # Currently only on premium version and when using the TAB plugin
+  NameTag Suffix: ''
   Glowing: true
   # Symbol to use for the bar and how many times to repeat it. Other symbols ▊,▮,▯,|
   Action Bar:
