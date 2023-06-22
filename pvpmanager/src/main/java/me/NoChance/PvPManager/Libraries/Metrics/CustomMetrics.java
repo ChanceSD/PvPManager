@@ -43,7 +43,7 @@ public class CustomMetrics {
 				map.put("Update Check", getMapEntry(!Settings.isUpdateCheck() ? "Disabled" : !Settings.isAutoUpdate() ? "Update Check" : "Auto Update"));
 				map.put("PvP Blood", getMapEntry(Settings.isPvpBlood() ? "Enabled" : "Disabled"));
 				map.put("Drop Mode", getMapEntry(Settings.getDropMode().toString()));
-				map.put("Combat Nametags", getMapEntry(Settings.isUseCombatTeam() ? "Enabled" : "Disabled"));
+				map.put("Combat Nametags", getMapEntry(Settings.useNameTag() ? "Enabled" : "Disabled"));
 				map.put("Database Type", getMapEntry(plugin.getStorageManager().getStorage().getDatabaseType().toString()));
 				if (Settings.isBossBarEnabled() && !Settings.getActionBarMessage().isEmpty())
 					map.put("Display Type", getMapEntry("Both"));

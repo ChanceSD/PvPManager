@@ -3,6 +3,7 @@ PvPManager
 [![Discord](https://discordapp.com/api/guilds/622559860705198108/widget.png)](https://discord.gg/QFTjs3g)
 [![Spiget Downloads](https://img.shields.io/spiget/downloads/845?label=spigot%20downloads)](https://www.spigotmc.org/resources/pvpmanager-lite.845/)
 [![Build Status](https://github.com/ChanceSD/PvPManager/actions/workflows/maven.yml/badge.svg)](https://ci.codemc.io/job/ChanceSD/job/PvPManager/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ChanceSD_PvPManager&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ChanceSD_PvPManager)
 [![Crowdin](https://badges.crowdin.net/pvpmanager/localized.svg)](https://crowdin.com/project/pvpmanager)
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/chancesd/pvpmanager/latest)](https://github.com/ChanceSD/PvPManager/commits/master)
 ![GitHub Releases](https://img.shields.io/github/downloads/chancesd/pvpmanager/latest/total)
@@ -14,7 +15,7 @@ Useful Links
 **Bukkit:** http://dev.bukkit.org/bukkit-plugins/pvpmanager/  
 **Discord:** https://discord.gg/QFTjs3g  
 **Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/  
-**Help translating PvPManager:** https://crowdin.com/project/pvpmanager
+**Help translate PvPManager:** https://crowdin.com/project/pvpmanager
 
 Developers
 ------
@@ -30,7 +31,7 @@ Artifact Information:
 <dependency>
     <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>3.12.11</version>
+    <version>3.14</version>
     <scope>provided</scope>
 </dependency>
  ```
