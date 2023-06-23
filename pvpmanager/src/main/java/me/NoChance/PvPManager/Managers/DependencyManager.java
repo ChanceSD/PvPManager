@@ -18,7 +18,7 @@ import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
-import me.NoChance.PvPManager.Dependencies.WarDependency;
+import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.CooldownsXHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
@@ -33,6 +33,7 @@ import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
 import me.NoChance.PvPManager.Listeners.MoveListener;
 import me.NoChance.PvPManager.Listeners.MoveListener1_9;
+import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.NoChance.PvPManager.Utils.Log;
@@ -45,7 +46,7 @@ public class DependencyManager {
 	private final ArrayList<RegionDependency> regionChecks = new ArrayList<>();
 	private final ArrayList<GodDependency> godChecks = new ArrayList<>();
 	private final ArrayList<DisguiseDependency> disguiseChecks = new ArrayList<>();
-	private final ArrayList<WarDependency> warChecks = new ArrayList<>();
+	private final ArrayList<ForceToggleDependency> togglePvPChecks = new ArrayList<>();
 
 	public DependencyManager() {
 		setupHooks();
@@ -160,9 +161,9 @@ public class DependencyManager {
 		}
 	}
 
-	public final boolean shouldDisableProtection(final Player attacker, final Player defender) {
-		for (final WarDependency warPlugin : warChecks) { // TODO change to something like forcetogglehook
-			if (warPlugin.isInWar(attacker, defender))
+	public final boolean shouldDisableProtection(final Player attacker, final Player defender, final CancelResult reason) {
+		for (final ForceToggleDependency togglePvPPlugin : togglePvPChecks) {
+			if (togglePvPPlugin.shouldDisable(attacker, defender, reason))
 				return true;
 		}
 		return false;
@@ -206,10 +207,10 @@ public class DependencyManager {
 		if (dep instanceof DisguiseDependency) {
 			disguiseChecks.add((DisguiseDependency) dep);
 		}
-		if (dep instanceof WarDependency) {
-			final WarDependency warHook = (WarDependency) dep;
-			if (warHook.shouldDisablePvPInWar()) {
-				warChecks.add(warHook);
+		if (dep instanceof ForceToggleDependency) {
+			final ForceToggleDependency togglePvPHook = (ForceToggleDependency) dep;
+			if (togglePvPHook.shouldDisableProtection()) {
+				togglePvPChecks.add(togglePvPHook);
 			}
 		}
 	}
@@ -220,7 +221,7 @@ public class DependencyManager {
 		regionChecks.remove(dep);
 		godChecks.remove(dep);
 		disguiseChecks.remove(dep);
-		warChecks.remove(dep);
+		togglePvPChecks.remove(dep);
 	}
 
 	public JavaPlugin getDependencyMainClass(final Hook h) {

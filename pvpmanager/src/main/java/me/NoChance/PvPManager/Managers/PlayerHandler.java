@@ -15,11 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.NoChance.PvPManager.Player.CancelResult;
-import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.PvPToggleFeeTask;
@@ -35,14 +32,12 @@ public class PlayerHandler {
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
 	private final TagTask tagTask;
-	private final WorldGuardHook worldguard;
 
 	public PlayerHandler(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
 		this.tagTask = new TagTask(plugin.getDisplayManager());
-		this.worldguard = (WorldGuardHook) dependencyManager.getDependency(Hook.WORLDGUARD);
 		if (Settings.isKillAbuseEnabled()) {
 			ScheduleUtils.runAsyncTimer(new CleanKillersTask(this), Settings.getKillAbuseTime() * 20L, Settings.getKillAbuseTime() * 20L);
 		}
@@ -60,21 +55,13 @@ public class PlayerHandler {
 			return CancelResult.FAIL_OVERRIDE;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
 			return CancelResult.RESPAWN_PROTECTION.setAttackerCaused(attacker.hasRespawnProtection());
-		if (attacked.isNewbie() || attacker.isNewbie())
-			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
-		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
-			if (worldguard != null && (Settings.isWorldguardOverrides() && worldguard.hasAllowPvPFlag(defender)
-			        || worldguard.containsRegionsAt(defender.getLocation(), Settings.getWorldguardOverridesList()))) {
-				if (!attacker.hasPvPEnabled()) {
-					attacker.setPvP(true);
-					attacker.message(Messages.getPvpForceEnabledWG());
-				}
-				if (!attacked.hasPvPEnabled()) {
-					attacked.setPvP(true);
-					attacked.message(Messages.getPvpForceEnabledWG());
-				}
+		if (attacked.isNewbie() || attacker.isNewbie()) {
+			if (dependencyManager.shouldDisableProtection(damager, defender, CancelResult.NEWBIE))
 				return CancelResult.FAIL_PLUGIN_HOOK;
-			} else if (dependencyManager.shouldDisableProtection(damager, defender)) // TODO add worldguard overrides in this
+			return CancelResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
+		}
+		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
+			if (dependencyManager.shouldDisableProtection(damager, defender, CancelResult.PVPDISABLED))
 				return CancelResult.FAIL_PLUGIN_HOOK;
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 		}
@@ -86,9 +73,9 @@ public class PlayerHandler {
 	 * This method will not be changed while the previous might change at any time.
 	 *
 	 * @param attacker
-	 *            The attacking player
+	 *                 The attacking player
 	 * @param defender
-	 *            The player being attacked
+	 *                 The player being attacked
 	 *
 	 * @return true if the attack didn't get blocked or if it got override, otherwise false
 	 */

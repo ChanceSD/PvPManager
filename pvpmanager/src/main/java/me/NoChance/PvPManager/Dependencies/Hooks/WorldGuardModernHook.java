@@ -12,13 +12,18 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
+import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Listeners.WGListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Settings.Settings;
 
-public class WorldGuardModernHook extends BaseDependency implements WorldGuardHook {
+public class WorldGuardModernHook extends BaseDependency implements WorldGuardHook, ForceToggleDependency {
 
 	private final RegionQuery regionQuery;
 
@@ -72,6 +77,47 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardHo
 	@Override
 	public void startListener(final PlayerHandler ph) {
 		Bukkit.getPluginManager().registerEvents(new WGListener(ph), ph.getPlugin());
+	}
+
+	@Override
+	public boolean shouldDisable(final Player player) {
+		return false;
+	}
+
+	@Override
+	public boolean shouldDisable(final Player damager, final Player defender, final CancelResult reason) {
+		if (hasAllowPvPFlag(defender) || containsRegionsAt(defender.getLocation(), Settings.getWorldguardOverridesList())) {
+			final PvPlayer attacker = PvPlayer.get(damager);
+			final PvPlayer attacked = PvPlayer.get(defender);
+			if (reason == CancelResult.PVPDISABLED) {
+				disablePvP(attacker);
+				disablePvP(attacked);
+			} else {
+				disableNewbieProtection(attacker);
+				disableNewbieProtection(attacked);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private void disableNewbieProtection(final PvPlayer player) {
+		if (player.isNewbie()) {
+			player.setNewbie(false);
+			player.message(Messages.getNewbieForceRemovedWG());
+		}
+	}
+
+	private void disablePvP(final PvPlayer player) {
+		if (!player.hasPvPEnabled()) {
+			player.setPvP(true);
+			player.message(Messages.getPvpForceEnabledWG());
+		}
+	}
+
+	@Override
+	public boolean shouldDisableProtection() {
+		return Settings.isWorldguardOverrides();
 	}
 
 }

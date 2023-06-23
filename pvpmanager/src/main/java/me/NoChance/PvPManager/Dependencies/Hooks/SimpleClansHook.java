@@ -6,14 +6,15 @@ import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
-import me.NoChance.PvPManager.Dependencies.WarDependency;
+import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Settings.Settings;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
 @SuppressWarnings("null")
-public class SimpleClansHook extends BaseDependency implements PvPDependency, WarDependency {
+public class SimpleClansHook extends BaseDependency implements PvPDependency, ForceToggleDependency {
 
 	private final ClanManager clanManager;
 
@@ -31,20 +32,20 @@ public class SimpleClansHook extends BaseDependency implements PvPDependency, Wa
 	}
 
 	@Override
-	public boolean isInWar(final Player player) {
+	public boolean shouldDisable(final Player player) {
 		final ClanPlayer cPlayer = clanManager.getClanPlayer(player);
 		return cPlayer != null && !cPlayer.getClan().getWarringClans().isEmpty();
 	}
 
 	@Override
-	public boolean isInWar(final Player attacker, final Player defender) {
+	public boolean shouldDisable(final Player attacker, final Player defender, final CancelResult reason) {
 		final ClanPlayer cAttacker = clanManager.getClanPlayer(attacker);
 		final ClanPlayer cDefender = clanManager.getClanPlayer(defender);
 		return cAttacker != null && cDefender != null && cAttacker.getClan().isWarring(cDefender.getClan());
 	}
 
 	@Override
-	public boolean shouldDisablePvPInWar() {
+	public boolean shouldDisableProtection() {
 		return Settings.isSimpleClansNoPvPInWar();
 	}
 

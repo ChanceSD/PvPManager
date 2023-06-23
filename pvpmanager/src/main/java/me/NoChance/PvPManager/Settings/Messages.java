@@ -79,6 +79,7 @@ public class Messages {
 	private static String newbieTimeCheck;
 	private static String newbieTimeCheckOther;
 	private static String newbieProtectionRemoved;
+	private static String newbieForceRemovedWG;
 	private static String respawnProtectionSelf;
 	private static String respawnProtectionOther;
 	private static String pvpForceEnabledWG;
@@ -177,6 +178,7 @@ public class Messages {
 		newbieTimeCheckOther = getString("Newbie_Time_Check_Other");
 		newbieCommandBlocked = getString("Newbie_Command_Blocked");
 		newbiePickupItemBlocked = getString("Newbie_Pickup_Items_Blocked");
+		newbieForceRemovedWG = getString("Newbie_Force_Removed_WorldGuard");
 		blockPlaceBlockedInCombat = getString("Block_Place_Blocked_InCombat");
 		eatBlockedInCombat = getString("Eating_Blocked_InCombat");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
@@ -452,6 +454,10 @@ public class Messages {
 
 	public static String getNewbieProtectionRemoved() {
 		return newbieProtectionRemoved;
+	}
+
+	public static String getNewbieForceRemovedWG() {
+		return newbieForceRemovedWG;
 	}
 
 	public static String getErrorNotInCombat() {
