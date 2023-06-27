@@ -39,7 +39,7 @@ public class PlayerHandler {
 		this.dependencyManager = plugin.getDependencyManager();
 		this.tagTask = new TagTask(plugin.getDisplayManager());
 		if (Settings.isKillAbuseEnabled()) {
-			ScheduleUtils.runAsyncTimer(new CleanKillersTask(this), Settings.getKillAbuseTime() * 20L, Settings.getKillAbuseTime() * 20L);
+			ScheduleUtils.runAsyncTimer(new CleanKillersTask(this), Settings.getKillAbuseTime(), Settings.getKillAbuseTime());
 		}
 		if (Settings.getPvPDisabledFee() != 0) {
 			ScheduleUtils.runAsyncTimer(new PvPToggleFeeTask(this), 0, 60 * 60L);

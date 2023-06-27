@@ -2,14 +2,12 @@ package me.NoChance.PvPManager.Tasks;
 
 import java.util.concurrent.ScheduledFuture;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
-public class NewbieTask extends BukkitRunnable {
+public class NewbieTask implements Runnable {
 
 	private final PvPlayer player;
 	private final long finishTime;
@@ -30,8 +28,7 @@ public class NewbieTask extends BukkitRunnable {
 		player.setNewbie(false);
 	}
 
-	@Override
-	public synchronized void cancel() throws IllegalStateException {
+	public synchronized void cancel() {
 		task.cancel(true);
 	}
 

@@ -149,14 +149,14 @@ Newbie Protection:
 
 # Prevent player abuse by killing the same player several times to rise in rank or even just grief
 # Example - If a player X kills player Y more than 5 times, it executes the commands defined(kick, jail, etc)
-# In this case, it would check every 20 seconds for abusers
+# In this case, it would check every 30 seconds for abusers
 # Respawn Protection - After respawn, how many seconds should players be protected (0 to disable)
 Kill Abuse:
   Enabled: true
   Max Kills: 5
-  Time Limit: 20
+  Time Limit: 30
   Commands on Abuse:
-    - 'kick <player> Kill Abuse Is Not Allowed!'
+    - 'kick <player> &cKill Abuse Is Not Allowed!'
   Respawn Protection: 3
 
 # Section with settings triggered when a player kills another player

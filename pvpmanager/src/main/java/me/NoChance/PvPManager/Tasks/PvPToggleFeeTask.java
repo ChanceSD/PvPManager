@@ -1,11 +1,9 @@
 package me.NoChance.PvPManager.Tasks;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 
-public class PvPToggleFeeTask extends BukkitRunnable {
+public class PvPToggleFeeTask implements Runnable {
 
 	private final PlayerHandler ph;
 

@@ -196,7 +196,7 @@ public class PvPlayer extends EcoPlayer {
 	public final void addVictim(final String victimName) {
 		if (!victim.containsKey(victimName)) {
 			victim.put(victimName, 1);
-		} else if (victim.containsKey(victimName)) {
+		} else {
 			int totalKills = victim.get(victimName);
 			if (totalKills < Settings.getKillAbuseMaxKills()) {
 				totalKills++;
