@@ -100,7 +100,7 @@ public class PvPlayer extends EcoPlayer {
 			message(Messages.getNewbieProtection().replace("%", Integer.toString(Settings.getNewbieProtectionTime())));
 			this.newbieTask = new NewbieTask(this, 0);
 		} else if (this.newbie && newbieTask != null) {
-			if (newbieTask.isScheduled()) {
+			if (newbieTask.isExpired()) {
 				message(Messages.getNewbieProtectionEnd());
 			} else {
 				message(Messages.getNewbieProtectionRemoved());

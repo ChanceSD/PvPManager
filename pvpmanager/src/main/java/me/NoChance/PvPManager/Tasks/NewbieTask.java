@@ -12,6 +12,7 @@ public class NewbieTask implements Runnable {
 	private final PvPlayer player;
 	private final long finishTime;
 	private final ScheduledFuture<?> task;
+	private boolean expired;
 
 	public NewbieTask(final PvPlayer player, final long time) {
 		this.player = player;
@@ -25,6 +26,7 @@ public class NewbieTask implements Runnable {
 
 	@Override
 	public final void run() {
+		this.expired = true;
 		player.setNewbie(false);
 	}
 
@@ -32,8 +34,8 @@ public class NewbieTask implements Runnable {
 		task.cancel(true);
 	}
 
-	public boolean isScheduled() {
-		return task.isDone();
+	public boolean isExpired() {
+		return this.expired;
 	}
 
 	public long getTimeleft() {
