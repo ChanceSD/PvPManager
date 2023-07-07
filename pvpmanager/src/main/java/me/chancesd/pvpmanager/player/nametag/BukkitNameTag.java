@@ -30,10 +30,10 @@ public class BukkitNameTag extends NameTag {
 	}
 
 	private void setup() {
-		if (!Settings.getNameTagPrefix().isEmpty()) {
+		if (!combatPrefix.isEmpty() || !combatSuffix.isEmpty()) {
 			if (scoreboard.getTeam(combatTeamID) != null) {
 				inCombat = scoreboard.getTeam(combatTeamID);
-				Log.debug("Combat team with name " + combatTeamID + " already existed");
+				Log.warning("Combat team with name " + combatTeamID + " already existed! Did you server crash?");
 			} else {
 				inCombat = scoreboard.registerNewTeam(combatTeamID);
 				Log.debug("Creating combat team with name " + combatTeamID);

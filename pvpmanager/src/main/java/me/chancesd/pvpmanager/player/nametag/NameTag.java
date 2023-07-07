@@ -3,6 +3,7 @@ package me.chancesd.pvpmanager.player.nametag;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.ChatUtils;
+import me.NoChance.PvPManager.Utils.Log;
 
 public abstract class NameTag {
 
@@ -18,6 +19,7 @@ public abstract class NameTag {
 		this.combatSuffix = ChatUtils.colorize(Settings.getNameTagSuffix());
 		this.pvpOnPrefix = Settings.getToggleColorOn().equalsIgnoreCase("none") ? "" : ChatUtils.colorize(Settings.getToggleColorOn());
 		this.pvpOffPrefix = Settings.getToggleColorOff().equalsIgnoreCase("none") ? "" : ChatUtils.colorize(Settings.getToggleColorOff());
+		Log.debug("Creating " + this.getClass().getSimpleName() + " for " + p);
 	}
 
 	public abstract void setInCombat();
