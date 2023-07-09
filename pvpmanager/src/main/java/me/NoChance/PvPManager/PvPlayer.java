@@ -193,7 +193,8 @@ public class PvPlayer extends EcoPlayer {
 		}
 	}
 
-	public final void addVictim(final String victimName) {
+	public final void addVictim(final Player victimPlayer) {
+		final String victimName = victimPlayer.getName();
 		if (!victim.containsKey(victimName)) {
 			victim.put(victimName, 1);
 		} else {
@@ -207,6 +208,18 @@ public class PvPlayer extends EcoPlayer {
 				CombatUtils.executeCommands(Settings.getKillAbuseCommands(), getPlayer(), getName());
 			}
 		}
+	}
+
+	/**
+	 * The number of times this player killed victimPlayer in the last x seconds
+	 * <br>
+	 * where x is the time limit defined in the config file
+	 *
+	 * @param victimPlayer
+	 * @return The kill count
+	 */
+	public final int getKillAbuseCount(final Player victimPlayer) {
+		return victim.getOrDefault(victimPlayer.getName(), 0);
 	}
 
 	public final void clearVictims() {
