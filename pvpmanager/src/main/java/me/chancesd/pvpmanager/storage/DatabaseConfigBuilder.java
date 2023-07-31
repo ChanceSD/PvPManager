@@ -35,14 +35,14 @@ public class DatabaseConfigBuilder {
 		final DatabaseType dbType = getDBTypeFrom(section);
 		final String newURL = String.format("%s:%d", section.getString("Host"), section.getInt("Port"));
 
-		if (dbType == DatabaseType.MYSQL) {
-			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(section.getString("Database")).user(section.getString("Username"))
-			.password(section.getString("Password"));
-		}
 		if (dbType == DatabaseType.MARIADB) {
 			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(section.getString("Database")).user(section.getString("Username"))
 			.password(section.getString("Password"));
+		} else {
+			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(section.getString("Database")).user(section.getString("Username"))
+			.password(section.getString("Password"));
 		}
+
 	}
 
 	/**
