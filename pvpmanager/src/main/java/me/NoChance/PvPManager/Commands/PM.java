@@ -277,7 +277,7 @@ public class PM implements TabExecutor {
 		if (args.length == 1)
 			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "debug", "reload", "update", "locale"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("convert"))
-			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
+			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL", "MARIADB"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("debug"))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "tag", "ct", "newbie", "attack"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("locale"))

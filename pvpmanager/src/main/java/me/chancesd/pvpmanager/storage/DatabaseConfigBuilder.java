@@ -9,7 +9,7 @@ import me.NoChance.PvPManager.Utils.Log;
 public class DatabaseConfigBuilder {
 
 	public enum DatabaseType {
-		SQLITE, MYSQL;
+		SQLITE, MYSQL, MARIADB;
 	}
 
 	private String driver;
@@ -32,9 +32,17 @@ public class DatabaseConfigBuilder {
 	 * @param section Configuration section.
 	 */
 	public DatabaseConfigBuilder(final ConfigurationSection section) {
+		final DatabaseType dbType = getDBTypeFrom(section);
 		final String newURL = String.format("%s:%d", section.getString("Host"), section.getInt("Port"));
-		driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(section.getString("Database")).user(section.getString("Username"))
-		        .password(section.getString("Password"));
+
+		if (dbType == DatabaseType.MYSQL) {
+			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(section.getString("Database")).user(section.getString("Username"))
+			.password(section.getString("Password"));
+		}
+		if (dbType == DatabaseType.MARIADB) {
+			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(section.getString("Database")).user(section.getString("Username"))
+			.password(section.getString("Password"));
+		}
 	}
 
 	/**
@@ -65,7 +73,16 @@ public class DatabaseConfigBuilder {
 			final String newURL = String.format("%s:%d", mysql.getString("Host"), mysql.getInt("Port"));
 			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(mysql.getString("Database")).user(mysql.getString("Username"))
 			        .password(mysql.getString("Password"));
-		} else {
+		}
+		if (dbType == DatabaseType.MARIADB) {
+			final ConfigurationSection mariadb = section.getConfigurationSection("MariaDB");
+			if (mariadb == null)
+				throw new IllegalArgumentException("The MariaDB config section is missing");
+			final String newURL = String.format("%s:%d", mariadb.getString("Host"), mariadb.getInt("Port"));
+			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(mariadb.getString("Database")).user(mariadb.getString("Username"))
+			        .password(mariadb.getString("Password"));
+		}
+		else {
 			driver("org.sqlite.SQLiteDataSource").type(DatabaseType.SQLITE).sqlite(backup);
 		}
 	}
