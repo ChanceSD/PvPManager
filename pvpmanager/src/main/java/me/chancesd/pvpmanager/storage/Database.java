@@ -58,13 +58,12 @@ public class Database {
 				config.addDataSourceProperty("journal_mode", "wal");
 			}
 			config.addDataSourceProperty("synchronous", "normal");
-		} if (databaseType == DatabaseType.MARIADB) {
+		} else if (databaseType == DatabaseType.MARIADB) {
 			// Use MARIADB
 			config.setJdbcUrl(String.format(MARIADB_URL_TEMPLATE, builder.getUrl(), builder.getDatabase()));
 			config.setUsername(builder.getUser());
 			config.setPassword(builder.getPassword());
-		}
-		else {
+		} else {
 			// Use MYSQL
 			config.setJdbcUrl(String.format(MYSQL_URL_TEMPLATE, builder.getUrl(), builder.getDatabase()));
 			config.setUsername(builder.getUser());

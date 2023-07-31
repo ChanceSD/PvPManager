@@ -12,6 +12,9 @@ public class DatabaseConfigBuilder {
 		SQLITE, MYSQL, MARIADB;
 	}
 
+	private static final String DATABASE_FIELD = "Database";
+	private static final String USERNAME_FIELD = "Username";
+	private static final String PASSWORD_FIELD = "Password";
 	private String driver;
 	private String url;
 	private String database;
@@ -35,14 +38,15 @@ public class DatabaseConfigBuilder {
 		final DatabaseType dbType = getDBTypeFrom(section);
 		final String newURL = String.format("%s:%d", section.getString("Host"), section.getInt("Port"));
 
-		if (dbType == DatabaseType.MARIADB) {
-			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(section.getString("Database")).user(section.getString("Username"))
-			.password(section.getString("Password"));
-		} else {
-			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(section.getString("Database")).user(section.getString("Username"))
-			.password(section.getString("Password"));
+		if (dbType == DatabaseType.MYSQL) {
+			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(section.getString(DATABASE_FIELD))
+					.user(section.getString(USERNAME_FIELD))
+					.password(section.getString(PASSWORD_FIELD));
+		} else if (dbType == DatabaseType.MARIADB) {
+			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(section.getString(DATABASE_FIELD))
+					.user(section.getString(USERNAME_FIELD))
+					.password(section.getString(PASSWORD_FIELD));
 		}
-
 	}
 
 	/**
@@ -50,9 +54,8 @@ public class DatabaseConfigBuilder {
 	 * drivers auto-generated.
 	 *
 	 * @param section Configuration section.
-	 * @param backup SQLite file backup.
+	 * @param backup  SQLite file backup.
 	 */
-	@SuppressWarnings("null")
 	public DatabaseConfigBuilder(final ConfigurationSection section, final File backup) {
 		this(section, backup, getDBTypeFrom(section));
 	}
@@ -62,8 +65,8 @@ public class DatabaseConfigBuilder {
 	 * drivers auto-generated.
 	 *
 	 * @param section Configuration section.
-	 * @param backup SQLIte file backup.
-	 * @param dbType Type of database
+	 * @param backup  SQLIte file backup.
+	 * @param dbType  Type of database
 	 */
 	public DatabaseConfigBuilder(final ConfigurationSection section, final File backup, final DatabaseType dbType) {
 		if (dbType == DatabaseType.MYSQL) {
@@ -71,18 +74,18 @@ public class DatabaseConfigBuilder {
 			if (mysql == null)
 				throw new IllegalArgumentException("The MySQL config section is missing");
 			final String newURL = String.format("%s:%d", mysql.getString("Host"), mysql.getInt("Port"));
-			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(mysql.getString("Database")).user(mysql.getString("Username"))
-			        .password(mysql.getString("Password"));
-		}
-		if (dbType == DatabaseType.MARIADB) {
-			final ConfigurationSection mariadb = section.getConfigurationSection("MariaDB");
-			if (mariadb == null)
-				throw new IllegalArgumentException("The MariaDB config section is missing");
-			final String newURL = String.format("%s:%d", mariadb.getString("Host"), mariadb.getInt("Port"));
-			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(mariadb.getString("Database")).user(mariadb.getString("Username"))
-			        .password(mariadb.getString("Password"));
-		}
-		else {
+			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(mysql.getString(DATABASE_FIELD))
+					.user(mysql.getString(USERNAME_FIELD))
+					.password(mysql.getString(PASSWORD_FIELD));
+		} else if (dbType == DatabaseType.MARIADB) {
+			final ConfigurationSection mysql = section.getConfigurationSection("MySQL");
+			if (mysql == null)
+				throw new IllegalArgumentException("The MySQL config section is missing");
+			final String newURL = String.format("%s:%d", mysql.getString("Host"), mysql.getInt("Port"));
+			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(mysql.getString(DATABASE_FIELD))
+					.user(mysql.getString(USERNAME_FIELD))
+					.password(mysql.getString(PASSWORD_FIELD));
+		} else {
 			driver("org.sqlite.SQLiteDataSource").type(DatabaseType.SQLITE).sqlite(backup);
 		}
 	}
