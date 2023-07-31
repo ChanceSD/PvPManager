@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -46,13 +47,22 @@ public class MoveListener1_9 implements Listener {
 			final Vector newVel = event.getFrom().toVector().subtract(event.getTo().toVector());
 			newVel.setY(0).normalize().multiply(1.6).setY(0.5);
 			CombatUtils.checkGlide(player);
-			player.setVelocity(newVel);
+			player.setVelocity(sanitizeVector(newVel));
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {
 				pvplayer.message(Messages.getPushbackWarning());
 				event.getFrom().getWorld().playEffect(player.getEyeLocation(), Effect.SMOKE, 3);
 				cache.put(player.getUniqueId(), player);
 			}
 		}
+	}
+
+	@NotNull
+	private Vector sanitizeVector(@NotNull final Vector vel) {
+		if (Double.isNaN(vel.getX()))
+			vel.setX(0);
+		if (Double.isNaN(vel.getZ()))
+			vel.setZ(0);
+		return vel;
 	}
 
 }
