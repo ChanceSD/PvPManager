@@ -17,7 +17,7 @@
 # Ignore No Damage Hits -> Ignore hits from snowballs, eggs, fishing rod and others
 # World Exclusions -> List of worlds where PvPManager will have no effect
 General:
-  # Changes messages language, options are - EN | BG | DE | ES | FR | HR | IT | PL | pt_BR | RU | TR | zh_TW | ZH
+  # Changes messages language, options are - EN | BG | DE | ES | FR | HR | IT | JA | PL | pt_BR | RU | TR | zh_TW | ZH
   Locale: EN
   Default PvP: true
   PvP Blood: true
