@@ -59,6 +59,8 @@ Disable:
   GameMode: true
   Disguise: true
   GodMode: true
+  # Makes player fall down if they're tagged while elytra gliding
+  Elytra: false
   Invisibility: false
 
 # Section about the tag system

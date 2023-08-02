@@ -48,6 +48,7 @@ public final class Settings {
 	private static boolean disableGamemode;
 	private static boolean disableInvisibility;
 	private static boolean disableGodMode;
+	private static boolean disableELytra;
 	private static boolean dropArmor;
 	private static boolean dropExp;
 	private static boolean dropInventory;
@@ -166,6 +167,7 @@ public final class Settings {
 		disableGamemode = DISABLE.getBoolean("GameMode", true);
 		disableDisguise = DISABLE.getBoolean("Disguise", true);
 		disableGodMode = DISABLE.getBoolean("GodMode", true);
+		disableELytra = DISABLE.getBoolean("Elytra", false);
 		disableInvisibility = DISABLE.getBoolean("Invisibility", false);
 
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
@@ -447,6 +449,10 @@ public final class Settings {
 
 	public static boolean isDisableInvisibility() {
 		return disableInvisibility;
+	}
+
+	public static boolean isDisableElytra() {
+		return disableELytra;
 	}
 
 	public static boolean isDropArmor() {

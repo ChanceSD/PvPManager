@@ -152,6 +152,7 @@ public final class CombatUtils {
 		if (p.isGliding()) {
 			p.setGliding(false);
 			p.teleport(p.getLocation());
+			p.setFallDistance(-200);
 			if (!Settings.isBorderPushbackTakeElytra())
 				return;
 			final ItemStack chestplate = p.getInventory().getChestplate();

@@ -164,6 +164,11 @@ public class EntityListener implements Listener {
 		if (Settings.isDisableGodMode()) {
 			ph.getPlugin().getDependencyManager().disableGodMode(attacker);
 		}
+		if (Settings.isDisableElytra()) {
+			CombatUtils.checkGlide(attacker);
+			if (!defender.hasPermission("pvpmanager.nodisable"))
+				CombatUtils.checkGlide(defender);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
