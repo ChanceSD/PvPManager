@@ -13,12 +13,14 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Utils.Log;
 
 public class ScheduleUtils {
 
@@ -106,6 +108,7 @@ public class ScheduleUtils {
 	public static boolean checkFolia() {
 		try {
 			Class.forName("io.papermc.paper.threadedregions.scheduler.AsyncScheduler");
+			Log.debug("Method " + Bukkit.class.getDeclaredMethod("getAsyncScheduler", null));
 			return true;
 		} catch (final Throwable ignored) {
 			return false;
