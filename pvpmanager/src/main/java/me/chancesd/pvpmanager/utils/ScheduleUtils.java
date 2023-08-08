@@ -105,9 +105,9 @@ public class ScheduleUtils {
 
 	public static boolean checkFolia() {
 		try {
-			Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
+			Class.forName("io.papermc.paper.threadedregions.scheduler.AsyncScheduler");
 			return true;
-		} catch (final ClassNotFoundException ignored) {
+		} catch (final Throwable ignored) {
 			return false;
 		}
 	}
