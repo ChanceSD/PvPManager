@@ -9,6 +9,8 @@ public interface SchedulerProvider {
 
 	public void runPlatformAsyncTimer(final Runnable task, final long delay, final long period);
 
+	public void runPlatformGlobal(final Runnable task);
+
 	public void runTask(final Runnable task, final Entity entity);
 
 	public void runTaskLater(final Runnable task, final Entity entity, final long delay);

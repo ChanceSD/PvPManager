@@ -27,6 +27,11 @@ public class BukkitProvider implements SchedulerProvider {
 	}
 
 	@Override
+	public void runPlatformGlobal(final Runnable task) {
+		Bukkit.getScheduler().runTask(plugin, task);
+	}
+
+	@Override
 	public void runTask(final Runnable task, final Entity entity) {
 		Bukkit.getScheduler().runTask(plugin, task);
 	}

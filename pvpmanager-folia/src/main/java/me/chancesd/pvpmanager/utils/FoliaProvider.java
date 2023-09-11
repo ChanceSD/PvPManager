@@ -28,6 +28,11 @@ public class FoliaProvider implements SchedulerProvider {
 	}
 
 	@Override
+	public void runPlatformGlobal(final Runnable task) {
+		Bukkit.getGlobalRegionScheduler().execute(plugin, task);
+	}
+
+	@Override
 	public void runTask(final Runnable task, final Entity entity) {
 		entity.getScheduler().run(plugin, scheduledTask -> task.run(), task);
 	}

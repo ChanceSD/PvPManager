@@ -58,6 +58,10 @@ public class ScheduleUtils {
 		provider.runPlatformAsyncTimer(task, delay, period);
 	}
 
+	public static void runPlatformGlobal(final Runnable task) {
+		provider.runPlatformGlobal(task);
+	}
+
 	public static void runTask(final Runnable task, final Entity entity) {
 		provider.runTask(task, entity);
 	}
