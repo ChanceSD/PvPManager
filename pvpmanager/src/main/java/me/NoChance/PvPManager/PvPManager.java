@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
@@ -60,7 +61,7 @@ public class PvPManager extends JavaPlugin {
 		registerCommands();
 		startMetrics();
 		checkJavaVersion();
-		Log.info("PvPManager Enabled (" + (System.currentTimeMillis() - start) + " ms)");
+		Log.infoColor(ChatColor.GREEN + "PvPManager Enabled " + ChatColor.GRAY + "(" + (System.currentTimeMillis() - start) + " ms)");
 	}
 
 	@Override

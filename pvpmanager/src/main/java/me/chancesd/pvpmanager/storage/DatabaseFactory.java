@@ -35,9 +35,17 @@ public class DatabaseFactory {
 	}
 
 	protected void doConversion(final Database database) {
+		boolean anyConversion = false;
 		for (final Converter converter : converters) {
 			if (converter.onDatabaseLoad(database))
 				converter.onComplete();
+			if (converter.needsConversion(database))
+				anyConversion = true;
+		}
+		if (anyConversion) {
+			database.getPlugin().reloadConfig();
+			database.getPlugin().getConfig().set("Database Version", database.getPlugin().getConfig().getDefaults().getInt("Database Version"));
+			database.getPlugin().saveConfig();
 		}
 	}
 

@@ -33,9 +33,8 @@ public interface Converter {
 	 *
 	 * @param database Selected database
 	 * @return Needs conversion?
-	 * @throws SQLException
 	 */
-	public boolean needsConversion(Database database) throws SQLException;
+	public boolean needsConversion(Database database);
 
 	/**
 	 * Old table format.

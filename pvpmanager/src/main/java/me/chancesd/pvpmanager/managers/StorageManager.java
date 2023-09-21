@@ -123,7 +123,7 @@ public class StorageManager {
 		}
 
 		conversionFinished.set(true);
-		ChatUtils.send(sender, ChatColor.DARK_GREEN + "Converted " + usersConverted + " out of " + allRows.size() + " users to the new database");
+		ChatUtils.send(sender, ChatColor.GOLD + "Converted " + usersConverted + " out of " + allRows.size() + " users to the new database");
 		ChatUtils.send(sender,
 		        ChatColor.DARK_GREEN + "Database conversion finished in " + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - start) + " seconds");
 	}

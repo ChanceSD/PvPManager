@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -209,7 +210,7 @@ public class PlayerHandler {
 			p.cleanForRemoval();
 		}
 		removeTeams();
-		Log.info("Saving player data to storage...");
+		Log.infoColor(ChatColor.RED + "Saving player data to storage...");
 		PvPlayer.shutdownExecutorAndWait();
 	}
 

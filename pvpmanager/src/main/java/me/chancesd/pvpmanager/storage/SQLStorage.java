@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.pvpmanager.storage.converter.DisplayNameConverter;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 
 public class SQLStorage implements Storage {
@@ -39,13 +41,13 @@ public class SQLStorage implements Storage {
 	}
 
 	private Database setupDatabase(final DatabaseConfigBuilder config) {
-		final Database db = new DatabaseFactory(plugin).getDatabase(config);
+		final Database db = new DatabaseFactory(plugin).registerConverter(new DisplayNameConverter()).getDatabase(config);
 		usersTable = new Table("pmr_users",
 				"uuid CHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), displayname VARCHAR(255), kills INT UNSIGNED DEFAULT 0, deaths INT UNSIGNED DEFAULT 0, pvpstatus BOOLEAN DEFAULT 1, "
 		                + "toggletime BIGINT DEFAULT 0, newbie BOOLEAN DEFAULT 0, newbie_timeleft BIGINT DEFAULT 0, last_seen BIGINT DEFAULT 0");
 		db.registerTable(usersTable);
-		Log.info("Connected to " + config.getType() + " database successfully");
-		Log.info("Players stored: " + db.getRowCount(usersTable));
+		Log.infoColor(ChatColor.GREEN + "Connected to " + ChatColor.AQUA + config.getType() + ChatColor.GREEN + " database successfully");
+		Log.infoColor(ChatColor.GREEN + "Players stored: " + ChatColor.GOLD + db.getRowCount(usersTable));
 		return db;
 	}
 
@@ -86,7 +88,7 @@ public class SQLStorage implements Storage {
 	@Override
 	public void shutdown() {
 		database.close();
-		Log.info("Closed " + getDatabaseType() + " storage");
+		Log.infoColor(ChatColor.RED + "Closed " + getDatabaseType() + " storage");
 	}
 
 	@Override

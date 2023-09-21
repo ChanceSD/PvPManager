@@ -54,7 +54,7 @@ public class ConfigManager {
 		if (oldVersion < currentVersion) {
 			try {
 				ConfigUpdater.update(plugin, "config.yml", configFile, Arrays.asList("Config Version", "Metrics", "Update Check.Enabled"));
-				Log.warning("Config file updated from version " + oldVersion + " to version " + currentVersion);
+				Log.infoColor("§aConfig file updated from version §c" + oldVersion + " §ato version §c" + currentVersion);
 				Log.warning("Checking the config file and adjusting the new settings is highly recommended");
 				Messages.queueAdminMsg(Messages.PREFIXMSG + " §aConfiguration updated from version §c" + oldVersion + " §ato §c" + currentVersion);
 				Messages.queueAdminMsg(Messages.PREFIXMSG + " §aChecking the config file and adjusting the new settings is highly recommended");

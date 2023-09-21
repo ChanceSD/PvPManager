@@ -3,6 +3,9 @@ package me.NoChance.PvPManager.Utils;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+
+import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 
 public final class Log {
@@ -14,6 +17,10 @@ public final class Log {
 
 	public static void setup(final Logger log) {
 		Log.logger = log;
+	}
+
+	public static void infoColor(final String message) {
+		ChatUtils.send(Bukkit.getConsoleSender(), Messages.PREFIXMSG + " " + message);
 	}
 
 	public static void info(final String message) {

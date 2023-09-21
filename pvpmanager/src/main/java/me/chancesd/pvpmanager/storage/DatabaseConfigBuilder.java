@@ -9,7 +9,7 @@ import me.NoChance.PvPManager.Utils.Log;
 public class DatabaseConfigBuilder {
 
 	public enum DatabaseType {
-		SQLITE, MYSQL, MARIADB;
+		SQLITE, MYSQL;// MARIADB; spigot/paper dont have the driver for this and don't want to shade it for now
 	}
 
 	private static final String DATABASE_FIELD = "Database";
@@ -42,11 +42,12 @@ public class DatabaseConfigBuilder {
 			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(section.getString(DATABASE_FIELD))
 					.user(section.getString(USERNAME_FIELD))
 					.password(section.getString(PASSWORD_FIELD));
-		} else if (dbType == DatabaseType.MARIADB) {
-			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(section.getString(DATABASE_FIELD))
-					.user(section.getString(USERNAME_FIELD))
-					.password(section.getString(PASSWORD_FIELD));
 		}
+//		} else if (dbType == DatabaseType.MARIADB) {
+//			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(section.getString(DATABASE_FIELD))
+//					.user(section.getString(USERNAME_FIELD))
+//					.password(section.getString(PASSWORD_FIELD));
+//		}
 	}
 
 	/**
@@ -77,14 +78,14 @@ public class DatabaseConfigBuilder {
 			driver("com.mysql.jdbc.Driver").type(DatabaseType.MYSQL).url(newURL).database(mysql.getString(DATABASE_FIELD))
 					.user(mysql.getString(USERNAME_FIELD))
 					.password(mysql.getString(PASSWORD_FIELD));
-		} else if (dbType == DatabaseType.MARIADB) {
-			final ConfigurationSection mysql = section.getConfigurationSection("MySQL");
-			if (mysql == null)
-				throw new IllegalArgumentException("The MySQL config section is missing");
-			final String newURL = String.format("%s:%d", mysql.getString("Host"), mysql.getInt("Port"));
-			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(mysql.getString(DATABASE_FIELD))
-					.user(mysql.getString(USERNAME_FIELD))
-					.password(mysql.getString(PASSWORD_FIELD));
+//		} else if (dbType == DatabaseType.MARIADB) {
+//			final ConfigurationSection mysql = section.getConfigurationSection("MySQL");
+//			if (mysql == null)
+//				throw new IllegalArgumentException("The MySQL config section is missing");
+//			final String newURL = String.format("%s:%d", mysql.getString("Host"), mysql.getInt("Port"));
+//			driver("org.mariadb.jdbc.Driver").type(DatabaseType.MARIADB).url(newURL).database(mysql.getString(DATABASE_FIELD))
+//					.user(mysql.getString(USERNAME_FIELD))
+//					.password(mysql.getString(PASSWORD_FIELD));
 		} else {
 			driver("org.sqlite.SQLiteDataSource").type(DatabaseType.SQLITE).sqlite(backup);
 		}

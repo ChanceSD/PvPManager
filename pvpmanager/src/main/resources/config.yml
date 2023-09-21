@@ -215,9 +215,9 @@ Plugin Hooks:
     Enderpearl: exampleOne
 
 Database:
-  # Database type, supported databases: SQLite or MySQL or MariaDB
+  # Database type, supported databases: SQLite or MySQL
   Type: SQLite
-  # Only fill this section if using MySQL or MariaDB
+  # Only fill this section if using MySQL
   MySQL:
     Host: 127.0.0.1
     Port: 3306
@@ -238,3 +238,4 @@ Debug Mode: false
 
 # Informs PvPManager if the config is updated, do not touch it unless you want to reset the config
 Config Version: ${config.version}
+Database Version: ${database.version}

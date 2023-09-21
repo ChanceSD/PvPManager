@@ -243,7 +243,7 @@ public final class Settings {
 		cooldownsxEnderpearlID = PLUGINHOOKS.getString("CooldownsX.Enderpearl", "");
 
 		useNameTag = !nameTagPrefix.isEmpty() || !nameTagSuffix.isEmpty() || toggleNametagsEnabled;
-		Log.info("Using player nametags: " + useNameTag);
+		Log.infoColor(ChatColor.GREEN + "Using player nametags: " + ChatColor.AQUA + useNameTag);
 
 		checkUpdates = UPDATECHECK.getBoolean("Enabled", true);
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);

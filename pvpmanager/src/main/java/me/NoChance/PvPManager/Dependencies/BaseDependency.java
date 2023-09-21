@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Dependencies;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.NoChance.PvPManager.Utils.Log;
@@ -12,7 +13,7 @@ public class BaseDependency implements Dependency {
 	public BaseDependency(final Hook hook) {
 		this.hook = hook;
 		this.plugin = (JavaPlugin) hook.getPlugin();
-		Log.info(onEnableMessage());
+		Log.infoColor(ChatColor.DARK_PURPLE + onEnableMessage());
 	}
 
 	@Override
