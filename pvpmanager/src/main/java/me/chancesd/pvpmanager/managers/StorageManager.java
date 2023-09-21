@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.Bukkit;
@@ -102,23 +103,26 @@ public class StorageManager {
 	}
 
 	private void convertTo(final Storage destination, final List<Map<String, Object>> allRows, @NotNull final CommandSender sender, final long start) {
+		final AtomicBoolean conversionFinished = new AtomicBoolean();
 		final AtomicInteger usersConverted = new AtomicInteger();
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (usersConverted.get() == allRows.size()) {
+				if (conversionFinished.get()) {
 					this.cancel();
 					return;
 				}
 				ChatUtils.send(sender, ChatColor.GOLD + "Converting database... " + usersConverted + "/" + allRows.size());
 			}
 		}, 0, 1000);
+
 		for (final Map<String, Object> row : allRows) {
 			final UUID uuid = UUID.fromString((String) row.get(UserDataFields.UUID));
-			destination.saveUserData(uuid, row);
-			usersConverted.incrementAndGet();
+			if (destination.saveUserData(uuid, row))
+				usersConverted.incrementAndGet();
 		}
 
+		conversionFinished.set(true);
 		ChatUtils.send(sender, ChatColor.DARK_GREEN + "Converted " + usersConverted + " out of " + allRows.size() + " users to the new database");
 		ChatUtils.send(sender,
 		        ChatColor.DARK_GREEN + "Database conversion finished in " + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - start) + " seconds");

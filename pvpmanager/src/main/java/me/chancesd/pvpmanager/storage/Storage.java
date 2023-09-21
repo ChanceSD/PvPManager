@@ -28,7 +28,7 @@ public interface Storage {
 		removeUserData(player.getUUID());
 	}
 
-	public void saveUserData(UUID uuid, Map<String, Object> userData);
+	public boolean saveUserData(UUID uuid, Map<String, Object> userData);
 
 	public default void saveUserData(final PvPlayer player) {
 		final long start = System.nanoTime();

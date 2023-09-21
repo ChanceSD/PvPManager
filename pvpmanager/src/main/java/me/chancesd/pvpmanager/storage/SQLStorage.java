@@ -41,7 +41,7 @@ public class SQLStorage implements Storage {
 	private Database setupDatabase(final DatabaseConfigBuilder config) {
 		final Database db = new DatabaseFactory(plugin).getDatabase(config);
 		usersTable = new Table("pmr_users",
-		        "uuid CHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), displayname VARCHAR(75), kills INT UNSIGNED DEFAULT 0, deaths INT UNSIGNED DEFAULT 0, pvpstatus BOOLEAN DEFAULT 1, "
+				"uuid CHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), displayname VARCHAR(255), kills INT UNSIGNED DEFAULT 0, deaths INT UNSIGNED DEFAULT 0, pvpstatus BOOLEAN DEFAULT 1, "
 		                + "toggletime BIGINT DEFAULT 0, newbie BOOLEAN DEFAULT 0, newbie_timeleft BIGINT DEFAULT 0, last_seen BIGINT DEFAULT 0");
 		db.registerTable(usersTable);
 		Log.info("Connected to " + config.getType() + " database successfully");
@@ -65,11 +65,11 @@ public class SQLStorage implements Storage {
 	}
 
 	@Override
-	public void saveUserData(final UUID uuid, final Map<String, Object> userData) {
+	public boolean saveUserData(final UUID uuid, final Map<String, Object> userData) {
 		if (userExists(uuid)) {
-			database.updateValues(usersTable, UserDataFields.UUID, uuid.toString(), userData.keySet(), userData.values());
+			return database.updateValues(usersTable, UserDataFields.UUID, uuid.toString(), userData.keySet(), userData.values());
 		} else {
-			database.insertColumns(usersTable, userData.keySet(), userData.values());
+			return database.insertColumns(usersTable, userData.keySet(), userData.values());
 		}
 	}
 

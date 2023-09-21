@@ -34,11 +34,11 @@ public class ConfigManager {
 	}
 
 	private void loadConfig() {
-		checkConfig();
+		checkConfigVersion();
 		initConfig();
 	}
 
-	private void checkConfig() {
+	private void checkConfigVersion() {
 		if (!configFile.exists())
 			return;
 

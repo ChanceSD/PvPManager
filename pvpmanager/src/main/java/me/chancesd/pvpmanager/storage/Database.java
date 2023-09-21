@@ -210,7 +210,7 @@ public class Database {
 	 * @param columns Collection of column names
 	 * @param values  Values to insert
 	 */
-	public void insertColumns(final Table table, final Collection<String> columns, final Collection<Object> values) {
+	public boolean insertColumns(final Table table, final Collection<String> columns, final Collection<Object> values) {
 		try (Connection connection = getConnection()) {
 			final StringBuilder valueCount = getValueParameteres(values);
 			final StringBuilder columnList = new StringBuilder("(");
@@ -231,8 +231,10 @@ public class Database {
 
 				ps.executeUpdate();
 			}
+			return true;
 		} catch (final SQLException e) {
 			log("Failed to insert data to database", e);
+			return false;
 		}
 	}
 
@@ -430,7 +432,7 @@ public class Database {
 	 * @param columns    Columns to update
 	 * @param values     New values to update
 	 */
-	public void updateValues(final Table table, final String index, final Object indexValue, final Collection<String> columns,
+	public boolean updateValues(final Table table, final String index, final Object indexValue, final Collection<String> columns,
 			final Collection<Object> values) {
 		try (Connection connection = getConnection()) {
 			final StringBuilder updateString = new StringBuilder();
@@ -451,8 +453,10 @@ public class Database {
 				ps.setObject(values.size() + 1, indexValue);
 				ps.executeUpdate();
 			}
+			return true;
 		} catch (final SQLException e) {
 			log("Failed to update database", e);
+			return false;
 		}
 	}
 
