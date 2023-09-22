@@ -205,7 +205,7 @@ public class PvPlayer extends EcoPlayer {
 			}
 			if (totalKills >= Settings.getKillAbuseMaxKills()) {
 				unTag();
-				CombatUtils.executeCommands(Settings.getKillAbuseCommands(), getPlayer(), getName());
+				CombatUtils.executeCommands(Settings.getKillAbuseCommands(), getPlayer(), getName(), victimName);
 			}
 		}
 	}

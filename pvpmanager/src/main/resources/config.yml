@@ -157,6 +157,7 @@ Kill Abuse:
   Enabled: true
   Max Kills: 5
   Time Limit: 30
+  # Possible variables are <player> and <victim>
   Commands on Abuse:
     - 'kick <player> &cKill Abuse Is Not Allowed!'
   Respawn Protection: 3
