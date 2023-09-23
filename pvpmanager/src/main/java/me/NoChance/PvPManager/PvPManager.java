@@ -61,8 +61,8 @@ public class PvPManager extends JavaPlugin {
 		registerCommands();
 		startMetrics();
 		checkJavaVersion();
-		Log.infoColor(ChatColor.GREEN + getDescription().getFullName() + " Enabled " + ChatColor.GRAY + "(" + (System.currentTimeMillis() - start)
-				+ " ms)");
+		Log.infoColor(ChatColor.GREEN + getDescription().getFullName() + " enabled " + ChatColor.GRAY + "("
+				+ (System.currentTimeMillis() - start) + " ms)");
 	}
 
 	@Override
