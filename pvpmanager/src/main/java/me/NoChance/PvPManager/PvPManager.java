@@ -49,7 +49,7 @@ public class PvPManager extends JavaPlugin {
 		Log.setup(getLogger());
 		ScheduleUtils.setupExecutor();
 		if (ScheduleUtils.checkFolia()) {
-			Log.info("Running on Folia. Support for Folia is still experimental");
+			Log.infoColor(ChatColor.AQUA + "Running on Folia. Support for Folia is still experimental");
 		}
 		loadFiles();
 		updateManager = new UpdateManager(this);
@@ -61,7 +61,8 @@ public class PvPManager extends JavaPlugin {
 		registerCommands();
 		startMetrics();
 		checkJavaVersion();
-		Log.infoColor(ChatColor.GREEN + "PvPManager Enabled " + ChatColor.GRAY + "(" + (System.currentTimeMillis() - start) + " ms)");
+		Log.infoColor(ChatColor.GREEN + getDescription().getFullName() + " Enabled " + ChatColor.GRAY + "(" + (System.currentTimeMillis() - start)
+				+ " ms)");
 	}
 
 	@Override

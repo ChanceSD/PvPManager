@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Events;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -10,14 +9,11 @@ import me.NoChance.PvPManager.PvPlayer;
 /**
  * This event is called before a player is set as no longer in combat.
  * <br>
- * Canceling the event will keep the player in combat indefinitely.
- * <br>
  * This event may be called by different threads, it is up to the developer to make their code thread safe
  */
-public final class PlayerUntagEvent extends Event implements Cancellable {
+public final class PlayerUntagEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
-	private boolean cancelled;
 	private final Player player;
 	private final PvPlayer pvplayer;
 
@@ -42,16 +38,6 @@ public final class PlayerUntagEvent extends Event implements Cancellable {
 	 */
 	public final PvPlayer getPvPlayer() {
 		return pvplayer;
-	}
-
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
-
-	@Override
-	public void setCancelled(final boolean cancel) {
-		cancelled = cancel;
 	}
 
 	@Override

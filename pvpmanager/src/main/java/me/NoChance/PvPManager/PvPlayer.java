@@ -151,8 +151,6 @@ public class PvPlayer extends EcoPlayer {
 	public final void unTag() {
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this);
 		Bukkit.getPluginManager().callEvent(event);
-		if (event.isCancelled())
-			return;
 
 		if (isOnline()) {
 			if (nametag != null && Settings.useNameTag()) {
@@ -258,7 +256,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public long getTagTimeLeft() {
-		return tagged ? taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis() : 0;
+		return Math.max(taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis(), 0);
 	}
 
 	private synchronized void loadData() {

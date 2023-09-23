@@ -22,7 +22,7 @@ public abstract class Updater {
 	protected String versionType;
 	protected String versionGameVersion;
 
-	private static final String[] TAGS = { "-DEV", "-PRE", "-SNAPSHOT" };
+	private static final String[] TAGS = { "-DEV", "-PRE", "-SNAPSHOT", "-BETA" };
 	private UpdateResult result = UpdateResult.SUCCESS;
 	private final Thread thread;
 	private final Plugin plugin;

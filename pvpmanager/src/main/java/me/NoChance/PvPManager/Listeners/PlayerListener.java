@@ -100,18 +100,7 @@ public class PlayerListener implements Listener {
 		// Player died in combat, process that
 		if (killer != null && !killer.equals(player)) {
 			final PvPlayer pKiller = ph.get(killer);
-			if (Settings.isKillAbuseEnabled() && !killer.hasPermission("pvpmanager.nokillabuse")) {
-				pKiller.addVictim(player);
-			}
-			if (wg == null || !wg.containsRegionsAt(killer.getLocation(), Settings.getKillsWGExclusions())) {
-				if (Settings.getMoneyReward() > 0) {
-					pKiller.giveReward(pvPlayer);
-				}
-				if (Settings.getMoneyPenalty() > 0) {
-					pvPlayer.applyPenalty();
-				}
-				CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
-			}
+			handlePvPDeath(player, pvPlayer, killer, pKiller);
 		}
 
 		if (pvPlayer.isInCombat()) {
@@ -129,6 +118,21 @@ public class PlayerListener implements Listener {
 		}
 
 		ph.handlePlayerDrops(event, player, killer);
+	}
+
+	private void handlePvPDeath(final Player player, final PvPlayer pvPlayer, final Player killer, final PvPlayer pKiller) {
+		if (Settings.isKillAbuseEnabled() && !killer.hasPermission("pvpmanager.nokillabuse")) {
+			pKiller.addVictim(player);
+		}
+		if (wg == null || !wg.containsRegionsAt(killer.getLocation(), Settings.getKillsWGExclusions())) {
+			if (Settings.getMoneyReward() > 0) {
+				pKiller.giveReward(pvPlayer);
+			}
+			if (Settings.getMoneyPenalty() > 0) {
+				pvPlayer.applyPenalty();
+			}
+			CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
+		}
 	}
 
 	@EventHandler
