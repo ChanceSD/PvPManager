@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Queue;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -118,7 +119,7 @@ public class Messages {
 			} catch (final IOException e) {
 				Log.severe("Error reading default locale from jar", e);
 			}
-			Log.info("New messages file created successfully!");
+			Log.infoColor(ChatColor.DARK_GREEN + "New messages file created successfully!");
 		}
 		final File[] listFiles = plugin.getDataFolder().listFiles();
 		if (listFiles != null) {
@@ -131,6 +132,7 @@ public class Messages {
 		}
 		try (FileInputStream in = new FileInputStream(messagesFile)) {
 			if (messagesFile.exists()) {
+				LANG.clear();
 				LANG.load(in);
 				checkChanges();
 				getMessages();

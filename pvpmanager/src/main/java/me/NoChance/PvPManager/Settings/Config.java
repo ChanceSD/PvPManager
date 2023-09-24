@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,7 +33,7 @@ public class Config extends YamlConfiguration {
 		this.file = new File(plugin.getDataFolder(), name);
 		if (!file.exists()) {
 			this.prepareFile(name);
-			Log.info("New config file created successfully!");
+			Log.infoColor(ChatColor.DARK_GREEN + "New config file created successfully!");
 		}
 		this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 	}
