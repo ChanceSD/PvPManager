@@ -1,16 +1,22 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Settings.Config;
 import me.NoChance.PvPManager.Settings.LogFile;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -19,14 +25,15 @@ import me.chancesd.sdutils.utils.Log;
 
 public class ConfigManager {
 
+	private static final String CONFIG_NAME = "config.yml";
 	private final PvPManager plugin;
 	private final File configFile;
-	private Config config;
+	private YamlConfiguration config;
 	private LogFile log;
 
 	public ConfigManager(final PvPManager plugin) {
 		this.plugin = plugin;
-		this.configFile = new File(plugin.getDataFolder(), "config.yml");
+		this.configFile = new File(plugin.getDataFolder(), CONFIG_NAME);
 		loadConfig();
 		if (Settings.isLogToFile()) {
 			log = new LogFile(new File(plugin.getDataFolder(), "combatlogs.log"));
@@ -53,7 +60,7 @@ public class ConfigManager {
 		}
 		if (oldVersion < currentVersion) {
 			try {
-				ConfigUpdater.update(plugin, "config.yml", configFile, Arrays.asList("Config Version", "Metrics", "Update Check.Enabled"));
+				ConfigUpdater.update(plugin, CONFIG_NAME, configFile, Arrays.asList("Config Version", "Metrics", "Update Check.Enabled"));
 				Log.infoColor("§aConfig file updated from version §c" + oldVersion + " §ato version §c" + currentVersion);
 				Log.warning("Checking the config file and adjusting the new settings is highly recommended");
 				Messages.queueAdminMsg(Messages.PREFIXMSG + " §aConfiguration updated from version §c" + oldVersion + " §ato §c" + currentVersion);
@@ -66,9 +73,13 @@ public class ConfigManager {
 	}
 
 	private void initConfig() {
-		try {
-			config = new Config(plugin, "config.yml");
-		} catch (final FileNotFoundException e) {
+		if (!configFile.exists()) {
+			this.prepareFile(configFile, CONFIG_NAME);
+			Log.infoColor(ChatColor.DARK_GREEN + "New config file created successfully!");
+		}
+		try (InputStreamReader inputStream = new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8)) {
+			this.config = YamlConfiguration.loadConfiguration(inputStream);
+		} catch (final IOException e) {
 			Log.severe("Config file not found", e);
 		}
 		Settings.initizalizeVariables(config);
@@ -89,8 +100,29 @@ public class ConfigManager {
 		Messages.queueAdminMsg(Messages.PREFIXMSG + "§cThe broken config was renamed to config.old.yml, you can copy your old settings manually if you need them");
 	}
 
-	public final FileConfiguration getConfig() {
-		return config;
+	private void prepareFile(final File file, final String resource) {
+		try {
+			file.getParentFile().mkdirs();
+			if (file.createNewFile() && resource != null && !resource.isEmpty()) {
+				this.copyResource(plugin.getResource(resource), file);
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void copyResource(final InputStream resource, final File file1) {
+		try (OutputStream out = new FileOutputStream(file1)) {
+			int lenght;
+			final byte[] buf = new byte[1024];
+
+			while ((lenght = resource.read(buf)) > 0) {
+				out.write(buf, 0, lenght);
+			}
+			resource.close();
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public LogFile getLog() {

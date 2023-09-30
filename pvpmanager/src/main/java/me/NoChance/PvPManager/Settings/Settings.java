@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 
@@ -130,7 +131,7 @@ public final class Settings {
 	private Settings() {
 	}
 
-	private static void assignSections(final Config config) {
+	private static void assignSections(final YamlConfiguration config) {
 		GENERAL = config.getConfigurationSection("General");
 		BORDERHOPPING = config.getConfigurationSection("Anti Border Hopping");
 		DISABLE = config.getConfigurationSection("Disable");
@@ -143,7 +144,7 @@ public final class Settings {
 		UPDATECHECK = config.getConfigurationSection("Update Check");
 	}
 
-	public static void initizalizeVariables(final Config c) {
+	public static void initizalizeVariables(final YamlConfiguration c) {
 		assignSections(c);
 
 		minecraftVersion = Bukkit.getBukkitVersion().isEmpty() ? "0" : Bukkit.getBukkitVersion().replaceAll("-.+", "");
@@ -249,7 +250,7 @@ public final class Settings {
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
 
 		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
-		DEBUG = c.getBoolean("Debug Mode", false);
+		Settings.setDEBUG(c.getBoolean("Debug Mode", false));
 		configVersion = c.getInt("Config Version");
 
 	}
@@ -717,6 +718,7 @@ public final class Settings {
 
 	public static void setDEBUG(final boolean dEBUG) {
 		Settings.DEBUG = dEBUG;
+		Log.setDebug(dEBUG);
 	}
 
 	public static Set<String> getWorldguardOverridesList() {
