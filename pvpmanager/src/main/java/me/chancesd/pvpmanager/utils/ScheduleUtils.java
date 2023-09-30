@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 
 public class ScheduleUtils {
 

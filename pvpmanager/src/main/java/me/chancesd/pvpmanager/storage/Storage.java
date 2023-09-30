@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 
 public interface Storage {

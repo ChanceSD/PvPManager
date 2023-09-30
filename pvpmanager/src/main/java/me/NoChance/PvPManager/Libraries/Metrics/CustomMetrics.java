@@ -13,6 +13,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Dependencies.Dependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.sdutils.metrics.Metrics;
 
 public class CustomMetrics {
 
@@ -24,7 +25,7 @@ public class CustomMetrics {
 
 	private void initMetrics(final PvPManager plugin) {
 
-		final Metrics metrics = new Metrics(plugin, 5653);
+		final Metrics metrics = new Metrics(plugin, 5653, Settings.isOptOutMetrics());
 
 		metrics.addCustomChart(new Metrics.SimplePie("time_in_combat", new Callable<String>() {
 			@Override

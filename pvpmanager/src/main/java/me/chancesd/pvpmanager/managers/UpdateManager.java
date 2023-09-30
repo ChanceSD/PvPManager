@@ -4,15 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Libraries.Updater.BukkitUpdater;
-import me.NoChance.PvPManager.Libraries.Updater.SpigotUpdater;
-import me.NoChance.PvPManager.Libraries.Updater.Updater;
-import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateResult;
-import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.updater.BukkitUpdater;
+import me.chancesd.sdutils.updater.SpigotUpdater;
+import me.chancesd.sdutils.updater.Updater;
+import me.chancesd.sdutils.updater.Updater.UpdateResult;
+import me.chancesd.sdutils.updater.Updater.UpdateType;
+import me.chancesd.sdutils.utils.Log;
 
 public class UpdateManager {
 

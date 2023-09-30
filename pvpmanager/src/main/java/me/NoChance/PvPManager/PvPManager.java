@@ -26,7 +26,7 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.managers.StorageManager;
 import me.chancesd.pvpmanager.managers.UpdateManager;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -46,7 +46,7 @@ public class PvPManager extends JavaPlugin {
 	public void onEnable() {
 		final long start = System.currentTimeMillis();
 		instance = this;
-		Log.setup(getLogger());
+		Log.setup(getLogger(), Messages.PREFIXMSG);
 		ScheduleUtils.setupExecutor();
 		if (ScheduleUtils.checkFolia()) {
 			Log.infoColor(ChatColor.AQUA + "Running on Folia. Support for Folia is still experimental");

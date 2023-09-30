@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-import me.NoChance.PvPManager.Libraries.Updater.Updater;
-import me.NoChance.PvPManager.Libraries.Updater.Updater.UpdateType;
+import me.chancesd.sdutils.updater.Updater;
+import me.chancesd.sdutils.updater.Updater.UpdateType;
 
 @ExtendWith(InstanceCreator.class)
 class UpdaterTest {

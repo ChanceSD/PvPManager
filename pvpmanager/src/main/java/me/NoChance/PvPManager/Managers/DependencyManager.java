@@ -36,7 +36,7 @@ import me.NoChance.PvPManager.Listeners.MoveListener1_9;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import net.milkbowl.vault.economy.Economy;
 
 public class DependencyManager {

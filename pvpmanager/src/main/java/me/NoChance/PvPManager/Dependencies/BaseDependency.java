@@ -3,7 +3,7 @@ package me.NoChance.PvPManager.Dependencies;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 
 public class BaseDependency implements Dependency {
 

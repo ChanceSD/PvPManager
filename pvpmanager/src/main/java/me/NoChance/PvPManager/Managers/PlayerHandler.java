@@ -23,7 +23,7 @@ import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.PvPToggleFeeTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PlayerHandler {

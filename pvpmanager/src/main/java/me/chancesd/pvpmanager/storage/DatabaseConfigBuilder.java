@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 
 public class DatabaseConfigBuilder {
 

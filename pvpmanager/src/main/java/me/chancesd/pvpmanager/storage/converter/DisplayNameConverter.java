@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 import org.bukkit.ChatColor;
 
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.storage.Converter;
 import me.chancesd.pvpmanager.storage.Database;
 import me.chancesd.pvpmanager.storage.Table;

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DisguiseDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import me.libraryaddict.disguise.DisguiseAPI;
 
 public class LibsDisguisesHook extends BaseDependency implements DisguiseDependency {

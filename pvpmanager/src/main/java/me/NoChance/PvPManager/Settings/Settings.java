@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 
 public final class Settings {
 

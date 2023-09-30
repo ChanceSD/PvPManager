@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Utils.ChatUtils;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.SQLStorage;
 import me.chancesd.pvpmanager.storage.Storage;

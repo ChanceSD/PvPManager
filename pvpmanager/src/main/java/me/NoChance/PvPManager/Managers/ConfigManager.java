@@ -10,12 +10,12 @@ import java.util.Arrays;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Libraries.Config.ConfigUpdater;
 import me.NoChance.PvPManager.Settings.Config;
 import me.NoChance.PvPManager.Settings.LogFile;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.config.ConfigUpdater;
+import me.chancesd.sdutils.utils.Log;
 
 public class ConfigManager {
 

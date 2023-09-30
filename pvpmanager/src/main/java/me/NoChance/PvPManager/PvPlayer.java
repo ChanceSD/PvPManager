@@ -19,11 +19,11 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Log;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.utils.Log;
 
 public class PvPlayer extends EcoPlayer {
 

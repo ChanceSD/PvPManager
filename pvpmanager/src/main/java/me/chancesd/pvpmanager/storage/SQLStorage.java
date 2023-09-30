@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.converter.DisplayNameConverter;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;

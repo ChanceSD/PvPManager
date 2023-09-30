@@ -9,7 +9,7 @@ import org.bukkit.scoreboard.Team;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 
 public class BukkitNameTag extends NameTag {
 

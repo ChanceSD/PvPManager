@@ -29,7 +29,7 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.Log;
+import me.chancesd.sdutils.utils.Log;
 
 public class DebugEntityListener implements Listener {
 
