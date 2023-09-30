@@ -107,7 +107,7 @@ public class ConfigManager {
 				this.copyResource(plugin.getResource(resource), file);
 			}
 		} catch (final IOException e) {
-			e.printStackTrace();
+			Log.severe("Error creating config file", e);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class ConfigManager {
 			}
 			resource.close();
 		} catch (final Exception e) {
-			e.printStackTrace();
+			Log.severe("Error copying config file", e);
 		}
 	}
 
