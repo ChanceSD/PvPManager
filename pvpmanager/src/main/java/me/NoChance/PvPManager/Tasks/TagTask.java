@@ -10,7 +10,6 @@ import java.util.TimerTask;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Settings.Settings;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class TagTask extends TimerTask {
 
@@ -33,7 +32,7 @@ public class TagTask extends TimerTask {
 				final PvPlayer p = iterator.next();
 				final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
 				if (timePassed >= time) {
-					ScheduleUtils.runTask(p::unTag, p.getPlayer());
+					p.unTag();
 					display.discardBossbar(p);
 					iterator.remove();
 					continue;

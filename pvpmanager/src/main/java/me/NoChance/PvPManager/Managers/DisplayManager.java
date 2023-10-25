@@ -2,6 +2,7 @@ package me.NoChance.PvPManager.Managers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
@@ -16,7 +17,7 @@ import me.chancesd.sdutils.utils.Log;
 public class DisplayManager {
 
 	private final Map<Integer, ProgressBar> actionBars = new HashMap<>();
-	private final Map<PvPlayer, BossBar> bossBars = new HashMap<>();
+	private final Map<PvPlayer, BossBar> bossBars = new ConcurrentHashMap<>();
 	private final PvPManager plugin;
 
 	public DisplayManager(final PvPManager plugin) {
