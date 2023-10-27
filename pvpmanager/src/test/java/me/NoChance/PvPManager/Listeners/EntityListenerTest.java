@@ -34,6 +34,7 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 @ExtendWith(InstanceCreator.class)
 public class EntityListenerTest {
 
+	private static final PluginTest PT = InstanceCreator.getPt();
 	private static EntityListener damageListener;
 	private EntityDamageByEntityEvent mockEvent;
 	private EntityDamageByEntityEvent projMockEvent;
@@ -43,13 +44,12 @@ public class EntityListenerTest {
 
 	@BeforeAll
 	public static void setupClass() {
-		final PluginTest pt = InstanceCreator.getPt();
-		final PvPManager plugin = pt.getPlugin();
+		final PvPManager plugin = PT.getPlugin();
 		ph = plugin.getPlayerHandler();
 		damageListener = new EntityListener(ph);
 		Settings.setPvpBlood(false); // avoid loading Material class while testing
-		attacker = pt.getAttacker();
-		defender = pt.getDefender();
+		attacker = PT.getAttacker();
+		defender = PT.getDefender();
 	}
 
 	@BeforeEach

@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Listeners;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -23,6 +25,7 @@ import me.NoChance.PvPManager.PluginTest;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 
 @ExtendWith(InstanceCreator.class)
@@ -124,6 +127,27 @@ public class PlayerListenerTest {
 		listener.onPlayerDeath(new PlayerDeathEvent(defender, new ArrayList<>(), 0, ""));
 		assertFalse(pDefender.isInCombat());
 		assertFalse(pAttacker.isInCombat());
+	}
+
+	@Test
+	final void onCommandTest() {
+		final Player player = pt.createPlayer("onCommandTest");
+		final PvPlayer pvPlayer = ph.get(player);
+		final PlayerCommandPreprocessEvent commandPreprocessEvent = new PlayerCommandPreprocessEvent(player, "/spawn");
+
+		assertFalse(commandPreprocessEvent.isCancelled());
+		listener.onCommand(commandPreprocessEvent);
+		assertFalse(commandPreprocessEvent.isCancelled());
+
+		tagPlayer(pvPlayer);
+		listener.onCommand(commandPreprocessEvent);
+		assertTrue(commandPreprocessEvent.isCancelled());
+		verify(player, atMostOnce()).sendMessage(Messages.getCommandDeniedIncombat());
+
+		final PlayerCommandPreprocessEvent commandPreprocessEvent2 = new PlayerCommandPreprocessEvent(player, "/tell");
+		tagPlayer(pvPlayer);
+		listener.onCommand(commandPreprocessEvent2);
+		assertFalse(commandPreprocessEvent2.isCancelled());
 	}
 
 }

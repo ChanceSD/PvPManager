@@ -266,7 +266,6 @@ public class PlayerListener implements Listener {
 				player.message(Messages.getNewbieCommandBlocked());
 			}
 		}
-
 	}
 
 	@EventHandler(ignoreCancelled = true)
