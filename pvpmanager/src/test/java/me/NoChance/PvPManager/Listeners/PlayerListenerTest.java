@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -28,9 +30,6 @@ public class PlayerListenerTest {
 
 	private static PlayerListener listener;
 	private static PlayerHandler ph;
-	private PlayerDeathEvent event;
-	private static Player attacker;
-	private static Player defender;
 	private static PluginTest pt;
 
 	@BeforeAll
@@ -39,13 +38,10 @@ public class PlayerListenerTest {
 		final PvPManager plugin = pt.getPlugin();
 		ph = plugin.getPlayerHandler();
 		listener = new PlayerListener(plugin.getPlayerHandler());
-		attacker = pt.getAttacker();
-		defender = pt.getDefender();
 	}
 
 	@BeforeEach
 	public final void setup() {
-		event = new PlayerDeathEvent(defender, null, 0, "");
 		ph.getPlayers().clear();
 	}
 
@@ -55,24 +51,28 @@ public class PlayerListenerTest {
 	}
 
 	private void tagPlayer(final PvPlayer player) {
-		tagPlayer(player, ph.get(attacker));
+		tagPlayer(player, ph.get(pt.createPlayer("Attacker")));
 	}
 
 	@Test
 	void onPlayerJoinTest() {
+		final Player playerJoined = pt.createPlayer("onPlayerJoinTest");
 		assertEquals(0, ph.getPlayers().size());
-		listener.onPlayerJoin(new PlayerJoinEvent(attacker, ""));
+		listener.onPlayerJoin(new PlayerJoinEvent(playerJoined, ""));
 		assertEquals(1, ph.getPlayers().size());
-		assertEquals(attacker, ph.getPlayers().values().stream().findFirst().get().getPlayer());
+		assertEquals(playerJoined, ph.getPlayers().values().stream().findFirst().get().getPlayer());
 	}
 
 	@Test
 	void onPlayerLogoutTest() {
-		final PvPlayer pvPlayer = ph.get(defender);
-		tagPlayer(pvPlayer);
+		final Player player = pt.createPlayer("onPlayerLogoutTest");
+		final PvPlayer pvPlayer = ph.get(player);
+		final Player attacker = pt.createPlayer("Attacker");
+		final PvPlayer pvpAttacker = ph.get(attacker);
+		tagPlayer(pvPlayer, pvpAttacker);
 
-		listener.onPlayerLogout(new PlayerQuitEvent(defender, ""));
-		verify(defender, times(1)).setHealth(0);
+		listener.onPlayerLogout(new PlayerQuitEvent(player, ""));
+		verify(player, times(1)).setHealth(0);
 		assertFalse(pvPlayer.isInCombat());
 
 		assertEquals(1, ph.getPlayers().size());
@@ -82,7 +82,7 @@ public class PlayerListenerTest {
 
 	@Test
 	void onPlayerKickTest() {
-		final Player kickPlayer = pt.createPlayer("PlayerKickTest");
+		final Player kickPlayer = pt.createPlayer("onPlayerKickTest");
 		final PvPlayer pvPlayer = ph.get(kickPlayer);
 
 		tagPlayer(pvPlayer);
@@ -101,24 +101,27 @@ public class PlayerListenerTest {
 
 	@Test
 	final void regularDeath() {
-		final PvPlayer pDefender = ph.get(defender);
+		final Player player = pt.createPlayer("regularDeath");
+		final PvPlayer pDefender = ph.get(player);
 		assertFalse(pDefender.isInCombat());
-		listener.onPlayerDeath(event);
+		listener.onPlayerDeath(new PlayerDeathEvent(player, new ArrayList<>(), 0, ""));
 	}
 
 	@Test
 	final void inCombatDeath() {
+		final Player attacker = pt.createPlayer("Attacker");
 		final PvPlayer pAttacker = ph.get(attacker);
+		final Player defender = pt.createPlayer("Defender", attacker);
 		final PvPlayer pDefender = ph.get(defender);
 
 		tagPlayer(pDefender);
-		listener.onPlayerDeath(event);
+		listener.onPlayerDeath(new PlayerDeathEvent(defender, new ArrayList<>(), 0, ""));
 		assertFalse(pDefender.isInCombat());
 
 		Settings.setUntagEnemy(true);
 		tagPlayer(pDefender, pAttacker);
 		tagPlayer(pAttacker, pDefender);
-		listener.onPlayerDeath(event);
+		listener.onPlayerDeath(new PlayerDeathEvent(defender, new ArrayList<>(), 0, ""));
 		assertFalse(pDefender.isInCombat());
 		assertFalse(pAttacker.isInCombat());
 	}

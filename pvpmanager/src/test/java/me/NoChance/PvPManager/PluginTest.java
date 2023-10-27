@@ -18,6 +18,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
@@ -65,12 +66,20 @@ public class PluginTest {
 		when(defender.getKiller()).thenReturn(attacker);
 	}
 
+	@NotNull
 	public final Player createPlayer(final String name) {
 		final Player player = mock(Player.class, Mockito.RETURNS_MOCKS);
 		when(player.hasPlayedBefore()).thenReturn(true);
 		when(player.getName()).thenReturn(name);
 		when(player.getUniqueId()).thenReturn(UUID.randomUUID());
 		when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);
+		return player;
+	}
+
+	@NotNull
+	public final Player createPlayer(final String name, final Player killer) {
+		final Player player = createPlayer(name);
+		when(player.getKiller()).thenReturn(killer);
 		return player;
 	}
 
