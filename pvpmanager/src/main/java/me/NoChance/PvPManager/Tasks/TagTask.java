@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.sdutils.utils.Log;
 
 public class TagTask extends TimerTask {
 
@@ -27,22 +28,27 @@ public class TagTask extends TimerTask {
 	@Override
 	public final void run() {
 		synchronized (tagged) {
-			final Iterator<PvPlayer> iterator = tagged.iterator();
-			while (iterator.hasNext()) {
-				final PvPlayer p = iterator.next();
-				final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
-				if (timePassed >= time) {
-					p.unTag();
-					display.discardBossbar(p);
-					iterator.remove();
-					continue;
+			try {
+				final Iterator<PvPlayer> iterator = tagged.iterator();
+				while (iterator.hasNext()) {
+					final PvPlayer p = iterator.next();
+					final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
+					if (timePassed >= time) {
+						p.unTag();
+						display.discardBossbar(p);
+						iterator.remove();
+						continue;
+					}
+					if (!Settings.getActionBarMessage().isEmpty()) {
+						display.showProgress(p, timePassed / 1000D);
+					}
+					if (Settings.isBossBarEnabled()) {
+						display.updateBossbar(p, timePassed / 1000D);
+					}
 				}
-				if (!Settings.getActionBarMessage().isEmpty()) {
-					display.showProgress(p, timePassed / 1000D);
-				}
-				if (Settings.isBossBarEnabled()) {
-					display.updateBossbar(p, timePassed / 1000D);
-				}
+			} catch (final Exception e) {
+				Log.severe("Error in tag task", e);
+				throw e;
 			}
 		}
 	}

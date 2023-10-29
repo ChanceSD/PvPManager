@@ -24,7 +24,10 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Libraries.rollbar.PMRUncaughExceptionHandler;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
@@ -45,7 +48,9 @@ public class StorageManager {
 		this.plugin = plugin;
 		this.storage = new SQLStorage(plugin);
 		convertYMLToSQL();
-		executor = Executors.newSingleThreadScheduledExecutor();
+		executor = Executors
+				.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("PvPManager Storage Thread").setUncaughtExceptionHandler(
+						new PMRUncaughExceptionHandler()).build());
 		saveTask = executor.scheduleAtFixedRate(new StorageSaveTask(plugin, storage), 300, 300, TimeUnit.SECONDS);
 	}
 

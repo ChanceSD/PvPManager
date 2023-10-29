@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Libraries.rollbar.PMRUncaughExceptionHandler;
 import me.chancesd.sdutils.utils.Log;
 
 public class ScheduleUtils {
@@ -35,7 +36,8 @@ public class ScheduleUtils {
 
 	public static void setupExecutor() {
 		executor = Executors.newScheduledThreadPool(Math.max(4, Runtime.getRuntime().availableProcessors() / 2),
-				new ThreadFactoryBuilder().setNameFormat("PvPManager Worker Thread - %d").build());
+				new ThreadFactoryBuilder().setNameFormat("PvPManager Worker Thread - %d")
+						.setUncaughtExceptionHandler(new PMRUncaughExceptionHandler()).build());
 	}
 
 	public static void runAsync(final Runnable task) {

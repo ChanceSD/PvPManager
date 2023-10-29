@@ -14,6 +14,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import me.NoChance.PvPManager.Events.PlayerTagEvent;
 import me.NoChance.PvPManager.Events.PlayerTogglePvPEvent;
 import me.NoChance.PvPManager.Events.PlayerUntagEvent;
+import me.NoChance.PvPManager.Libraries.rollbar.PMRUncaughExceptionHandler;
 import me.NoChance.PvPManager.Player.EcoPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -378,7 +379,8 @@ public class PvPlayer extends EcoPlayer {
 
 	public static void startExecutor() {
 		executor = ScheduleUtils.newBoundedCachedThreadPool(4, Math.max(4, Runtime.getRuntime().availableProcessors()),
-				new ThreadFactoryBuilder().setNameFormat("PvPManager Player Thread - %d").build());
+				new ThreadFactoryBuilder().setNameFormat("PvPManager Player Thread - %d")
+						.setUncaughtExceptionHandler(new PMRUncaughExceptionHandler()).build());
 	}
 
 	/**
