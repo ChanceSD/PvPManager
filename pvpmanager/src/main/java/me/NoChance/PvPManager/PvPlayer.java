@@ -151,7 +151,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void unTag() {
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this);
-		ScheduleUtils.runTask(() -> Bukkit.getPluginManager().callEvent(event), getPlayer());
+		ScheduleUtils.ensureMainThread(() -> Bukkit.getPluginManager().callEvent(event), getPlayer());
 
 		if (isOnline()) {
 			if (nametag != null && Settings.useNameTag()) {

@@ -84,6 +84,14 @@ public class ScheduleUtils {
 		provider.executePlayerCommand(player, command);
 	}
 
+	public static void ensureMainThread(final Runnable task, final Entity entity) {
+		if (Bukkit.isPrimaryThread()) {
+			task.run();
+			return;
+		}
+		runTask(task, entity);
+	}
+
 	public static void cancelAllTasks() {
 		scheduledTasks.forEach(scheduledTask -> scheduledTask.cancel(false));
 		executor.shutdown();
