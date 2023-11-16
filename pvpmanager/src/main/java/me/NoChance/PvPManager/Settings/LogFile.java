@@ -9,7 +9,6 @@ import java.util.Date;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.NoChance.PvPManager.PvPManager;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class LogFile {

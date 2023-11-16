@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Player;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 
+import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +16,7 @@ public abstract class BasePlayer {
 
 	private WeakReference<Player> player;
 	private final UUID uuid;
+	private CombatWorld combatWorld;
 
 	protected BasePlayer(final Player player) {
 		this.player = new WeakReference<>(player);
@@ -40,6 +42,14 @@ public abstract class BasePlayer {
 
 	public final boolean isOnline() {
 		return getPlayer() != null;
+	}
+
+	public CombatWorld getCombatWorld() {
+		return combatWorld;
+	}
+
+	public void setCombatWorld(CombatWorld combatWorld) {
+		this.combatWorld = combatWorld;
 	}
 
 	public final void message(final String message) {

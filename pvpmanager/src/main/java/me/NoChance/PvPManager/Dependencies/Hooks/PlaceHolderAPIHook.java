@@ -7,7 +7,7 @@ import me.NoChance.PvPManager.Dependencies.Hook;
 
 public class PlaceHolderAPIHook extends BaseDependency {
 
-	PlaceHolderAPI placeHolderAPI;
+	final PlaceHolderAPI placeHolderAPI;
 
 	public PlaceHolderAPIHook(final Hook hook) {
 		super(hook);

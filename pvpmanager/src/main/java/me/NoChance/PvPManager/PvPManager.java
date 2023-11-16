@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager;
 
+import me.chancesd.pvpmanager.managers.WorldManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -39,6 +40,7 @@ public class PvPManager extends JavaPlugin {
 	private StorageManager storageManager;
 	private DependencyManager dependencyManager;
 	private DisplayManager displayManager;
+	private WorldManager worldManager;
 	private EntityListener entityListener;
 	private static PvPManager instance;
 
@@ -56,6 +58,7 @@ public class PvPManager extends JavaPlugin {
 		storageManager = new StorageManager(this);
 		dependencyManager = new DependencyManager();
 		displayManager = new DisplayManager(this);
+		worldManager = new WorldManager(this);
 		playerHandler = new PlayerHandler(this);
 		startListeners();
 		registerCommands();
@@ -170,6 +173,10 @@ public class PvPManager extends JavaPlugin {
 
 	public DisplayManager getDisplayManager() {
 		return displayManager;
+	}
+
+	public WorldManager getWorldManager() {
+		return worldManager;
 	}
 
 	/**

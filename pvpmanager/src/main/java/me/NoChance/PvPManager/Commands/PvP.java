@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -80,15 +81,13 @@ public class PvP implements TabExecutor {
 			return;
 		}
 
-		// temporary since some people like to add the * permission on their servers for some reason
-		if (!player.getPlayer().hasPermission("*")) {
-			if (state && player.getPlayer().hasPermission("pvpmanager.nopvp")) {
-				player.message(Messages.getErrorPvPToggleNoPvP());
-				return;
-			} else if (!state && player.getPlayer().hasPermission("pvpmanager.forcepvp")) {
-				player.message(Messages.getErrorPvPToggleForcePvP());
-				return;
-			}
+		CombatWorld combatWorld = player.getCombatWorld();
+		if (state && combatWorld.isPvPForced() == CombatWorld.WorldOptionState.OFF) {
+			player.message(Messages.getErrorPvPToggleNoPvP());
+			return;
+		} else if (!state && combatWorld.isPvPForced() == CombatWorld.WorldOptionState.ON) {
+			player.message(Messages.getErrorPvPToggleForcePvP());
+			return;
 		}
 
 		player.setPvP(state);

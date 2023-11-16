@@ -28,7 +28,7 @@ public class ScheduleUtils {
 	private static final boolean FOLIA_SUPPORT = checkFolia();
 	private static ScheduledExecutorService executor;
 	private static final List<ScheduledFuture<?>> scheduledTasks = new ArrayList<>();
-	private static SchedulerProvider provider = FOLIA_SUPPORT ? new FoliaProvider(PvPManager.getInstance())
+	private static final SchedulerProvider provider = FOLIA_SUPPORT ? new FoliaProvider(PvPManager.getInstance())
 			: new BukkitProvider(PvPManager.getInstance());
 
 	private ScheduleUtils() {

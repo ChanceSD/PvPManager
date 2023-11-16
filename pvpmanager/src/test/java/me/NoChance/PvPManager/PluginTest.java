@@ -6,12 +6,14 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -41,6 +43,9 @@ public class PluginTest {
 		Mockito.when(server.getUpdateFolderFile()).thenReturn(new File(filePath + "TestServer/plugins/update"));
 		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [%4$-7s] %5$s %n");
 		Mockito.when(server.getLogger()).thenReturn(Logger.getLogger("Minecraft"));
+		final World world = mock(World.class);
+		Mockito.when(world.getName()).thenReturn("");
+		Mockito.when(server.getWorlds()).thenReturn(Arrays.asList(world));
 		Bukkit.setServer(server);
 		plugin = Mockito.mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
 		final PluginDescriptionFile pdf = new PluginDescriptionFile(PluginTest.class.getClassLoader().getResource("plugin.yml").openStream());

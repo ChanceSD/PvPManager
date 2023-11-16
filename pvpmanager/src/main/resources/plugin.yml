@@ -51,8 +51,6 @@ permissions:
      default: op
      children:
        pvpmanager.admin: true
-       pvpmanager.nopvp: false
-       pvpmanager.forcepvp: false
    pvpmanager.admin:
      description: Gives access to admin features
      default: false
@@ -94,12 +92,6 @@ permissions:
      default: false
    pvpmanager.nocombatlog:
      description: Exempts a player from combat log punishments
-     default: false
-   pvpmanager.forcepvp:
-     description: Players with this permission always have PvP force enabled on login and world change
-     default: false
-   pvpmanager.nopvp:
-     description: Players with this permission always have PvP force disabled on login and world change
      default: false
    pvpmanager.override:
      description: Players with this permission can use the pvp override command and attack everywhere

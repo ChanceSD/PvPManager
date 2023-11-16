@@ -52,8 +52,11 @@ public class PlayerHandler {
 	public final CancelResult tryCancel(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
+
 		if (attacker.hasOverride() || Settings.borderHoppingVulnerable() && canAttackHooks(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
+		if (!attacked.getCombatWorld().isCombatAllowed())
+			return CancelResult.WORLD_PROTECTION;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
 			return CancelResult.RESPAWN_PROTECTION.setAttackerCaused(attacker.hasRespawnProtection());
 		if (attacked.isNewbie() || attacker.isNewbie()) {
@@ -113,11 +116,11 @@ public class PlayerHandler {
 	}
 
 	public final void removeUser(final PvPlayer player) {
-		player.cleanForRemoval();
-		players.remove(player.getUUID());
 		if (player.isInCombat()) {
 			untag(player);
 		}
+		player.cleanForRemoval();
+		players.remove(player.getUUID());
 	}
 
 	public final void applyPunishments(final PvPlayer player) {

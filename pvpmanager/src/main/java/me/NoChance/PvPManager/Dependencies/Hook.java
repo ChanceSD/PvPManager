@@ -16,8 +16,8 @@ public enum Hook {
 
 	@NotNull
 	private final String pluginName;
-	private String disabledWarning;
-	private Runnable disabledAction;
+	private final String disabledWarning;
+	private final Runnable disabledAction;
 
 	private Hook(@NotNull final String name) {
 		this(name, null, () -> {

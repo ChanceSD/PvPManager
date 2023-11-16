@@ -40,6 +40,10 @@ public interface Storage {
 
 	public void increment(final String field, final UUID uuid);
 
+	public Map<String, Object> getWorldData(String name);
+
+	public boolean saveWorldData(String name, Map<String, Object> worldData);
+
 	public void shutdown();
 
 	public DatabaseType getDatabaseType();

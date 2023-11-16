@@ -38,9 +38,11 @@ public class PM implements TabExecutor {
 
 	private final PvPManager plugin;
 	private DebugEntityListener damageListener;
+	private final Worlds worldsSubcommand;
 
 	public PM(final PvPManager plugin) {
 		this.plugin = plugin;
+		worldsSubcommand = new Worlds(plugin);
 	}
 
 	@Override
@@ -74,6 +76,9 @@ public class PM implements TabExecutor {
 				return true;
 			} else if (args[0].equalsIgnoreCase("locale") && sender.hasPermission("pvpmanager.admin")) {
 				locale(sender, args);
+				return true;
+			} else if (args[0].equalsIgnoreCase("worlds") && sender.hasPermission("pvpmanager.admin")) {
+				worldsSubcommand.onCommand(sender, cmd, label, args);
 				return true;
 			}
 		}
@@ -275,7 +280,7 @@ public class PM implements TabExecutor {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 1)
-			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "debug", "reload", "update", "locale"));
+			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "debug", "reload", "update", "locale", "worlds"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("convert"))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("debug"))

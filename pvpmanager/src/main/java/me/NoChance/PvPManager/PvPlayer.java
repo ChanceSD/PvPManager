@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +49,7 @@ public class PvPlayer extends EcoPlayer {
 		super(player, plugin.getDependencyManager().getEconomy());
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
+		setCombatWorld(plugin.getWorldManager().getWorld(getPlayer().getWorld()));
 		if (!CombatUtils.isNPC(player))
 			executor.execute(this::loadData);
 	}
@@ -266,12 +268,10 @@ public class PvPlayer extends EcoPlayer {
 		} else if (Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
-		if (!getPlayer().hasPermission("*")) {
-			if (getPlayer().hasPermission("pvpmanager.forcepvp")) {
-				this.pvpState = true;
-			} else if (getPlayer().hasPermission("pvpmanager.nopvp")) {
-				this.pvpState = false;
-			}
+		if (getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON) {
+			this.pvpState = true;
+		} else if (getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.OFF) {
+			this.pvpState = false;
 		}
 		if (Settings.useNameTag()) {
 			try {

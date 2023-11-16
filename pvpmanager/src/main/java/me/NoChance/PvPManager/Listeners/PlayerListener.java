@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Listeners;
 
+import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -297,24 +298,22 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onChangeWorld(final PlayerChangedWorldEvent event) {
 		final Player player = event.getPlayer();
-		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
-			return;
-
 		final PvPlayer pvPlayer = ph.get(player);
-		if (!player.hasPermission("*")) {
-			if (!pvPlayer.hasPvPEnabled() && player.hasPermission("pvpmanager.forcepvp")) {
-				pvPlayer.setPvP(true);
-				pvPlayer.message(Messages.getErrorPvPToggleForcePvP());
-				return;
-			}
-			if (pvPlayer.hasPvPEnabled() && player.hasPermission("pvpmanager.nopvp")) {
-				pvPlayer.setPvP(false);
-				pvPlayer.message(Messages.getErrorPvPToggleNoPvP());
-				return;
-			}
+		final CombatWorld combatWorld = ph.getPlugin().getWorldManager().getWorld(player.getWorld());
+		pvPlayer.setCombatWorld(combatWorld);
+
+		final CombatWorld.WorldOptionState optionState = pvPlayer.getCombatWorld().isPvPForced();
+		if (optionState == CombatWorld.WorldOptionState.NONE)
+			return;
+		if (pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.OFF) {
+			pvPlayer.setPvP(false);
+			pvPlayer.message(Messages.getErrorPvPToggleNoPvP());
+			return;
 		}
-		if (Settings.isForcePvPOnWorldChange()) {
-			pvPlayer.setPvP(Settings.isDefaultPvp());
+		if (!pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.ON) {
+			pvPlayer.setPvP(true);
+			pvPlayer.message(Messages.getErrorPvPToggleForcePvP());
+			return;
 		}
 	}
 

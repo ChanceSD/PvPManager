@@ -85,7 +85,6 @@ public final class Settings {
 	private static String toggleColorOn;
 	private static int toggleCooldown;
 	private static boolean toggleNametagsEnabled;
-	private static boolean forcePvPOnWorldChange;
 	private static int pvpDisabledFee;
 	private static boolean update = false;
 	private static boolean checkUpdates;
@@ -235,7 +234,6 @@ public final class Settings {
 		pvpDisabledFee = PVPTOGGLE.getInt("PvP Disabled Money Fee", 0);
 		commandsPvPOn = getCommandList(PVPTOGGLE.getStringList("Commands PvP On"));
 		commandsPvPOff = getCommandList(PVPTOGGLE.getStringList("Commands PvP Off"));
-		forcePvPOnWorldChange = PVPTOGGLE.getBoolean("Force On Change World", false);
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
 		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl Cooldown");
@@ -262,11 +260,12 @@ public final class Settings {
 		player.sendMessage(ChatColor.GOLD + "/pvplist " + ChatColor.WHITE + "| List all players with PvP enabled");
 		player.sendMessage(ChatColor.GOLD + "/pvpo " + ChatColor.WHITE + "| Override all PvP protections");
 		player.sendMessage(ChatColor.GOLD + "/pvpstatus [player] " + ChatColor.WHITE + "| Check yours or other player PvP status");
-		player.sendMessage(ChatColor.GOLD + "/newbie disable " + ChatColor.WHITE + "| Disable Newbie Protection");
-		player.sendMessage(ChatColor.GOLD + "/pm " + ChatColor.WHITE + "| Show This Help Page");
-		player.sendMessage(ChatColor.GOLD + "/pm update " + ChatColor.WHITE + "| Update to Latest Version");
-		player.sendMessage(ChatColor.GOLD + "/pm reload " + ChatColor.WHITE + "| Reload PvPManager");
-		player.sendMessage(ChatColor.GOLD + "/pm cleanup " + ChatColor.WHITE + "| Cleanup inactive users from database");
+		player.sendMessage(ChatColor.GOLD + "/newbie disable " + ChatColor.WHITE + "| Disable newbie protection");
+		player.sendMessage(ChatColor.GOLD + "/pmr " + ChatColor.WHITE + "| Show This Help Page");
+		player.sendMessage(ChatColor.GOLD + "/pmr worlds" + ChatColor.WHITE + "| Control panel to manage world PvP");
+		player.sendMessage(ChatColor.GOLD + "/pmr update " + ChatColor.WHITE + "| Update to Latest Version");
+		player.sendMessage(ChatColor.GOLD + "/pmr reload " + ChatColor.WHITE + "| Reload PvPManager");
+		player.sendMessage(ChatColor.GOLD + "/pmr cleanup " + ChatColor.WHITE + "| Cleanup inactive users from database");
 		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
 	}
 
@@ -634,10 +633,6 @@ public final class Settings {
 
 	public static boolean isBlockTeleport() {
 		return blockTeleport;
-	}
-
-	public static boolean isForcePvPOnWorldChange() {
-		return forcePvPOnWorldChange;
 	}
 
 	public static boolean isWorldguardOverrides() {

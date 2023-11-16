@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import me.chancesd.pvpmanager.storage.fields.WorldDataFields;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +19,7 @@ import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 public class SQLStorage implements Storage {
 
 	private Table usersTable;
+	private Table worldsTable;
 	private final JavaPlugin plugin;
 	private final File sqliteFile;
 	private final ConfigurationSection dbConfigSection;
@@ -46,6 +48,8 @@ public class SQLStorage implements Storage {
 				"uuid CHAR(36) NOT NULL PRIMARY KEY, name VARCHAR(16), displayname VARCHAR(255), kills INT UNSIGNED DEFAULT 0, deaths INT UNSIGNED DEFAULT 0, pvpstatus BOOLEAN DEFAULT 1, "
 		                + "toggletime BIGINT DEFAULT 0, newbie BOOLEAN DEFAULT 0, newbie_timeleft BIGINT DEFAULT 0, last_seen BIGINT DEFAULT 0");
 		db.registerTable(usersTable);
+		worldsTable = new Table("pmr_worlds", "uuid CHAR(36) NOT NULL, name VARCHAR(255) NOT NULL PRIMARY KEY, pvp BOOLEAN DEFAULT 1, forcepvp VARCHAR(16) DEFAULT 'NONE'");
+		db.registerTable(worldsTable);
 		Log.infoColor(ChatColor.GREEN + "Connected to " + ChatColor.AQUA + config.getType() + ChatColor.GREEN + " database successfully");
 		Log.infoColor(ChatColor.GREEN + "Players stored: " + ChatColor.GOLD + db.getRowCount(usersTable));
 		return db;
@@ -83,6 +87,21 @@ public class SQLStorage implements Storage {
 	@Override
 	public void increment(final String field, final UUID uuid) {
 		database.update(usersTable, UserDataFields.UUID, field, uuid, field, "+1");
+	}
+
+	@Override
+	public Map<String, Object> getWorldData(String name) {
+		return database.getRow(worldsTable, WorldDataFields.NAME, name);
+	}
+
+	@Override
+	public boolean saveWorldData(String name, Map<String, Object> worldData) {
+		Map<String, Object> data = getWorldData(name);
+		if (data.isEmpty()) {
+			return database.insertColumns(worldsTable, worldData.keySet(), worldData.values());
+		} else {
+			return database.updateValues(worldsTable, WorldDataFields.NAME, name, worldData.keySet(), worldData.values());
+		}
 	}
 
 	@Override

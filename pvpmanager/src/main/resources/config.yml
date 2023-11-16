@@ -183,8 +183,6 @@ Player Kills:
 # NameTags - What should the player's prefix be when pvp is on/off
 # You can write 'none' to disable one of the nametags, or set 'Enabled' to false to disable both
 # Commands -> Command list to execute on PvP toggle, use '%p' for player name
-# Force On Change World -> Force player PvP to default when changing world, useful if there are worlds
-# where players don't have permission to use /pvp
 # WorldGuard Overrides -> PvP Toggle is forcibly enabled on an attack in all regions with WG's pvp flag set to allow
 # WorldGuard overrides region list -> PvP Toggle is forcibly enabled on an attack in the listed regions, regardless of the WG's pvp flag
 PvP Toggle:
@@ -196,7 +194,6 @@ PvP Toggle:
   # This setting runs every hour and applies a money fee to every player with PvP disabled, it's a very simplified system 
   # so it doesn't track how long PvP has been off for that player. Leave as 0 to disable
   PvP Disabled Money Fee: 0
-  Force On Change World: false
   Commands PvP On:
     - 'examplecommand %p turned pvp on'
   Commands PvP Off:

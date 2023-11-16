@@ -16,7 +16,7 @@ public class ChatUtils {
 
 	private static final Pattern HEX_PATTERN = Pattern.compile("&(#[a-fA-F0-9]{6})");
 	private static final boolean USEPLACEHOLDERAPI = Hook.PLACEHOLDERAPI.isEnabled();
-	private static boolean hexSupported = checkForBungeeAPI();
+	private static final boolean hexSupported = checkForBungeeAPI();
 
 	private ChatUtils() {
 	}
