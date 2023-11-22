@@ -1,5 +1,7 @@
 package me.chancesd.pvpmanager.managers;
 
+import java.util.concurrent.TimeUnit;
+
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -31,7 +33,7 @@ public class UpdateManager {
 				public void run() {
 					checkForUpdates();
 				}
-			}, 1, 18000);
+			}, 1, 18000, TimeUnit.SECONDS);
 		}
 	}
 

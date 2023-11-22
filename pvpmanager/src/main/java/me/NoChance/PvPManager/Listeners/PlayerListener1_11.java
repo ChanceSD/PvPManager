@@ -40,7 +40,7 @@ public class PlayerListener1_11 implements Listener {
 			if (cooldownsxHook != null) {
 				cooldownsxHook.setEnderpearlCooldown(player, Settings.getEnderPearlCooldown());
 			}
-			ScheduleUtils.runTask(() -> player.setCooldown(Material.ENDER_PEARL, Settings.getEnderPearlCooldown() * 20), player);
+			ScheduleUtils.runPlatformTask(() -> player.setCooldown(Material.ENDER_PEARL, Settings.getEnderPearlCooldown() * 20), player);
 		}
 	}
 

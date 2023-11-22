@@ -105,7 +105,7 @@ public class EntityListener1_9 implements Listener {
 		final Player player = e.getPlayer();
 		final PlayerInventory inventory = player.getInventory();
 		final int heldSlot = inventory.getHeldItemSlot();
-		ScheduleUtils.runTaskLater(() -> {
+		ScheduleUtils.runPlatformTaskLater(() -> {
 			final ItemStack held = inventory.getItem(heldSlot);
 			final ItemStack off = inventory.getItemInOffHand();
 			if (held != null && (held.getType() == Material.GLASS_BOTTLE || held.getType() == Material.BUCKET))

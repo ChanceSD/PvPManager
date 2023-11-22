@@ -44,12 +44,12 @@ public class ScheduleUtils {
 		executor.submit(task);
 	}
 
-	public static ScheduledFuture<?> runAsyncLater(final Runnable task, final long delay) {
-		return executor.schedule(task, delay, TimeUnit.SECONDS);
+	public static ScheduledFuture<?> runAsyncLater(final Runnable task, final long delay, final TimeUnit unit) {
+		return executor.schedule(task, delay, unit);
 	}
 
-	public static void runAsyncTimer(final Runnable task, final long delay, final long period) {
-		scheduledTasks.add(executor.scheduleAtFixedRate(task, delay, period, TimeUnit.SECONDS));
+	public static void runAsyncTimer(final Runnable task, final long delay, final long period, final TimeUnit unit) {
+		scheduledTasks.add(executor.scheduleAtFixedRate(task, delay, period, unit));
 	}
 
 	public static void runPlatformAsync(final Runnable task) {
@@ -64,15 +64,15 @@ public class ScheduleUtils {
 		provider.runPlatformGlobal(task);
 	}
 
-	public static void runTask(final Runnable task, final Entity entity) {
+	public static void runPlatformTask(final Runnable task, final Entity entity) {
 		provider.runTask(task, entity);
 	}
 
-	public static void runTaskLater(final Runnable task, final Entity entity, final long delay) {
+	public static void runPlatformTaskLater(final Runnable task, final Entity entity, final long delay) {
 		provider.runTaskLater(task, entity, delay);
 	}
 
-	public static void runTaskTimer(final Runnable task, final long delay, final long period) {
+	public static void runPlatformTaskTimer(final Runnable task, final long delay, final long period) {
 		provider.runTaskTimer(task, delay, period);
 	}
 
@@ -89,7 +89,7 @@ public class ScheduleUtils {
 			task.run();
 			return;
 		}
-		runTask(task, entity);
+		runPlatformTask(task, entity);
 	}
 
 	public static void cancelAllTasks() {

@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Tasks;
 
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -18,7 +19,7 @@ public class NewbieTask implements Runnable {
 		this.player = player;
 		final long timeLeft = time == 0 ? Settings.getNewbieProtectionTime() * 60000 : time;
 		this.finishTime = System.currentTimeMillis() + timeLeft;
-		task = ScheduleUtils.runAsyncLater(this, timeLeft / 1000);
+		task = ScheduleUtils.runAsyncLater(this, timeLeft / 1000, TimeUnit.SECONDS);
 		if (time != 0) {
 			player.message(String.format(Messages.getNewbieTimeCheck(), time / 1000));
 		}
