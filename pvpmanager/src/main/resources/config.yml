@@ -116,6 +116,7 @@ Tagged In Combat:
         - 'BED'
     Elytra: false
     Eat: false
+    Totem of Undying: false
     Commands:
       Enabled: true
       Whitelist: true

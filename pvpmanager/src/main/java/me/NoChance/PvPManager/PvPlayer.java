@@ -141,10 +141,10 @@ public class PvPlayer extends EcoPlayer {
 
 		if (attacker) {
 			message(Messages.getTaggedAttacker().replace("%p", tagger.getName()));
-			sendActionBar(Messages.getTaggedAttackerABar().replace("%p", tagger.getName()));
+			sendActionBar(Messages.getTaggedAttackerABar().replace("%p", tagger.getName()), 500);
 		} else {
 			message(Messages.getTaggedDefender().replace("%p", tagger.getName()));
-			sendActionBar(Messages.getTaggedDefenderABar().replace("%p", tagger.getName()));
+			sendActionBar(Messages.getTaggedDefenderABar().replace("%p", tagger.getName()), 500);
 		}
 
 		this.tagged = true;

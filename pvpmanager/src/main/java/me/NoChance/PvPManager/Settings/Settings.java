@@ -37,6 +37,7 @@ public final class Settings {
 	private static boolean blockPlaceBlocks;
 	private static boolean blockGlideInCombat;
 	private static boolean blockEat;
+	private static boolean blockTotemUndying;
 	private static List<String> commandsAllowed;
 	private static List<String> commandsOnKill;
 	private static List<String> commandsOnPvPLog;
@@ -196,6 +197,7 @@ public final class Settings {
 		blockInteractItemList = TAGGEDCOMBAT.getStringList("Block.Interact.List");
 		blockGlideInCombat = TAGGEDCOMBAT.getBoolean("Block.Elytra", false);
 		blockEat = TAGGEDCOMBAT.getBoolean("Block.Eat", false);
+		blockTotemUndying = TAGGEDCOMBAT.getBoolean("Block.Totem of Undying", false);
 		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
 		commandsWhitelist = TAGGEDCOMBAT.getBoolean("Block.Commands.Whitelist", true);
 		commandsAllowed = getList(TAGGEDCOMBAT.getStringList("Block.Commands.Command List"));
@@ -427,6 +429,10 @@ public final class Settings {
 
 	public static boolean isBlockEat() {
 		return blockEat;
+	}
+
+	public static boolean isBlockTotemUndying() {
+		return blockTotemUndying;
 	}
 
 	public static boolean isCommandsWhitelist() {

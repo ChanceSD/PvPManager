@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -13,6 +14,7 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Hooks.CooldownsXHook;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
@@ -42,6 +44,20 @@ public class PlayerListener1_11 implements Listener {
 			}
 			ScheduleUtils.runPlatformTask(() -> player.setCooldown(Material.ENDER_PEARL, Settings.getEnderPearlCooldown() * 20), player);
 		}
+	}
+
+	@EventHandler
+	public void onEntityRessurrect(final EntityResurrectEvent event) {
+		if (!Settings.isBlockTotemUndying() || event.isCancelled() || event.getEntityType() != EntityType.PLAYER)
+			return;
+
+		final Player player = (Player) event.getEntity();
+		final PvPlayer pvPlayer = playerHandler.get(player);
+		if (pvPlayer.isInCombat()) {
+			event.setCancelled(true);
+			pvPlayer.message(Messages.getTotemBlockedInCombat());
+		}
+
 	}
 
 }
