@@ -75,7 +75,8 @@ public final class CombatUtils {
 	public static void executeCommands(final List<String> commands, final Player player, final String playerName, final String victim) {
 		for (final String command : commands) {
 			try {
-				final String preparedCommand = command.replace("<player>", playerName).replace("<victim>", victim).replace("%p", playerName);
+				final String preparedCommand = command.replace("<player>", playerName).replace("<victim>", victim).replace("%p", playerName)
+						.replace("<item>", player.getItemInHand().getType().toString());
 				if (preparedCommand.toLowerCase().startsWith("!console")) {
 					ScheduleUtils.executeConsoleCommand(preparedCommand.substring(9));
 				} else if (preparedCommand.toLowerCase().startsWith("!player")) {
