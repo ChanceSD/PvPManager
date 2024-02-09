@@ -103,6 +103,7 @@ public final class Settings {
 	private static boolean glowingInCombat;
 	private static boolean selfTag;
 	private static boolean blockInteractInCombat;
+	private static List<String> blockInteractItemList;
 	private static boolean untagEnemy;
 	private static String actionBarMessage;
 	private static String actionBarSymbol;
@@ -191,7 +192,8 @@ public final class Settings {
 		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
-		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact", false);
+		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact.Enabled", false);
+		blockInteractItemList = TAGGEDCOMBAT.getStringList("Block.Interact.List");
 		blockGlideInCombat = TAGGEDCOMBAT.getBoolean("Block.Elytra", false);
 		blockEat = TAGGEDCOMBAT.getBoolean("Block.Eat", false);
 		stopCommands = TAGGEDCOMBAT.getBoolean("Block.Commands.Enabled", true);
@@ -649,6 +651,10 @@ public final class Settings {
 
 	public static boolean blockInteract() {
 		return blockInteractInCombat;
+	}
+
+	public static List<String> getBlockInteractItemList() {
+		return blockInteractItemList;
 	}
 
 	public static String getActionBarMessage() {

@@ -14,7 +14,7 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<config.version>72</config.version>
+		<config.version>73</config.version>
 		<database.version>1</database.version>
 	</properties>
 

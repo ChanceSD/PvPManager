@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.chancesd.pvpmanager.world.CombatWorld;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -171,8 +172,10 @@ public class PlayerListener implements Listener {
 		final ItemStack i = player.getItemInHand();
 		final PvPlayer pvplayer = ph.get(player);
 		final Block clickedBlock = e.getClickedBlock();
+		if (clickedBlock == null)
+			return;
 
-		if ((i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) && clickedBlock != null) {
+		if (i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) {
 			for (final Player p : clickedBlock.getWorld().getPlayers()) {
 				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
 					continue;
@@ -186,8 +189,14 @@ public class PlayerListener implements Listener {
 			}
 		}
 		if (Settings.blockInteract() && pvplayer.isInCombat()) {
-			e.setCancelled(true);
-			pvplayer.sendActionBar(Messages.getInteractBlockedInCombat());
+			final Material type = clickedBlock.getType();
+			for (final String material : Settings.getBlockInteractItemList()) {
+				if (type.name().endsWith(material)) {
+					e.setCancelled(true);
+					pvplayer.sendActionBar(Messages.getInteractBlockedInCombat());
+					return;
+				}
+			}
 		}
 	}
 
