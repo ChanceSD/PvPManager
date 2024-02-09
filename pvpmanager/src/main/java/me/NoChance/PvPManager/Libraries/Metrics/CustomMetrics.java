@@ -46,8 +46,10 @@ public class CustomMetrics {
 				map.put("Drop Mode", getMapEntry(Settings.getDropMode().toString()));
 				map.put("Combat Nametags", getMapEntry(Settings.useNameTag() ? "Enabled" : "Disabled"));
 				map.put("Database Type", getMapEntry(plugin.getStorageManager().getStorage().getDatabaseType().toString()));
-				if (Settings.isBossBarEnabled() && !Settings.getActionBarMessage().isEmpty())
+				if (Settings.isBossBarEnabled() && Settings.isActionBarEnabled())
 					map.put("Display Type", getMapEntry("Both"));
+				else if (!Settings.isBossBarEnabled() && !Settings.isActionBarEnabled())
+					map.put("Display Type", getMapEntry("None"));
 				else
 					map.put("Display Type", getMapEntry(Settings.isBossBarEnabled() ? "Only Bossbar" : "Only Actionbar"));
 				return map;

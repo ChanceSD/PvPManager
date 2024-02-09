@@ -106,6 +106,7 @@ public final class Settings {
 	private static boolean blockInteractInCombat;
 	private static List<String> blockInteractItemList;
 	private static boolean untagEnemy;
+	private static boolean actionBarEnabled;
 	private static String actionBarMessage;
 	private static String actionBarSymbol;
 	private static int actionBarTotalBars;
@@ -178,6 +179,7 @@ public final class Settings {
 		nameTagSuffix = TAGGEDCOMBAT.getString("NameTag Suffix", "");
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
 		selfTag = TAGGEDCOMBAT.getBoolean("Self Tag", false);
+		actionBarEnabled = TAGGEDCOMBAT.getBoolean("Action Bar.Enabled", true);
 		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
@@ -661,6 +663,10 @@ public final class Settings {
 
 	public static List<String> getBlockInteractItemList() {
 		return blockInteractItemList;
+	}
+
+	public static boolean isActionBarEnabled() {
+		return actionBarEnabled;
 	}
 
 	public static String getActionBarMessage() {

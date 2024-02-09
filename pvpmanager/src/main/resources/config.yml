@@ -87,7 +87,8 @@ Tagged In Combat:
   Glowing: true
   # Symbol to use for the bar and how many times to repeat it. Other symbols ▊,▮,▯,|
   Action Bar:
-    # You can use any PlaceholderAPI placeholders here. Leave message empty to disable
+    Enabled: true
+    # You can use any PlaceholderAPI placeholders here
     Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec]'
     Symbol: '▊'
     Total Bars: 20
@@ -109,7 +110,7 @@ Tagged In Combat:
     Place Blocks: false
     Interact:
       Enabled: false
-      # List of materials to block interact, adding DOOR means all materials that end with DOOR like IRON_DOOR and so on
+      # List of materials to block interaction, adding DOOR means all materials that end with DOOR like IRON_DOOR and so on
       List:
         - 'DOOR'
         - 'BUTTON'

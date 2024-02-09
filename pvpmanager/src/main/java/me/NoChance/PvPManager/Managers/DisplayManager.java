@@ -49,7 +49,7 @@ public class DisplayManager {
 	}
 
 	private void setupActionBar() {
-		if (Settings.getActionBarMessage().isEmpty())
+		if (!Settings.isActionBarEnabled())
 			return;
 
 		for (int i = 0; i < Settings.getTimeInCombat() + 1; i++) {

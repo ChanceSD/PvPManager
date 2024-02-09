@@ -39,7 +39,7 @@ public class TagTask extends TimerTask {
 						iterator.remove();
 						continue;
 					}
-					if (!Settings.getActionBarMessage().isEmpty()) {
+					if (Settings.isActionBarEnabled()) {
 						display.showProgress(p, timePassed / 1000D);
 					}
 					if (Settings.isBossBarEnabled()) {
