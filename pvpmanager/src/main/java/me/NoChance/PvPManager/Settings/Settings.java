@@ -14,7 +14,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 
-import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -244,7 +243,6 @@ public final class Settings {
 		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
 		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl Cooldown");
 
-		simpleClansNoPvPInWar = Hook.SIMPLECLANS.getPlugin() != null && PLUGINHOOKS.getBoolean("SimpleClans.No Protection In War", true);
 		cooldownsxEnderpearlID = PLUGINHOOKS.getString("CooldownsX.Enderpearl", "");
 
 		useNameTag = !nameTagPrefix.isEmpty() || !nameTagSuffix.isEmpty() || toggleNametagsEnabled;
@@ -740,5 +738,9 @@ public final class Settings {
 
 	public static int getPvPDisabledFee() {
 		return pvpDisabledFee;
+	}
+
+	public static ConfigurationSection getPLUGINHOOKS() {
+		return PLUGINHOOKS;
 	}
 }

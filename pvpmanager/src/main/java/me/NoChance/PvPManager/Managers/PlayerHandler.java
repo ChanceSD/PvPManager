@@ -70,6 +70,8 @@ public class PlayerHandler {
 				return CancelResult.FAIL_PLUGIN_HOOK;
 			return CancelResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
 		}
+		if (dependencyManager.shouldProtectAFK(defender))
+			return CancelResult.AFK_PROTECTION;
 		return CancelResult.FAIL;
 	}
 

@@ -212,6 +212,9 @@ PvP Toggle:
 
 # Section to configure interactions with other plugins
 Plugin Hooks:
+  Essentials:
+    # Should AFK players be protected from other players
+    Protect AFK: false
   SimpleClans:
     # Disable PvP protection if the players are in a SimpleClans war
     No Protection In War: true

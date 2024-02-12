@@ -4,11 +4,12 @@ import org.bukkit.entity.Player;
 
 import com.earth2me.essentials.Essentials;
 
+import me.NoChance.PvPManager.Dependencies.AFKDependency;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 
-public class EssentialsHook extends BaseDependency implements GodDependency {
+public class EssentialsHook extends BaseDependency implements AFKDependency, GodDependency {
 
 	private final Essentials ess;
 
@@ -30,6 +31,11 @@ public class EssentialsHook extends BaseDependency implements GodDependency {
 	@Override
 	public void disableGodMode(final Player player) {
 		ess.getUser(player).setGodModeEnabled(false);
+	}
+
+	@Override
+	public boolean isAFK(final Player player) {
+		return ess.getUser(player).isAfk();
 	}
 
 }

@@ -85,6 +85,7 @@ public class Messages {
 	private static String respawnProtectionSelf;
 	private static String respawnProtectionOther;
 	private static String worldProtection;
+	private static String afkProtection;
 	private static String pvpForceEnabledWG;
 	private static String teleportBlockedInCombat;
 	private static String blockPlaceBlockedInCombat;
@@ -214,6 +215,7 @@ public class Messages {
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
 		worldProtection = getString("World_Protection");
+		afkProtection = getString("AFK_Protection");
 		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorldGuard");
 		enabled = getString("Enabled");
 		disabled = getString("Disabled");
@@ -265,6 +267,8 @@ public class Messages {
 			return result.attackerCaused() ? respawnProtSelf() : respawnProtOther(attacked.getName());
 		case WORLD_PROTECTION:
 			return worldProtection();
+		case AFK_PROTECTION:
+			return getAfkProtection();
 		default:
 			return "";
 		}
@@ -486,6 +490,10 @@ public class Messages {
 
 	public static String worldProtection() {
 		return worldProtection;
+	}
+
+	public static String getAfkProtection() {
+		return afkProtection;
 	}
 
 	public static String getTaggedAttackerABar() {

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.Dependencies.AFKDependency;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Dependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
@@ -47,6 +48,7 @@ public class DependencyManager {
 	private final ArrayList<GodDependency> godChecks = new ArrayList<>();
 	private final ArrayList<DisguiseDependency> disguiseChecks = new ArrayList<>();
 	private final ArrayList<ForceToggleDependency> togglePvPChecks = new ArrayList<>();
+	private final ArrayList<AFKDependency> afkChecks = new ArrayList<>();
 
 	public DependencyManager() {
 		setupHooks();
@@ -169,6 +171,14 @@ public class DependencyManager {
 		return false;
 	}
 
+	public final boolean shouldProtectAFK(final Player player) {
+		for (final AFKDependency afkPlugin : afkChecks) {
+			if (afkPlugin.isAFK(player))
+				return true;
+		}
+		return false;
+	}
+
 	public void startListeners(final PvPManager plugin) {
 		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
 			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
@@ -211,6 +221,12 @@ public class DependencyManager {
 			final ForceToggleDependency togglePvPHook = (ForceToggleDependency) dep;
 			if (togglePvPHook.shouldDisableProtection()) {
 				togglePvPChecks.add(togglePvPHook);
+			}
+		}
+		if (dep instanceof AFKDependency) {
+			final AFKDependency afkHook = (AFKDependency) dep;
+			if (afkHook.shouldProtectAFK()) {
+				afkChecks.add(afkHook);
 			}
 		}
 	}

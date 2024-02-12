@@ -8,7 +8,6 @@ import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
-import me.NoChance.PvPManager.Settings.Settings;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
@@ -42,11 +41,6 @@ public class SimpleClansHook extends BaseDependency implements PvPDependency, Fo
 		final ClanPlayer cAttacker = clanManager.getClanPlayer(attacker);
 		final ClanPlayer cDefender = clanManager.getClanPlayer(defender);
 		return cAttacker != null && cDefender != null && cAttacker.getClan().isWarring(cDefender.getClan());
-	}
-
-	@Override
-	public boolean shouldDisableProtection() {
-		return Settings.isSimpleClansNoPvPInWar();
 	}
 
 }

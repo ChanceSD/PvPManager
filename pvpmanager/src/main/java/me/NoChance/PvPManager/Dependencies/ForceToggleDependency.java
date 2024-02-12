@@ -10,6 +10,8 @@ public interface ForceToggleDependency extends Dependency {
 
 	public boolean shouldDisable(Player attacker, Player defender, CancelResult reason);
 
-	public boolean shouldDisableProtection();
+	public default boolean shouldDisableProtection() {
+		return getConfigBoolean("No Protection In War", true);
+	}
 
 }
