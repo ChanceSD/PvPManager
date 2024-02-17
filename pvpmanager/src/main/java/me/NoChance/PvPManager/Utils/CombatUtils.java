@@ -246,6 +246,10 @@ public final class CombatUtils {
 		return version.replaceAll("[-;+].+", "");
 	}
 
+	public static String truncateString(final String text, final int size) {
+		return text.substring(0, Math.min(text.length(), size));
+	}
+
 	private static ProjectileSource getSource(final Entity entity) {
 		if (entity instanceof Projectile)
 			return ((Projectile) entity).getShooter();

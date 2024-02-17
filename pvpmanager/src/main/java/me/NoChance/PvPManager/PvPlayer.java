@@ -321,7 +321,7 @@ public class PvPlayer extends EcoPlayer {
 		final Map<String, Object> userData = new HashMap<>();
 		userData.put(UserDataFields.UUID, getUUID().toString());
 		userData.put(UserDataFields.NAME, getName());
-		userData.put(UserDataFields.DISPLAYNAME, getPlayer().getDisplayName());
+		userData.put(UserDataFields.DISPLAYNAME, CombatUtils.truncateString(getPlayer().getDisplayName(), 255));
 		userData.put(UserDataFields.PVPSTATUS, hasPvPEnabled());
 		userData.put(UserDataFields.TOGGLETIME, getToggleTime());
 		userData.put(UserDataFields.NEWBIE, isNewbie());
