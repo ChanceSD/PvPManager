@@ -9,16 +9,16 @@ PvPManager
 ![GitHub Releases](https://img.shields.io/github/downloads/chancesd/pvpmanager/latest/total)
 ***
 
-If you have any ideas/bugfixes and have some experience programming, feel free to join Discord and send a PM  
+If you have ideas/bugfixes and have some experience programming, feel free to join Discord and send a PM  
 Any help is always welcome, specially given the size of this project keeps growing, new contributions are very appreciated
 
 Useful Links
 ------------
 **Spigot:** https://www.spigotmc.org/resources/pvpmanager-lite.845/  
-**Bukkit:** http://dev.bukkit.org/bukkit-plugins/pvpmanager/  
+**Bukkit:** https://dev.bukkit.org/bukkit-plugins/pvpmanager/  
 **Discord:** https://discord.gg/QFTjs3g  
 **Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/  
-**Help translate PvPManager:** https://crowdin.com/project/pvpmanager
+**Crowdin Translations:** https://crowdin.com/project/pvpmanager
 
 Developers
 ------
@@ -34,7 +34,7 @@ Artifact Information:
 <dependency>
     <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>3.15.6</version>
+    <version>3.16</version>
     <scope>provided</scope>
 </dependency>
  ```
@@ -42,7 +42,7 @@ Artifact Information:
 Description
 ------------
 PvPManager is an all in one PvP plugin.
-There are certainly some features that are better covered by a dedicated separate plugin. Still, PvPManager will try to cover most of those even if in a more superficial way, always maintaining good performance in mind. 
+There are some features that are better covered by a dedicated separate plugin. Even so, PvPManager aims to cover most of those even if in a more superficial way, always maintaining good performance as a goal. 
 
 **Some of the plugin's main features are:**
 - Toggle PvP for each player  
@@ -54,7 +54,7 @@ There are certainly some features that are better covered by a dedicated separat
 - Give money rewards, penalties, steal money or execute commands when a player kills another
 - Keep/Drop player inventory depending whether they died in PvP or transfer drops directly to the killer
 
-You can find a detailed description of all features on the plugin page and in the config.  
+There is a more detailed description of all features on the plugin page and in the config.  
 
 bStats
 -----------

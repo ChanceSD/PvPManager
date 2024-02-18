@@ -14,7 +14,7 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<config.version>73</config.version>
+		<config.version>74</config.version>
 		<database.version>1</database.version>
 	</properties>
 
@@ -98,7 +98,8 @@
 					<relocations>
 						<relocation>
 							<pattern>com.zaxxer.hikari</pattern>
-							<shadedPattern>me.NoChance.PvPManager.Libraries.hikari</shadedPattern>
+							<shadedPattern>
+								me.NoChance.PvPManager.Libraries.hikari</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>
@@ -119,7 +120,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.20.4-R0.1-SNAPSHOT</version>
+			<version>1.20.3-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -239,6 +240,14 @@
 					<artifactId>*</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<!-- Towny -->
+		<dependency>
+			<groupId>com.github.TownyAdvanced</groupId>
+			<artifactId>towny</artifactId>
+			<version>0.100.1.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- LibsDisguises -->

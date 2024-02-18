@@ -29,6 +29,7 @@ import me.NoChance.PvPManager.Dependencies.Hooks.McMMOHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SaberFactionsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.TownyHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.VaultHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
@@ -125,6 +126,9 @@ public class DependencyManager {
 			break;
 		case COOLDOWNSX:
 			registerDependency(new CooldownsXHook(hook));
+			break;
+		case TOWNY:
+			registerDependency(new TownyHook(hook));
 			break;
 		default:
 			registerDependency(new BaseDependency(hook));

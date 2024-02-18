@@ -12,7 +12,8 @@ public enum Hook {
 		Settings.setFineAmount(0);
 		Settings.setMoneyPenalty(0);
 		Settings.setMoneyReward(0);
-	}), SIMPLECLANS("SimpleClans"), PLACEHOLDERAPI("PlaceholderAPI"), LIBSDISGUISES("LibsDisguises"), MCMMO("mcMMO"), COOLDOWNSX("CooldownsX");
+	}), SIMPLECLANS("SimpleClans"), PLACEHOLDERAPI("PlaceholderAPI"), LIBSDISGUISES("LibsDisguises"), MCMMO("mcMMO"), COOLDOWNSX("CooldownsX"),
+	TOWNY("Towny");
 
 	@NotNull
 	private final String pluginName;

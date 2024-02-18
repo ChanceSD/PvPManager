@@ -216,7 +216,10 @@ Plugin Hooks:
     # Should AFK players be protected from other players
     Protect AFK: false
   SimpleClans:
-    # Disable PvP protection if the players are in a SimpleClans war
+    # Disable PvP and newbie protection if the players are in a SimpleClans war
+    No Protection In War: true
+  Towny:
+    # Disable PvP and newbie protection if the players are in a siege war
     No Protection In War: true
   CooldownsX:
     # Change this into the cooldown id for enderpearls in CooldownsX, by default they have it as exampleOne in cooldowns.yml
