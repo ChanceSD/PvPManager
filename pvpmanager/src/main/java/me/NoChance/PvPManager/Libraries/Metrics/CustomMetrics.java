@@ -91,7 +91,7 @@ public class CustomMetrics {
 				for (final Entry<Hook, Dependency> entry : plugin.getDependencyManager().getDependencies().entrySet()) {
 					valueMap.put(entry.getValue().getName(), 1);
 				}
-				final List<String> extra = Arrays.asList("Towny", "TAB", "NametagEdit", "GriefPrevention", "RedProtect", "GriefDefender", "Citizens");
+				final List<String> extra = Arrays.asList("TAB", "NametagEdit", "GriefPrevention", "RedProtect", "GriefDefender", "Citizens");
 				for (final String plugin : extra) {
 					if (Bukkit.getPluginManager().isPluginEnabled(plugin)) {
 						valueMap.put(plugin, 1);
