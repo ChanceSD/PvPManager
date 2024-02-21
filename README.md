@@ -9,6 +9,8 @@ PvPManager
 ![GitHub Releases](https://img.shields.io/github/downloads/chancesd/pvpmanager/latest/total)
 ***
 
+To install and use the plugin, check the [Wiki](https://github.com/ChanceSD/PvPManager/wiki)
+
 If you have ideas/bugfixes and have some experience programming, feel free to join Discord and send a PM  
 Any help is always welcome, specially given the size of this project keeps growing, new contributions are very appreciated
 
@@ -20,7 +22,7 @@ Useful Links
 **Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/  
 **Crowdin Translations:** https://crowdin.com/project/pvpmanager
 
-Developers
+Developers ([API](https://github.com/ChanceSD/PvPManager/wiki/Developer-API))
 ------
 Maven Repo:
 ```xml
