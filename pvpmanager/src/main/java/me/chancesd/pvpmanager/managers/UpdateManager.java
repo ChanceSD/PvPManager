@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
+import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.updater.BukkitUpdater;
 import me.chancesd.sdutils.updater.SpigotUpdater;
@@ -46,20 +47,28 @@ public class UpdateManager {
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			Messages.setNewVersion(updater.getLatestName());
 			final String updateMsg = Messages.PREFIXMSG + " §aUpdate available: §c" + Messages.getNewVersion() + " §aCurrent version: §c"
-			        + Messages.getCurrentversion();
+					+ Messages.getCurrentversion();
 			Messages.queueAdminMsg(updateMsg);
 			Bukkit.broadcast(updateMsg, "pvpmanager.admin");
-			if (Settings.isAutoUpdate()) {
+			if (Settings.isAutoUpdate() && CombatUtils.isVersionAtLeast(Messages.getNewVersion(), "4.0")
+					&& !CombatUtils.isVersionAtLeast(Messages.getNewVersion(), "4.1")) {
+				final String v4message = Messages.PREFIXMSG
+						+ " §aSince §b§lv4.0 is a huge update§a, it changes a lot of the config and messages file. "
+						+ "This makes it unable to be automatically updated. "
+						+ "Please §b§lmanually download the update§a from the link below and copy any settings you need from the old config.";
+				Messages.queueAdminMsg(v4message);
+				Bukkit.broadcast(v4message, "pvpmanager.admin");
+			} else if (Settings.isAutoUpdate()) {
 				if (updater.downloadFile()) {
 					Messages.queueAdminMsg(Messages.PREFIXMSG + " §aUpdate downloaded, it will be applied automatically on the next server restart");
 					Bukkit.broadcast(Messages.PREFIXMSG + " §aUpdate downloaded to your update folder, it will be applied automatically on the next server restart",
-					        "pvpmanager.admin");
+							"pvpmanager.admin");
 					return;
 				}
 				Log.info("Could not download latest update. Please update manually from one of the links below.");
 			}
 			Settings.setUpdate(true);
-			final String linkMsg = Messages.PREFIXMSG + " §aFollow the link to download: §8" + updater.getUpdateLink();
+			final String linkMsg = Messages.PREFIXMSG + " §aFollow the link to download: §7" + updater.getUpdateLink();
 			Messages.queueAdminMsg(linkMsg);
 			Bukkit.broadcast(linkMsg, "pvpmanager.admin");
 		} else {

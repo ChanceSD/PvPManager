@@ -41,7 +41,7 @@ public class PlayerListener1_11 implements Listener {
 		if (pvPlayer.isInCombat()) {
 			if (cooldownsxHook != null) {
 				cooldownsxHook.setEnderpearlCooldown(player, Settings.getEnderPearlCooldown());
-			}
+			} // TODO add feedback while on cooldown
 			ScheduleUtils.runPlatformTask(() -> player.setCooldown(Material.ENDER_PEARL, Settings.getEnderPearlCooldown() * 20), player);
 		}
 	}
