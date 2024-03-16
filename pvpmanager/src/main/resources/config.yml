@@ -63,7 +63,7 @@ Disable:
   Elytra: false
   Invisibility: false
 
-# Section about the tag system
+# Section about the combat tag system
 # Time -> How long should the tag last in seconds
 # NameTag Prefix -> Choose the player's nametag prefix while tagged, '&c' would just color their name red
 # while empty quotes '' will disable this feature completely
@@ -102,7 +102,11 @@ Tagged In Combat:
     BarStyle: SOLID
   Self Tag: false
   Untag Enemy: false
-  EnderPearl Cooldown: 15
+  EnderPearl:
+    # Time in seconds before the player can throw another enderpearl
+    Cooldown: 15
+    # If enabled, will retag the player when they throw an enderpearl
+    Renew Tag: true
   Block:
     EnderPearls: true
     ChorusFruits: true

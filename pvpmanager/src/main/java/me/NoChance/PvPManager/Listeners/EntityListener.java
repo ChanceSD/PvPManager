@@ -23,10 +23,12 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.weather.LightningStrikeEvent.Cause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -254,6 +256,21 @@ public class EntityListener implements Listener {
 					}
 				}
 			}
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onProjectileHitEvent(final ProjectileHitEvent event) {
+		final Projectile entity = event.getEntity();
+		final ProjectileSource shooter = entity.getShooter();
+		if (!Settings.isEnderPearlRenewTag() || entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof Player))
+			return;
+
+		final Player player = (Player) shooter;
+		final PvPlayer pvPlayer = ph.get(player);
+
+		if (pvPlayer.isInCombat()) {
+			pvPlayer.setTagged(true, pvPlayer);
 		}
 	}
 

@@ -100,6 +100,7 @@ public final class Settings {
 	private static boolean worldguardOverrides;
 	private static Set<String> worldguardOverridesList;
 	private static int enderPearlCooldown;
+	private static boolean enderPearlRenewTag;
 	private static boolean glowingInCombat;
 	private static boolean selfTag;
 	private static boolean blockInteractInCombat;
@@ -190,6 +191,9 @@ public final class Settings {
 		        ? BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10"))
 		        : null;
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
+		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl.Cooldown", 15);
+		enderPearlRenewTag = TAGGEDCOMBAT.getBoolean("EnderPearl.Renew Tag", true);
+
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
@@ -241,7 +245,6 @@ public final class Settings {
 		commandsPvPOff = getCommandList(PVPTOGGLE.getStringList("Commands PvP Off"));
 		worldguardOverrides = PVPTOGGLE.getBoolean("WorldGuard Overrides", true);
 		worldguardOverridesList = new HashSet<>(getList(PVPTOGGLE.getStringList("WorldGuard Overrides Region List")));
-		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl Cooldown");
 
 		cooldownsxEnderpearlID = PLUGINHOOKS.getString("CooldownsX.Enderpearl", "");
 
@@ -649,6 +652,10 @@ public final class Settings {
 
 	public static int getEnderPearlCooldown() {
 		return enderPearlCooldown;
+	}
+
+	public static boolean isEnderPearlRenewTag() {
+		return enderPearlRenewTag;
 	}
 
 	public static boolean isGlowingInCombat() {
