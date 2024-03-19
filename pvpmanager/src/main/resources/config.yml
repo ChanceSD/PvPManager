@@ -249,6 +249,21 @@ Update Check:
 
 Metrics:
   Opt-out: false
+  
+# Potions considered harmful, players will be tagged by them and protected from them   
+Harmful Potions:
+  - SLOW
+  - SLOW_DIGGING
+  - CONFUSION
+  - BLINDNESS
+  - HUNGER
+  - WEAKNESS
+  - POISON
+  - WITHER
+  - GLOWING
+  - LEVITATION
+  - UNLUCK
+  - BAD_OMEN
 
 Debug Mode: false
 

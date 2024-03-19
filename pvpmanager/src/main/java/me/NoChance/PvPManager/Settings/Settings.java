@@ -119,6 +119,7 @@ public final class Settings {
 	private static Set<String> playerKillsWGExclusions;
 	private static boolean simpleClansNoPvPInWar;
 	private static String cooldownsxEnderpearlID;
+	private static Set<String> harmfulPotions;
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection BORDERHOPPING;
 	private static ConfigurationSection DISABLE;
@@ -255,9 +256,10 @@ public final class Settings {
 		autoUpdate = UPDATECHECK.getBoolean("Auto Update", true);
 
 		optOutMetrics = c.getBoolean("Metrics.Opt-out", false);
+
+		harmfulPotions = new HashSet<>(c.getStringList("Harmful Potions"));
 		Settings.setDEBUG(c.getBoolean("Debug Mode", false));
 		configVersion = c.getInt("Config Version");
-
 	}
 
 	public static void helpMenu(final Player player) {
@@ -732,6 +734,10 @@ public final class Settings {
 
 	public static void setReloading(final boolean isReloading) {
 		Settings.isReloading = isReloading;
+	}
+
+	public static Set<String> getHarmfulPotions() {
+		return harmfulPotions;
 	}
 
 	public static void setDEBUG(final boolean dEBUG) {

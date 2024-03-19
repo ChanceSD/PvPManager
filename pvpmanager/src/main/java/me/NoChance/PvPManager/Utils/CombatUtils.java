@@ -37,18 +37,6 @@ public final class CombatUtils {
 	}
 
 	static {
-		harmfulPotions.add("SLOW");
-		harmfulPotions.add("SLOW_DIGGING");
-		harmfulPotions.add("CONFUSION");
-		harmfulPotions.add("BLINDNESS");
-		harmfulPotions.add("HUNGER");
-		harmfulPotions.add("WEAKNESS");
-		harmfulPotions.add("POISON");
-		harmfulPotions.add("WITHER");
-		harmfulPotions.add("GLOWING");
-		harmfulPotions.add("LEVITATION");
-		harmfulPotions.add("UNLUCK");
-		harmfulPotions.add("BAD_OMEN");
 		decimalFormat.setMaximumFractionDigits(2);
 	}
 
@@ -202,7 +190,7 @@ public final class CombatUtils {
 	}
 
 	public static boolean isHarmfulPotion(final PotionEffectType type) {
-		return harmfulPotions.contains(type.getName());
+		return Settings.getHarmfulPotions().contains(type.getName());
 	}
 
 	public static boolean recursiveContainsCommand(final String[] givenCommand, final List<String> list) {

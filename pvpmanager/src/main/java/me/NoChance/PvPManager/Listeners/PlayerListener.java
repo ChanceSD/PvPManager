@@ -1,6 +1,7 @@
 package me.NoChance.PvPManager.Listeners;
 
 import me.chancesd.pvpmanager.world.CombatWorld;
+import me.chancesd.sdutils.utils.Log;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -76,10 +77,25 @@ public class PlayerListener implements Listener {
 		}
 	}
 
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public final void onPlayerKick(final PlayerKickEvent event) {
+		final Player player = event.getPlayer();
+		Log.debugLazy(() -> player.getName() + " was kicked with reason: " + event.getReason() + " | Leave message: " + event.getLeaveMessage()
+				+ " - In combat: " + ph.get(player).isInCombat());
+		if (Settings.punishOnKick() && (!Settings.matchKickReason() || Settings.getPunishKickReasons().contains(event.getReason())))
+			return;
+
+		final PvPlayer pvPlayer = ph.get(player);
+		if (pvPlayer.isInCombat()) {
+			ph.untag(pvPlayer);
+		}
+	}
+
 	@EventHandler // normal priority to avoid conflict with griefprevention
 	public final void onPlayerLogout(final PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
+		Log.debug(player.getName() + " quit with reason: " + event.getQuitMessage() + " - In combat: " + pvPlayer.isInCombat());
 		if (pvPlayer.isInCombat() && !player.hasPermission("pvpmanager.nocombatlog")) {
 			if (Settings.isLogToFile()) {
 				ph.getConfigManager().getLog().log(player.getName() + " tried to escape combat!");
@@ -222,17 +238,6 @@ public class PlayerListener implements Listener {
 			}
 		});
 
-	}
-
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public final void onPlayerKick(final PlayerKickEvent event) {
-		if (Settings.punishOnKick() && (!Settings.matchKickReason() || Settings.getPunishKickReasons().contains(event.getReason())))
-			return;
-
-		final PvPlayer pvPlayer = ph.get(event.getPlayer());
-		if (pvPlayer.isInCombat()) {
-			ph.untag(pvPlayer);
-		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
