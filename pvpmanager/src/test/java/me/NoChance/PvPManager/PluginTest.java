@@ -54,6 +54,7 @@ public class PluginTest {
 		method.setAccessible(true);
 		method.invoke(plugin, (Object) null, server, pdf, pluginDirectory, new File(filePath), PluginTest.class.getClassLoader());
 		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(ArgumentMatchers.anyString());
+		plugin.onLoad();
 		plugin.onEnable();
 		setupPlayers();
 	}

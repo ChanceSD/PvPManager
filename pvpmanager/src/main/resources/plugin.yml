@@ -1,12 +1,28 @@
 name: ${project.name}
 main: ${project.groupId}.PvPManager
 version: ${project.version}
-website: https://www.spigotmc.org/resources/pvpmanager-lite.845/
 author: ChanceSD
+website: https://www.spigotmc.org/resources/pvpmanager-lite.845/
 description: A powerful tool to manage PvP combat
-softdepend: [Vault, WorldGuard, LibsDisguises, Factions, SimpleClans, EZRanksLite, Essentials, PlaceholderAPI, Towny, mcMMO, CooldownsX]
 api-version: 1.13
 folia-supported: true
+
+softdepend:
+  - Vault
+  - WorldGuard
+  - LibsDisguises
+  - Factions
+  - SimpleClans
+  - EZRanksLite
+  - Essentials
+  - PlaceholderAPI
+  - Towny
+  - mcMMO
+  - CooldownsX
+
+libraries:
+  - com.zaxxer:HikariCP:4.0.3
+  - org.slf4j:slf4j-api:2.0.0
 
 commands:
    pvpmanager:

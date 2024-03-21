@@ -95,13 +95,6 @@
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<minimizeJar>true</minimizeJar>
-					<relocations>
-						<relocation>
-							<pattern>com.zaxxer.hikari</pattern>
-							<shadedPattern>
-								me.NoChance.PvPManager.Libraries.hikari</shadedPattern>
-						</relocation>
-					</relocations>
 				</configuration>
 				<executions>
 					<execution>
@@ -277,7 +270,7 @@
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
 			<version>4.0.3</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
@@ -315,7 +308,7 @@
 		<dependency>
 			<groupId>me.chancesd.sdutils</groupId>
 			<artifactId>sdutils</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
