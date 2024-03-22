@@ -9,15 +9,17 @@
 	</parent>
 
 	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
-	<name>PvPManager</name>
 	<artifactId>pvpmanager</artifactId>
 	<packaging>jar</packaging>
+	<name>PvPManager</name>
+	<description>A powerful plugin to manage various PvP combat features</description>
+	<url>https://github.com/ChanceSD/PvPManager</url>
 
 	<properties>
 		<config.version>76</config.version>
 		<database.version>1</database.version>
 	</properties>
-
+	
 	<repositories>
 		<!-- SpigotMC -->
 		<repository>

@@ -3,7 +3,7 @@ main: ${project.groupId}.PvPManager
 version: ${project.version}
 author: ChanceSD
 website: https://www.spigotmc.org/resources/pvpmanager-lite.845/
-description: A powerful tool to manage PvP combat
+description: ${project.description}
 api-version: 1.13
 folia-supported: true
 
