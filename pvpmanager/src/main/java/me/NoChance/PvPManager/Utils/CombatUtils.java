@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +29,6 @@ import me.chancesd.sdutils.utils.Log;
 
 public final class CombatUtils {
 
-	private static final List<String> harmfulPotions = new ArrayList<>();
 	private static final DecimalFormat decimalFormat = new DecimalFormat();
 
 	private CombatUtils() {

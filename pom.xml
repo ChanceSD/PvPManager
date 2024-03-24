@@ -30,6 +30,13 @@
 		<module>pvpmanager-folia</module>
 	</modules>
 
+	<scm>
+		<connection>scm:git:https://github.com/ChanceSD/PvPManager.git</connection>
+		<developerConnection>scm:git:git@github.com:ChanceSD/PvPManager.git</developerConnection>
+		<url>https://github.com/ChanceSD/PvPManager</url>
+		<tag>HEAD</tag>
+	</scm>
+
 	<build>
 		<plugins>
 			<plugin>

@@ -149,17 +149,7 @@ public class EntityListenerTest {
 		final Projectile proj = mock(Projectile.class);
 		when(proj.getShooter()).thenReturn(attacker);
 
-		// don't ignore any hits
-		assertFalse(Settings.isIgnoreNoDamageHits());
-
-		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
-		assertTrue(CombatUtils.isPvP(projMockEvent));
-
-		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 0));
-		assertTrue(CombatUtils.isPvP(projMockEvent));
-
 		// ignore no damage hits
-		Settings.setIgnoreNoDamageHits(true);
 		assertTrue(Settings.isIgnoreNoDamageHits());
 
 		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
@@ -167,6 +157,16 @@ public class EntityListenerTest {
 
 		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 0));
 		assertFalse(CombatUtils.isPvP(projMockEvent));
+
+		// don't ignore any hits
+		Settings.setIgnoreNoDamageHits(false);
+		assertFalse(Settings.isIgnoreNoDamageHits());
+
+		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
+		assertTrue(CombatUtils.isPvP(projMockEvent));
+
+		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 0));
+		assertTrue(CombatUtils.isPvP(projMockEvent));
 	}
 
 	@Test
