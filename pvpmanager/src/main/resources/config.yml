@@ -22,7 +22,7 @@ General:
   Default PvP: true
   PvP Blood: true
   Player Drop Mode: ALWAYS
-  Ignore No Damage Hits: false
+  Ignore No Damage Hits: true
   Auto Soup:
      # How much health does soup heal, use 0 to disable
      Health: 0

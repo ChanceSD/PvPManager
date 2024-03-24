@@ -155,7 +155,7 @@ public final class Settings {
 		defaultPvp = GENERAL.getBoolean("Default PvP", true);
 		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
 		dropMode = DropMode.valueOf(GENERAL.getString("Player Drop Mode", "ALWAYS").toUpperCase());
-		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", false);
+		ignoreNoDamageHits = GENERAL.getBoolean("Ignore No Damage Hits", true);
 		soupHealth = GENERAL.getDouble("Auto Soup.Health", 0);
 		soupBowlDisappear = GENERAL.getBoolean("Auto Soup.Bowl Disappear", false);
 		recyclePotionBottles = GENERAL.getBoolean("Recycling.Potion Bottle", false);
