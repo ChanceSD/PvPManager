@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -7,7 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -21,6 +24,7 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.NoChance.PvPManager.Utils.MCVersion;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
@@ -40,7 +44,8 @@ public class PvPlayer extends EcoPlayer {
 	private long taggedTime;
 	private NewbieTask newbieTask;
 	private PvPlayer enemy;
-	private final HashMap<String, Integer> victim = new HashMap<>();
+	private final Map<String, Integer> victim = new HashMap<>();
+	private final Map<Material, Long> itemCooldown = new EnumMap<>(Material.class);
 	private final PvPManager plugin;
 	private NameTag nametag;
 	private static ExecutorService executor;
@@ -61,8 +66,8 @@ public class PvPlayer extends EcoPlayer {
 	public final boolean hasToggleCooldownPassed() {
 		if (!CombatUtils.hasTimePassed(toggleTime, Settings.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
 			final long secondsLeft = CombatUtils.getTimeLeft(toggleTime, Settings.getToggleCooldown());
-			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - secondsLeft / 60 * 60))
-					.replace("%t", Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60)));
+			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - secondsLeft / 60 * 60)).replace("%t",
+			        Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60))); // TODO use replaceTime
 			return false;
 		}
 		return true;
@@ -100,8 +105,8 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
-			message(Messages.getNewbieProtection().replace("%", Integer.toString(Settings.getNewbieProtectionTime())));
 			this.newbieTask = new NewbieTask(this, 0);
+			message(Messages.getNewbieProtection(newbieTask.getFinishTime()));
 		} else if (this.newbie && newbieTask != null) {
 			if (newbieTask.isExpired()) {
 				message(Messages.getNewbieProtectionEnd());
@@ -135,20 +140,24 @@ public class PvPlayer extends EcoPlayer {
 		if (nametag != null && Settings.useNameTag()) {
 			nametag.setInCombat();
 		}
-		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+		if (Settings.isGlowingInCombat() && MCVersion.isAtLeast(MCVersion.V1_9)) {
 			getPlayer().setGlowing(true);
 		}
 
+		final String message;
+		final String actionBarMessage;
 		if (attacker) {
-			message(Messages.getTaggedAttacker().replace("%p", tagger.getName()));
-			sendActionBar(Messages.getTaggedAttackerABar().replace("%p", tagger.getName()), 500);
+			message = Messages.getTaggedAttacker(tagger.getName());
+			actionBarMessage = Messages.getTaggedAttackerABar(tagger.getName());
 		} else {
-			message(Messages.getTaggedDefender().replace("%p", tagger.getName()));
-			sendActionBar(Messages.getTaggedDefenderABar().replace("%p", tagger.getName()), 500);
+			message = Messages.getTaggedDefender(tagger.getName());
+			actionBarMessage = Messages.getTaggedDefenderABar(tagger.getName());
 		}
+		message(message);
+		sendActionBar(actionBarMessage, 500);
 
 		this.tagged = true;
-		plugin.getPlayerHandler().tag(this);
+		plugin.getPlayerHandler().addToTagTask(this);
 	}
 
 	public final void unTag() {
@@ -159,7 +168,7 @@ public class PvPlayer extends EcoPlayer {
 			if (nametag != null && Settings.useNameTag()) {
 				nametag.restoreNametag();
 			}
-			if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+			if (Settings.isGlowingInCombat() && MCVersion.isAtLeast(MCVersion.V1_9)) {
 				getPlayer().setGlowing(false); // effect should pass by itself but now players can get untagged before tag expires
 			}
 
@@ -168,6 +177,7 @@ public class PvPlayer extends EcoPlayer {
 		}
 
 		this.tagged = false;
+		plugin.getPlayerHandler().removeFromTagTask(this);
 	}
 
 	public final void setPvP(final boolean pvpState) {
@@ -204,6 +214,9 @@ public class PvPlayer extends EcoPlayer {
 				totalKills++;
 				victim.put(victimName, totalKills);
 			}
+			if (Settings.isKillAbuseWarn() && totalKills + 1 == Settings.getKillAbuseMaxKills()) {
+				message(Messages.getKillAbuseWarning());
+			}
 			if (totalKills >= Settings.getKillAbuseMaxKills()) {
 				unTag();
 				CombatUtils.executeCommands(Settings.getKillAbuseCommands(), getPlayer(), getName(), victimName);
@@ -221,6 +234,29 @@ public class PvPlayer extends EcoPlayer {
 	 */
 	public final int getKillAbuseCount(final Player victimPlayer) {
 		return victim.getOrDefault(victimPlayer.getName(), 0);
+	}
+
+	public final boolean hasItemCooldown(final Material material) {
+		final Long time = itemCooldown.get(material);
+		if (time == null)
+			return false;
+		if (System.currentTimeMillis() > time) {
+			itemCooldown.remove(material);
+			return false;
+		}
+		return true;
+	}
+
+	public final void setItemCooldown(@NotNull final Material material, final int time) {
+		itemCooldown.put(material, System.currentTimeMillis() + time * 1000);
+		if (MCVersion.isAtLeast(MCVersion.V1_11_2)) {
+			getPlayer().setCooldown(material, time * 20);
+		}
+	}
+
+	@Nullable
+	public final Long getItemCooldown(final Material material) {
+		return itemCooldown.get(material);
 	}
 
 	public final void clearVictims() {
@@ -330,15 +366,6 @@ public class PvPlayer extends EcoPlayer {
 		return userData;
 	}
 
-	public final void updatePlayer(final Player p) {
-		if (!p.equals(getPlayer())) {
-			setPlayer(p);
-			if (nametag != null) {
-				nametag = new BukkitNameTag(this);
-			}
-		}
-	}
-
 	public final void cleanForRemoval() {
 		if (newbieTask != null) {
 			newbieTask.cancel();
@@ -384,7 +411,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	/**
-	 * @param player
+	 * @param player the player instance
 	 * @return PvPlayer instance for the provided player
 	 */
 	public static PvPlayer get(final Player player) {

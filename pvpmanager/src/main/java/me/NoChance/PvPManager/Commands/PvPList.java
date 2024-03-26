@@ -32,7 +32,7 @@ public class PvPList implements CommandExecutor {
 		final StringBuilder list = new StringBuilder();
 		for (final PvPlayer p : ph.getPlayers().values()) {
 			final Player player = p.getPlayer();
-			if (enabled == p.hasPvPEnabled() && player != null && (console || sender.canSee(player))) {
+			if (enabled == p.hasPvPEnabled() && (console || sender.canSee(player))) {
 				list.append(p.getName()).append(", ");
 			}
 		}

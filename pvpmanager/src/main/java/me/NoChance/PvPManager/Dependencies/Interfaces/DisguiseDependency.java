@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Dependencies;
+package me.NoChance.PvPManager.Dependencies.Interfaces;
 
 import org.bukkit.entity.Player;
 

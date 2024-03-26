@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.chancesd.sdutils.utils.Log;
+import me.NoChance.PvPManager.Dependencies.Interfaces.Dependency;
 
 public class BaseDependency implements Dependency {
 

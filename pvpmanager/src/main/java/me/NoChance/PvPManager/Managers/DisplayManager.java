@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
+import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
@@ -63,6 +64,7 @@ public class DisplayManager {
 		p.sendActionBar(ChatUtils.setPlaceholders(p.getPlayer(), message));
 	}
 
+	@NotNull
 	public PvPManager getPlugin() {
 		return plugin;
 	}

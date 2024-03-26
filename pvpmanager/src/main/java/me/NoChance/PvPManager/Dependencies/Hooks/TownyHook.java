@@ -6,7 +6,7 @@ import com.palmergames.bukkit.towny.object.Resident;
 
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 
 public class TownyHook extends BaseDependency implements ForceToggleDependency {
@@ -25,7 +25,7 @@ public class TownyHook extends BaseDependency implements ForceToggleDependency {
 	}
 
 	@Override
-	public boolean shouldDisable(final Player attacker, final Player defender, final CancelResult reason) {
+	public boolean shouldDisable(final Player attacker, final Player defender, final ProtectionResult reason) {
 		return shouldDisable(attacker) && shouldDisable(defender);
 	}
 

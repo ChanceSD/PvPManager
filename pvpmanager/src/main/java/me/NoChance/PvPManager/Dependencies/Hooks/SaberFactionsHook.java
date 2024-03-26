@@ -9,7 +9,7 @@ import com.massivecraft.factions.zcore.persist.MemoryFPlayers;
 
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.PvPDependency;
+import me.NoChance.PvPManager.Dependencies.Interfaces.PvPDependency;
 
 public class SaberFactionsHook extends BaseDependency implements PvPDependency {
 

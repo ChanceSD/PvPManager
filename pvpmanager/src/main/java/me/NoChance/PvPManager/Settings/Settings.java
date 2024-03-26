@@ -1,14 +1,18 @@
 package me.NoChance.PvPManager.Settings;
 
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -17,6 +21,7 @@ import org.bukkit.entity.Player;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.NoChance.PvPManager.Utils.MCVersion;
 
 public final class Settings {
 
@@ -26,8 +31,8 @@ public final class Settings {
 
 	public static boolean DEBUG = false;
 	private static int configVersion;
-	private static String minecraftVersion;
 	private static boolean isReloading;
+	private static MCVersion minecraftVersion;
 	private static boolean autoUpdate;
 	private static boolean blockEnderPearl;
 	private static boolean blockChorusFruit;
@@ -106,6 +111,8 @@ public final class Settings {
 	private static boolean blockInteractInCombat;
 	private static List<String> blockInteractItemList;
 	private static boolean untagEnemy;
+	private static boolean killAbuseWarn;
+	private static ChatColor teamColor;
 	private static boolean actionBarEnabled;
 	private static String actionBarMessage;
 	private static String actionBarSymbol;
@@ -114,12 +121,15 @@ public final class Settings {
 	private static String bossBarMessage;
 	private static BarColor bossBarColor;
 	private static BarStyle bossBarStyle;
+	private static boolean healthBelowName;
+	private static String healthBelowNameSymbol;
 	private static List<String> newbieBlacklist;
 	private static Set<String> worldsExcluded;
 	private static Set<String> playerKillsWGExclusions;
 	private static boolean simpleClansNoPvPInWar;
 	private static String cooldownsxEnderpearlID;
 	private static Set<String> harmfulPotions;
+	private static Map<Material, Integer> itemCooldowns;
 	private static ConfigurationSection GENERAL;
 	private static ConfigurationSection BORDERHOPPING;
 	private static ConfigurationSection DISABLE;
@@ -150,7 +160,7 @@ public final class Settings {
 	public static void initizalizeVariables(final YamlConfiguration c) {
 		assignSections(c);
 
-		minecraftVersion = Bukkit.getBukkitVersion().isEmpty() ? "0" : Bukkit.getBukkitVersion().replaceAll("-.+", "");
+		minecraftVersion = MCVersion.getMCVersion(Bukkit.getBukkitVersion().isEmpty() ? "0" : Bukkit.getBukkitVersion().replaceAll("-.+", ""));
 		locale = GENERAL.getString("Locale", "en").toUpperCase();
 		defaultPvp = GENERAL.getBoolean("Default PvP", true);
 		pvpBlood = GENERAL.getBoolean("PvP Blood", true);
@@ -160,6 +170,8 @@ public final class Settings {
 		soupBowlDisappear = GENERAL.getBoolean("Auto Soup.Bowl Disappear", false);
 		recyclePotionBottles = GENERAL.getBoolean("Recycling.Potion Bottle", false);
 		recycleMilkBucket = GENERAL.getBoolean("Recycling.Milk Bucket", false);
+		healthBelowName = GENERAL.getBoolean("Show health under name.Enabled", true);
+		healthBelowNameSymbol = GENERAL.getString("Show health under name.Display Name", "❤");
 		worldsExcluded = new HashSet<>(getList(GENERAL.getStringList("World Exclusions")));
 
 		borderHoppingVulnerable = BORDERHOPPING.getBoolean("Vulnerable", true);
@@ -184,13 +196,10 @@ public final class Settings {
 		actionBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Action Bar.Message", ""));
 		actionBarSymbol = TAGGEDCOMBAT.getString("Action Bar.Symbol", "▊");
 		actionBarTotalBars = TAGGEDCOMBAT.getInt("Action Bar.Total Bars", 10);
-		bossBarEnabled = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && TAGGEDCOMBAT.getBoolean("Boss Bar.Enabled", true);
+		bossBarEnabled = MCVersion.isAtLeast(MCVersion.V1_9) && TAGGEDCOMBAT.getBoolean("Boss Bar.Enabled", true);
 		bossBarMessage = ChatUtils.colorize(TAGGEDCOMBAT.getString("Boss Bar.Message", ""));
-		bossBarColor = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") ? BarColor.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarColor", "RED"))
-		        : null;
-		bossBarStyle = CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")
-		        ? BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10"))
-		        : null;
+		bossBarColor = MCVersion.isAtLeast(MCVersion.V1_9) ? BarColor.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarColor", "RED")) : null;
+		bossBarStyle = MCVersion.isAtLeast(MCVersion.V1_9) ? BarStyle.valueOf(TAGGEDCOMBAT.getString("Boss Bar.BarStyle", "SEGMENTED_10")) : null;
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
 		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl.Cooldown", 15);
 		enderPearlRenewTag = TAGGEDCOMBAT.getBoolean("EnderPearl.Renew Tag", true);
@@ -218,6 +227,17 @@ public final class Settings {
 		dropArmor = TAGGEDCOMBAT.getBoolean("Punishments.Kill on Logout.Player Drops.Armor", true);
 		commandsOnPvPLog = getCommandList(TAGGEDCOMBAT.getStringList("Punishments.Commands On PvPLog"));
 
+		itemCooldowns = new EnumMap<>(Material.class);
+		for (final Entry<String, Object> e : c.getConfigurationSection("Item Cooldowns").getValues(false).entrySet()) {
+			final Material material = Material.getMaterial(e.getKey().toUpperCase());
+			if (material == null) {
+				Log.warning("The material " + e.getKey()
+						+ " in Item Cooldowns doesn't exist. You might have typed it incorrectly or it might not exist in this MC version");
+				continue;
+			}
+			itemCooldowns.put(material, (Integer) e.getValue());
+		}
+
 		newbieProtectionEnabled = NEWBIEPROTECTION.getBoolean("Enabled", true);
 		newbieProtectionTime = NEWBIEPROTECTION.getInt("Time(minutes)", 5);
 		newbieAllowDisable = NEWBIEPROTECTION.getBoolean("Allow Player Disable", true);
@@ -228,6 +248,7 @@ public final class Settings {
 		killAbuseEnabled = KILLABUSE.getBoolean("Enabled", true);
 		killAbuseMaxKills = KILLABUSE.getInt("Max Kills", 5);
 		killAbuseTime = KILLABUSE.getInt("Time Limit", 60);
+		killAbuseWarn = KILLABUSE.getBoolean("Warn Before", true);
 		killAbuseCommands = getCommandList(KILLABUSE.getStringList("Commands on Abuse"));
 		respawnProtection = KILLABUSE.getInt("Respawn Protection", 5);
 
@@ -279,12 +300,7 @@ public final class Settings {
 	}
 
 	private static List<String> getList(final List<String> list) {
-		for (final Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
-			final String string = iterator.next();
-			if (string.startsWith("example")) {
-				iterator.remove();
-			}
-		}
+		list.removeIf(string -> string.startsWith("example"));
 		return list;
 	}
 
@@ -548,10 +564,6 @@ public final class Settings {
 		return borderHoppingResetCombatTag;
 	}
 
-	public static void setBorderHoppingResetCombatTag(final boolean borderHoppingResetCombatTag) {
-		Settings.borderHoppingResetCombatTag = borderHoppingResetCombatTag;
-	}
-
 	public static boolean isStopCommands() {
 		return stopCommands;
 	}
@@ -708,7 +720,23 @@ public final class Settings {
 		return playerKillsWGExclusions;
 	}
 
-	public static String getMinecraftVersion() {
+	public static boolean isKillAbuseWarn() {
+		return killAbuseWarn;
+	}
+
+	public static Map<Material, Integer> getItemCooldowns() {
+		return itemCooldowns;
+	}
+
+	public static boolean isHealthBelowName() {
+		return healthBelowName;
+	}
+
+	public static String getHealthBelowNameSymbol() {
+		return healthBelowNameSymbol;
+	}
+
+	public static MCVersion getMinecraftVersion() {
 		return minecraftVersion;
 	}
 

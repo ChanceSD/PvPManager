@@ -25,13 +25,12 @@ import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.DisplayManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.library.PluginLibraries;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.managers.StorageManager;
 import me.chancesd.pvpmanager.managers.UpdateManager;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.NoChance.PvPManager.Utils.MCVersion;
 
 public class PvPManager extends JavaPlugin {
 
@@ -88,12 +87,12 @@ public class PvPManager extends JavaPlugin {
 	}
 
 	private void startListeners() {
-		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+		if (MCVersion.isAtLeast(MCVersion.V1_9)) {
 			registerListener(new EntityListener1_9(playerHandler));
 		}
 		entityListener = new EntityListener(playerHandler);
 		registerListener(entityListener);
-		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.11.2")) {
+		if (MCVersion.isAtLeast(MCVersion.V1_11_2)) {
 			registerListener(new PlayerListener1_11(playerHandler));
 		}
 		registerListener(new PlayerListener(playerHandler));

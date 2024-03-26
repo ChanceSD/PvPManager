@@ -24,22 +24,23 @@ import com.google.common.cache.CacheBuilder;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
+import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Player.CancelResult;
+import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.NoChance.PvPManager.Utils.MCVersion;
 
 public class DebugEntityListener implements Listener {
 
 	private final PlayerHandler ph;
-	private final WorldGuardHook wg;
+	private final WorldGuardDependency wg;
 	private final Cache<LightningStrike, Location> lightningCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.SECONDS).build();
 
 	public DebugEntityListener(final PlayerHandler ph) {
 		this.ph = ph;
-		this.wg = (WorldGuardHook) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
+		this.wg = (WorldGuardDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 	}
 
 	private String getEntityNames(final EntityDamageByEntityEvent event) {
@@ -83,7 +84,7 @@ public class DebugEntityListener implements Listener {
 
 		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
-		final CancelResult result = ph.tryCancel(attacker, attacked);
+		final ProtectionResult result = ph.tryCancel(attacker, attacked);
 
 		if (result.isProtected()) {
 			event.setCancelled(true);
@@ -98,7 +99,7 @@ public class DebugEntityListener implements Listener {
 		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (ph.tryCancel(getAttacker(event.getDamager()), (Player) event.getEntity()).equals(CancelResult.FAIL_OVERRIDE)) {
+		if (ph.tryCancel(getAttacker(event.getDamager()), (Player) event.getEntity()).equals(ProtectionResult.FAIL_OVERRIDE)) {
 			event.setCancelled(false);
 			Log.debug("Force allowing PvP even though a plugin blocked it because a player has override or Vulnerable is enabled");
 		} else {
@@ -163,7 +164,7 @@ public class DebugEntityListener implements Listener {
 	public void onLightningStrike(final LightningStrikeEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getLightning().getWorld().getName()))
 			return;
-		if (!CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13.1"))
+		if (!MCVersion.isAtLeast(MCVersion.V1_13_1))
 			return;
 		if (event.getCause() != Cause.TRIDENT)
 			return;

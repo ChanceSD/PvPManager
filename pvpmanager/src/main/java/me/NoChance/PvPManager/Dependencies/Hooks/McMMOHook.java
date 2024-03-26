@@ -6,8 +6,8 @@ import com.gmail.nossr50.api.PartyAPI;
 
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.PvPDependency;
 import me.chancesd.sdutils.utils.Log;
+import me.NoChance.PvPManager.Dependencies.Interfaces.PvPDependency;
 
 public class McMMOHook extends BaseDependency implements PvPDependency {
 

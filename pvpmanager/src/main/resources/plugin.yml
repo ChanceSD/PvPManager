@@ -16,6 +16,7 @@ softdepend:
   - EZRanksLite
   - Essentials
   - PlaceholderAPI
+  - GriefPrevention
   - Towny
   - mcMMO
   - CooldownsX
