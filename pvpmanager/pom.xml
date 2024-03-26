@@ -11,12 +11,13 @@
 	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
 	<artifactId>pvpmanager</artifactId>
 	<packaging>jar</packaging>
+	
 	<name>PvPManager</name>
 	<description>A powerful plugin to manage various PvP combat features</description>
 	<url>https://github.com/ChanceSD/PvPManager</url>
 
 	<properties>
-		<config.version>76</config.version>
+		<config.version>77</config.version>
 		<database.version>1</database.version>
 	</properties>
 	
@@ -296,8 +297,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-inline</artifactId>
-			<version>5.2.0</version>
+			<artifactId>mockito-core</artifactId>
+			<version>5.11.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -305,7 +306,7 @@
 		<dependency>
 			<groupId>me.chancesd.pvpmanager</groupId>
 			<artifactId>pvpmanager-folia</artifactId>
-			<version>3.15</version>
+			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>me.chancesd.sdutils</groupId>

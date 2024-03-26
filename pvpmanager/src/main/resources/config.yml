@@ -218,7 +218,7 @@ PvP Toggle:
 Plugin Hooks:
   Essentials:
     # Should AFK players be protected from other players
-    Protect AFK: false
+    Protect AFK: true
   SimpleClans:
     # Disable PvP and newbie protection if the players are in a SimpleClans war
     No Protection In War: true
@@ -250,7 +250,8 @@ Update Check:
 Metrics:
   Opt-out: false
   
-# Potions considered harmful, players will be tagged by them and protected from them   
+# Potions considered harmful, players will be tagged by them and protected from them
+# See list here https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
 Harmful Potions:
   - SLOW
   - SLOW_DIGGING

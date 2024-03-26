@@ -253,9 +253,9 @@ public class PM implements TabExecutor {
 
 		Settings.setReloading(true);
 		Settings.setUpdate(false);
+		plugin.onDisable();
 		ScheduleUtils.cancelAllTasks();
 		HandlerList.unregisterAll(plugin);
-		plugin.onDisable();
 		plugin.onEnable();
 		Settings.setReloading(false);
 		sender.sendMessage(Messages.PREFIXMSG + " §aPvPManager reloaded!");
