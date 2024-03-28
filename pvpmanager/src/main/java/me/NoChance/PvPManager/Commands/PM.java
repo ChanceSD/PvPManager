@@ -201,10 +201,6 @@ public class PM implements TabExecutor {
 			} else {
 				p.setTagged(true, p);
 			}
-		} else if (args[1].equalsIgnoreCase("ct")) {
-			p.message("Tagged: " + p.isInCombat());
-		} else if (args[1].equalsIgnoreCase("newbie")) {
-			p.setNewbie(true);
 		} else if (args[1].equalsIgnoreCase("attack")) {
 			plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
 			sender.sendMessage("Attacked player with 5 damage");
@@ -238,11 +234,15 @@ public class PM implements TabExecutor {
 		}
 
 		Settings.setLocale(locale.name());
-		plugin.reloadConfig();
-		plugin.getConfig().set("General.Locale", locale.name());
-		plugin.saveConfig();
+		changeConfigSetting("General.Locale", locale.name());
 		Messages.setup(plugin);
 		sender.sendMessage(Messages.PREFIXMSG + " §aLanguage changed to " + Messages.getLocale() + " - Filename: " + Messages.getLocale().fileName());
+	}
+
+	private void changeConfigSetting(final String path, final String value) {
+		plugin.reloadConfig();
+		plugin.getConfig().set(path, value);
+		plugin.saveConfig();
 	}
 
 	private void reload(final CommandSender sender) {
@@ -251,6 +251,12 @@ public class PM implements TabExecutor {
 			return;
 		}
 
+		reload(false);
+		sender.sendMessage(Messages.PREFIXMSG + " §aPvPManager reloaded!");
+	}
+
+	private void reload(final boolean silent) {
+		Log.setSilent(silent);
 		Settings.setReloading(true);
 		Settings.setUpdate(false);
 		plugin.onDisable();
@@ -258,7 +264,8 @@ public class PM implements TabExecutor {
 		HandlerList.unregisterAll(plugin);
 		plugin.onEnable();
 		Settings.setReloading(false);
-		sender.sendMessage(Messages.PREFIXMSG + " §aPvPManager reloaded!");
+		if (silent)
+			Log.setSilent(false);
 	}
 
 	private void update(final CommandSender sender) {
@@ -284,7 +291,7 @@ public class PM implements TabExecutor {
 		if (args.length == 2 && args[0].equalsIgnoreCase("convert"))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("debug"))
-			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "tag", "ct", "newbie", "attack"));
+			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "tag", "attack", "players"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("locale"))
 			return ChatUtils.getMatchingEntries(args[1], Locale.asStringList());
 

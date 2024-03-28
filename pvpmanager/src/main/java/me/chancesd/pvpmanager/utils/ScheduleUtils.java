@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,16 +41,18 @@ public class ScheduleUtils {
 						.setUncaughtExceptionHandler(new PMRUncaughExceptionHandler()).build());
 	}
 
-	public static void runAsync(final Runnable task) {
-		executor.submit(task);
+	public static Future<?> runAsync(final Runnable task) {
+		return executor.submit(task);
 	}
 
 	public static ScheduledFuture<?> runAsyncLater(final Runnable task, final long delay, final TimeUnit unit) {
 		return executor.schedule(task, delay, unit);
 	}
 
-	public static void runAsyncTimer(final Runnable task, final long delay, final long period, final TimeUnit unit) {
-		scheduledTasks.add(executor.scheduleAtFixedRate(task, delay, period, unit));
+	public static ScheduledFuture<?> runAsyncTimer(final Runnable task, final long delay, final long period, final TimeUnit unit) {
+		final ScheduledFuture<?> scheduledTask = executor.scheduleAtFixedRate(task, delay, period, unit);
+		scheduledTasks.add(scheduledTask);
+		return scheduledTask;
 	}
 
 	public static void runPlatformAsync(final Runnable task) {
@@ -99,7 +102,7 @@ public class ScheduleUtils {
 	}
 
 	public static ExecutorService newBoundedCachedThreadPool(final int corePoolSize, final int maxPoolSize, final ThreadFactory threadFactory) {
-		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<Runnable>() {
+		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<>() {
 			@Override
 			public boolean offer(final Runnable e) {
 				return tryTransfer(e);

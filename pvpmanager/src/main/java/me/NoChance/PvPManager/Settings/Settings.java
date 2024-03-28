@@ -297,7 +297,7 @@ public final class Settings {
 			if (string.startsWith("!player")) {
 				string = string.substring(8);
 			}
-			if (string.startsWith("example")) {
+			if (string.isEmpty() || string.startsWith("example")) {
 				iterator.remove();
 			}
 		}

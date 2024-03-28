@@ -132,11 +132,12 @@ public class PvPlayer extends EcoPlayer {
 		if (event.isCancelled())
 			return;
 
-		if (nametag != null && Settings.useNameTag()) {
-			nametag.setInCombat();
-		}
 		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
 			getPlayer().setGlowing(true);
+		}
+
+		if (nametag != null && Settings.useNameTag()) {
+			executor.execute(nametag::setInCombat);
 		}
 
 		if (attacker) {
