@@ -56,6 +56,8 @@ public class PlayerHandler {
 
 		if (attacker.hasOverride() || Settings.borderHoppingVulnerable() && canAttackHooks(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
+		if (!Settings.isGlobalStatus())
+			return CancelResult.GLOBAL_PROTECTION;
 		if (!attacked.getCombatWorld().isCombatAllowed())
 			return CancelResult.WORLD_PROTECTION;
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
@@ -72,6 +74,7 @@ public class PlayerHandler {
 		}
 		if (dependencyManager.shouldProtectAFK(defender))
 			return CancelResult.AFK_PROTECTION;
+
 		return CancelResult.FAIL;
 	}
 

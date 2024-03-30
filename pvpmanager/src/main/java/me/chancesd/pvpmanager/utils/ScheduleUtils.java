@@ -102,7 +102,7 @@ public class ScheduleUtils {
 	}
 
 	public static ExecutorService newBoundedCachedThreadPool(final int corePoolSize, final int maxPoolSize, final ThreadFactory threadFactory) {
-		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<>() {
+		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<Runnable>() {
 			@Override
 			public boolean offer(final Runnable e) {
 				return tryTransfer(e);

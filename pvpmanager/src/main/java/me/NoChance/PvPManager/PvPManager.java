@@ -10,11 +10,13 @@ import me.NoChance.PvPManager.Commands.Announce;
 import me.NoChance.PvPManager.Commands.Newbie;
 import me.NoChance.PvPManager.Commands.PM;
 import me.NoChance.PvPManager.Commands.PvP;
+import me.NoChance.PvPManager.Commands.PvPGlobal;
 import me.NoChance.PvPManager.Commands.PvPInfo;
 import me.NoChance.PvPManager.Commands.PvPList;
 import me.NoChance.PvPManager.Commands.PvPOverride;
 import me.NoChance.PvPManager.Commands.PvPStatus;
 import me.NoChance.PvPManager.Commands.Tag;
+import me.NoChance.PvPManager.Commands.Untag;
 import me.NoChance.PvPManager.Libraries.Metrics.CustomMetrics;
 import me.NoChance.PvPManager.Listeners.EntityListener;
 import me.NoChance.PvPManager.Listeners.EntityListener1_9;
@@ -109,7 +111,9 @@ public class PvPManager extends JavaPlugin {
 		registerCommand(getCommand("pvplist"), new PvPList(playerHandler));
 		registerCommand(getCommand("pvpstatus"), new PvPStatus(playerHandler));
 		registerCommand(getCommand("pvptag"), new Tag(playerHandler));
+		registerCommand(getCommand("untag"), new Untag(playerHandler));
 		registerCommand(getCommand("announce"), new Announce());
+		registerCommand(getCommand("pvpglobal"), new PvPGlobal());
 	}
 
 	private void startMetrics() {

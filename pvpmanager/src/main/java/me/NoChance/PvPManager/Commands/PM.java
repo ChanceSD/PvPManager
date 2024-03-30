@@ -91,7 +91,7 @@ public class PM implements TabExecutor {
 			sender.sendMessage("§4§lUsage: §f/pmr cleanup <days>");
 			sender.sendMessage("§cThis command will remove users from the database that haven't logged in during the last x days.");
 			sender.sendMessage(
-			        "§cThis means that if they come back their remaining newbie protection(if they had any) will be gone and their previous PvP state will also be default.");
+					"§cThis means that if they come back their remaining newbie protection(if they had any) will be gone and their previous PvP state will also be default.");
 			return;
 		}
 		try {
@@ -184,6 +184,11 @@ public class PM implements TabExecutor {
 				Settings.setDEBUG(false);
 				sender.sendMessage("Debug damage listener disabled");
 			}
+		} else if (args[1].equalsIgnoreCase("tagall")) {
+			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
+				player.setTagged(true, player);
+			}
+			sender.sendMessage("Tagged all players");
 		} else if (args.length == 3) {
 			if (!CombatUtils.isOnline(args[2])) {
 				sender.sendMessage("§4Player not online!");
@@ -194,15 +199,10 @@ public class PM implements TabExecutor {
 		if (p == null)
 			return;
 		if (args[1].equalsIgnoreCase("tag")) {
-			if (args.length == 3 && args[2].equalsIgnoreCase("all")) {
-				for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
-					player.setTagged(true, p);
-				}
-			} else {
-				p.setTagged(true, p);
-			}
+			p.setTagged(true, p);
 		} else if (args[1].equalsIgnoreCase("attack")) {
-			plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
+			plugin.getServer().getPluginManager()
+					.callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
 			sender.sendMessage("Attacked player with 5 damage");
 		} else if (args[1].equalsIgnoreCase("players")) {
 			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
@@ -291,7 +291,7 @@ public class PM implements TabExecutor {
 		if (args.length == 2 && args[0].equalsIgnoreCase("convert"))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("debug"))
-			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "tag", "attack", "players"));
+			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "tag", "tagall", "attack", "players"));
 		if (args.length == 2 && args[0].equalsIgnoreCase("locale"))
 			return ChatUtils.getMatchingEntries(args[1], Locale.asStringList());
 

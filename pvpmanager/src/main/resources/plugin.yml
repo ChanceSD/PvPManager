@@ -55,11 +55,19 @@ commands:
       aliases: [plist, pvpl]
       permission: pvpmanager.list
    pvptag:
-      description: Shows time left until out of combat
+      description: Shows time left until out of combat or tag player
       aliases: [ct, ctag, combattag]
+   untag:
+      description: Untags a player  
+      permission: pvpmanager.admin
+      usage: "Usage: /<command> <player>"
    announce:
       description: Broadcasts a message to all players with color support
       permission: pvpmanager.admin
+   pvpglobal:
+      description: Toggle PvP for the whole server
+      permission: pvpmanager.admin
+      usage: "Usage: /<command> <on|off>"
 
 permissions:
    pvpmanager.*:

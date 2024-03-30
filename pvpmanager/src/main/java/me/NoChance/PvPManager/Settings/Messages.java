@@ -66,6 +66,7 @@ public class Messages {
 	private static String moneySteal;
 	private static Locale locale;
 	private static String tagTimeLeft;
+	private static String tagNotInCombat;
 	private static String newVersion;
 	private static String pvpListTitle;
 	private static String pvpListEnabled;
@@ -76,7 +77,6 @@ public class Messages {
 	private static String pvpToggleAlreadyEnabled;
 	private static String errorPlayerNotFound;
 	private static String errorNotNewbie;
-	private static String errorNotInCombat;
 	private static String errorNotPlayer;
 	private static String newbieTimeCheck;
 	private static String newbieTimeCheckOther;
@@ -86,6 +86,7 @@ public class Messages {
 	private static String respawnProtectionOther;
 	private static String worldProtection;
 	private static String afkProtection;
+	private static String globalProtection;
 	private static String pvpForceEnabledWG;
 	private static String teleportBlockedInCombat;
 	private static String blockPlaceBlockedInCombat;
@@ -198,7 +199,6 @@ public class Messages {
 		errorPvpToggleNoPvp = getString("Error_PvPToggle_NoPvP");
 		errorPvpToggleForcePvp = getString("Error_PvPToggle_ForcePvP");
 		errorPermission = getString("Error_Permission");
-		errorNotInCombat = getString("Error_Not_In_Combat");
 		errorNotPlayer = getString("Error_Not_Player");
 		moneyReward = getString("Money_Reward");
 		moneyPenalty = getString("Money_Penalty");
@@ -212,10 +212,12 @@ public class Messages {
 		pvpToggleAlreadyEnabled = getString("PvPToggle_Already_Enabled");
 		errorPlayerNotFound = getString("Error_Player_Not_Found");
 		tagTimeLeft = getString("Tag_Timeleft");
+		tagNotInCombat = getString("Tag_Not_In_Combat");
 		respawnProtectionSelf = getString("Respawn_Protection");
 		respawnProtectionOther = getString("Respawn_Protection_Other");
 		worldProtection = getString("World_Protection");
 		afkProtection = getString("AFK_Protection");
+		globalProtection = getString("Global_Protection");
 		pvpForceEnabledWG = getString("PvP_Force_Enabled_WorldGuard");
 		enabled = getString("Enabled");
 		disabled = getString("Disabled");
@@ -269,6 +271,8 @@ public class Messages {
 			return worldProtection();
 		case AFK_PROTECTION:
 			return getAfkProtection();
+		case GLOBAL_PROTECTION:
+			return getGlobalProtection();
 		default:
 			return "";
 		}
@@ -426,6 +430,10 @@ public class Messages {
 		return tagTimeLeft;
 	}
 
+	public static String getTagNotInCombat() {
+		return tagNotInCombat;
+	}
+
 	public static String getNewVersion() {
 		return newVersion;
 	}
@@ -472,10 +480,6 @@ public class Messages {
 		return newbieForceRemovedWG;
 	}
 
-	public static String getErrorNotInCombat() {
-		return errorNotInCombat;
-	}
-
 	public static String getErrorNotPlayer() {
 		return errorNotPlayer;
 	}
@@ -494,6 +498,10 @@ public class Messages {
 
 	public static String getAfkProtection() {
 		return afkProtection;
+	}
+
+	public static String getGlobalProtection() {
+		return globalProtection;
 	}
 
 	public static String getTaggedAttackerABar() {

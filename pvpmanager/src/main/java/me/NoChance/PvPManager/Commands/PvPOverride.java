@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -7,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Settings.Messages;
 
 public class PvPOverride implements CommandExecutor {
 
@@ -21,7 +23,7 @@ public class PvPOverride implements CommandExecutor {
 		if (sender instanceof Player) {
 			final PvPlayer pvPlayer = ph.get((Player) sender);
 			final boolean override = pvPlayer.toggleOverride();
-			pvPlayer.message("§2PvP Override Set To: " + override);
+			pvPlayer.message(Messages.PREFIXMSG + ChatColor.DARK_GREEN + "PvP Override set to: " + ChatColor.GOLD + override);
 		}
 		return true;
 	}
