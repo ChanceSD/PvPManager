@@ -11,7 +11,7 @@
 	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
 	<artifactId>pvpmanager</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<name>PvPManager</name>
 	<description>A powerful plugin to manage various PvP combat features</description>
 	<url>https://github.com/ChanceSD/PvPManager</url>
@@ -20,7 +20,7 @@
 		<config.version>77</config.version>
 		<database.version>1</database.version>
 	</properties>
-	
+
 	<repositories>
 		<!-- SpigotMC -->
 		<repository>
@@ -265,6 +265,14 @@
 			<groupId>com.github.sirblobman.plugin.cooldowns</groupId>
 			<artifactId>cooldowns-api</artifactId>
 			<version>5.0.0-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- KingdomsX -->
+		<dependency>
+			<groupId>com.github.cryptomorin</groupId>
+			<artifactId>kingdoms</artifactId>
+			<version>1.16.20.5</version>
 			<scope>provided</scope>
 		</dependency>
 

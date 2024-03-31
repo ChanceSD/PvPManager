@@ -219,6 +219,9 @@ Plugin Hooks:
   Essentials:
     # Should AFK players be protected from other players
     Protect AFK: true
+  Kingdoms:
+    # Disable PvP and newbie protection if the players are in an invasion
+    No Protection In War: true
   SimpleClans:
     # Disable PvP and newbie protection if the players are in a SimpleClans war
     No Protection In War: true

@@ -24,6 +24,7 @@ import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.CooldownsXHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUIDHook;
+import me.NoChance.PvPManager.Dependencies.Hooks.KingdomsXHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.McMMOHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
@@ -129,6 +130,9 @@ public class DependencyManager {
 			break;
 		case TOWNY:
 			registerDependency(new TownyHook(hook));
+			break;
+		case KINGDOMSX:
+			registerDependency(new KingdomsXHook(hook));
 			break;
 		default:
 			registerDependency(new BaseDependency(hook));

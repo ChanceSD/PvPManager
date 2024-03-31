@@ -19,6 +19,7 @@ softdepend:
   - Towny
   - mcMMO
   - CooldownsX
+  - Kingdoms
 
 libraries:
   - com.zaxxer:HikariCP:4.0.3
