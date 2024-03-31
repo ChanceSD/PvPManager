@@ -267,21 +267,25 @@ public final class Settings {
 
 	public static void helpMenu(final Player player) {
 		player.sendMessage(ChatColor.GOLD + "-------------- PvPManager Help Page --------------");
-		player.sendMessage(ChatColor.GOLD + "/pvp [player] " + ChatColor.WHITE + "| Set PvP Enabled or Disabled");
-		player.sendMessage(ChatColor.GOLD + "/pvpinfo [player] " + ChatColor.WHITE + "| Check your or other player info");
-		player.sendMessage(ChatColor.GOLD + "/pvplist " + ChatColor.WHITE + "| List all players with PvP enabled");
-		player.sendMessage(ChatColor.GOLD + "/pvpo " + ChatColor.WHITE + "| Override all PvP protections");
-		player.sendMessage(ChatColor.GOLD + "/pvpstatus [player] " + ChatColor.WHITE + "| Check yours or other player PvP status");
-		player.sendMessage(ChatColor.GOLD + "/pvpglobal <on|off> " + ChatColor.WHITE + "| Toggle PvP for the whole server");
-		player.sendMessage(ChatColor.GOLD + "/pvptag <player> " + ChatColor.WHITE + "| Check tag time left or tag a player");
-		player.sendMessage(ChatColor.GOLD + "/untag <player> " + ChatColor.WHITE + "| Untags a player");
-		player.sendMessage(ChatColor.GOLD + "/newbie disable " + ChatColor.WHITE + "| Disable newbie protection");
-		player.sendMessage(ChatColor.GOLD + "/pmr " + ChatColor.WHITE + "| Show This Help Page");
-		player.sendMessage(ChatColor.GOLD + "/pmr worlds" + ChatColor.WHITE + "| Control panel to manage world PvP");
-		player.sendMessage(ChatColor.GOLD + "/pmr reload " + ChatColor.WHITE + "| Reload PvPManager");
-		player.sendMessage(ChatColor.GOLD + "/pmr cleanup " + ChatColor.WHITE + "| Cleanup inactive users from database");
-		player.sendMessage(ChatColor.GOLD + "/pmr update " + ChatColor.WHITE + "| Update to latest version");
+		player.sendMessage(ChatColor.GOLD + "/pvp [player]" + helpSeparator() + ChatColor.WHITE + "Set PvP enabled or disabled");
+		player.sendMessage(ChatColor.GOLD + "/pvpinfo [player]" + helpSeparator() + ChatColor.WHITE + "Check your or other player info");
+		player.sendMessage(ChatColor.GOLD + "/pvplist [offline]" + helpSeparator() + ChatColor.WHITE + "List all online or offline players");
+		player.sendMessage(ChatColor.GOLD + "/pvpo " + helpSeparator() + ChatColor.WHITE + "Override all PvP protections");
+		player.sendMessage(ChatColor.GOLD + "/pvpstatus [player]" + helpSeparator() + ChatColor.WHITE + "Check your or other player PvP status");
+		player.sendMessage(ChatColor.GOLD + "/pvpglobal <on|off>" + helpSeparator() + ChatColor.WHITE + "Toggle PvP for the whole server");
+		player.sendMessage(ChatColor.GOLD + "/pvptag <player>" + helpSeparator() + ChatColor.WHITE + "Check tag time left or tag a player");
+		player.sendMessage(ChatColor.GOLD + "/untag <player>" + helpSeparator() + ChatColor.WHITE + "Untags a player");
+		player.sendMessage(ChatColor.GOLD + "/newbie disable" + helpSeparator() + ChatColor.WHITE + "Disable newbie protection");
+		player.sendMessage(ChatColor.GOLD + "/pmr" + helpSeparator() + ChatColor.WHITE + "Shows this help page");
+		player.sendMessage(ChatColor.GOLD + "/pmr worlds" + helpSeparator() + ChatColor.WHITE + "Control panel to manage world PvP");
+		player.sendMessage(ChatColor.GOLD + "/pmr reload" + helpSeparator() + ChatColor.WHITE + "Reload PvPManager");
+		player.sendMessage(ChatColor.GOLD + "/pmr cleanup" + helpSeparator() + ChatColor.WHITE + "Cleanup inactive users from database");
+		player.sendMessage(ChatColor.GOLD + "/pmr update" + helpSeparator() + ChatColor.WHITE + "Update to latest version");
 		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
+	}
+
+	private static String helpSeparator() {
+		return ChatColor.RED + " >> ";
 	}
 
 	private static List<String> getList(final List<String> list) {

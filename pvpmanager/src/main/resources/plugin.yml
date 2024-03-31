@@ -52,7 +52,7 @@ commands:
       permission: pvpmanager.pvpstatus.self
       usage: "Usage: /<command> [player]"
    pvplist:
-      description: List all players with pvp enabled
+      description: List the PvP state of all online or offline players
       aliases: [plist, pvpl]
       permission: pvpmanager.list
    pvptag:
