@@ -129,6 +129,9 @@ permissions:
    pvpmanager.exempt.block.commands:
      description: Players with this permission can use commands while tagged
      default: false
+   pvpmanager.bypass.protection.respawn:
+     description: Players with this permission do not get respawn protection
+     default: false 
    pvpmanager.list:
      description: Allows access to the list of players with PvP enabled and disabled
      default: false

@@ -239,7 +239,7 @@ public class PvPlayer extends EcoPlayer {
 			respawnTime = 0;
 			return false;
 		}
-		return true;
+		return !getPlayer().hasPermission("pvpmanager.bypass.protection.respawn");
 	}
 
 	public final void setRespawnTime(final long respawnTime) {
