@@ -56,9 +56,13 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public final void onBlockPlace(final BlockPlaceEvent event) {
-		if (Settings.isBlockPlaceBlocks() && ph.get(event.getPlayer()).isInCombat()) {
+		if (!Settings.isBlockPlaceBlocks() && !Settings.isBlockPlaceBlocksNewbie())
+			return;
+
+		final PvPlayer combatPlayer = ph.get(event.getPlayer());
+		if (Settings.isBlockPlaceBlocks() && combatPlayer.isInCombat() || Settings.isBlockPlaceBlocksNewbie() && combatPlayer.isNewbie()) {
 			event.setCancelled(true);
-			ph.get(event.getPlayer()).sendActionBar(Messages.getBlockPlaceBlockedInCombat(), 1000);
+			combatPlayer.sendActionBar(Messages.getBlockPlaceBlockedInCombat(), 1000);
 		}
 	}
 

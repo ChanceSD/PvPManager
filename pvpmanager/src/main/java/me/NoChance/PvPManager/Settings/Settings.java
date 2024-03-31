@@ -34,6 +34,7 @@ public final class Settings {
 	private static boolean blockChorusFruit;
 	private static boolean blockTeleport;
 	private static boolean blockPickNewbies;
+	private static boolean blockPlaceBlocksNewbie;
 	private static boolean blockPlaceBlocks;
 	private static boolean blockGlideInCombat;
 	private static boolean blockEat;
@@ -223,6 +224,7 @@ public final class Settings {
 		newbieProtectionTime = NEWBIEPROTECTION.getInt("Time(minutes)", 5);
 		newbieAllowDisable = NEWBIEPROTECTION.getBoolean("Allow Player Disable", true);
 		blockPickNewbies = NEWBIEPROTECTION.getBoolean("Block Pick Items", false);
+		blockPlaceBlocksNewbie = NEWBIEPROTECTION.getBoolean("Block Place Blocks", false);
 		newbieGodMode = NEWBIEPROTECTION.getBoolean("Protect From Everything", false);
 		newbieBlacklist = getList(NEWBIEPROTECTION.getStringList("Command Blacklist"));
 
@@ -426,6 +428,10 @@ public final class Settings {
 
 	public static boolean isBlockPickNewbies() {
 		return blockPickNewbies;
+	}
+
+	public static boolean isBlockPlaceBlocksNewbie() {
+		return blockPlaceBlocksNewbie;
 	}
 
 	public static boolean isBlockPlaceBlocks() {
