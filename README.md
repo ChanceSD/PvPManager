@@ -11,9 +11,6 @@ PvPManager
 
 To install and use the plugin, check the [Wiki](https://github.com/ChanceSD/PvPManager/wiki)
 
-If you have ideas/bugfixes and have some experience programming, feel free to join Discord and send a PM  
-Any help is always welcome, specially given the size of this project keeps growing, new contributions are very appreciated
-
 Useful Links
 ------------
 **Spigot:** https://www.spigotmc.org/resources/pvpmanager-lite.845/  
