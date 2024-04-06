@@ -58,6 +58,7 @@ public class Messages {
 	private static String enderpearlBlockedIncombat;
 	private static String chorusBlockedInCombat;
 	private static String totemBlockedInCombat;
+	private static String inventoryBlockedInCombat;
 	private static String pushbackWarning;
 	private static String errorCommand;
 	private static String currentVersion;
@@ -192,6 +193,7 @@ public class Messages {
 		interactBlockedInCombat = getString("Interact_Blocked_InCombat");
 		teleportBlockedInCombat = getString("Teleport_Blocked_InCombat");
 		totemBlockedInCombat = getString("Totem_Blocked_InCombat");
+		inventoryBlockedInCombat = getString("Inventory_Blocked_InCombat");
 		pushbackWarning = getString("Pushback_Warning");
 		errorCommand = getString("Error_Command");
 		errorNotNewbie = getString("Error_Not_Newbie");
@@ -534,6 +536,10 @@ public class Messages {
 
 	public static String getTotemBlockedInCombat() {
 		return totemBlockedInCombat;
+	}
+
+	public static String getInventoryBlockedInCombat() {
+		return inventoryBlockedInCombat;
 	}
 
 	public static String getNewbiePickupItemBlocked() {

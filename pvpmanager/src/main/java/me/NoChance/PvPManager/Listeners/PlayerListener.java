@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -310,6 +311,17 @@ public class PlayerListener implements Listener {
 		if (Settings.isKillAbuseEnabled() && Settings.getRespawnProtection() != 0) {
 			final PvPlayer player = ph.get(event.getPlayer());
 			player.setRespawnTime(System.currentTimeMillis());
+		}
+	}
+
+	@EventHandler
+	public final void onInventoryOpen(final InventoryOpenEvent event) {
+		if (!Settings.isBlockInventoryOpen())
+			return;
+		final PvPlayer combatPlayer = ph.get((Player) event.getPlayer());
+		if (combatPlayer.isInCombat()) {
+			event.setCancelled(true);
+			combatPlayer.sendActionBar(Messages.getInventoryBlockedInCombat(), 1000);
 		}
 	}
 

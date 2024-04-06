@@ -122,6 +122,7 @@ Tagged In Combat:
     Elytra: false
     Eat: false
     Totem of Undying: false
+    Open Inventory: true
     Commands:
       Enabled: true
       Whitelist: true
