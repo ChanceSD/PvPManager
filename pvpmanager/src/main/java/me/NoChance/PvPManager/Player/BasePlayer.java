@@ -18,6 +18,7 @@ public abstract class BasePlayer {
 	private final UUID uuid;
 	private CombatWorld combatWorld;
 	private long actionBarCooldown;
+	private String lastActionBarMessage;
 
 	protected BasePlayer(final Player player) {
 		this.player = new WeakReference<>(player);
@@ -66,7 +67,7 @@ public abstract class BasePlayer {
 	 * @param duration The duration in milliseconds
 	 */
 	public void sendActionBar(final String message, final long duration) {
-		if (System.currentTimeMillis() < actionBarCooldown || message.isEmpty())
+		if (System.currentTimeMillis() < actionBarCooldown || message.isEmpty() || message.equals(lastActionBarMessage))
 			return;
 		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.10")) { // Premium PvPManager supports lower versions with NMS
 			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.16.5")) {
@@ -75,6 +76,7 @@ public abstract class BasePlayer {
 				getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
 			}
 		}
+		lastActionBarMessage = message;
 		actionBarCooldown = System.currentTimeMillis() + duration;
 	}
 

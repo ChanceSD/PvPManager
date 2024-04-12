@@ -59,6 +59,11 @@ public class DependencyManager {
 			        + "Make sure to disable Punish Logout and set tag time to 0 seconds in GP config. "
 			        + "Issues with those features often get wrongly blamed on PvPManager and cause conflicts due to the lack of GP feedback messages.");
 		}
+		if (Bukkit.getPluginManager().getPlugin("TAB") != null && Settings.useNameTag()) {
+			Log.warning(
+					"TAB has been detected. If you want nametags to change while in combat, you have to set 'anti-override' to false in TAB's config.");
+			Log.warning("Or use the premium version of PvPManager which hooks into TAB for nametag/tablist changes.");
+		}
 	}
 
 	private void setupHooks() {

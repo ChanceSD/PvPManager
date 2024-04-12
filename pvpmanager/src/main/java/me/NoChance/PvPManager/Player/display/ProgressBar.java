@@ -5,29 +5,52 @@ import com.google.common.base.Strings;
 public class ProgressBar {
 
 	private final int totalBars;
-	private final int goal;
 	private final String symbol;
-	private double progress;
+	private final String originalMessage;
 	private String message;
+	private int goal;
+	private double progress;
+	private boolean dirty = true;
 
 	public ProgressBar(final String message, final int totalBars, final int goal, final String symbol) {
-		this.message = message;
+		this.originalMessage = message;
 		this.totalBars = totalBars;
 		this.goal = goal;
 		this.symbol = symbol;
 	}
 
-	public ProgressBar(final String message, final int totalBars, final int goal, final String symbol, final int secondsPassed) {
+	public ProgressBar(final String message, final int totalBars, final int goal, final String symbol, final long secondsPassed) {
 		this(message, totalBars, goal, symbol);
 		setProgress(secondsPassed);
+		calculate();
 	}
 
-	public void setProgress(final double progress) {
+	public ProgressBar setProgress(final double progress) {
+		if (this.progress == progress)
+			return this;
+		this.progress = progress;
+		this.dirty = true;
+		return this;
+	}
+
+	public ProgressBar setGoal(final int goal) {
+		if (this.goal == goal)
+			return this;
+		this.goal = goal;
+		this.dirty = true;
+		return this;
+	}
+
+	public ProgressBar calculate() {
+		if (!dirty)
+			return this;
 		final double percent = progress / goal;
 		final int progressBars = (int) (totalBars * percent);
-		message = message.replace("<barsLeft>", Strings.repeat(symbol, totalBars - progressBars)).replace("<barsPassed>", Strings.repeat(symbol, progressBars))
+		message = originalMessage.replace("<barsLeft>", Strings.repeat(symbol, totalBars - progressBars))
+				.replace("<barsPassed>", Strings.repeat(symbol, progressBars))
 		        .replace("<time>", Integer.toString((int) (goal - progress)));
-		this.progress = progress;
+		this.dirty = false;
+		return this;
 	}
 
 	public double getProgress() {

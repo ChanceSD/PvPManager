@@ -16,20 +16,21 @@ import me.chancesd.sdutils.utils.Log;
 
 public class DisplayManager {
 
-	private final Map<Integer, ProgressBar> actionBars = new HashMap<>();
+	private final Map<PvPlayer, ProgressBar> actionBars = new HashMap<>();
 	private final Map<PvPlayer, BossBar> bossBars = new ConcurrentHashMap<>();
 	private final PvPManager plugin;
 
 	public DisplayManager(final PvPManager plugin) {
 		this.plugin = plugin;
-		setupActionBar();
 	}
 
-	public void updateBossbar(final PvPlayer player, final double timePassed) {
+	public void updateBossbar(final PvPlayer player, final double timePassed, final int totalTime) {
 		final BossBar bossBar = bossBars.computeIfAbsent(player, this::setupBossbar);
-		final String message = Settings.getBossBarMessage().replace("<time>", Long.toString(Settings.getTimeInCombat() - Math.round(timePassed)));
-		bossBar.setTitle(ChatUtils.setPlaceholders(player.getPlayer(), message));
-		bossBar.setProgress((Settings.getTimeInCombat() - timePassed) / Settings.getTimeInCombat());
+		final String message = Settings.getBossBarMessage().replace("<time>", Long.toString(totalTime - Math.round(timePassed)));
+		final String placeHolderMessage = ChatUtils.setPlaceholders(player.getPlayer(), message);
+		if (!bossBar.getTitle().equals(placeHolderMessage))
+			bossBar.setTitle(placeHolderMessage);
+		bossBar.setProgress((totalTime - timePassed) / totalTime);
 	}
 
 	private BossBar setupBossbar(final PvPlayer player) {
@@ -48,19 +49,15 @@ public class DisplayManager {
 		bossBars.remove(player);
 	}
 
-	private void setupActionBar() {
-		if (!Settings.isActionBarEnabled())
-			return;
-
-		for (int i = 0; i < Settings.getTimeInCombat() + 1; i++) {
-			actionBars.put(i,
-			        new ProgressBar(Settings.getActionBarMessage(), Settings.getActionBarBars(), Settings.getTimeInCombat(), Settings.getActionBarSymbol(), i));
-		}
+	private ProgressBar setupProgressBar(final long time, final int goal) {
+		return new ProgressBar(Settings.getActionBarMessage(), Settings.getActionBarBars(), goal, Settings.getActionBarSymbol(), time);
 	}
 
-	public void showProgress(final PvPlayer p, final double timePassed) {
-		final String message = actionBars.get((int) (timePassed + 0.5)).getMessage();
-		p.sendActionBar(ChatUtils.setPlaceholders(p.getPlayer(), message));
+	public void showProgress(final PvPlayer p, final double timePassed, final int goal) {
+		final long timePassedRounded = Math.round(timePassed);
+		final ProgressBar progressBar = actionBars.computeIfAbsent(p, x -> setupProgressBar(timePassedRounded, goal));
+		progressBar.setProgress(timePassedRounded).setGoal(goal).calculate();
+		p.sendActionBar(ChatUtils.setPlaceholders(p.getPlayer(), progressBar.getMessage()));
 	}
 
 	public PvPManager getPlugin() {

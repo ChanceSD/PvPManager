@@ -36,16 +36,31 @@ public class Tag implements CommandExecutor {
 			if (!CombatUtils.isOnlineWithFeedback(sender, name))
 				return true;
 
-			final PvPlayer target = ph.get(Bukkit.getPlayer(name));
-			if (target.isInCombat()) {
-				sender.sendMessage(Messages.PREFIXMSG + " §cThat player is already in combat");
+			tagPlayer(sender, name, Settings.getTimeInCombatMs());
+			return true;
+		} else if (args.length == 2 && sender.hasPermission("pvpmanager.admin")) {
+			final String name = args[0];
+			if (!CombatUtils.isOnlineWithFeedback(sender, name))
 				return true;
+			try {
+				final int time = Integer.parseInt(args[1]);
+				tagPlayer(sender, name, time * 1000L);
+			} catch (final NumberFormatException e) {
+				sender.sendMessage(Messages.PREFIXMSG + " §cError, time must be a number!");
 			}
-			target.setTagged(true, target);
-			sender.sendMessage(Messages.PREFIXMSG + " " + target.getName() + "§2has been combat tagged");
 			return true;
 		}
 		return false;
+	}
+
+	private void tagPlayer(final CommandSender sender, final String name, final long time) {
+		final PvPlayer target = ph.get(Bukkit.getPlayer(name));
+		if (target.isInCombat()) {
+			sender.sendMessage(Messages.PREFIXMSG + " §cThat player is already in combat");
+			return;
+		}
+		target.setTagged(true, target, time);
+		sender.sendMessage(Messages.PREFIXMSG + " " + target.getName() + " §2has been tagged for §e" + time / 1000 + " §2seconds");
 	}
 
 }

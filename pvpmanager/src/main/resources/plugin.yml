@@ -20,6 +20,7 @@ softdepend:
   - mcMMO
   - CooldownsX
   - Kingdoms
+  - TAB
 
 libraries:
   - com.zaxxer:HikariCP:4.0.3

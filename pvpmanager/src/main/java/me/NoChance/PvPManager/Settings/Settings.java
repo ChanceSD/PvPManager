@@ -84,6 +84,7 @@ public final class Settings {
 	private static int respawnProtection;
 	private static boolean stopCommands;
 	private static int timeInCombat;
+	private static long timeInCombatMs;
 	private static String toggleColorOff;
 	private static String toggleColorOn;
 	private static int toggleCooldown;
@@ -179,6 +180,7 @@ public final class Settings {
 
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
 		timeInCombat = TAGGEDCOMBAT.getInt("Time", 10);
+		timeInCombatMs = timeInCombat * 1000L;
 		nameTagPrefix = TAGGEDCOMBAT.getString("NameTag Prefix", "&c");
 		nameTagSuffix = TAGGEDCOMBAT.getString("NameTag Suffix", "");
 		glowingInCombat = TAGGEDCOMBAT.getBoolean("Glowing", true);
@@ -275,7 +277,7 @@ public final class Settings {
 		player.sendMessage(ChatColor.GOLD + "/pvpo " + helpSeparator() + ChatColor.WHITE + "Override all PvP protections");
 		player.sendMessage(ChatColor.GOLD + "/pvpstatus [player]" + helpSeparator() + ChatColor.WHITE + "Check your or other player PvP status");
 		player.sendMessage(ChatColor.GOLD + "/pvpglobal <on|off>" + helpSeparator() + ChatColor.WHITE + "Toggle PvP for the whole server");
-		player.sendMessage(ChatColor.GOLD + "/pvptag <player>" + helpSeparator() + ChatColor.WHITE + "Check tag time left or tag a player");
+		player.sendMessage(ChatColor.GOLD + "/pvptag <player> <time>" + helpSeparator() + ChatColor.WHITE + "Check tag time left or tag a player");
 		player.sendMessage(ChatColor.GOLD + "/untag <player>" + helpSeparator() + ChatColor.WHITE + "Untags a player");
 		player.sendMessage(ChatColor.GOLD + "/newbie disable" + helpSeparator() + ChatColor.WHITE + "Disable newbie protection");
 		player.sendMessage(ChatColor.GOLD + "/pmr" + helpSeparator() + ChatColor.WHITE + "Shows this help page");
@@ -402,6 +404,10 @@ public final class Settings {
 
 	public static int getTimeInCombat() {
 		return timeInCombat;
+	}
+
+	public static long getTimeInCombatMs() {
+		return timeInCombatMs;
 	}
 
 	public static String getToggleColorOff() {

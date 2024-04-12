@@ -15,7 +15,6 @@ import me.chancesd.sdutils.utils.Log;
 public class TagTask extends TimerTask {
 
 	private final Timer timer;
-	private final long time = Settings.getTimeInCombat() * 1000L;
 	private final Set<PvPlayer> tagged = Collections.synchronizedSet(new HashSet<>());
 	private final DisplayManager display;
 
@@ -32,18 +31,20 @@ public class TagTask extends TimerTask {
 				final Iterator<PvPlayer> iterator = tagged.iterator();
 				while (iterator.hasNext()) {
 					final PvPlayer p = iterator.next();
-					final long timePassed = System.currentTimeMillis() - p.getTaggedTime();
-					if (timePassed >= time) {
+					final long currentTime = System.currentTimeMillis();
+					if (currentTime >= p.getUntagTime()) {
 						p.unTag();
 						display.discardBossbar(p);
 						iterator.remove();
 						continue;
 					}
+					final double timePassed = (currentTime - p.getTaggedTime()) / 1000D;
+					final int totalTagTimeInSeconds = (int) (p.getTotalTagTime() / 1000);
 					if (Settings.isActionBarEnabled()) {
-						display.showProgress(p, timePassed / 1000D);
+						display.showProgress(p, timePassed, totalTagTimeInSeconds);
 					}
 					if (Settings.isBossBarEnabled()) {
-						display.updateBossbar(p, timePassed / 1000D);
+						display.updateBossbar(p, timePassed, totalTagTimeInSeconds);
 					}
 				}
 			} catch (final Exception e) {

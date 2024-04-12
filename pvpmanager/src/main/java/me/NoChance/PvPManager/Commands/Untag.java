@@ -34,7 +34,7 @@ public class Untag implements CommandExecutor {
 				return true;
 			}
 			ph.untag(target);
-			sender.sendMessage(Messages.PREFIXMSG + " " + target.getName() + "§2has been untagged");
+			sender.sendMessage(Messages.PREFIXMSG + " " + target.getName() + " §2has been untagged");
 			return true;
 		}
 		return false;

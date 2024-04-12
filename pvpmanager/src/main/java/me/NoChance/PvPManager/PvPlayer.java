@@ -38,6 +38,7 @@ public class PvPlayer extends EcoPlayer {
 	private long toggleTime;
 	private long respawnTime;
 	private long taggedTime;
+	private long totalTagTime;
 	private NewbieTask newbieTask;
 	private PvPlayer enemy;
 	private final HashMap<String, Integer> victim = new HashMap<>();
@@ -115,7 +116,7 @@ public class PvPlayer extends EcoPlayer {
 		this.newbie = newbie;
 	}
 
-	public final void setTagged(final boolean attacker, final PvPlayer tagger) {
+	public final void setTagged(final boolean attacker, final PvPlayer tagger, final long timeMiliseconds) {
 		if (getPlayer().hasPermission("pvpmanager.nocombattag")) {
 			Log.debug("Not tagging " + getName() + " because player has permission: pvpmanager.nocombattag");
 			return;
@@ -142,14 +143,19 @@ public class PvPlayer extends EcoPlayer {
 
 		if (attacker) {
 			message(Messages.getTaggedAttacker().replace("%p", tagger.getName()));
-			sendActionBar(Messages.getTaggedAttackerABar().replace("%p", tagger.getName()), 500);
+			sendActionBar(Messages.getTaggedAttackerABar().replace("%p", tagger.getName()), 400);
 		} else {
 			message(Messages.getTaggedDefender().replace("%p", tagger.getName()));
-			sendActionBar(Messages.getTaggedDefenderABar().replace("%p", tagger.getName()), 500);
+			sendActionBar(Messages.getTaggedDefenderABar().replace("%p", tagger.getName()), 400);
 		}
 
 		this.tagged = true;
+		this.totalTagTime = timeMiliseconds;
 		plugin.getPlayerHandler().tag(this);
+	}
+
+	public final void setTagged(final boolean attacker, final PvPlayer tagger) {
+		setTagged(attacker, tagger, Settings.getTimeInCombatMs());
 	}
 
 	public final void unTag() {
@@ -255,12 +261,20 @@ public class PvPlayer extends EcoPlayer {
 		return taggedTime;
 	}
 
+	public final long getUntagTime() {
+		return taggedTime + totalTagTime;
+	}
+
+	public final long getTotalTagTime() {
+		return totalTagTime;
+	}
+
 	public final long getNewbieTimeLeft() {
 		return newbieTask != null ? newbieTask.getTimeleft() : 0;
 	}
 
 	public long getTagTimeLeft() {
-		return Math.max(taggedTime + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis(), 0);
+		return Math.max(totalTagTime - System.currentTimeMillis(), 0);
 	}
 
 	private synchronized void loadData() {
