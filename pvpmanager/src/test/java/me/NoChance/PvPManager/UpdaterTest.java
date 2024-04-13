@@ -46,7 +46,7 @@ class UpdaterTest {
 	public class UpdaterMock extends Updater {
 
 		protected UpdaterMock(final Plugin plugin, final UpdateType type) {
-			super(plugin, 0, type);
+			super(plugin, 0, type, plugin.getName());
 		}
 
 		public boolean versionCheck(final String localVersion, final String remoteVersion) {

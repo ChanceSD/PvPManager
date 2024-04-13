@@ -61,7 +61,8 @@ public class UpdateManager {
 			} else if (Settings.isAutoUpdate()) {
 				if (updater.downloadFile()) {
 					Messages.queueAdminMsg(Messages.PREFIXMSG + " §aUpdate downloaded, it will be applied automatically on the next server restart");
-					Bukkit.broadcast(Messages.PREFIXMSG + " §aUpdate downloaded to your update folder, it will be applied automatically on the next server restart",
+					Bukkit.broadcast(
+							Messages.PREFIXMSG + " §aUpdate downloaded to update folder, it will be applied automatically on the next restart",
 							"pvpmanager.admin");
 					return;
 				}
