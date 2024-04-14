@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
-import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
