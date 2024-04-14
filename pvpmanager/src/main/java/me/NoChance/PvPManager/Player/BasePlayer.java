@@ -4,11 +4,12 @@ import java.util.UUID;
 
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.world.CombatWorld;
+import me.chancesd.sdutils.utils.MCVersion;
+
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.NoChance.PvPManager.Utils.MCVersion;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Player.ProtectionType;
+import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.TimeUtil;
 import me.chancesd.sdutils.utils.Log;
@@ -271,20 +271,20 @@ public class Messages {
 		}
 	}
 
-	public static void messageProtection(final ProtectionType result, final Player player, final Player attacked) {
+	public static void messageProtection(final ProtectionResult result, final Player player, final Player attacked) {
 		final String message = getProtectionMessage(result, attacked);
 		final PvPlayer receiver = plugin.getPlayerHandler().get(player);
 		receiver.message(message);
 	}
 
-	public static String getProtectionMessage(final ProtectionType result, final Player attacked) {
-		switch (result) {
+	public static String getProtectionMessage(final ProtectionResult result, final Player attacked) {
+		switch (result.type()) {
 		case NEWBIE:
-			return result.attackerCaused() ? newbieBlocked() : newbieBlockedOther(attacked.getName());
+			return result.isAttacker() ? newbieBlocked() : newbieBlockedOther(attacked.getName());
 		case PVPDISABLED:
-			return result.attackerCaused() ? pvpDisabled() : pvpDisabledOther(attacked.getName());
+			return result.isAttacker() ? pvpDisabled() : pvpDisabledOther(attacked.getName());
 		case RESPAWN_PROTECTION:
-			return result.attackerCaused() ? respawnProtSelf() : respawnProtOther(attacked.getName());
+			return result.isAttacker() ? respawnProtSelf() : respawnProtOther(attacked.getName());
 		case WORLD_PROTECTION:
 			return worldProtection();
 		case AFK_PROTECTION:

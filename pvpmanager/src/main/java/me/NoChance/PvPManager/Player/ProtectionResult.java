@@ -6,4 +6,12 @@ public record ProtectionResult(ProtectionType type, boolean isAttacker) {
 		this(type, false);
 	}
 
+	public boolean isProtected() {
+		return !type.canAttack();
+	}
+
+	public boolean isVulnerable() {
+		return type.canAttack();
+	}
+
 }

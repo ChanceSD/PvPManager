@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -164,7 +163,6 @@ public final class Settings {
 	public static void initizalizeVariables(final YamlConfiguration c) {
 		assignSections(c);
 
-		minecraftVersion = MCVersion.getMCVersion(Bukkit.getBukkitVersion().isEmpty() ? "0" : Bukkit.getBukkitVersion().replaceAll("-.+", ""));
 		locale = generalSection.getString("Locale", "en").toUpperCase();
 		defaultPvp = generalSection.getBoolean("Default PvP", true);
 		pvpBlood = generalSection.getBoolean("PvP Blood", true);
