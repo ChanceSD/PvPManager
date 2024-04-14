@@ -33,7 +33,7 @@ public class Untag implements CommandExecutor {
 				sender.sendMessage(Messages.PREFIXMSG + " §cThat player is not in combat");
 				return true;
 			}
-			ph.untag(target);
+			target.unTag();
 			sender.sendMessage(Messages.PREFIXMSG + " " + target.getName() + " §2has been untagged");
 			return true;
 		}
