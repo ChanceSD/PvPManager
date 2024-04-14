@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager.Tasks;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Timer;
@@ -77,7 +76,7 @@ public class TagTask extends TimerTask {
 	}
 
 	public Set<PvPlayer> getTaggedPlayers() {
-		return new HashSet<>(tagged);
+		return tagged;
 	}
 
 }
