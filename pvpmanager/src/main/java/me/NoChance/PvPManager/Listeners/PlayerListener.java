@@ -216,7 +216,7 @@ public class PlayerListener implements Listener {
 		// Player died in combat, process that
 		if (killer != null && !killer.equals(player)) {
 			final PvPlayer pKiller = playerHandler.get(killer);
-			handlePvPDeath(player, pvPlayer, killer, pKiller);
+			handlePvPDeath(player, pvPlayer, killer, pKiller, event);
 		}
 
 		if (pvPlayer.isInCombat()) {
@@ -236,7 +236,7 @@ public class PlayerListener implements Listener {
 		playerHandler.handlePlayerDrops(event, player, killer);
 	}
 
-	private void handlePvPDeath(final Player player, final PvPlayer pvPlayer, final Player killer, final PvPlayer pKiller) {
+	private void handlePvPDeath(final Player player, final PvPlayer pvPlayer, final Player killer, final PvPlayer pKiller, final PlayerDeathEvent event) {
 		if (Settings.isKillAbuseEnabled() && !pKiller.hasPerm(Permissions.EXEMPT_KILL_ABUSE)) {
 			pKiller.addVictim(player);
 		}
@@ -251,6 +251,12 @@ public class PlayerListener implements Listener {
 				CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
 			}
 			pvPlayer.setLastDeathWasPvP(true);
+			if (Settings.getExpSteal() > 0) {
+				final int expWon = pKiller.giveExp(pvPlayer);
+				event.setDroppedExp(0);
+				event.setNewExp(player.getTotalExperience() - expWon);
+				pvPlayer.message(Messages.getExpStolen(pKiller.getName(), String.valueOf(expWon)));
+			}
 		}
 	}
 

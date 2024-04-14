@@ -42,7 +42,6 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.NoChance.PvPManager.Utils.MCVersion;
 import me.chancesd.sdutils.utils.MCVersion;
 
 public class EntityListener implements Listener {

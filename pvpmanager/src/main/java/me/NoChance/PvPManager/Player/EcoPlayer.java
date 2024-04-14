@@ -27,7 +27,8 @@ public abstract class EcoPlayer extends BasePlayer {
 
 	private void depositMoney(final double amount) {
 		final EconomyResponse response = economy.depositPlayer(getPlayer(), amount);
-		Log.debug("Deposit money to " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " " + response.errorMessage);
+		Log.debug("Deposit money to " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " "
+				+ response.errorMessage);
 	}
 
 	public final void applyFine() {
@@ -60,6 +61,25 @@ public abstract class EcoPlayer extends BasePlayer {
 		}
 		depositMoney(moneyWon);
 		message(Messages.getMoneyReward(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
+	}
+
+	public final int giveExp(final EcoPlayer victim) {
+		int expWon = 0;
+		final int exp = victim.getPlayer().getTotalExperience();
+		if (Settings.getExpSteal() <= 1) {
+			expWon = (int) (Settings.getExpSteal() * exp);
+		} else {
+			expWon = exp;
+		}
+		setExp(getPlayer().getTotalExperience() + expWon);
+		message(Messages.getExpWon(victim.getPlayer().getName(), String.valueOf(expWon)));
+		return expWon;
+	}
+
+	public final void setExp(final int exp) {
+		getPlayer().setExp(0);
+		getPlayer().setLevel(0);
+		getPlayer().giveExp(exp);
 	}
 
 	private double getMoneyPercentage(final double percentage) {

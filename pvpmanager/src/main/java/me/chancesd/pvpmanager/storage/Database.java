@@ -44,7 +44,7 @@ public class Database {
 		final HikariConfig config = new HikariConfig();
 		if (databaseType == DatabaseType.SQLITE) {
 			// Use SQLITE
-			if (MCVersion.isLessThan(MCVersion.V1_9)) {
+			if (MCVersion.isLowerThan(MCVersion.V1_9)) {
 				try {
 					Class.forName("org.sqlite.JDBC"); // got to do this for 1.8 sigh
 					config.setConnectionTestQuery("SELECT 1;");
