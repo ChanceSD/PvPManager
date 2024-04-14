@@ -36,7 +36,7 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -78,7 +78,7 @@ public class EntityListener implements Listener {
 
 		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
-		final ProtectionResult result = ph.tryCancel(attacker, attacked);
+		final ProtectionType result = ph.tryCancel(attacker, attacked);
 
 		if (result.isProtected()) {
 			event.setCancelled(true);
@@ -91,7 +91,7 @@ public class EntityListener implements Listener {
 		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (ph.tryCancel(getAttacker(event.getDamager()), (Player) event.getEntity()).equals(ProtectionResult.FAIL_OVERRIDE)) {
+		if (ph.tryCancel(getAttacker(event.getDamager()), (Player) event.getEntity()).equals(ProtectionType.FAIL_OVERRIDE)) {
 			event.setCancelled(false);
 		}
 	}
@@ -188,7 +188,7 @@ public class EntityListener implements Listener {
 				continue;
 			}
 			final Player attacked = (Player) e;
-			final ProtectionResult result = ph.tryCancel(player, attacked);
+			final ProtectionType result = ph.tryCancel(player, attacked);
 
 			if (result.isProtected()) {
 				event.setIntensity(attacked, 0);

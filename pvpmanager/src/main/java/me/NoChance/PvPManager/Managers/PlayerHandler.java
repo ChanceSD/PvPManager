@@ -23,6 +23,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.PvPToggleFeeTask;
@@ -65,27 +66,27 @@ public class PlayerHandler {
 		final PvPlayer attacked = get(defender);
 
 		if (attacker.hasOverride() || Settings.borderHoppingVulnerable() && canAttackHooks(attacker, attacked))
-			return ProtectionResult.FAIL_OVERRIDE;
+			return new ProtectionResult(ProtectionType.FAIL_OVERRIDE);
 		if (!Settings.isGlobalStatus())
-			return ProtectionResult.GLOBAL_PROTECTION;
+			return new ProtectionResult(ProtectionType.GLOBAL_PROTECTION);
 		if (!attacked.getCombatWorld().isCombatAllowed())
-			return ProtectionResult.WORLD_PROTECTION;
+			return new ProtectionResult(ProtectionType.WORLD_PROTECTION);
 		if (attacked.hasRespawnProtection() || attacker.hasRespawnProtection())
-			return ProtectionResult.RESPAWN_PROTECTION.setAttackerCaused(attacker.hasRespawnProtection());
+			return new ProtectionResult(ProtectionType.RESPAWN_PROTECTION, attacker.hasRespawnProtection());
 		if (attacked.isNewbie() || attacker.isNewbie()) {
-			if (dependencyManager.shouldDisableProtection(damager, defender, ProtectionResult.NEWBIE))
-				return ProtectionResult.FAIL_PLUGIN_HOOK;
-			return ProtectionResult.NEWBIE.setAttackerCaused(attacker.isNewbie());
+			if (dependencyManager.shouldDisableProtection(damager, defender, ProtectionType.NEWBIE))
+				return new ProtectionResult(ProtectionType.FAIL_PLUGIN_HOOK);
+			return new ProtectionResult(ProtectionType.NEWBIE, attacker.isNewbie());
 		}
 		if (!attacker.hasPvPEnabled() || !attacked.hasPvPEnabled()) {
-			if (dependencyManager.shouldDisableProtection(damager, defender, ProtectionResult.PVPDISABLED))
-				return ProtectionResult.FAIL_PLUGIN_HOOK;
-			return ProtectionResult.PVPDISABLED.setAttackerCaused(!attacker.hasPvPEnabled());
+			if (dependencyManager.shouldDisableProtection(damager, defender, ProtectionType.PVPDISABLED))
+				return new ProtectionResult(ProtectionType.FAIL_PLUGIN_HOOK);
+			return new ProtectionResult(ProtectionType.PVPDISABLED, !attacker.hasPvPEnabled());
 		}
 		if (dependencyManager.shouldProtectAFK(defender))
-			return ProtectionResult.AFK_PROTECTION;
+			return new ProtectionResult(ProtectionType.AFK_PROTECTION);
 
-		return ProtectionResult.FAIL;
+		return new ProtectionResult(ProtectionType.FAIL);
 	}
 
 	/**

@@ -19,7 +19,7 @@ import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Listeners.WGListener;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 
@@ -85,11 +85,11 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 	}
 
 	@Override
-	public boolean shouldDisable(final Player damager, final Player defender, final ProtectionResult reason) {
+	public boolean shouldDisable(final Player damager, final Player defender, final ProtectionType reason) {
 		if (hasAllowPvPFlag(defender) || containsRegionsAt(defender.getLocation(), Settings.getWorldguardOverridesList())) {
 			final PvPlayer attacker = PvPlayer.get(damager);
 			final PvPlayer attacked = PvPlayer.get(defender);
-			if (reason == ProtectionResult.PVPDISABLED) {
+			if (reason == ProtectionType.PVPDISABLED) {
 				disablePvP(attacker);
 				disablePvP(attacked);
 			} else {
