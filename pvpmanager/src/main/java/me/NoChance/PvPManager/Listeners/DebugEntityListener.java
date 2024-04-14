@@ -26,12 +26,13 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Player.ProtectionResult;
 import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.sdutils.utils.Log;
-import me.NoChance.PvPManager.Utils.MCVersion;
+import me.chancesd.sdutils.utils.MCVersion;
 
 public class DebugEntityListener implements Listener {
 
@@ -85,7 +86,7 @@ public class DebugEntityListener implements Listener {
 
 		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
-		final ProtectionType result = ph.tryCancel(attacker, attacked);
+		final ProtectionResult result = ph.checkProtection(attacker, attacked);
 
 		if (result.isProtected()) {
 			event.setCancelled(true);
@@ -100,7 +101,7 @@ public class DebugEntityListener implements Listener {
 		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (ph.tryCancel(getAttacker(event.getDamager()), (Player) event.getEntity()).equals(ProtectionType.FAIL_OVERRIDE)) {
+		if (ph.checkProtection(getAttacker(event.getDamager()), (Player) event.getEntity()).type() == ProtectionType.FAIL_OVERRIDE) {
 			event.setCancelled(false);
 			Log.debug("Force allowing PvP even though a plugin blocked it because a player has override or Vulnerable is enabled");
 		} else {

@@ -33,6 +33,7 @@ import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.sdutils.utils.ReflectionUtil;
+import me.chancesd.sdutils.utils.MCVersion;
 
 public final class CombatUtils {
 
@@ -118,8 +119,7 @@ public final class CombatUtils {
 					return !Settings.isIgnoreNoDamageHits() || event.getDamage() != 0;
 			}
 		}
-		if (attacker instanceof TNTPrimed) {
-			final TNTPrimed tnt = (TNTPrimed) attacker;
+		if (attacker instanceof final TNTPrimed tnt) {
 			final Entity tntAttacker = tnt.getSource();
 			if (tntAttacker instanceof Player && (Settings.isSelfTag() || !tntAttacker.equals(defender))) {
 				return true;
@@ -138,8 +138,8 @@ public final class CombatUtils {
 		if (attacker instanceof Player && !isNPC(attacker))
 			return true;
 
-		if (attacker instanceof Projectile) {
-			final ProjectileSource projSource = ((Projectile) attacker).getShooter();
+		if (attacker instanceof final Projectile projectile) {
+			final ProjectileSource projSource = projectile.getShooter();
 			if (projSource instanceof Player) {
 				final Entity shooter = (Entity) projSource;
 				return !shooter.equals(defender) && !isNPC(shooter);
@@ -244,39 +244,13 @@ public final class CombatUtils {
 		return contains;
 	}
 
-	public static final boolean isVersionAtLeast(final String v1, final String v2) {
-		if (v1.equals(v2))
-			return true;
-
-		final String[] v1Array = v1.split("\\.");
-		final String[] v2Array = v2.split("\\.");
-		final int length = Math.max(v2Array.length, v1Array.length);
-		try {
-			for (int i = 0; i < length; i++) {
-				final int x = i < v2Array.length ? Integer.parseInt(v2Array[i]) : 0;
-				final int y = i < v1Array.length ? Integer.parseInt(v1Array[i]) : 0;
-				if (y > x)
-					return true;
-				if (y < x)
-					return false;
-			}
-		} catch (final NumberFormatException ex) {
-			Log.severe("Error reading version number! Comparing " + v1 + " to " + v2);
-		}
-		return true;
-	}
-
-	public static String stripTags(final String version) {
-		return version.replaceAll("[-;+].+", "");
-	}
-
 	public static String truncateString(final String text, final int size) {
 		return text.substring(0, Math.min(text.length(), size));
 	}
 
 	private static ProjectileSource getSource(final Entity entity) {
-		if (entity instanceof Projectile)
-			return ((Projectile) entity).getShooter();
+		if (entity instanceof final Projectile projectile)
+			return projectile.getShooter();
 		else
 			return ((AreaEffectCloud) entity).getSource();
 	}
