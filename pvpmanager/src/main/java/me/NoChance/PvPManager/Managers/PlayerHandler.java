@@ -62,7 +62,7 @@ public class PlayerHandler {
 		addOnlinePlayers();
 	}
 
-	public final ProtectionResult tryCancel(final Player damager, final Player defender) {
+	public final ProtectionResult checkProtection(final Player damager, final Player defender) {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
 
@@ -91,7 +91,7 @@ public class PlayerHandler {
 	}
 
 	/**
-	 * Use this method to check PvP instead of using {@link PlayerHandler#tryCancel(Player, Player)}
+	 * Use this method to check PvP instead of using {@link PlayerHandler#checkProtection(Player, Player)}
 	 * This method will not be changed while the previous might change at any time.
 	 *
 	 * @param attacker
@@ -102,7 +102,7 @@ public class PlayerHandler {
 	 * @return true if the attack didn't get blocked or if it got override, otherwise false
 	 */
 	public final boolean canAttack(final Player attacker, final Player defender) {
-		return tryCancel(attacker, defender).canAttack();
+		return checkProtection(attacker, defender).isVulnerable();
 	}
 
 	private final boolean canAttackVulnerable(final PvPlayer attacker, final PvPlayer defender) {

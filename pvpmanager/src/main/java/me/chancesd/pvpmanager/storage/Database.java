@@ -24,8 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import me.NoChance.PvPManager.Utils.MCVersion;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.sdutils.utils.MCVersion;
 
 public class Database {
 

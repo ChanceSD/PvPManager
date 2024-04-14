@@ -5,16 +5,11 @@ public enum ProtectionType {
 
 	public boolean canAttack() {
 		switch (this) {
-		case FAIL_PLUGIN_HOOK:
-		case FAIL_OVERRIDE:
-		case FAIL:
+		case FAIL_PLUGIN_HOOK, FAIL_OVERRIDE, FAIL:
 			return true;
 		default:
 			return false;
 		}
 	}
 
-	public boolean isProtected() {
-		return !canAttack();
-	}
 }

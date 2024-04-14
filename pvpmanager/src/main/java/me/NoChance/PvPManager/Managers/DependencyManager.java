@@ -17,19 +17,11 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Dependencies.AFKDependency;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
-import me.NoChance.PvPManager.Dependencies.DisguiseDependency;
-import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Hooks.*;
 import me.NoChance.PvPManager.Dependencies.GroupDependency;
-import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
-import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
-import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.Hooks.CooldownsXHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.KingdomsXHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.GriefPreventionHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
@@ -40,7 +32,6 @@ import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.Dependency;
 import me.NoChance.PvPManager.Dependencies.Interfaces.DisguiseDependency;
 import me.NoChance.PvPManager.Dependencies.Interfaces.GodDependency;
-import me.NoChance.PvPManager.Dependencies.Interfaces.PvPDependency;
 import me.NoChance.PvPManager.Dependencies.Interfaces.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Listeners.MoveListener;
@@ -49,8 +40,9 @@ import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
-import me.NoChance.PvPManager.Utils.MCVersion;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
+import me.chancesd.sdutils.utils.Utils;
 import net.milkbowl.vault.economy.Economy;
 
 public class DependencyManager {
@@ -123,17 +115,15 @@ public class DependencyManager {
 		return failedHooks;
 	}
 
-	private void attemptHookingInto(final Hook hook) {
+	private boolean attemptHookingInto(final Hook hook) {
 		switch (hook) {
 		case SIMPLECLANS:
-			registerDependency(new SimpleClansHook(hook));
-			break;
+			return registerDependency(new SimpleClansHook(hook));
 		case VAULT:
-			registerDependency(new VaultHook(hook));
-			break;
+			return registerDependency(new VaultHook(hook));
 		case WORLDGUARD:
-			if (CombatUtils.isVersionAtLeast(CombatUtils.stripTags(hook.getVersion()), "7.0")) {
-				registerDependency(new WorldGuardModernHook(hook));
+			if (Utils.isVersionAtLeast(Utils.stripTags(hook.getVersion()), "7.0")) {
+				return registerDependency(new WorldGuardModernHook(hook));
 			} else {
 				// Use reflection to instantiate WorldGuardLegacyHook from the pvpmanager-worldguard-legacy module
 				try {
@@ -145,34 +135,22 @@ public class DependencyManager {
 					throw new DependencyException("Failed to load WorldGuardLegacyHook", e, hook);
 				}
 			}
-			break;
 		case ESSENTIALS:
-			registerDependency(new EssentialsHook(hook));
-			break;
+			return registerDependency(new EssentialsHook(hook));
 		case PLACEHOLDERAPI:
-			registerDependency(new PlaceHolderAPIHook(hook));
-			break;
+			return registerDependency(new PlaceHolderAPIHook(hook));
 		case LIBSDISGUISES:
-			registerDependency(new LibsDisguisesHook(hook));
-			break;
+			return registerDependency(new LibsDisguisesHook(hook));
 		case TOWNY:
-			registerDependency(new TownyHook(hook));
-			break;
+			return registerDependency(new TownyHook(hook));
 		case HUSKTOWNS:
-			registerDependency(new HuskTownsHook(hook));
-			break;
+			return registerDependency(new HuskTownsHook(hook));
 		case HUSKCLAIMS:
-			registerDependency(new HuskClaimsHook(hook));
-			break;
-		case KINGDOMSX:
-			registerDependency(new KingdomsXHook(hook));
-			break;
+			return registerDependency(new HuskClaimsHook(hook));
 		case GRIEFPREVENTION:
-			registerDependency(new GriefPreventionHook(hook));
-			break;
+			return registerDependency(new GriefPreventionHook(hook));
 		default:
-			registerDependency(new BaseDependency(hook));
-			break;
+			return registerDependency(new BaseDependency(hook));
 		}
 	}
 
@@ -247,32 +225,27 @@ public class DependencyManager {
 		return dependencies.get(h);
 	}
 
-	public void registerDependency(final Dependency dep) {
+	public boolean registerDependency(final Dependency dep) {
 		dependencies.put(dep.getHook(), dep);
-		if (dep instanceof GroupDependency) {
-			attackChecks.add((GroupDependency) dep);
+		if (dep instanceof final GroupDependency pvpHook) {
+			attackChecks.add(pvpHook);
 		}
-		if (dep instanceof RegionDependency) {
-			regionChecks.add((RegionDependency) dep);
+		if (dep instanceof final RegionDependency regionHook) {
+			regionChecks.add(regionHook);
 		}
-		if (dep instanceof GodDependency) {
-			godChecks.add((GodDependency) dep);
+		if (dep instanceof final GodDependency godHook) {
+			godChecks.add(godHook);
 		}
-		if (dep instanceof DisguiseDependency) {
-			disguiseChecks.add((DisguiseDependency) dep);
+		if (dep instanceof final DisguiseDependency disguiseHook) {
+			disguiseChecks.add(disguiseHook);
 		}
-		if (dep instanceof ForceToggleDependency) {
-			final ForceToggleDependency togglePvPHook = (ForceToggleDependency) dep;
-			if (togglePvPHook.shouldDisableProtection()) {
-				togglePvPChecks.add(togglePvPHook);
-			}
+		if (dep instanceof final ForceToggleDependency togglePvPHook && togglePvPHook.shouldDisableProtection()) {
+			togglePvPChecks.add(togglePvPHook);
 		}
-		if (dep instanceof AFKDependency) {
-			final AFKDependency afkHook = (AFKDependency) dep;
-			if (afkHook.shouldProtectAFK()) {
-				afkChecks.add(afkHook);
-			}
+		if (dep instanceof final AFKDependency afkHook && afkHook.shouldProtectAFK()) {
+			afkChecks.add(afkHook);
 		}
+		return true;
 	}
 
 	public void unregisterDependency(final Dependency dep) {

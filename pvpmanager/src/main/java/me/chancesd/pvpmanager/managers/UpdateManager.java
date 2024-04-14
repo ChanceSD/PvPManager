@@ -15,6 +15,7 @@ import me.chancesd.sdutils.updater.Updater;
 import me.chancesd.sdutils.updater.Updater.UpdateResult;
 import me.chancesd.sdutils.updater.Updater.UpdateType;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.Utils;
 
 public class UpdateManager {
 
@@ -44,8 +45,8 @@ public class UpdateManager {
 					+ Messages.getCurrentversion();
 			Messages.queueAdminMsg(updateMsg);
 			Bukkit.broadcast(updateMsg, Permissions.ADMIN.getPermission());
-			if (Settings.isAutoUpdate() && CombatUtils.isVersionAtLeast(Messages.getNewVersion(), "4.0")
-					&& !CombatUtils.isVersionAtLeast(Messages.getNewVersion(), "4.1")) {
+			if (Settings.isAutoUpdate() && Utils.isVersionAtLeast(Messages.getNewVersion(), "4.0")
+					&& !Utils.isVersionAtLeast(Messages.getNewVersion(), "4.1")) {
 				final String v4message = Messages.PREFIXMSG
 						+ " §aSince §b§lv4.0 is a huge update§a, it changes a lot of the config and messages file. "
 						+ "This makes it unable to be automatically updated. "
