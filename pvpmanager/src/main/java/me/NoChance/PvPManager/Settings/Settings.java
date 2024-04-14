@@ -76,6 +76,7 @@ public final class Settings {
 	private static double moneyPenalty;
 	private static double moneyReward;
 	private static boolean moneySteal;
+	private static double expSteal;
 	private static String nameTagPrefix;
 	private static String nameTagSuffix;
 	private static boolean newbieGodMode;
@@ -173,7 +174,7 @@ public final class Settings {
 		recyclePotionBottles = generalSection.getBoolean("Recycling.Potion Bottle", false);
 		recycleMilkBucket = generalSection.getBoolean("Recycling.Milk Bucket", false);
 		healthBelowName = generalSection.getBoolean("Show health under name.Enabled", true);
-		healthBelowNameSymbol = generalSection.getString("Show health under name.Display Name", "❤");
+		healthBelowNameSymbol = ChatUtils.colorize(generalSection.getString("Show health under name.Display Name", "&c❤"));
 		worldsExcluded = new HashSet<>(getList(generalSection.getStringList("World Exclusions")));
 
 		borderHoppingVulnerable = borderHoppingSection.getBoolean("Vulnerable", true);
@@ -262,6 +263,7 @@ public final class Settings {
 		setMoneyReward(playerKillsSection.getDouble("Money Reward", 10));
 		setMoneyPenalty(playerKillsSection.getDouble("Money Penalty", 10));
 		moneySteal = playerKillsSection.getBoolean("Money Steal", false);
+		expSteal = playerKillsSection.getDouble("Exp Steal", 0.0);
 		commandsOnKill = getCommandList(playerKillsSection.getStringList("Commands On Kill"));
 		playerKillsWGExclusions = new HashSet<>(getList(playerKillsSection.getStringList("WorldGuard Exclusions")));
 
@@ -568,6 +570,10 @@ public final class Settings {
 
 	public static boolean isMoneySteal() {
 		return moneySteal;
+	}
+
+	public static double getExpSteal() {
+		return expSteal;
 	}
 
 	public static boolean isUntagEnemy() {

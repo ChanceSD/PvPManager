@@ -209,7 +209,7 @@ public final class CombatUtils {
 	}
 
 	public static boolean hasHarmfulPotion(final AreaEffectCloud areaCloud) {
-		if (isVersionAtLeast(Settings.getMinecraftVersion(), "1.20.2")) {
+		if (MCVersion.isAtLeast(MCVersion.V1_20_2)) {
 			final PotionType basePotionType = areaCloud.getBasePotionType();
 			if (basePotionType == null)
 				return false;

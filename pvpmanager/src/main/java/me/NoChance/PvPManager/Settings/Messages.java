@@ -67,6 +67,8 @@ public class Messages {
 	private static String moneyReward;
 	private static String moneyPenalty;
 	private static String moneySteal;
+	private static String expWon;
+	private static String expStolen;
 	private static Locale locale;
 	private static String tagTimeLeft;
 	private static String tagNotInCombat;
@@ -214,6 +216,8 @@ public class Messages {
 		moneyReward = getString("Money_Reward");
 		moneyPenalty = getString("Money_Penalty");
 		moneySteal = getString("Money_Steal");
+		expWon = getString("Exp_Won");
+		expStolen = getString("Exp_Stolen");
 		pvpListTitle = getString("PvPList_Title");
 		pvpListEnabled = getString("PvPList_Enabled");
 		pvpListDisabled = getString("PvPList_Disabled");
@@ -327,6 +331,10 @@ public class Messages {
 
 	public static String replaceMoney(final String message, final String money) {
 		return message.replace("%money%", money);
+	}
+
+	public static String replaceExp(final String message, final String exp) {
+		return message.replace("%exp%", exp);
 	}
 
 	public static String getPrefix() {
@@ -481,6 +489,14 @@ public class Messages {
 
 	public static String getMoneySteal(final String name, final String money) {
 		return replaceMoney(replacePlayer(moneySteal, name), money);
+	}
+
+	public static String getExpStolen(final String name, final String exp) {
+		return replaceExp(replacePlayer(expStolen, name), exp);
+	}
+
+	public static String getExpWon(final String name, final String exp) {
+		return replaceExp(replacePlayer(expWon, name), exp);
 	}
 
 	public static Locale getLocale() {

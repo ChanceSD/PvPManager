@@ -3,8 +3,10 @@ package me.chancesd.pvpmanager.player.nametag;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -72,11 +74,15 @@ public class BukkitNameTag extends NameTag {
 			// set pvp tag if player has pvp nametags on
 			setPvP(pvPlayer.hasPvPEnabled());
 		}
-		if (Settings.isHealthBelowName() && health == null) {
+		if (Settings.isHealthBelowName() && (health == null || scoreboard.getObjective(HEALTHOBJ) == null)) {
 			if (scoreboard.getObjective(HEALTHOBJ) != null) {
 				health = scoreboard.getObjective(HEALTHOBJ);
+			} else if (MCVersion.isAtLeast(MCVersion.V1_19)) {
+				health = scoreboard.registerNewObjective(HEALTHOBJ, Criteria.HEALTH, Settings.getHealthBelowNameSymbol(), RenderType.HEARTS);
+				health.setDisplaySlot(DisplaySlot.BELOW_NAME);
 			} else {
-				health = scoreboard.registerNewObjective(HEALTHOBJ, "health", Settings.getHealthBelowNameSymbol());
+				health = scoreboard.registerNewObjective(HEALTHOBJ, "health");
+				health.setDisplayName(Settings.getHealthBelowNameSymbol());
 				health.setDisplaySlot(DisplaySlot.BELOW_NAME);
 			}
 		}
