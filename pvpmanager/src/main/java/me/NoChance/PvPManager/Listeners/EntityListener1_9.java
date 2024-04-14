@@ -27,7 +27,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -71,7 +71,7 @@ public class EntityListener1_9 implements Listener {
 				continue;
 			}
 			final Player attacked = (Player) e;
-			final ProtectionResult result = ph.tryCancel(player, attacked);
+			final ProtectionType result = ph.tryCancel(player, attacked);
 
 			if (result.isProtected()) {
 				toRemove.add(e);
