@@ -45,7 +45,7 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
@@ -443,7 +443,7 @@ public class PlayerListener implements Listener {
 
 		if (event.getState() == State.CAUGHT_ENTITY && event.getCaught() instanceof Player) {
 			final Player caught = (Player) event.getCaught();
-			final ProtectionResult result = ph.tryCancel(player, caught);
+			final ProtectionType result = ph.tryCancel(player, caught);
 			if (result.isProtected()) {
 				event.setCancelled(true);
 				Messages.messageProtection(result, player, caught);

@@ -45,7 +45,7 @@ import me.NoChance.PvPManager.Dependencies.Interfaces.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
 import me.NoChance.PvPManager.Listeners.MoveListener;
 import me.NoChance.PvPManager.Listeners.MoveListener1_9;
-import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -207,7 +207,7 @@ public class DependencyManager {
 		}
 	}
 
-	public final boolean shouldDisableProtection(final Player attacker, final Player defender, final ProtectionResult reason) {
+	public final boolean shouldDisableProtection(final Player attacker, final Player defender, final ProtectionType reason) {
 		for (final ForceToggleDependency togglePvPPlugin : togglePvPChecks) {
 			if (togglePvPPlugin.shouldDisable(attacker, defender, reason))
 				return true;
