@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Player.ProtectionType;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.TimeUtil;
 import me.chancesd.sdutils.utils.Log;
@@ -271,13 +271,13 @@ public class Messages {
 		}
 	}
 
-	public static void messageProtection(final ProtectionResult result, final Player player, final Player attacked) {
+	public static void messageProtection(final ProtectionType result, final Player player, final Player attacked) {
 		final String message = getProtectionMessage(result, attacked);
 		final PvPlayer receiver = plugin.getPlayerHandler().get(player);
 		receiver.message(message);
 	}
 
-	public static String getProtectionMessage(final ProtectionResult result, final Player attacked) {
+	public static String getProtectionMessage(final ProtectionType result, final Player attacked) {
 		switch (result) {
 		case NEWBIE:
 			return result.attackerCaused() ? newbieBlocked() : newbieBlockedOther(attacked.getName());

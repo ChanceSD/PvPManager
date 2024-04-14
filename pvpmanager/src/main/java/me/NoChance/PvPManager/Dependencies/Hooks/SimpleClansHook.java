@@ -10,7 +10,7 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.PvPDependency;
-import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.NoChance.PvPManager.Player.ProtectionType;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
@@ -39,7 +39,7 @@ public class SimpleClansHook extends BaseDependency implements GroupDependency, 
 	}
 
 	@Override
-	public boolean shouldDisable(final Player attacker, final Player defender, final ProtectionResult reason) {
+	public boolean shouldDisable(final Player attacker, final Player defender, final ProtectionType reason) {
 		final ClanPlayer cAttacker = clanManager.getClanPlayer(attacker);
 		final ClanPlayer cDefender = clanManager.getClanPlayer(defender);
 		return cAttacker != null && cDefender != null && cAttacker.getClan().isWarring(cDefender.getClan());
