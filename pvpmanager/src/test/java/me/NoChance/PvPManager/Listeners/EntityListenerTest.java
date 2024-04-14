@@ -184,7 +184,7 @@ public class EntityListenerTest {
 		ph.get(attacker).setNewbie(true);
 		createAttack(false);
 
-		assertEquals(ProtectionType.NEWBIE, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionType.NEWBIE, ph.checkProtection(attacker, defender).type());
 		verify(attacker, times(2)).sendMessage(Messages.newbieBlocked());
 
 		verify(mockEvent).setCancelled(true);
@@ -196,7 +196,7 @@ public class EntityListenerTest {
 		ph.get(defender).setPvP(false);
 		createAttack(false);
 
-		assertEquals(ProtectionType.PVPDISABLED, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionType.PVPDISABLED, ph.checkProtection(attacker, defender).type());
 		verify(attacker, times(2)).sendMessage(Messages.pvpDisabledOther(defender.getName()));
 
 		verify(mockEvent).setCancelled(true);
@@ -210,7 +210,7 @@ public class EntityListenerTest {
 
 		when(attacker.isFlying()).thenReturn(true);
 		when(defender.isFlying()).thenReturn(true);
-		assertEquals(ProtectionType.FAIL, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionType.FAIL, ph.checkProtection(attacker, defender).type());
 		createAttack(false);
 		assertTrue(ph.get(attacker).isInCombat());
 		assertTrue(ph.get(defender).isInCombat());
@@ -226,7 +226,7 @@ public class EntityListenerTest {
 		ph.get(attacker).toggleOverride();
 		createAttack(false);
 
-		assertEquals(ProtectionType.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionType.FAIL_OVERRIDE, ph.checkProtection(attacker, defender).type());
 		assertTrue(ph.get(attacker).isInCombat());
 		assertTrue(ph.get(defender).isInCombat());
 
@@ -239,7 +239,7 @@ public class EntityListenerTest {
 		ph.get(attacker).toggleOverride();
 		createAttack(true);
 
-		assertEquals(ProtectionType.FAIL_OVERRIDE, ph.tryCancel(attacker, defender));
+		assertEquals(ProtectionType.FAIL_OVERRIDE, ph.checkProtection(attacker, defender).type());
 		assertTrue(ph.get(attacker).isInCombat());
 		assertTrue(ph.get(defender).isInCombat());
 

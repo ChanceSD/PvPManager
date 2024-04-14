@@ -78,7 +78,7 @@ public class PvPList implements TabExecutor {
 		final StringBuilder list = new StringBuilder();
 		for (final PvPlayer p : ph.getPlayers().values()) {
 			final Player player = p.getPlayer();
-			if (enabled == p.hasPvPEnabled() && player != null && (console || ((Player) sender).canSee(player))) {
+			if (enabled == p.hasPvPEnabled() && (console || ((Player) sender).canSee(player))) {
 				list.append(p.getName()).append(", ");
 			}
 		}

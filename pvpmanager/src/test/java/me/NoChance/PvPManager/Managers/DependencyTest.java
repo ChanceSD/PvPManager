@@ -1,7 +1,6 @@
 package me.NoChance.PvPManager.Managers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +17,7 @@ import org.mockito.Mockito;
 
 import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.sdutils.utils.Utils;
 
 @ExtendWith(InstanceCreator.class)
 public class DependencyTest {
@@ -43,9 +42,9 @@ public class DependencyTest {
 
 	@Test
 	void versionTags() {
-		final String v1 = CombatUtils.stripTags("1.0.2-SNAPSHOT");
-		final String v2 = CombatUtils.stripTags("1.0.2;1994-9adac4f");
-		final String v3 = CombatUtils.stripTags("1.0.2+9adac4f");
+		final String v1 = Utils.stripTags("1.0.2-SNAPSHOT");
+		final String v2 = Utils.stripTags("1.0.2;1994-9adac4f");
+		final String v3 = Utils.stripTags("1.0.2+9adac4f");
 		assertEquals("1.0.2", v1);
 		assertEquals("1.0.2", v2);
 		assertEquals("1.0.2", v3);
