@@ -11,7 +11,7 @@ import org.bukkit.scoreboard.Team;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.chancesd.sdutils.utils.Log;
-import me.NoChance.PvPManager.Utils.MCVersion;
+import me.chancesd.sdutils.utils.MCVersion;
 
 public class BukkitNameTag extends NameTag {
 
