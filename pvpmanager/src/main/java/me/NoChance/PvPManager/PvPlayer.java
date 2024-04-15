@@ -275,7 +275,7 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public long getTagTimeLeft() {
-		return Math.max(totalTagTime - System.currentTimeMillis(), 0);
+		return Math.max(getUntagTime() - System.currentTimeMillis(), 0);
 	}
 
 	private synchronized void loadData() {
