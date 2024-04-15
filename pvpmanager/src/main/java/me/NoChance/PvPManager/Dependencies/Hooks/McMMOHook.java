@@ -5,15 +5,16 @@ import org.bukkit.entity.Player;
 import com.gmail.nossr50.api.PartyAPI;
 
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
+import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.PvPDependency;
-import me.chancesd.sdutils.utils.Log;
 
 public class McMMOHook extends BaseDependency implements PvPDependency {
 
 	public McMMOHook(final Hook hook) {
 		super(hook);
-		Log.debug(PartyAPI.getParties().toString());
+		if (!PartyAPI.isPartySystemEnabled())
+			throw new DependencyException("McMMO party system is disabled, hook disabled", hook);
 	}
 
 	@Override
