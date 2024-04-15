@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -48,7 +49,7 @@ public class PvP implements TabExecutor {
 				final boolean state = args[0].equalsIgnoreCase("on");
 				togglePvP(pvpPlayer, state);
 				return true;
-			} else if (sender.hasPermission("pvpmanager.admin")) {
+			} else if (Permissions.ADMIN.hasPerm(sender)) {
 				final String target = args[0];
 				if (target.equalsIgnoreCase("*"))
 					togglePvPAll(sender, false, true);
@@ -59,7 +60,7 @@ public class PvP implements TabExecutor {
 			return false;
 		}
 
-		if (args.length == 2 && sender.hasPermission("pvpmanager.admin") && (args[1].equalsIgnoreCase("off") || args[1].equalsIgnoreCase("on"))) {
+		if (args.length == 2 && Permissions.ADMIN.hasPerm(sender) && (args[1].equalsIgnoreCase("off") || args[1].equalsIgnoreCase("on"))) {
 			final String target = args[0];
 			if (target.equalsIgnoreCase("*"))
 				togglePvPAll(sender, args[1].equalsIgnoreCase("on"), false);
@@ -81,7 +82,7 @@ public class PvP implements TabExecutor {
 			return;
 		}
 
-		CombatWorld combatWorld = player.getCombatWorld();
+		final CombatWorld combatWorld = player.getCombatWorld();
 		if (state && combatWorld.isPvPForced() == CombatWorld.WorldOptionState.OFF) {
 			player.message(Messages.getErrorPvPToggleNoPvP());
 			return;
@@ -111,13 +112,13 @@ public class PvP implements TabExecutor {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 1) {
-			if (!sender.hasPermission("pvpmanager.admin"))
+			if (!Permissions.ADMIN.hasPerm(sender))
 				return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("ON", "OFF"));
 			final List<String> list = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			list.addAll(Arrays.asList("*", "ON", "OFF"));
 			return ChatUtils.getMatchingEntries(args[0], list);
 		}
-		if (args.length == 2 && sender.hasPermission("pvpmanager.admin"))
+		if (args.length == 2 && Permissions.ADMIN.hasPerm(sender))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("ON", "OFF"));
 
 		return Collections.emptyList();

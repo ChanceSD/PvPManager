@@ -36,6 +36,7 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 @SuppressWarnings("deprecation")
@@ -101,7 +102,7 @@ public class PlayerListener implements Listener {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
 		Log.debug(player.getName() + " quit with reason: " + event.getQuitMessage() + " - In combat: " + pvPlayer.isInCombat());
-		if (pvPlayer.isInCombat() && !player.hasPermission("pvpmanager.nocombatlog")) {
+		if (pvPlayer.isInCombat() && !pvPlayer.hasPerm(Permissions.EXEMPT_COMBAT_LOG)) {
 			if (Settings.isLogToFile()) {
 				ph.getConfigManager().getLog().log(player.getName() + " tried to escape combat!");
 			}
@@ -144,7 +145,7 @@ public class PlayerListener implements Listener {
 	}
 
 	private void handlePvPDeath(final Player player, final PvPlayer pvPlayer, final Player killer, final PvPlayer pKiller) {
-		if (Settings.isKillAbuseEnabled() && !killer.hasPermission("pvpmanager.nokillabuse")) {
+		if (Settings.isKillAbuseEnabled() && !pKiller.hasPerm(Permissions.EXEMPT_KILL_ABUSE)) {
 			pKiller.addVictim(player);
 		}
 		if (wg == null || !wg.containsRegionsAt(killer.getLocation(), Settings.getKillsWGExclusions())) {
@@ -238,7 +239,7 @@ public class PlayerListener implements Listener {
 		final PvPlayer pvPlayer = ph.get(player);
 		pvPlayer.updatePlayer(player);
 		ScheduleUtils.runAsync(() -> {
-			if (player.isOp() || player.hasPermission("pvpmanager.admin")) {
+			if (player.isOp() || pvPlayer.hasPerm(Permissions.ADMIN)) {
 				Messages.sendQueuedMsgs(pvPlayer);
 			}
 		});
@@ -274,7 +275,7 @@ public class PlayerListener implements Listener {
 			final PvPlayer player = ph.get(event.getPlayer());
 			final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
 
-			if (player.isInCombat() && !event.getPlayer().hasPermission("pvpmanager.exempt.block.commands")) {
+			if (player.isInCombat() && !player.hasPerm(Permissions.EXEMPT_BLOCK_COMMANDS)) {
 				final boolean contains = CombatUtils.recursiveContainsCommand(givenCommand, Settings.getCommandsAllowed());
 				if (Settings.isCommandsWhitelist() != contains) {
 					event.setCancelled(true);

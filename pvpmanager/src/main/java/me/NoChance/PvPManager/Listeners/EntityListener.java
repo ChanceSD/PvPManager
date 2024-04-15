@@ -41,6 +41,7 @@ import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.setting.Permissions;
 
 public class EntityListener implements Listener {
 
@@ -143,14 +144,14 @@ public class EntityListener implements Listener {
 	}
 
 	private void disableActions(final Player attacker, final Player defender, final PvPlayer pvpAttacker, final PvPlayer pvpDefender) {
-		if (attacker.hasPermission("pvpmanager.nodisable"))
+		if (pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS))
 			return;
 
 		if (Settings.isDisableFly()) {
 			if (CombatUtils.canFly(attacker)) {
 				pvpAttacker.disableFly();
 			}
-			if (!defender.hasPermission("pvpmanager.nodisable") && CombatUtils.canFly(defender)) {
+			if (!pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS) && CombatUtils.canFly(defender)) {
 				pvpDefender.disableFly();
 			}
 		}
@@ -168,7 +169,7 @@ public class EntityListener implements Listener {
 		}
 		if (Settings.isDisableElytra()) {
 			CombatUtils.checkGlide(attacker);
-			if (!defender.hasPermission("pvpmanager.nodisable"))
+			if (!pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS))
 				CombatUtils.checkGlide(defender);
 		}
 	}

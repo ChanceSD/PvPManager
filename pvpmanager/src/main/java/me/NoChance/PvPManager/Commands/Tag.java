@@ -11,6 +11,7 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.setting.Permissions;
 
 public class Tag implements CommandExecutor {
 
@@ -31,14 +32,14 @@ public class Tag implements CommandExecutor {
 				pvPlayer.message(String.format(Messages.getTagTimeLeft(), timeLeft));
 			}
 			return true;
-		} else if (args.length == 1 && sender.hasPermission("pvpmanager.admin")) {
+		} else if (args.length == 1 && Permissions.ADMIN.hasPerm(sender)) {
 			final String name = args[0];
 			if (!CombatUtils.isOnlineWithFeedback(sender, name))
 				return true;
 
 			tagPlayer(sender, name, Settings.getTimeInCombatMs());
 			return true;
-		} else if (args.length == 2 && sender.hasPermission("pvpmanager.admin")) {
+		} else if (args.length == 2 && Permissions.ADMIN.hasPerm(sender)) {
 			final String name = args[0];
 			if (!CombatUtils.isOnlineWithFeedback(sender, name))
 				return true;

@@ -9,6 +9,7 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.updater.BukkitUpdater;
 import me.chancesd.sdutils.updater.SpigotUpdater;
@@ -49,7 +50,7 @@ public class UpdateManager {
 			final String updateMsg = Messages.PREFIXMSG + " §aUpdate available: §c" + Messages.getNewVersion() + " §aCurrent version: §c"
 					+ Messages.getCurrentversion();
 			Messages.queueAdminMsg(updateMsg);
-			Bukkit.broadcast(updateMsg, "pvpmanager.admin");
+			Bukkit.broadcast(updateMsg, Permissions.ADMIN.getPermission());
 			if (Settings.isAutoUpdate() && CombatUtils.isVersionAtLeast(Messages.getNewVersion(), "4.0")
 					&& !CombatUtils.isVersionAtLeast(Messages.getNewVersion(), "4.1")) {
 				final String v4message = Messages.PREFIXMSG
@@ -57,13 +58,13 @@ public class UpdateManager {
 						+ "This makes it unable to be automatically updated. "
 						+ "Please §b§lmanually download the update§a from the link below and copy any settings you need from the old config.";
 				Messages.queueAdminMsg(v4message);
-				Bukkit.broadcast(v4message, "pvpmanager.admin");
+				Bukkit.broadcast(v4message, Permissions.ADMIN.getPermission());
 			} else if (Settings.isAutoUpdate()) {
 				if (updater.downloadFile()) {
 					Messages.queueAdminMsg(Messages.PREFIXMSG + " §aUpdate downloaded, it will be applied automatically on the next server restart");
 					Bukkit.broadcast(
 							Messages.PREFIXMSG + " §aUpdate downloaded to update folder, it will be applied automatically on the next restart",
-							"pvpmanager.admin");
+							Permissions.ADMIN.getPermission());
 					return;
 				}
 				Log.info("Could not download latest update. Please update manually from one of the links below.");
@@ -71,7 +72,7 @@ public class UpdateManager {
 			Settings.setUpdate(true);
 			final String linkMsg = Messages.PREFIXMSG + " §aFollow the link to download: §7" + updater.getUpdateLink();
 			Messages.queueAdminMsg(linkMsg);
-			Bukkit.broadcast(linkMsg, "pvpmanager.admin");
+			Bukkit.broadcast(linkMsg, Permissions.ADMIN.getPermission());
 		} else {
 			Log.info("No update found");
 		}

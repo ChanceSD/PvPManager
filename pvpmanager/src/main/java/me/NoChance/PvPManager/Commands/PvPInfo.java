@@ -1,15 +1,21 @@
 package me.NoChance.PvPManager.Commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
+import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.setting.Permissions;
 
 public class PvPInfo implements CommandExecutor {
 
@@ -44,6 +50,25 @@ public class PvPInfo implements CommandExecutor {
 		sender.sendMessage(Messages.getString("PvPInfo_Line5") + target.isNewbie());
 		sender.sendMessage(Messages.getString("PvPInfo_Line6") + target.getPlayer().getWorld().getName());
 		sender.sendMessage(Messages.getString("PvPInfo_Line7") + target.hasOverride());
+		sender.sendMessage(ChatUtils.colorize("&2- Exempt Perms: &7" + getExemptions(target.getPlayer())));
+
+	}
+
+	public String getExemptions(final Player player) {
+		final List<String> exemptions = new ArrayList<>();
+		checkExemption(exemptions, "&aCombatTag&7", Permissions.EXEMPT_COMBAT_TAG, player);
+		checkExemption(exemptions, "&aCombatLog&7", Permissions.EXEMPT_COMBAT_LOG, player);
+		checkExemption(exemptions, "&aDisableActions&7", Permissions.EXEMPT_DISABLE_ACTIONS, player);
+		checkExemption(exemptions, "&aKillAbuse&7", Permissions.EXEMPT_KILL_ABUSE, player);
+		checkExemption(exemptions, "&aBlockCommands&7", Permissions.EXEMPT_BLOCK_COMMANDS, player);
+		if (exemptions.isEmpty())
+			return "&cNone";
+		return exemptions.toString();
+	}
+
+	private void checkExemption(final List<String> exemptions, final @NotNull String displayName, final Permissions perm, final Player player) {
+		if (perm.hasPerm(player))
+			exemptions.add(displayName);
 	}
 
 }

@@ -29,6 +29,7 @@ import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.sdutils.utils.Log;
 
 public class DebugEntityListener implements Listener {
@@ -124,12 +125,12 @@ public class DebugEntityListener implements Listener {
 		if (Settings.isPvpBlood()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 		}
-		if (!attacker.hasPermission("pvpmanager.nodisable")) {
+		if (!pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS)) {
 			if (Settings.isDisableFly()) {
 				if (CombatUtils.canFly(attacker)) {
 					pvpAttacker.disableFly();
 				}
-				if (!defender.hasPermission("pvpmanager.nodisable") && CombatUtils.canFly(defender)) {
+				if (!pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS) && CombatUtils.canFly(defender)) {
 					pvpDefender.disableFly();
 				}
 			}
@@ -146,7 +147,7 @@ public class DebugEntityListener implements Listener {
 				ph.getPlugin().getDependencyManager().disableGodMode(attacker);
 			}
 		} else {
-			Log.debug("Didn't disable fly/gamemode/etc because attacker has permission pvpmanager.nodisable");
+			Log.debug("Didn't disable fly/gamemode/etc because attacker has permission " + Permissions.EXEMPT_DISABLE_ACTIONS);
 		}
 		if (Settings.isInCombatEnabled()) {
 			if (Settings.borderHoppingVulnerable() && wg != null && !Settings.borderHoppingResetCombatTag()) {

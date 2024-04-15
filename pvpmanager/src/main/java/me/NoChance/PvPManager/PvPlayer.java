@@ -23,6 +23,7 @@ import me.NoChance.PvPManager.Tasks.NewbieTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -117,8 +118,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void setTagged(final boolean attacker, final PvPlayer tagger, final long timeMiliseconds) {
-		if (getPlayer().hasPermission("pvpmanager.nocombattag")) {
-			Log.debug("Not tagging " + getName() + " because player has permission: pvpmanager.nocombattag");
+		if (hasPerm(Permissions.EXEMPT_COMBAT_TAG)) {
+			Log.debug("Not tagging " + getName() + " because player has permission: " + Permissions.EXEMPT_COMBAT_TAG);
 			return;
 		}
 

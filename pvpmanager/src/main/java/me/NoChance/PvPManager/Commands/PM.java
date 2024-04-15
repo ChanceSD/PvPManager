@@ -30,6 +30,7 @@ import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -59,25 +60,25 @@ public class PM implements TabExecutor {
 				reload(sender);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("update") && sender.hasPermission("pvpmanager.admin")) {
+			if (args[0].equalsIgnoreCase("update") && Permissions.ADMIN.hasPerm(sender)) {
 				update(sender);
 				return true;
 			}
 		}
 		if (args.length >= 1) {
-			if (args[0].equalsIgnoreCase("cleanup") && sender.hasPermission("pvpmanager.admin")) {
+			if (args[0].equalsIgnoreCase("cleanup") && Permissions.ADMIN.hasPerm(sender)) {
 				cleanup(sender, args);
 				return true;
-			} else if (args[0].equalsIgnoreCase("convert") && sender.hasPermission("pvpmanager.admin")) {
+			} else if (args[0].equalsIgnoreCase("convert") && Permissions.ADMIN.hasPerm(sender)) {
 				convert(sender, args);
 				return true;
 			} else if (args[0].equalsIgnoreCase("debug") && sender.hasPermission("pvpmanager.debug")) {
 				debug(sender, args);
 				return true;
-			} else if (args[0].equalsIgnoreCase("locale") && sender.hasPermission("pvpmanager.admin")) {
+			} else if (args[0].equalsIgnoreCase("locale") && Permissions.ADMIN.hasPerm(sender)) {
 				locale(sender, args);
 				return true;
-			} else if (args[0].equalsIgnoreCase("worlds") && sender.hasPermission("pvpmanager.admin")) {
+			} else if (args[0].equalsIgnoreCase("worlds") && Permissions.ADMIN.hasPerm(sender)) {
 				worldsSubcommand.onCommand(sender, cmd, label, args);
 				return true;
 			}

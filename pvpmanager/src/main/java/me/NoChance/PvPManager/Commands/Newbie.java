@@ -18,6 +18,7 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.setting.Permissions;
 
 public class Newbie implements TabExecutor {
 	private final PlayerHandler ph;
@@ -47,7 +48,7 @@ public class Newbie implements TabExecutor {
 				}
 				player.message(Messages.getErrorNotNewbie());
 				return true;
-			} else if (sender.hasPermission("pvpmanager.admin") && args.length == 2) {
+			} else if (Permissions.ADMIN.hasPerm(sender) && args.length == 2) {
 				if (subcommand.equalsIgnoreCase("checktime")) {
 					checkNewbieTime(sender, args[1]);
 					return true;
@@ -97,11 +98,11 @@ public class Newbie implements TabExecutor {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 1) {
-			if (!sender.hasPermission("pvpmanager.admin"))
+			if (!Permissions.ADMIN.hasPerm(sender))
 				return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("disable"));
 			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("add", "checktime", "disable", "remove"));
 		}
-		if (args.length == 2 && sender.hasPermission("pvpmanager.admin"))
+		if (args.length == 2 && Permissions.ADMIN.hasPerm(sender))
 			return ChatUtils.getMatchingEntries(args[1], Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));
 
 		return Collections.emptyList();

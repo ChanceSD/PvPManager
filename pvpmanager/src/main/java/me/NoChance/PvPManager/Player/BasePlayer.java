@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Player;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -52,6 +53,14 @@ public abstract class BasePlayer {
 
 	public void setCombatWorld(final CombatWorld combatWorld) {
 		this.combatWorld = combatWorld;
+	}
+
+	/**
+	 * @param permission the permission to check
+	 * @return true if this player has the specified permission
+	 */
+	public boolean hasPerm(final Permissions permission) {
+		return permission.hasPerm(getPlayer());
 	}
 
 	public final void message(final String message) {
