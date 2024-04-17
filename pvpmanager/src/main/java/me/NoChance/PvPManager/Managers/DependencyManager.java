@@ -1,10 +1,13 @@
 package me.NoChance.PvPManager.Managers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,6 +42,7 @@ import me.NoChance.PvPManager.Listeners.MoveListener1_9;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import net.milkbowl.vault.economy.Economy;
 
@@ -53,21 +57,32 @@ public class DependencyManager {
 	private final ArrayList<AFKDependency> afkChecks = new ArrayList<>();
 
 	public DependencyManager() {
-		setupHooks();
 		if (Bukkit.getPluginManager().getPlugin("GriefPrevention") != null) {
 			Log.warning("GriefPrevention has been detected. GriefPrevention has some combat features without showing any feedback messages. "
-			        + "Make sure to disable Punish Logout and set tag time to 0 seconds in GP config. "
-			        + "Issues with those features often get wrongly blamed on PvPManager and cause conflicts due to the lack of GP feedback messages.");
+					+ "Make sure to disable Punish Logout and set tag time to 0 seconds in GP config. "
+					+ "Issues with those features often get wrongly blamed on PvPManager and cause conflicts due to the lack of GP feedback messages.");
 		}
 		if (Bukkit.getPluginManager().getPlugin("TAB") != null && Settings.useNameTag()) {
-			Log.warning(
-					"TAB has been detected. If you want nametags to change while in combat, you have to set 'anti-override' to false in TAB's config.");
+			Log.warning("TAB detected. If you want nametags to change while in combat, set 'anti-override' to false in TAB's config."
+					+ " (Doing that will prevent TAB from changing nametags)");
 			Log.warning("Or use the premium version of PvPManager which hooks into TAB for nametag/tablist changes.");
 		}
+		final List<Hook> failedHooks = setupHooks(Hook.values());
+		// Delayed check for hooks that do not use softdepend
+		ScheduleUtils.runPlatformTaskLater(() -> {
+			final Hook[] hooks = Arrays.stream(Hook.values())
+					.filter(hook -> hook.isEnabled() && !isDependencyEnabled(hook) && !failedHooks.contains(hook))
+					.toArray(Hook[]::new);
+			if (hooks.length == 0)
+				return;
+			Log.infoColor(ChatColor.LIGHT_PURPLE + "Delayed checking for any missing hooks...");
+			setupHooks(hooks);
+		}, null, 0);
 	}
 
-	private void setupHooks() {
-		for (final Hook hook : Hook.values()) {
+	private List<Hook> setupHooks(final Hook... hooks) {
+		final List<Hook> failedHooks = new ArrayList<>();
+		for (final Hook hook : hooks) {
 			try {
 				if (!hook.isEnabled()) {
 					if (hook.getDisabledWarning() != null) {
@@ -80,17 +95,21 @@ public class DependencyManager {
 			} catch (final NoClassDefFoundError | NoSuchMethodError | ClassCastException | NoSuchFieldError e) {
 				Log.warning("Your " + hook + " version is currently unsupported: " + hook.getDescription().getFullName());
 				Log.warning(hook + " support disabled");
+				failedHooks.add(hook);
 			} catch (final DependencyException e) {
 				Log.warning(e.getMessage());
 				hook.getDisabledAction().run();
+				failedHooks.add(hook);
 			} catch (final ExceptionInInitializerError e) {
 				// Ignore, only here for unit tests
 				Log.warning("Exception initializing " + hook);
 			} catch (final Exception | LinkageError e) {
 				Log.warning("Failed to enable support for " + hook.getDescription().getFullName() + ". Is " + hook + " up to date?");
 				e.printStackTrace();
+				failedHooks.add(hook);
 			}
 		}
+		return failedHooks;
 	}
 
 	private void attemptHookingInto(final Hook hook) {

@@ -37,7 +37,7 @@ public enum Permissions {
 	 * Check if the command sender has this permission
 	 *
 	 * @param sender the sender to check for permission
-	 * @returntrue if sender has permission
+	 * @return true if sender has permission
 	 */
 	public boolean hasPerm(final CommandSender sender) {
 		return sender.hasPermission(permission);
