@@ -144,17 +144,24 @@ public class EntityListener implements Listener {
 	}
 
 	private void disableActions(final Player attacker, final Player defender, final PvPlayer pvpAttacker, final PvPlayer pvpDefender) {
-		if (pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS))
-			return;
-
+		final boolean hasExemptPerm = pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS);
 		if (Settings.isDisableFly()) {
-			if (CombatUtils.canFly(attacker)) {
+			if (CombatUtils.canFly(attacker) && !hasExemptPerm) {
 				pvpAttacker.disableFly();
 			}
-			if (!pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS) && CombatUtils.canFly(defender)) {
+			if (CombatUtils.canFly(defender) && !pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS)) {
 				pvpDefender.disableFly();
 			}
 		}
+		if (Settings.isDisableElytra()) {
+			if (!hasExemptPerm)
+				CombatUtils.checkGlide(attacker);
+			if (!pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS))
+				CombatUtils.checkGlide(defender);
+		}
+
+		if (hasExemptPerm)
+			return;
 		if (Settings.isDisableGamemode() && attacker.getGameMode() != GameMode.SURVIVAL) {
 			attacker.setGameMode(GameMode.SURVIVAL);
 		}
@@ -166,11 +173,6 @@ public class EntityListener implements Listener {
 		}
 		if (Settings.isDisableGodMode()) {
 			ph.getPlugin().getDependencyManager().disableGodMode(attacker);
-		}
-		if (Settings.isDisableElytra()) {
-			CombatUtils.checkGlide(attacker);
-			if (!pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS))
-				CombatUtils.checkGlide(defender);
 		}
 	}
 
