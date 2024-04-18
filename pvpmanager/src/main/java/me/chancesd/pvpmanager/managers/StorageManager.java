@@ -10,8 +10,6 @@ import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,10 +22,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Libraries.rollbar.PMRUncaughExceptionHandler;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
@@ -35,28 +30,24 @@ import me.chancesd.pvpmanager.storage.SQLStorage;
 import me.chancesd.pvpmanager.storage.Storage;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.tasks.StorageSaveTask;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import net.md_5.bungee.api.ChatColor;
 
 public class StorageManager {
 
 	private final PvPManager plugin;
 	private final Storage storage;
-	private final ScheduledExecutorService executor;
 	private final ScheduledFuture<?> saveTask;
 
 	public StorageManager(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.storage = new SQLStorage(plugin);
 		convertYMLToSQL();
-		executor = Executors
-				.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("PvPManager Storage Thread").setUncaughtExceptionHandler(
-						new PMRUncaughExceptionHandler()).build());
-		saveTask = executor.scheduleAtFixedRate(new StorageSaveTask(plugin, storage), 300, 300, TimeUnit.SECONDS);
+		saveTask = ScheduleUtils.runAsyncTimer(new StorageSaveTask(plugin, storage), 300, 300, TimeUnit.SECONDS);
 	}
 
 	public void shutdown() {
 		saveTask.cancel(false);
-		executor.shutdown();
 		storage.shutdown();
 	}
 

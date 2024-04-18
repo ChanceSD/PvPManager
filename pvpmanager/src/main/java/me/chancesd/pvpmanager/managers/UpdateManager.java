@@ -3,8 +3,6 @@ package me.chancesd.pvpmanager.managers;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -30,12 +28,7 @@ public class UpdateManager {
 
 	private void setup() {
 		if (Settings.isUpdateCheck()) {
-			ScheduleUtils.runAsyncTimer(new BukkitRunnable() {
-				@Override
-				public void run() {
-					checkForUpdates();
-				}
-			}, 1, 18000, TimeUnit.SECONDS);
+			ScheduleUtils.runAsyncTimer(this::checkForUpdates, 3, 18000, TimeUnit.SECONDS);
 		}
 	}
 

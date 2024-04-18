@@ -139,7 +139,7 @@ public final class CombatUtils {
 	public static void checkGlide(final Player p) {
 		if (p.isGliding()) {
 			p.setGliding(false);
-			p.teleport(p.getLocation());
+			ScheduleUtils.teleport(p, p.getLocation());
 			p.setFallDistance(-200);
 			if (!Settings.isBorderPushbackTakeElytra())
 				return;

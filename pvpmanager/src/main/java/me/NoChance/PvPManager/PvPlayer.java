@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -299,7 +300,8 @@ public class PvPlayer extends EcoPlayer {
 			} catch (final UnsupportedOperationException e) {
 				Settings.setUseNameTag(false);
 				this.nametag = null;
-				Log.info("Nametag support disabled until Folia supports the scoreboard API");
+				Log.infoColor(ChatColor.RED
+						+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
 			}
 		}
 		this.loaded = true;

@@ -152,7 +152,7 @@
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>Factions</artifactId>
-			<version>1.6.9.5-U0.6.15</version>
+			<version>1.6.9.5-U0.6.35</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 			<exclusions>

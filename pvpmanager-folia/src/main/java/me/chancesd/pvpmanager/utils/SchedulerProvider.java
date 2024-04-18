@@ -1,5 +1,8 @@
 package me.chancesd.pvpmanager.utils;
 
+import java.util.concurrent.Future;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -9,7 +12,7 @@ public interface SchedulerProvider {
 
 	public void runPlatformAsyncTimer(final Runnable task, final long delay, final long period);
 
-	public void runPlatformGlobal(final Runnable task);
+	public void runTask(final Runnable task);
 
 	public void runTask(final Runnable task, final Entity entity);
 
@@ -20,6 +23,10 @@ public interface SchedulerProvider {
 	public void executeConsoleCommand(final String command);
 
 	public void executePlayerCommand(final Player player, final String command);
+
+	public boolean isPrimaryThread();
+
+	public Future<Boolean> teleport(Player player, Location loc);
 
 	public void cancelAllTasks();
 

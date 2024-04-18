@@ -69,7 +69,7 @@ public class DependencyManager {
 		}
 		final List<Hook> failedHooks = setupHooks(Hook.values());
 		// Delayed check for hooks that do not use softdepend
-		ScheduleUtils.runPlatformTaskLater(() -> {
+		ScheduleUtils.runPlatformTask(() -> {
 			final Hook[] hooks = Arrays.stream(Hook.values())
 					.filter(hook -> hook.isEnabled() && !isDependencyEnabled(hook) && !failedHooks.contains(hook))
 					.toArray(Hook[]::new);
@@ -77,7 +77,7 @@ public class DependencyManager {
 				return;
 			Log.infoColor(ChatColor.LIGHT_PURPLE + "Delayed checking for any missing hooks...");
 			setupHooks(hooks);
-		}, null, 0);
+		});
 	}
 
 	private List<Hook> setupHooks(final Hook... hooks) {

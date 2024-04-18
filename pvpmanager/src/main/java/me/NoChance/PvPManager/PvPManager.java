@@ -60,6 +60,7 @@ public class PvPManager extends JavaPlugin {
 		ScheduleUtils.setupExecutor();
 		if (ScheduleUtils.checkFolia()) {
 			Log.infoColor(ChatColor.AQUA + "Running on Folia. Support for Folia is still experimental");
+			Log.infoColor(ChatColor.AQUA + "Please report any errors you find, most likely nobody reported them yet as not many people use Folia");
 		}
 		loadFiles();
 		updateManager = new UpdateManager(this);

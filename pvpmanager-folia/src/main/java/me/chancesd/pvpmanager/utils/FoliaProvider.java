@@ -1,8 +1,10 @@
 package me.chancesd.pvpmanager.utils;
 
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +30,7 @@ public class FoliaProvider implements SchedulerProvider {
 	}
 
 	@Override
-	public void runPlatformGlobal(final Runnable task) {
+	public void runTask(final Runnable task) {
 		Bukkit.getGlobalRegionScheduler().execute(plugin, task);
 	}
 
@@ -55,6 +57,16 @@ public class FoliaProvider implements SchedulerProvider {
 	@Override
 	public void executePlayerCommand(final Player player, final String command) {
 		player.performCommand(command);
+	}
+
+	@Override
+	public boolean isPrimaryThread() {
+		return Bukkit.isGlobalTickThread();
+	}
+
+	@Override
+	public Future<Boolean> teleport(final Player player, final Location loc) {
+		return player.teleportAsync(loc);
 	}
 
 	@Override

@@ -1,6 +1,10 @@
 package me.chancesd.pvpmanager.utils;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,13 +31,13 @@ public class BukkitProvider implements SchedulerProvider {
 	}
 
 	@Override
-	public void runPlatformGlobal(final Runnable task) {
+	public void runTask(final Runnable task) {
 		Bukkit.getScheduler().runTask(plugin, task);
 	}
 
 	@Override
 	public void runTask(final Runnable task, final Entity entity) {
-		Bukkit.getScheduler().runTask(plugin, task);
+		runTask(task);
 	}
 
 	@Override
@@ -54,6 +58,19 @@ public class BukkitProvider implements SchedulerProvider {
 	@Override
 	public void executePlayerCommand(final Player player, final String command) {
 		player.performCommand(command);
+	}
+
+	@Override
+	public boolean isPrimaryThread() {
+		return Bukkit.isPrimaryThread();
+	}
+
+	@Override
+	public Future<Boolean> teleport(final Player player, final Location loc) {
+		final CompletableFuture<Boolean> future = new CompletableFuture<>();
+		player.teleport(loc);
+		future.complete(true);
+		return future;
 	}
 
 	@Override
