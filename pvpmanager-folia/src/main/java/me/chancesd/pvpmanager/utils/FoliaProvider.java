@@ -1,6 +1,6 @@
 package me.chancesd.pvpmanager.utils;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
@@ -65,7 +65,7 @@ public class FoliaProvider implements SchedulerProvider {
 	}
 
 	@Override
-	public Future<Boolean> teleport(final Player player, final Location loc) {
+	public CompletableFuture<Boolean> teleport(final Player player, final Location loc) {
 		return player.teleportAsync(loc);
 	}
 

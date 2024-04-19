@@ -1,10 +1,11 @@
 package me.chancesd.pvpmanager.utils;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public interface SchedulerProvider {
 
@@ -26,7 +27,7 @@ public interface SchedulerProvider {
 
 	public boolean isPrimaryThread();
 
-	public Future<Boolean> teleport(Player player, Location loc);
+	public CompletableFuture<Boolean> teleport(Player player, @NotNull Location loc);
 
 	public void cancelAllTasks();
 

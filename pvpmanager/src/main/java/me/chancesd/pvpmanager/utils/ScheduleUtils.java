@@ -107,15 +107,15 @@ public class ScheduleUtils {
 		runPlatformTask(task);
 	}
 
-	public static void ensureMainThread(final Runnable task, final Entity entity) {
-		if (provider.isPrimaryThread()) {
+	public static void ensureMainThread(final Runnable task, @NotNull final Entity entity) {
+		if (Bukkit.isPrimaryThread()) { // different from above method for untag on Folia
 			task.run();
 			return;
 		}
 		runPlatformTask(task, entity);
 	}
 
-	public static Future<Boolean> teleport(final Player player, final Location loc) {
+	public static CompletableFuture<Boolean> teleport(final Player player, @NotNull final Location loc) {
 		return provider.teleport(player, loc);
 	}
 
