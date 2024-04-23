@@ -122,7 +122,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.20.3-R0.1-SNAPSHOT</version>
+			<version>1.20.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -286,7 +286,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>kingdoms</artifactId>
-			<version>1.16.20.5</version>
+			<version>1.16.8.1.1</version>
 			<scope>provided</scope>
 		</dependency>
 

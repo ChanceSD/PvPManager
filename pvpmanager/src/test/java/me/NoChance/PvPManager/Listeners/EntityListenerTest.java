@@ -7,20 +7,21 @@ import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
 import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
@@ -58,35 +59,42 @@ public class EntityListenerTest {
 	}
 
 	private void createAttack(final boolean cancelled) {
-		mockEvent = spy(new EntityDamageByEntityEvent(attacker, defender, DamageCause.ENTITY_ATTACK, 5));
-		mockEvent.setCancelled(cancelled);
+		mockEvent = createDamageEvent(attacker, defender, cancelled);
 
 		final Projectile proj = mock(Projectile.class);
 		when(proj.getShooter()).thenReturn(attacker);
-		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
-		projMockEvent.setCancelled(cancelled);
+		projMockEvent = createDamageEvent(proj, defender, cancelled);
 
 		callEvent(mockEvent);
 		callEvent(projMockEvent);
 	}
 
+	private EntityDamageByEntityEvent createDamageEvent(final Entity attackerEntity, final Entity defenderEntity, final boolean cancelled) {
+		final EntityDamageByEntityEvent event = mock(EntityDamageByEntityEvent.class);
+		when(event.getDamager()).thenReturn(attackerEntity);
+		when(event.getEntity()).thenReturn(defenderEntity);
+		when(event.getDamage()).thenReturn(5.0);
+		Mockito.doCallRealMethod().when(event).setCancelled(ArgumentMatchers.anyBoolean());
+		when(event.isCancelled()).thenCallRealMethod();
+		event.setCancelled(cancelled);
+		return event;
+	}
+
 	private void createMobAttack(final boolean mobAttacker, final boolean cancelled) {
 		final Zombie zombie = mock(Zombie.class, RETURNS_MOCKS);
 		if (mobAttacker) {
-			mockEvent = spy(new EntityDamageByEntityEvent(zombie, defender, DamageCause.ENTITY_ATTACK, 5));
+			mockEvent = createDamageEvent(zombie, defender, cancelled);
 		} else {
-			mockEvent = spy(new EntityDamageByEntityEvent(attacker, zombie, DamageCause.ENTITY_ATTACK, 5));
+			mockEvent = createDamageEvent(attacker, zombie, cancelled);
 		}
-		mockEvent.setCancelled(cancelled);
 
 		final Projectile proj = mock(Projectile.class);
 		when(proj.getShooter()).thenReturn(attacker);
 		if (mobAttacker) {
-			projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
+			projMockEvent = createDamageEvent(proj, defender, cancelled);
 		} else {
-			projMockEvent = spy(new EntityDamageByEntityEvent(proj, zombie, DamageCause.PROJECTILE, 5));
+			projMockEvent = createDamageEvent(proj, zombie, cancelled);
 		}
-		projMockEvent.setCancelled(cancelled);
 
 		callEvent(mockEvent);
 		callEvent(projMockEvent);
@@ -116,8 +124,7 @@ public class EntityListenerTest {
 	@Test
 	final void testSelfTag() {
 		final Projectile proj = mock(Projectile.class);
-		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
-		projMockEvent.setCancelled(false);
+		projMockEvent = createDamageEvent(proj, defender, false);
 
 		assertFalse(Settings.isSelfTag());
 		// attacker different from defender
@@ -152,20 +159,24 @@ public class EntityListenerTest {
 		// ignore no damage hits
 		assertTrue(Settings.isIgnoreNoDamageHits());
 
-		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
+		projMockEvent = createDamageEvent(proj, defender, false);
+		when(projMockEvent.getDamage()).thenReturn(5.0);
 		assertTrue(CombatUtils.isPvP(projMockEvent));
 
-		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 0));
+		projMockEvent = createDamageEvent(proj, defender, false);
+		when(projMockEvent.getDamage()).thenReturn(0.0);
 		assertFalse(CombatUtils.isPvP(projMockEvent));
 
 		// don't ignore any hits
 		Settings.setIgnoreNoDamageHits(false);
 		assertFalse(Settings.isIgnoreNoDamageHits());
 
-		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 5));
+		projMockEvent = createDamageEvent(proj, defender, false);
+		when(projMockEvent.getDamage()).thenReturn(5.0);
 		assertTrue(CombatUtils.isPvP(projMockEvent));
 
-		projMockEvent = spy(new EntityDamageByEntityEvent(proj, defender, DamageCause.PROJECTILE, 0));
+		projMockEvent = createDamageEvent(proj, defender, false);
+		when(projMockEvent.getDamage()).thenReturn(0.0);
 		assertTrue(CombatUtils.isPvP(projMockEvent));
 	}
 

@@ -62,7 +62,7 @@ public class EntityListener1_9 implements Listener {
 		if (event.getAffectedEntities().isEmpty() || !(areaCloudSource instanceof Player))
 			return;
 
-		final PotionEffectType potionType = areaCloud.getBasePotionData().getType().getEffectType();
+		final PotionEffectType potionType = areaCloud.getBasePotionType().getEffectType();
 		if (potionType == null || !CombatUtils.isHarmfulPotion(potionType))
 			return;
 
