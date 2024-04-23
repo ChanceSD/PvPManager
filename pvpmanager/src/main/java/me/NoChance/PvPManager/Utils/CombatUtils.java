@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +20,16 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.projectiles.ProjectileSource;
 
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.ReflectionUtil;
 
 public final class CombatUtils {
 
@@ -185,6 +189,23 @@ public final class CombatUtils {
 
 	public static boolean isWorldExcluded(final String worldName) {
 		return Settings.getWorldsExcluded().contains(worldName);
+	}
+
+	public static boolean hasHarmfulPotion(final AreaEffectCloud areaCloud) {
+		if (isVersionAtLeast(Settings.getMinecraftVersion(), "1.20")) {
+			final PotionType basePotionType = areaCloud.getBasePotionType();
+			if (basePotionType == null)
+				return false;
+			final List<PotionEffect> potionTypes = basePotionType.getPotionEffects();
+			return !potionTypes.isEmpty() && potionTypes.stream().anyMatch(p -> isHarmfulPotion(p.getType()));
+		}
+		PotionEffectType potionEffectType = null;
+		try {
+			potionEffectType = (PotionEffectType) ReflectionUtil.invokeMethods(areaCloud, "getBasePotionData", "getType", "getEffectType");
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			Log.severe("Error getting potion type of lingering potion", e);
+		}
+		return potionEffectType != null && isHarmfulPotion(potionEffectType);
 	}
 
 	public static boolean isHarmfulPotion(final PotionEffectType type) {

@@ -21,7 +21,6 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
 import com.google.common.cache.Cache;
@@ -37,7 +36,7 @@ import me.chancesd.pvpmanager.utils.ScheduleUtils;
 public class EntityListener1_9 implements Listener {
 
 	private final PlayerHandler ph;
-	private final Cache<UUID, Set<AreaEffectCloud>> potionMessageCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS).build();
+	private final Cache<UUID, Set<AreaEffectCloud>> potionMessageCache = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
 
 	public EntityListener1_9(final PlayerHandler ph) {
 		this.ph = ph;
@@ -62,8 +61,7 @@ public class EntityListener1_9 implements Listener {
 		if (event.getAffectedEntities().isEmpty() || !(areaCloudSource instanceof Player))
 			return;
 
-		final PotionEffectType potionType = areaCloud.getBasePotionType().getEffectType();
-		if (potionType == null || !CombatUtils.isHarmfulPotion(potionType))
+		if (!CombatUtils.hasHarmfulPotion(areaCloud))
 			return;
 
 		final Player player = (Player) areaCloudSource;
