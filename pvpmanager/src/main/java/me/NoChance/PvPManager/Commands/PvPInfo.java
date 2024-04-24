@@ -2,6 +2,7 @@ package me.NoChance.PvPManager.Commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -50,6 +51,8 @@ public class PvPInfo implements CommandExecutor {
 		sender.sendMessage(Messages.getString("PvPInfo_Line5") + target.isNewbie());
 		sender.sendMessage(Messages.getString("PvPInfo_Line6") + target.getPlayer().getWorld().getName());
 		sender.sendMessage(Messages.getString("PvPInfo_Line7") + target.hasOverride());
+		sender.sendMessage(ChatUtils.colorize("&2- Enemies: &7"
+				+ (target.getEnemies().isEmpty() ? "&cNone" : target.getEnemies().stream().map(PvPlayer::getName).collect(Collectors.toList()))));
 		sender.sendMessage(ChatUtils.colorize("&2- Exempt Perms: &7" + getExemptions(target.getPlayer())));
 
 	}

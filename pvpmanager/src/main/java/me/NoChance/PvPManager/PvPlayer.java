@@ -1,11 +1,12 @@
 package me.NoChance.PvPManager;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import me.chancesd.pvpmanager.world.CombatWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,6 +28,7 @@ import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.sdutils.utils.Log;
 
 public class PvPlayer extends EcoPlayer {
@@ -43,6 +45,7 @@ public class PvPlayer extends EcoPlayer {
 	private long totalTagTime;
 	private NewbieTask newbieTask;
 	private PvPlayer enemy;
+	private final Set<PvPlayer> lastHitters = new HashSet<>();
 	private final HashMap<String, Integer> victim = new HashMap<>();
 	private final PvPManager plugin;
 	private NameTag nametag;
@@ -96,6 +99,14 @@ public class PvPlayer extends EcoPlayer {
 		return this.enemy;
 	}
 
+	public boolean isEnemyOf(final PvPlayer enemyPlayer) {
+		return this.lastHitters.contains(enemyPlayer);
+	}
+
+	public Set<PvPlayer> getEnemies() {
+		return this.lastHitters;
+	}
+
 	public final void disableFly() {
 		getPlayer().setFlying(false);
 		getPlayer().setAllowFlight(false);
@@ -126,6 +137,7 @@ public class PvPlayer extends EcoPlayer {
 
 		this.taggedTime = System.currentTimeMillis();
 		this.enemy = tagger;
+		this.lastHitters.add(tagger);
 
 		if (tagged)
 			return;
@@ -176,6 +188,7 @@ public class PvPlayer extends EcoPlayer {
 			sendActionBar(Messages.getOutOfCombatABar());
 		}
 
+		this.lastHitters.clear();
 		this.tagged = false;
 	}
 
