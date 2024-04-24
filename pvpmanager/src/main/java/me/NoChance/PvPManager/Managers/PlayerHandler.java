@@ -117,7 +117,7 @@ public class PlayerHandler {
 		if (save) {
 			players.put(p.getUUID(), p);
 		}
-		Log.debug("Adding " + p + " to online players. Saved: " + save);
+		Log.debug("Creating " + p + " Saved: " + save);
 		return p;
 	}
 

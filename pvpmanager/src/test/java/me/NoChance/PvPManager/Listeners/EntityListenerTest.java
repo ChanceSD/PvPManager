@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.RETURNS_MOCKS;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -209,8 +208,8 @@ public class EntityListenerTest {
 		ph.get(defender).setPvP(true);
 		ph.get(attacker).setPvP(true);
 
-		doReturn(true).when(attacker).isFlying();
-		doReturn(true).when(defender).isFlying();
+		when(attacker.isFlying()).thenReturn(true);
+		when(defender.isFlying()).thenReturn(true);
 		assertTrue(attacker.isFlying());
 		assertTrue(defender.isFlying());
 		assertEquals(CancelResult.FAIL, ph.tryCancel(attacker, defender));

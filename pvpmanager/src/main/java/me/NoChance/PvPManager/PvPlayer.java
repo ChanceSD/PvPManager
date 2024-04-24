@@ -306,7 +306,7 @@ public class PvPlayer extends EcoPlayer {
 		}
 		this.loaded = true;
 		notifyAll();
-		Log.debug("Finished loading data for " + this);
+		Log.debug("Finished loading data for " + this + (nametag != null ? " with " + nametag.getClass().getSimpleName() : ""));
 	}
 
 	private void loadUserData(final Map<String, Object> userData) {

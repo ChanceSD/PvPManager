@@ -63,9 +63,9 @@ public class DependencyManager {
 					+ "Issues with those features often get wrongly blamed on PvPManager and cause conflicts due to the lack of GP feedback messages.");
 		}
 		if (Bukkit.getPluginManager().getPlugin("TAB") != null && Settings.useNameTag()) {
-			Log.warning("TAB detected. If you want nametags to change while in combat, set 'anti-override' to false in TAB's config."
+			Log.info("TAB detected. If you want nametags to change while in combat, set 'anti-override' to false in TAB's config."
 					+ " (Doing that will prevent TAB from changing nametags)");
-			Log.warning("Or use the premium version of PvPManager which hooks into TAB for nametag/tablist changes.");
+			Log.info("Or use the premium version of PvPManager which hooks into TAB for nametag/tablist changes.");
 		}
 		final List<Hook> failedHooks = setupHooks(Hook.values());
 		// Delayed check for hooks that do not use softdepend
