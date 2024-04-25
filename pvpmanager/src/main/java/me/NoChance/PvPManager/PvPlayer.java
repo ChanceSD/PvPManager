@@ -31,6 +31,11 @@ import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.sdutils.utils.Log;
 
+/**
+ * @deprecated Will be renamed to CombatPlayer and moved to another package when v4 is released.
+ *             There is currently no alternative, so it's safe to use for now
+ */
+@Deprecated
 public class PvPlayer extends EcoPlayer {
 
 	private boolean newbie;

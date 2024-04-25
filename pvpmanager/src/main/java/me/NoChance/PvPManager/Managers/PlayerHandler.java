@@ -27,6 +27,11 @@ import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
+/**
+ * @deprecated Will be moved to another package when v4 is released.
+ *             There is currently no alternative, so it's safe to use for now
+ */
+@Deprecated
 public class PlayerHandler {
 
 	private final HashMap<UUID, PvPlayer> players = new HashMap<>();
