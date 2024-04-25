@@ -41,7 +41,8 @@ public class CustomMetrics {
 
 				map.put("Newbie Protection", getMapEntry(Settings.isNewbieProtectionEnabled() ? "Enabled" : "Disabled"));
 				map.put("Kill Abuse", getMapEntry(Settings.isKillAbuseEnabled() ? "Enabled" : "Disabled"));
-				map.put("Update Check", getMapEntry(!Settings.isUpdateCheck() ? "Disabled" : !Settings.isAutoUpdate() ? "Update Check" : "Auto Update"));
+				map.put("Update Check",
+						getMapEntry(!Settings.isUpdateCheck() ? "Disabled" : !Settings.isAutoUpdate() ? "Update Check" : "Auto Update"));
 				map.put("PvP Blood", getMapEntry(Settings.isPvpBlood() ? "Enabled" : "Disabled"));
 				map.put("Drop Mode", getMapEntry(Settings.getDropMode().toString()));
 				map.put("Combat Nametags", getMapEntry(Settings.useNameTag() ? "Enabled" : "Disabled"));
@@ -102,13 +103,6 @@ public class CustomMetrics {
 			}
 		}));
 
-		metrics.addCustomChart(new Metrics.SimplePie("auto_soup", new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return Settings.isAutoSoupEnabled() ? "Enabled" : "Disabled";
-			}
-		}));
-
 		metrics.addCustomChart(new Metrics.SimplePie("locale", new Callable<String>() {
 			@Override
 			public String call() throws Exception {
@@ -122,6 +116,34 @@ public class CustomMetrics {
 				return PvPManager.getInstance().getPlayerHandler().getPlayersInCombat().size();
 			}
 		}));
+
+		metrics.addCustomChart(new Metrics.DrilldownPie("blocked_actions", () -> {
+			final Map<String, Map<String, Integer>> map = new HashMap<>();
+
+			map.put("EnderPearls", getMapEntry(Settings.isBlockEnderPearl()));
+			map.put("ChorusFruits", getMapEntry(Settings.isBlockChorusFruit()));
+			map.put("Teleport", getMapEntry(Settings.isBlockTeleport()));
+			map.put("Place Blocks", getMapEntry(Settings.isBlockPlaceBlocks()));
+			map.put("Interact", getMapEntry(Settings.blockInteract()));
+			map.put("Elytra", getMapEntry(Settings.isBlockGlide()));
+			map.put("Eat", getMapEntry(Settings.isBlockEat()));
+			map.put("Totem of Undying", getMapEntry(Settings.isBlockTotemUndying()));
+			map.put("Open Inventory", getMapEntry(Settings.isBlockInventoryOpen()));
+			final HashMap<String, Integer> result = new HashMap<>();
+			if (Settings.isStopCommands()) {
+				if (Settings.isCommandsWhitelist())
+					result.put("Whitelist", 1);
+				else
+					result.put("Blacklist", 1);
+			} else
+				result.put("False", 1);
+			map.put("Commands", result);
+			return map;
+		}));
+	}
+
+	private Map<String, Integer> getMapEntry(final boolean value) {
+		return value ? getMapEntry("True") : getMapEntry("False");
 	}
 
 	private Map<String, Integer> getMapEntry(final String key) {
