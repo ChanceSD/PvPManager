@@ -12,7 +12,6 @@ import org.bukkit.projectiles.ProjectileSource;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.Hooks.CooldownsXHook;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
@@ -21,11 +20,9 @@ import me.chancesd.pvpmanager.utils.ScheduleUtils;
 public class PlayerListener1_11 implements Listener {
 
 	private final PlayerHandler playerHandler;
-	private final CooldownsXHook cooldownsxHook;
 
 	public PlayerListener1_11(final PlayerHandler ph) {
 		this.playerHandler = ph;
-		this.cooldownsxHook = (CooldownsXHook) ph.getPlugin().getDependencyManager().getDependency(Hook.COOLDOWNSX);
 	}
 
 	@EventHandler
@@ -39,9 +36,7 @@ public class PlayerListener1_11 implements Listener {
 		final PvPlayer pvPlayer = playerHandler.get(player);
 
 		if (pvPlayer.isInCombat()) {
-			if (cooldownsxHook != null) {
-				cooldownsxHook.setEnderpearlCooldown(player, Settings.getEnderPearlCooldown());
-			} // TODO add feedback while on cooldown
+			// TODO add feedback while on cooldown
 			ScheduleUtils.runPlatformTask(() -> player.setCooldown(Material.ENDER_PEARL, Settings.getEnderPearlCooldown() * 20), player);
 		}
 	}

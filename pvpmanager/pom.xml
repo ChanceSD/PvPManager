@@ -34,18 +34,6 @@
 			<url>https://jitpack.io</url>
 		</repository>
 
-		<!-- FactionsUUID -->
-		<repository>
-			<id>codemc-repo</id>
-			<url>https://repo.codemc.org/repository/maven-public</url>
-		</repository>
-
-		<!-- mcMMO -->
-		<repository>
-			<id>neetgames</id>
-			<url>https://nexus.neetgames.com/repository/maven-releases/</url>
-		</repository>
-
 		<!-- PlaceholderAPI -->
 		<repository>
 			<id>placeholderapi</id>
@@ -71,11 +59,6 @@
 			<url>https://repo.md-5.net/content/groups/public/</url>
 		</repository>
 
-		<!-- SirBlobman Public Repository -->
-		<repository>
-			<id>sirblobman-public</id>
-			<url>https://nexus.sirblobman.xyz/public/</url>
-		</repository>
 	</repositories>
 
 	<build>
@@ -148,36 +131,6 @@
 			</exclusions>
 		</dependency>
 
-		<!-- FactionsUUID -->
-		<dependency>
-			<groupId>com.massivecraft</groupId>
-			<artifactId>Factions</artifactId>
-			<version>1.6.9.5-U0.6.35</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- SaberFactions -->
-		<dependency>
-			<groupId>com.github.SaberLLC</groupId>
-			<artifactId>Saber-Factions</artifactId>
-			<version>2.4.0-RC</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
 		<!-- PlaceHolderAPI -->
 		<dependency>
 			<groupId>me.clip</groupId>
@@ -237,21 +190,6 @@
 			</exclusions>
 		</dependency>
 
-		<!-- mcMMO -->
-		<dependency>
-			<groupId>com.gmail.nossr50.mcMMO</groupId>
-			<artifactId>mcMMO</artifactId>
-			<version>2.2.006</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
 		<!-- Towny -->
 		<dependency>
 			<groupId>com.github.TownyAdvanced</groupId>
@@ -274,14 +212,6 @@
 			</exclusions>
 		</dependency>
 
-		<!-- CooldownsX -->
-		<dependency>
-			<groupId>com.github.sirblobman.plugin.cooldowns</groupId>
-			<artifactId>cooldowns-api</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-
 		<!-- KingdomsX -->
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
@@ -302,6 +232,12 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.45.3.0</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.14.1</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Unit Tests -->

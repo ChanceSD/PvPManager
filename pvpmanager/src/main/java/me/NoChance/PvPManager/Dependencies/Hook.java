@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 import me.NoChance.PvPManager.Settings.Settings;
 
 public enum Hook {
-	WORLDGUARD("WorldGuard"), ESSENTIALS("Essentials"), FACTIONS("Factions"), VAULT("Vault", "Vault not found! Features requiring Vault won't work!", () -> {
+	WORLDGUARD("WorldGuard"), ESSENTIALS("Essentials"), VAULT("Vault", "Vault not found! Features requiring Vault won't work!", () -> {
 		Settings.setFineAmount(0);
 		Settings.setMoneyPenalty(0);
 		Settings.setMoneyReward(0);
-	}), SIMPLECLANS("SimpleClans"), PLACEHOLDERAPI("PlaceholderAPI"), LIBSDISGUISES("LibsDisguises"), MCMMO("mcMMO"), COOLDOWNSX("CooldownsX"),
+	}), SIMPLECLANS("SimpleClans"), PLACEHOLDERAPI("PlaceholderAPI"), LIBSDISGUISES("LibsDisguises"), COOLDOWNSX("CooldownsX"),
 	TOWNY("Towny"),
 	KINGDOMSX("Kingdoms");
 

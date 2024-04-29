@@ -10,7 +10,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 
-public interface WorldGuardHook extends RegionPvPDependency {
+public interface WorldGuardHook extends GroupDependency, RegionDependency {
 
 	public boolean hasAllowPvPFlag(Player player);
 

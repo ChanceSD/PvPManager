@@ -11,20 +11,16 @@ softdepend:
   - Vault
   - WorldGuard
   - LibsDisguises
-  - Factions
   - SimpleClans
   - EZRanksLite
   - Essentials
   - PlaceholderAPI
   - Towny
-  - mcMMO
-  - CooldownsX
   - Kingdoms
   - TAB
 
 libraries:
   - com.zaxxer:HikariCP:4.0.3
-  - org.slf4j:slf4j-api:2.0.0
 
 commands:
    pvpmanager:

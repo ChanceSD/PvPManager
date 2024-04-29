@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.PvPDependency;
+import me.NoChance.PvPManager.Dependencies.GroupDependency;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
@@ -13,7 +13,7 @@ import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
 @SuppressWarnings("null")
-public class SimpleClansHook extends BaseDependency implements PvPDependency, ForceToggleDependency {
+public class SimpleClansHook extends BaseDependency implements GroupDependency, ForceToggleDependency {
 
 	private final ClanManager clanManager;
 

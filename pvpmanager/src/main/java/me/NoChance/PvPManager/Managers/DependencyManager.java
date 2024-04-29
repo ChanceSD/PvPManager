@@ -20,18 +20,14 @@ import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.DisguiseDependency;
 import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.PvPDependency;
+import me.NoChance.PvPManager.Dependencies.GroupDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.CooldownsXHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.FactionsUUIDHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.KingdomsXHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.McMMOHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.SaberFactionsHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.TownyHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.VaultHook;
@@ -49,7 +45,7 @@ import net.milkbowl.vault.economy.Economy;
 public class DependencyManager {
 
 	private final HashMap<Hook, Dependency> dependencies = new HashMap<>();
-	private final ArrayList<PvPDependency> attackChecks = new ArrayList<>();
+	private final ArrayList<GroupDependency> attackChecks = new ArrayList<>();
 	private final ArrayList<RegionDependency> regionChecks = new ArrayList<>();
 	private final ArrayList<GodDependency> godChecks = new ArrayList<>();
 	private final ArrayList<DisguiseDependency> disguiseChecks = new ArrayList<>();
@@ -114,16 +110,6 @@ public class DependencyManager {
 
 	private void attemptHookingInto(final Hook hook) {
 		switch (hook) {
-		case FACTIONS:
-			final String fVersion = hook.getVersion();
-			if (fVersion.contains("RC")) {
-				registerDependency(new SaberFactionsHook(hook));
-			} else if (fVersion.contains("U")) {
-				registerDependency(new FactionsUUIDHook(hook));
-			} else {
-				Log.info("Update Factions to the latest version if you want PvPManager to hook into it successfully");
-			}
-			break;
 		case SIMPLECLANS:
 			registerDependency(new SimpleClansHook(hook));
 			break;
@@ -140,17 +126,11 @@ public class DependencyManager {
 		case ESSENTIALS:
 			registerDependency(new EssentialsHook(hook));
 			break;
-		case MCMMO:
-			registerDependency(new McMMOHook(hook));
-			break;
 		case PLACEHOLDERAPI:
 			registerDependency(new PlaceHolderAPIHook(hook));
 			break;
 		case LIBSDISGUISES:
 			registerDependency(new LibsDisguisesHook(hook));
-			break;
-		case COOLDOWNSX:
-			registerDependency(new CooldownsXHook(hook));
 			break;
 		case TOWNY:
 			registerDependency(new TownyHook(hook));
@@ -165,7 +145,7 @@ public class DependencyManager {
 	}
 
 	public final boolean canAttack(final Player attacker, final Player defender) {
-		for (final PvPDependency pvPlugin : attackChecks)
+		for (final GroupDependency pvPlugin : attackChecks)
 			if (!pvPlugin.canAttack(attacker, defender))
 				return false;
 		return true;
@@ -237,8 +217,8 @@ public class DependencyManager {
 
 	public void registerDependency(final Dependency dep) {
 		dependencies.put(dep.getHook(), dep);
-		if (dep instanceof PvPDependency) {
-			attackChecks.add((PvPDependency) dep);
+		if (dep instanceof GroupDependency) {
+			attackChecks.add((GroupDependency) dep);
 		}
 		if (dep instanceof RegionDependency) {
 			regionChecks.add((RegionDependency) dep);

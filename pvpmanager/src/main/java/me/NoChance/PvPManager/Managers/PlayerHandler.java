@@ -101,7 +101,7 @@ public class PlayerHandler {
 
 	private boolean canAttackHooks(final PvPlayer attacker, final PvPlayer defender) {
 		if (attacker.isInCombat() && defender.isInCombat())
-			return defender.isEnemyOf(attacker) && dependencyManager.canAttack(attacker.getPlayer(), defender.getPlayer());
+			return defender.isEnemyOf(attacker);
 		return false;
 	}
 
