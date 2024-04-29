@@ -185,7 +185,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // cancel on low since some plugins check cancels on normal instead of monitor
 	public final void onPlayerInteract(final PlayerInteractEvent e) {
 		final Player player = e.getPlayer();
 		if (CombatUtils.isWorldExcluded(player.getWorld().getName()) || e.getAction() != Action.RIGHT_CLICK_BLOCK)
