@@ -8,7 +8,6 @@
 		<version>${revision}</version>
 	</parent>
 
-	<groupId>me.NoChance.PvPManager</groupId> <!--keep this groupid for now while the java package isn't changed -->
 	<artifactId>pvpmanager</artifactId>
 	<packaging>jar</packaging>
 

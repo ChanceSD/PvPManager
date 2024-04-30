@@ -22,12 +22,12 @@ import org.bukkit.potion.PotionEffectType;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
-import me.NoChance.PvPManager.Player.ProtectionResult;
-import me.NoChance.PvPManager.Player.ProtectionType;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.ProtectionResult;
+import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -36,11 +36,11 @@ import me.chancesd.sdutils.utils.MCVersion;
 
 public class DebugEntityListener implements Listener {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 	private final WorldGuardDependency wg;
 	private final Cache<LightningStrike, Location> lightningCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.SECONDS).build();
 
-	public DebugEntityListener(final PlayerHandler ph) {
+	public DebugEntityListener(final PlayerManager ph) {
 		this.ph = ph;
 		this.wg = (WorldGuardDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 	}
@@ -63,7 +63,7 @@ public class DebugEntityListener implements Listener {
 				Log.debug("Ignoring damage because it wasn't considered PvP");
 				return;
 			}
-			final PvPlayer attacked = ph.get((Player) event.getEntity());
+			final CombatPlayer attacked = ph.get((Player) event.getEntity());
 			if (attacked.isNewbie() && Settings.isNewbieGodMode()) {
 				event.setCancelled(true);
 				Log.debug("Blocking damage to newbie because newbie god mode is enabled");
@@ -121,8 +121,8 @@ public class DebugEntityListener implements Listener {
 	}
 
 	public void onDamageActions(final Player attacker, final Player defender) {
-		final PvPlayer pvpAttacker = ph.get(attacker);
-		final PvPlayer pvpDefender = ph.get(defender);
+		final CombatPlayer pvpAttacker = ph.get(attacker);
+		final CombatPlayer pvpDefender = ph.get(defender);
 
 		if (Settings.isPvpBlood()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);

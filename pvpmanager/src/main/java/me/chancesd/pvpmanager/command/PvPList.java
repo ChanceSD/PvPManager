@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 
 import com.google.common.collect.Lists;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.storage.Storage;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
@@ -21,9 +21,9 @@ import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PvPList implements TabExecutor {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 
-	public PvPList(final PlayerHandler ph) {
+	public PvPList(final PlayerManager ph) {
 		this.ph = ph;
 	}
 
@@ -76,7 +76,7 @@ public class PvPList implements TabExecutor {
 
 	private String pvpList(final CommandSender sender, final boolean enabled, final boolean console) {
 		final StringBuilder list = new StringBuilder();
-		for (final PvPlayer p : ph.getPlayers().values()) {
+		for (final CombatPlayer p : ph.getPlayers().values()) {
 			final Player player = p.getPlayer();
 			if (enabled == p.hasPvPEnabled() && (console || ((Player) sender).canSee(player))) {
 				list.append(p.getName()).append(", ");

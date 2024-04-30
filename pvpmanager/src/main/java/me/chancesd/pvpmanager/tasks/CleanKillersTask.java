@@ -1,19 +1,19 @@
 package me.chancesd.pvpmanager.tasks;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 
 public class CleanKillersTask implements Runnable {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 
-	public CleanKillersTask(final PlayerHandler ph) {
+	public CleanKillersTask(final PlayerManager ph) {
 		this.ph = ph;
 	}
 
 	@Override
 	public final void run() {
-		for (final PvPlayer p : ph.getPlayers().values()) {
+		for (final CombatPlayer p : ph.getPlayers().values()) {
 			p.clearVictims();
 		}
 	}

@@ -22,10 +22,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.listener.PlayerListener;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
 
@@ -33,7 +33,7 @@ import me.chancesd.pvpmanager.setting.Settings;
 public class PlayerListenerTest {
 
 	private static PlayerListener listener;
-	private static PlayerHandler ph;
+	private static PlayerManager ph;
 	private static PluginTest pt;
 
 	@BeforeAll
@@ -49,12 +49,12 @@ public class PlayerListenerTest {
 		ph.getPlayers().clear();
 	}
 
-	private void tagPlayer(final PvPlayer player, final PvPlayer enemy) {
+	private void tagPlayer(final CombatPlayer player, final CombatPlayer enemy) {
 		player.setTagged(true, enemy);
 		assertTrue(player.isInCombat());
 	}
 
-	private void tagPlayer(final PvPlayer player) {
+	private void tagPlayer(final CombatPlayer player) {
 		tagPlayer(player, ph.get(pt.createPlayer("Attacker")));
 	}
 
@@ -70,9 +70,9 @@ public class PlayerListenerTest {
 	@Test
 	void onPlayerLogoutTest() {
 		final Player player = pt.createPlayer("onPlayerLogoutTest");
-		final PvPlayer pvPlayer = ph.get(player);
+		final CombatPlayer pvPlayer = ph.get(player);
 		final Player attacker = pt.createPlayer("Attacker");
-		final PvPlayer pvpAttacker = ph.get(attacker);
+		final CombatPlayer pvpAttacker = ph.get(attacker);
 		tagPlayer(pvPlayer, pvpAttacker);
 
 		listener.onPlayerLogout(new PlayerQuitEvent(player, ""));
@@ -87,7 +87,7 @@ public class PlayerListenerTest {
 	@Test
 	void onPlayerKickTest() {
 		final Player kickPlayer = pt.createPlayer("onPlayerKickTest");
-		final PvPlayer pvPlayer = ph.get(kickPlayer);
+		final CombatPlayer pvPlayer = ph.get(kickPlayer);
 
 		tagPlayer(pvPlayer);
 		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "", ""));
@@ -112,7 +112,7 @@ public class PlayerListenerTest {
 	@Test
 	final void regularDeath() {
 		final Player player = pt.createPlayer("regularDeath");
-		final PvPlayer pDefender = ph.get(player);
+		final CombatPlayer pDefender = ph.get(player);
 		assertFalse(pDefender.isInCombat());
 		listener.onPlayerDeath(createDeathEvent(player));
 	}
@@ -120,9 +120,9 @@ public class PlayerListenerTest {
 	@Test
 	final void inCombatDeath() {
 		final Player attacker = pt.createPlayer("Attacker");
-		final PvPlayer pAttacker = ph.get(attacker);
+		final CombatPlayer pAttacker = ph.get(attacker);
 		final Player defender = pt.createPlayer("Defender", attacker);
-		final PvPlayer pDefender = ph.get(defender);
+		final CombatPlayer pDefender = ph.get(defender);
 
 		tagPlayer(pDefender, pAttacker);
 		tagPlayer(pAttacker, pDefender);
@@ -149,7 +149,7 @@ public class PlayerListenerTest {
 	@Test
 	final void onCommandTest() {
 		final Player player = pt.createPlayer("onCommandTest");
-		final PvPlayer pvPlayer = ph.get(player);
+		final CombatPlayer pvPlayer = ph.get(player);
 		final PlayerCommandPreprocessEvent commandPreprocessEvent = new PlayerCommandPreprocessEvent(player, "/spawn");
 
 		assertFalse(commandPreprocessEvent.isCancelled());

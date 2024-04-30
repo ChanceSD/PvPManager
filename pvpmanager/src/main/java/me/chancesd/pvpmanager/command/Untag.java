@@ -5,16 +5,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
 public class Untag implements CommandExecutor {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 
-	public Untag(final PlayerHandler ph) {
+	public Untag(final PlayerManager ph) {
 		this.ph = ph;
 	}
 
@@ -22,7 +22,7 @@ public class Untag implements CommandExecutor {
 	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 0)
 			return false;
-		PvPlayer target;
+		CombatPlayer target;
 		if (args.length == 1) {
 			final String name = args[0];
 			if (!CombatUtils.isOnlineWithFeedback(sender, name))

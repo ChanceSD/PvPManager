@@ -32,12 +32,12 @@ import org.bukkit.projectiles.ProjectileSource;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
-import me.NoChance.PvPManager.Player.ProtectionResult;
-import me.NoChance.PvPManager.Player.ProtectionType;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.ProtectionResult;
+import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
@@ -46,11 +46,11 @@ import me.chancesd.sdutils.utils.MCVersion;
 
 public class EntityListener implements Listener {
 
-	private final PlayerHandler playerHandler;
+	private final PlayerManager playerHandler;
 	private final WorldGuardDependency wg;
 	private final Cache<LightningStrike, Location> lightningCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.SECONDS).build();
 
-	public EntityListener(final PlayerHandler ph) {
+	public EntityListener(final PlayerManager ph) {
 		this.playerHandler = ph;
 		this.wg = (WorldGuardDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 	}
@@ -63,7 +63,7 @@ public class EntityListener implements Listener {
 			if (!(event.getEntity() instanceof Player))
 				return;
 
-			final PvPlayer attacked = playerHandler.get((Player) event.getEntity());
+			final CombatPlayer attacked = playerHandler.get((Player) event.getEntity());
 			if (attacked.isNewbie() && Settings.isNewbieGodMode()) {
 				event.setCancelled(true);
 			} else if (event.getDamager() instanceof final LightningStrike lightning) {
@@ -126,8 +126,8 @@ public class EntityListener implements Listener {
 	}
 
 	public void processDamage(final Player attacker, final Player defender) {
-		final PvPlayer pvpAttacker = playerHandler.get(attacker);
-		final PvPlayer pvpDefender = playerHandler.get(defender);
+		final CombatPlayer pvpAttacker = playerHandler.get(attacker);
+		final CombatPlayer pvpDefender = playerHandler.get(defender);
 
 		if (Settings.isPvpBlood()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
@@ -143,7 +143,7 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	private void disableActions(final Player attacker, final Player defender, final PvPlayer pvpAttacker, final PvPlayer pvpDefender) {
+	private void disableActions(final Player attacker, final Player defender, final CombatPlayer pvpAttacker, final CombatPlayer pvpDefender) {
 		final boolean hasExemptPerm = pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS);
 		if (Settings.isDisableFly()) {
 			if (CombatUtils.canFly(attacker) && !hasExemptPerm) {
@@ -251,7 +251,7 @@ public class EntityListener implements Listener {
 		if (ignitingEntity instanceof final LightningStrike lightningStrike && lightningCache.asMap().containsKey(ignitingEntity)) {
 			for (final Entity entity : lightningStrike.getNearbyEntities(2, 2, 2)) {
 				if (entity instanceof final Player player) {
-					final PvPlayer attacked = playerHandler.get(player);
+					final CombatPlayer attacked = playerHandler.get(player);
 					if (!attacked.hasPvPEnabled() || attacked.isNewbie() || attacked.hasRespawnProtection()) {
 						event.setCancelled(true);
 						return;
@@ -268,7 +268,7 @@ public class EntityListener implements Listener {
 		if (!Settings.isEnderPearlRenewTag() || entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof final Player player))
 			return;
 
-		final PvPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 
 		if (pvPlayer.isInCombat()) {
 			final PvPlayer enemy = pvPlayer.getEnemy();

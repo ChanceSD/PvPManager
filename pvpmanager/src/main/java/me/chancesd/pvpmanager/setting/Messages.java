@@ -19,9 +19,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Player.ProtectionResult;
+import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.TimeUtil;
 import me.chancesd.sdutils.utils.Log;
@@ -277,7 +277,7 @@ public class Messages {
 
 	public static void messageProtection(final ProtectionResult result, final Player player, final Player attacked) {
 		final String message = getProtectionMessage(result, attacked);
-		final PvPlayer receiver = plugin.getPlayerHandler().get(player);
+		final CombatPlayer receiver = plugin.getPlayerHandler().get(player);
 		receiver.message(message);
 	}
 
@@ -527,7 +527,7 @@ public class Messages {
 		return pvpForceEnabledWG;
 	}
 
-	public static void sendQueuedMsgs(final PvPlayer player) {
+	public static void sendQueuedMsgs(final CombatPlayer player) {
 		messageQueue.forEach(player::message);
 	}
 

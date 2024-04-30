@@ -16,7 +16,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.NoChance.PvPManager.PvPManager;
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.setting.LogFile;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
