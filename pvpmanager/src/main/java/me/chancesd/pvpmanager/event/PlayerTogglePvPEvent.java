@@ -5,7 +5,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 
 /**
  * This event is called any time a Player's PvP state would change.
@@ -17,10 +17,10 @@ public final class PlayerTogglePvPEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled;
 	private final Player player;
-	private final PvPlayer pvplayer;
+	private final CombatPlayer pvplayer;
 	private final boolean pvpState;
 
-	public PlayerTogglePvPEvent(final Player player, final PvPlayer pvplayer, final boolean pvpState) {
+	public PlayerTogglePvPEvent(final Player player, final CombatPlayer pvplayer, final boolean pvpState) {
 		this.player = player;
 		this.pvplayer = pvplayer;
 		this.pvpState = pvpState;
@@ -40,7 +40,7 @@ public final class PlayerTogglePvPEvent extends Event implements Cancellable {
 	 *
 	 * @return PvPlayer instance of the player
 	 */
-	public final PvPlayer getPvPlayer() {
+	public final CombatPlayer getPvPlayer() {
 		return pvplayer;
 	}
 

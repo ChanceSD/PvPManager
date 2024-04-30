@@ -11,8 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.ChatUtils;
@@ -20,9 +20,9 @@ import me.chancesd.pvpmanager.utils.CombatUtils;
 
 public class PvPInfo implements CommandExecutor {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 
-	public PvPInfo(final PlayerHandler ph) {
+	public PvPInfo(final PlayerManager ph) {
 		this.ph = ph;
 	}
 
@@ -43,7 +43,7 @@ public class PvPInfo implements CommandExecutor {
 		return false;
 	}
 
-	private void sendInfo(final CommandSender sender, final PvPlayer target) {
+	private void sendInfo(final CommandSender sender, final CombatPlayer target) {
 		sender.sendMessage(Messages.getString("PvPInfo_Title"));
 		sender.sendMessage(Messages.getString("PvPInfo_Line1") + target.getName());
 		sender.sendMessage(Messages.getString("PvPInfo_Line2") + target.getUUID());
@@ -53,7 +53,7 @@ public class PvPInfo implements CommandExecutor {
 		sender.sendMessage(Messages.getString("PvPInfo_Line6") + target.getPlayer().getWorld().getName());
 		sender.sendMessage(Messages.getString("PvPInfo_Line7") + target.hasOverride());
 		sender.sendMessage(ChatUtils.colorize("&2- Enemies: &7"
-				+ (target.getEnemies().isEmpty() ? "&cNone" : target.getEnemies().stream().map(PvPlayer::getName).collect(Collectors.toList()))));
+				+ (target.getEnemies().isEmpty() ? "&cNone" : target.getEnemies().stream().map(CombatPlayer::getName).collect(Collectors.toList()))));
 		sender.sendMessage(ChatUtils.colorize("&2- Exempt Perms: &7" + getExemptions(target.getPlayer())));
 
 	}

@@ -3,7 +3,7 @@ package me.chancesd.pvpmanager.tasks;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -11,14 +11,14 @@ import me.chancesd.sdutils.utils.Log;
 
 public class NewbieTask implements Runnable {
 
-	private final PvPlayer player;
+	private final CombatPlayer player;
 	private long finishTime;
 	private ScheduledFuture<?> task;
 	private boolean expired;
 	private boolean paused;
 	private long pausedAt;
 
-	public NewbieTask(final PvPlayer player, final long time) {
+	public NewbieTask(final CombatPlayer player, final long time) {
 		this.player = player;
 		final long timeLeft = time == 0 ? Settings.getNewbieProtectionTime() * 60000 : time;
 		this.finishTime = System.currentTimeMillis() + timeLeft;
