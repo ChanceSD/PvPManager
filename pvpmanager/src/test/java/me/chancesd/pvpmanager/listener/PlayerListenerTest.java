@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Listeners;
+package me.chancesd.pvpmanager.listener;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -20,8 +20,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import me.NoChance.PvPManager.InstanceCreator;
-import me.NoChance.PvPManager.PluginTest;
+import me.chancesd.pvpmanager.InstanceCreator;
+import me.chancesd.pvpmanager.PluginTest;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.listener.PlayerListener;
 import me.chancesd.pvpmanager.manager.PlayerManager;

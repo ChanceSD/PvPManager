@@ -29,8 +29,8 @@ public class Newbie implements TabExecutor {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (args.length == 0 && sender instanceof Player) {
-			final CombatPlayer pvPlayer = ph.get((Player) sender);
+		if (args.length == 0 && sender instanceof final Player player) {
+			final CombatPlayer pvPlayer = ph.get(player);
 			if (!pvPlayer.isNewbie()) {
 				pvPlayer.message(Messages.getErrorNotNewbie());
 			} else {
@@ -40,13 +40,13 @@ public class Newbie implements TabExecutor {
 			return true;
 		} else if (args.length >= 1) {
 			final String subcommand = args[0];
-			if (Settings.isNewbieDisableAllowed() && subcommand.equalsIgnoreCase("disable") && sender instanceof Player) {
-				final CombatPlayer player = ph.get((Player) sender);
-				if (player.isNewbie()) {
-					player.setNewbie(false);
+			if (Settings.isNewbieDisableAllowed() && subcommand.equalsIgnoreCase("disable") && sender instanceof final Player player) {
+				final CombatPlayer combatPlayer = ph.get(player);
+				if (combatPlayer.isNewbie()) {
+					combatPlayer.setNewbie(false);
 					return true;
 				}
-				player.message(Messages.getErrorNotNewbie());
+				combatPlayer.message(Messages.getErrorNotNewbie());
 				return true;
 			} else if (Permissions.ADMIN.hasPerm(sender) && args.length == 2) {
 				if (subcommand.equalsIgnoreCase("checktime")) {

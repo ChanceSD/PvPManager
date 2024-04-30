@@ -16,7 +16,7 @@ public class ChatUtils {
 
 	private static final Pattern HEX_PATTERN = Pattern.compile("&(#[a-fA-F0-9]{6})");
 	private static final boolean USEPLACEHOLDERAPI = Hook.PLACEHOLDERAPI.isEnabled();
-	private static final boolean hexSupported = checkForBungeeAPI();
+	private static final boolean HEXSUPPORTED = checkForBungeeAPI();
 
 	private ChatUtils() {
 	}
@@ -30,7 +30,7 @@ public class ChatUtils {
 		return true;
 	}
 
-	public static String setPlaceholders(final Player player, final String message) {
+	public static String setPlaceholders(final Player player, @NotNull final String message) {
 		return USEPLACEHOLDERAPI ? PlaceholderAPI.setPlaceholders(player, message) : message;
 	}
 
@@ -39,9 +39,10 @@ public class ChatUtils {
 		return colorizeHex(ChatColor.translateAlternateColorCodes('&', message));
 	}
 
+	@SuppressWarnings("null")
 	@NotNull
 	private static String colorizeHex(@NotNull final String message) {
-		if (!hexSupported)
+		if (!HEXSUPPORTED)
 			return message;
 
 		final Matcher matcher = HEX_PATTERN.matcher(message);

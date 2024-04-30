@@ -42,7 +42,7 @@ public class MoveListener1_9 implements Listener {
 	public final void onPlayerMove(final PlayerMoveEvent event) {
 		final Location locTo = event.getTo();
 		final Location locFrom = event.getFrom();
-		if (locFrom.getBlockX() == locTo.getBlockX() && locFrom.getBlockZ() == locTo.getBlockZ() && locFrom.getBlockY() == locTo.getBlockY())
+		if (locTo == null || locFrom.getBlockX() == locTo.getBlockX() && locFrom.getBlockZ() == locTo.getBlockZ() && locFrom.getBlockY() == locTo.getBlockY())
 			return;
 
 		final Player player = event.getPlayer();
@@ -57,7 +57,7 @@ public class MoveListener1_9 implements Listener {
 			player.setVelocity(sanitizeVector(newVel));
 			if (!cache.asMap().containsKey(player.getUniqueId())) {
 				pvplayer.message(Messages.getPushbackWarning());
-				locFrom.getWorld().playEffect(player.getEyeLocation(), Effect.SMOKE, 3);
+				player.getWorld().playEffect(player.getEyeLocation(), Effect.SMOKE, 3);
 				cache.put(player.getUniqueId(), player);
 			}
 		}

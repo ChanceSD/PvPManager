@@ -3,7 +3,10 @@ package me.chancesd.pvpmanager.storage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.google.common.base.Preconditions;
 
 public class DatabaseFactory {
 	private final JavaPlugin plugin;
@@ -44,7 +47,9 @@ public class DatabaseFactory {
 		}
 		if (anyConversion) {
 			database.getPlugin().reloadConfig();
-			database.getPlugin().getConfig().set("Database Version", database.getPlugin().getConfig().getDefaults().getInt("Database Version"));
+			final Configuration defaults = database.getPlugin().getConfig().getDefaults();
+			Preconditions.checkNotNull(defaults, "Error doing plugin conversion, config defaults is null");
+			database.getPlugin().getConfig().set("Database Version", defaults.getInt("Database Version"));
 			database.getPlugin().saveConfig();
 		}
 	}

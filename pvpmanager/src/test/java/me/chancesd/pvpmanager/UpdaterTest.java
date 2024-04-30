@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager;
+package me.chancesd.pvpmanager;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.sdutils.updater.Updater;
 import me.chancesd.sdutils.updater.Updater.UpdateType;
 

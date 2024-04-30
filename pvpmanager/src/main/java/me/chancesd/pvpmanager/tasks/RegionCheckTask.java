@@ -27,6 +27,7 @@ public class RegionCheckTask extends BukkitRunnable implements Listener {
 		this.dependencyManager = dependencyManager;
 	}
 
+	@SuppressWarnings("null") // playerLocation can't be null
 	@Override
 	public void run() {
 		for (final CombatPlayer pvPlayer : playerHandler.getPlayersInCombat()) {

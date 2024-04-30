@@ -114,6 +114,9 @@ public class Messages {
 	private static String itemCooldown;
 	private static String prefix = "&6[&8PvPManager&6]";
 
+	private Messages() {
+	}
+
 	public static void setup(final PvPManager plugin) {
 		Messages.plugin = plugin;
 		currentVersion = plugin.getDescription().getVersion();
@@ -130,17 +133,7 @@ public class Messages {
 	private static void load() {
 		messagesFile = new File(plugin.getDataFolder(), locale.fileName());
 		if (!messagesFile.exists()) {
-			int readBytes;
-			final byte[] buffer = new byte[4096];
-			try (InputStream input = plugin.getResource("locale/" + locale.fileName());
-					OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.fileName()))) {
-				while ((readBytes = input.read(buffer)) != -1) {
-					resStreamOut.write(buffer, 0, readBytes);
-				}
-			} catch (final IOException e) {
-				Log.severe("Error reading default locale from jar", e);
-			}
-			Log.infoColor(ChatColor.DARK_GREEN + "New messages file created successfully!");
+			createMessagesFile();
 		}
 		final File[] listFiles = plugin.getDataFolder().listFiles();
 		if (listFiles != null) {
@@ -161,6 +154,24 @@ public class Messages {
 		} catch (final IOException e) {
 			Log.severe("Error reading locale file", e);
 		}
+	}
+
+	private static void createMessagesFile() {
+		int readBytes;
+		final byte[] buffer = new byte[4096];
+		try (InputStream input = plugin.getResource("locale/" + locale.fileName());
+				OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.fileName()))) {
+			if (input == null) {
+				Log.severe("Couldn't find the default locale file " + locale.fileName());
+				return;
+			}
+			while ((readBytes = input.read(buffer)) != -1) {
+				resStreamOut.write(buffer, 0, readBytes);
+			}
+		} catch (final IOException e) {
+			Log.severe("Error reading default locale from jar", e);
+		}
+		Log.infoColor(ChatColor.DARK_GREEN + "New messages file created successfully!");
 	}
 
 	@NotNull
@@ -267,7 +278,7 @@ public class Messages {
 				}
 			}
 		} catch (final IOException e) {
-			e.printStackTrace();
+			Log.severe(e.getMessage(), e);
 		}
 	}
 
@@ -275,7 +286,7 @@ public class Messages {
 		try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), StandardCharsets.UTF_8))) {
 			pw.println(a);
 		} catch (final IOException e) {
-			e.printStackTrace();
+			Log.severe(e.getMessage(), e);
 		}
 	}
 

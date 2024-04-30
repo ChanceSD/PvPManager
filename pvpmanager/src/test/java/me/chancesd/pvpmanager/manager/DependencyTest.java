@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Managers;
+package me.chancesd.pvpmanager.manager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -16,8 +16,8 @@ import org.mockito.AdditionalMatchers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
-import me.NoChance.PvPManager.InstanceCreator;
-import me.NoChance.PvPManager.PluginTest;
+import me.chancesd.pvpmanager.InstanceCreator;
+import me.chancesd.pvpmanager.PluginTest;
 import me.chancesd.pvpmanager.manager.DependencyManager;
 import me.chancesd.sdutils.utils.Utils;
 

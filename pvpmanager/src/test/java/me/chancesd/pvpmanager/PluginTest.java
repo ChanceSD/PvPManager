@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager;
+package me.chancesd.pvpmanager;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,14 +24,11 @@ import org.jetbrains.annotations.NotNull;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
-import me.chancesd.pvpmanager.PvPManager;
-
 public class PluginTest {
 
 	private PvPManager plugin;
 	private Server server;
 	private String filePath;
-	private static PluginTest instance;
 	private Player attacker;
 	private Player defender;
 
@@ -108,10 +105,6 @@ public class PluginTest {
 			}
 		}
 		return file.delete();
-	}
-
-	public static PluginTest getInstance() {
-		return instance;
 	}
 
 	public Server getServer() {

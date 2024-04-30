@@ -1,4 +1,4 @@
-package me.chancesd.pvpmanager.listener;
+package me.chancesd.pvpmanager.integration.hook.worldguard;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

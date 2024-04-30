@@ -3,9 +3,6 @@ package me.chancesd.pvpmanager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import me.chancesd.pvpmanager.command.Announce;
 import me.chancesd.pvpmanager.command.Newbie;
 import me.chancesd.pvpmanager.command.PM;
@@ -32,10 +29,11 @@ import me.chancesd.pvpmanager.manager.WorldManager;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.library.PluginLibraries;
+import me.chancesd.sdutils.plugin.SDPlugin;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
-public class PvPManager extends JavaPlugin {
+public class PvPManager extends SDPlugin {
 
 	private ConfigManager configM;
 	private PlayerManager playerHandler;
@@ -66,13 +64,12 @@ public class PvPManager extends JavaPlugin {
 		updateManager = new UpdateManager(this);
 		storageManager = new StorageManager(this);
 		dependencyManager = new DependencyManager();
-		displayManager = new DisplayManager(this);
+		displayManager = new DisplayManager();
 		worldManager = new WorldManager(this);
 		playerHandler = new PlayerManager(this);
 		startListeners();
 		registerCommands();
 		startMetrics();
-		checkJavaVersion();
 		Log.infoColor(ChatColor.GREEN + getDescription().getFullName() + " enabled " + ChatColor.GRAY + "("
 				+ (System.currentTimeMillis() - start) + " ms)");
 	}
@@ -119,37 +116,6 @@ public class PvPManager extends JavaPlugin {
 
 	private void startMetrics() {
 		new CustomMetrics(this);
-	}
-
-	private void checkJavaVersion() {
-		int javaVersion;
-		String version = System.getProperty("java.version");
-		if (version.startsWith("1.")) {
-			version = version.substring(2, 3);
-		} else {
-			final int dot = version.indexOf(".");
-			if (dot != -1) {
-				version = version.substring(0, dot);
-			} else {
-				final int separator = version.indexOf("-");
-				if (separator != -1) {
-					version = version.substring(0, separator);
-				}
-			}
-		}
-		try {
-			javaVersion = Integer.parseInt(version);
-		} catch (final NumberFormatException e) {
-			return;
-		}
-		if (javaVersion < 16) {
-			Log.severe("You appear to be using Java 15 or lower. For now the plugin still works but please update to Java 16+");
-			Log.severe("In the future PvPManager will stop supporting Java versions this old");
-		}
-	}
-
-	private void registerListener(final Listener listener) {
-		this.getServer().getPluginManager().registerEvents(listener, this);
 	}
 
 	private void registerCommand(final PluginCommand command, final CommandExecutor executor) {

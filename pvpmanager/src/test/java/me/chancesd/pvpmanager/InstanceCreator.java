@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager;
+package me.chancesd.pvpmanager;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -6,16 +6,16 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
-import me.NoChance.PvPManager.Listeners.EntityListenerTest;
-import me.NoChance.PvPManager.Listeners.PlayerListenerTest;
-import me.NoChance.PvPManager.Managers.DependencyTest;
+import me.chancesd.pvpmanager.listener.EntityListenerTest;
+import me.chancesd.pvpmanager.listener.PlayerListenerTest;
+import me.chancesd.pvpmanager.manager.DependencyTest;
 
 @Suite
 @SelectClasses({ UpdaterTest.class, DependencyTest.class, EntityListenerTest.class, PlayerListenerTest.class })
 public final class InstanceCreator implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
 	private static boolean started = false;
-	public static PluginTest pt;
+	private static PluginTest pt;
 
 	private InstanceCreator() {
 	}

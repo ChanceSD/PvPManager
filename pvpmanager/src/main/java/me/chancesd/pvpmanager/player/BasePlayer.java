@@ -15,14 +15,16 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public abstract class BasePlayer {
 
+	@NotNull
 	private final Player player;
+	@NotNull
 	private final UUID uuid;
 	private CombatWorld combatWorld;
 	private long actionBarCooldown;
 	private String lastActionBarMessage;
 	private boolean wasAllowedFlight;
 
-	protected BasePlayer(final Player player) {
+	protected BasePlayer(@NotNull final Player player) {
 		this.player = player;
 		this.uuid = player.getUniqueId();
 	}
@@ -37,6 +39,7 @@ public abstract class BasePlayer {
 		return getPlayer().getName();
 	}
 
+	@NotNull
 	public final UUID getUUID() {
 		return uuid;
 	}
@@ -73,12 +76,15 @@ public abstract class BasePlayer {
 	 * @param message  The message to be sent
 	 * @param duration The duration in milliseconds
 	 */
+	@SuppressWarnings({ "null", "deprecation" })
 	public void sendActionBar(final String message, final long duration) {
 		if (System.currentTimeMillis() < actionBarCooldown || message.isEmpty()
 				|| System.currentTimeMillis() - actionBarCooldown < 1000 && message.equals(lastActionBarMessage))
 			return;
 		if (MCVersion.isAtLeast(MCVersion.V1_10)) { // Premium PvPManager supports lower versions with NMS
-			if (MCVersion.isAtLeast(MCVersion.V1_16_5)) {
+			if (MCVersion.isAtLeast(MCVersion.V1_20_4)) {
+				getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(message));
+			} else if (MCVersion.isAtLeast(MCVersion.V1_16_5)) {
 				getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
 			} else {
 				getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));

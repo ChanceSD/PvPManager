@@ -1,4 +1,4 @@
-package me.chancesd.pvpmanager.integration.hook;
+package me.chancesd.pvpmanager.integration.hook.worldguard;
 
 import java.util.Set;
 
@@ -16,7 +16,6 @@ import me.chancesd.pvpmanager.integration.BaseDependency;
 import me.chancesd.pvpmanager.integration.ForceToggleDependency;
 import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
-import me.chancesd.pvpmanager.listener.WGListener;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionType;

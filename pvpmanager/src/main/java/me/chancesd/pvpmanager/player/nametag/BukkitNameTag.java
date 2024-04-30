@@ -9,6 +9,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Settings;
@@ -22,6 +23,7 @@ public class BukkitNameTag extends NameTag {
 	private Team pvpOffTeam;
 	private Team previousTeam;
 	private String previousTeamName;
+	@NotNull
 	private final String combatTeamID;
 	private final Scoreboard scoreboard;
 	private static final String PVPOFF = "PvPOff";
@@ -36,6 +38,7 @@ public class BukkitNameTag extends NameTag {
 		setup();
 	}
 
+	@SuppressWarnings({ "deprecation", "null" })
 	private void setup() {
 		if (!combatPrefix.isEmpty() || !combatSuffix.isEmpty()) {
 			inCombat = registerTeam(combatTeamID);
