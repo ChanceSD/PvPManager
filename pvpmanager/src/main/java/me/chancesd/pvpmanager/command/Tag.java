@@ -6,8 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
@@ -15,16 +15,16 @@ import me.chancesd.pvpmanager.utils.CombatUtils;
 
 public class Tag implements CommandExecutor {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 
-	public Tag(final PlayerHandler ph) {
+	public Tag(final PlayerManager ph) {
 		this.ph = ph;
 	}
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 0 && sender instanceof Player) {
-			final PvPlayer pvPlayer = ph.get((Player) sender);
+			final CombatPlayer pvPlayer = ph.get((Player) sender);
 			if (!pvPlayer.isInCombat()) {
 				pvPlayer.message(Messages.getTagNotInCombat());
 			} else {
@@ -55,7 +55,7 @@ public class Tag implements CommandExecutor {
 	}
 
 	private void tagPlayer(final CommandSender sender, final String name, final long time) {
-		final PvPlayer target = ph.get(Bukkit.getPlayer(name));
+		final CombatPlayer target = ph.get(Bukkit.getPlayer(name));
 		if (target.isInCombat()) {
 			sender.sendMessage(Messages.PREFIXMSG + " §cThat player is already in combat");
 			return;

@@ -10,8 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.NoChance.PvPManager.PvPManager;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.converter.DisplayNameConverter;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;

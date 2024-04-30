@@ -1,18 +1,18 @@
 package me.chancesd.pvpmanager.player.nametag;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 
 public abstract class NameTag {
 
-	protected final PvPlayer pvPlayer;
+	protected final CombatPlayer pvPlayer;
 	protected final String combatPrefix;
 	protected final String combatSuffix;
 	protected final String pvpOnPrefix;
 	protected final String pvpOffPrefix;
 
-	protected NameTag(final PvPlayer p) {
+	protected NameTag(final CombatPlayer p) {
 		this.pvPlayer = p;
 		this.combatPrefix = ChatUtils.colorize(Settings.getNameTagPrefix());
 		this.combatSuffix = ChatUtils.colorize(Settings.getNameTagSuffix());
