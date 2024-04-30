@@ -14,11 +14,18 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+<<<<<<<< HEAD:pvpmanager-worldguard-legacy/src/main/java/me/chancesd/pvpmanager/integration/hook/WorldGuardLegacyHook.java
+import me.NoChance.PvPManager.Dependencies.BaseDependency;
+import me.NoChance.PvPManager.Dependencies.DependencyException;
+import me.NoChance.PvPManager.Dependencies.Hook;
+import me.chancesd.pvpmanager.listener.WGListenerLegacy;
+========
 import me.chancesd.pvpmanager.integration.BaseDependency;
 import me.chancesd.pvpmanager.integration.DependencyException;
 import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
 import me.chancesd.pvpmanager.manager.PlayerManager;
+>>>>>>>> eb0b52fe (Handle most IDE warnings):pvpmanager/src/main/java/me/chancesd/pvpmanager/integration/hook/worldguard/WorldGuardLegacyHook.java
 
 public class WorldGuardLegacyHook extends BaseDependency implements WorldGuardDependency {
 

@@ -39,10 +39,11 @@ public class PlayerManager {
 	private final HashMap<UUID, CombatPlayer> players = new HashMap<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
+	@NotNull
 	private final PvPManager plugin;
 	private final TagTask tagTask;
 
-	public PlayerManager(final PvPManager plugin) {
+	public PlayerManager(@NotNull final PvPManager plugin) {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
@@ -57,7 +58,7 @@ public class PlayerManager {
 		addOnlinePlayers();
 	}
 
-	public final ProtectionResult checkProtection(final Player damager, final Player defender) {
+	public final ProtectionResult checkProtection(@NotNull final Player damager, @NotNull final Player defender) {
 		final CombatPlayer attacker = get(damager);
 		final CombatPlayer attacked = get(defender);
 
@@ -96,7 +97,7 @@ public class PlayerManager {
 	 *
 	 * @return true if the attack didn't get blocked or if it got override, otherwise false
 	 */
-	public final boolean canAttack(final Player attacker, final Player defender) {
+	public final boolean canAttack(@NotNull final Player attacker, @NotNull final Player defender) {
 		return checkProtection(attacker, defender).isVulnerable();
 	}
 

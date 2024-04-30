@@ -11,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,7 +19,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.weather.LightningStrikeEvent.Cause;
 import org.bukkit.potion.PotionEffectType;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -68,8 +68,7 @@ public class DebugEntityListener implements Listener {
 				event.setCancelled(true);
 				Log.debug("Blocking damage to newbie because newbie god mode is enabled");
 				return;
-			} else if (event.getDamager() instanceof LightningStrike) {
-				final LightningStrike lightning = (LightningStrike) event.getDamager();
+			} else if (event.getDamager() instanceof final LightningStrike lightning) {
 				if (!lightningCache.asMap().containsKey(lightning)) {
 					Log.debug("Ignoring damage because it wasn't considered PvP");
 					return;
@@ -120,6 +119,7 @@ public class DebugEntityListener implements Listener {
 		Log.debug("Finished processing damage.");
 	}
 
+	@SuppressWarnings("null") // defender.getLocation() never null
 	public void onDamageActions(final Player attacker, final Player defender) {
 		final CombatPlayer pvpAttacker = ph.get(attacker);
 		final CombatPlayer pvpDefender = ph.get(defender);
@@ -152,8 +152,8 @@ public class DebugEntityListener implements Listener {
 			Log.debug("Didn't disable fly/gamemode/etc because attacker has permission " + Permissions.EXEMPT_DISABLE_ACTIONS);
 		}
 		if (Settings.isInCombatEnabled()) {
-			if (Settings.borderHoppingVulnerable() && wg != null && !Settings.borderHoppingResetCombatTag()) {
-				if (wg.hasDenyPvPFlag(attacker) && wg.hasDenyPvPFlag(defender))
+			if (Settings.borderHoppingVulnerable() && wg != null && !Settings.borderHoppingResetCombatTag() && wg.hasDenyPvPFlag(attacker)
+					&& wg.hasDenyPvPFlag(defender)) {
 					return;
 			}
 			Log.debug("Tagging players " + pvpAttacker.getName() + " and " + pvpDefender.getName());
@@ -175,10 +175,12 @@ public class DebugEntityListener implements Listener {
 	}
 
 	private Player getAttacker(final Entity damager) {
-		if (damager instanceof Player)
-			return (Player) damager;
-		if (damager instanceof Projectile)
-			return (Player) ((Projectile) damager).getShooter();
+		if (damager instanceof final Player player)
+			return player;
+		if (damager instanceof final Projectile projectile)
+			return (Player) projectile.getShooter();
+		if (damager instanceof final TNTPrimed tnt)
+			return (Player) tnt.getSource();
 		return (Player) ((AreaEffectCloud) damager).getSource();
 	}
 

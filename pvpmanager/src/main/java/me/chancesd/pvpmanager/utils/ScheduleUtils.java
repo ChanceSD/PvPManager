@@ -126,7 +126,9 @@ public class ScheduleUtils {
 	}
 
 	public static ExecutorService newBoundedCachedThreadPool(final int corePoolSize, final int maxPoolSize, final ThreadFactory threadFactory) {
-		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<Runnable>() {
+		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<>() {
+			private static final long serialVersionUID = 4672233456178006928L;
+
 			@Override
 			public boolean offer(final Runnable e) {
 				return tryTransfer(e);
