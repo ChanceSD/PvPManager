@@ -1,8 +1,8 @@
 package me.chancesd.pvpmanager.player.nametag;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.ChatUtils;
+import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.utils.ChatUtils;
 
 public abstract class NameTag {
 

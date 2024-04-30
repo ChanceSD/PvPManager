@@ -2,9 +2,9 @@ package me.NoChance.PvPManager.Player;
 
 import org.bukkit.entity.Player;
 
-import me.NoChance.PvPManager.Settings.Messages;
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;

@@ -11,7 +11,7 @@ import org.bukkit.Bukkit;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.Dependency;
-import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.sdutils.metrics.Metrics;
 
 public class CustomMetrics {

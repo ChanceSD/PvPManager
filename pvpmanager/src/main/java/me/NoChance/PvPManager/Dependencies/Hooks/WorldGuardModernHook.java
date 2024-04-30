@@ -17,11 +17,11 @@ import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
-import me.NoChance.PvPManager.Listeners.WGListener;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.ProtectionType;
-import me.NoChance.PvPManager.Settings.Messages;
-import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.pvpmanager.listener.WGListener;
+import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Settings;
 
 public class WorldGuardModernHook extends BaseDependency implements WorldGuardDependency, ForceToggleDependency {
 

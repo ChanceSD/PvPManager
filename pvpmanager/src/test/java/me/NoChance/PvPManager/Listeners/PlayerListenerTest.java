@@ -24,9 +24,10 @@ import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
 import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Settings.Messages;
-import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.pvpmanager.listener.PlayerListener;
+import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Settings;
 
 @ExtendWith(InstanceCreator.class)
 public class PlayerListenerTest {

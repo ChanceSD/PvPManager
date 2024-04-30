@@ -5,7 +5,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
 
-import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.pvpmanager.setting.Settings;
 
 public enum Hook {
 	WORLDGUARD("WorldGuard"),
