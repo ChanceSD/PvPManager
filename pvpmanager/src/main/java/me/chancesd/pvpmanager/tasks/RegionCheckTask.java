@@ -9,11 +9,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Events.PlayerTagEvent;
-import me.NoChance.PvPManager.Events.PlayerUntagEvent;
-import me.NoChance.PvPManager.Managers.DependencyManager;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Settings.Messages;
+import me.chancesd.pvpmanager.event.PlayerTagEvent;
+import me.chancesd.pvpmanager.event.PlayerUntagEvent;
+import me.chancesd.pvpmanager.manager.DependencyManager;
+import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.setting.Messages;
 
 public class RegionCheckTask extends BukkitRunnable implements Listener {
 

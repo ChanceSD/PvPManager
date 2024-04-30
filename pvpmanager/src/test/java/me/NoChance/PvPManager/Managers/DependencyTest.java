@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 
 import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
+import me.chancesd.pvpmanager.manager.DependencyManager;
 import me.chancesd.sdutils.utils.Utils;
 
 @ExtendWith(InstanceCreator.class)
