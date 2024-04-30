@@ -17,19 +17,19 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import me.NoChance.PvPManager.Events.PlayerTagEvent;
-import me.NoChance.PvPManager.Events.PlayerTogglePvPEvent;
-import me.NoChance.PvPManager.Events.PlayerUntagEvent;
 import me.NoChance.PvPManager.Libraries.rollbar.PMRUncaughExceptionHandler;
 import me.NoChance.PvPManager.Player.EcoPlayer;
-import me.NoChance.PvPManager.Settings.Messages;
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Tasks.NewbieTask;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.event.PlayerTagEvent;
+import me.chancesd.pvpmanager.event.PlayerTogglePvPEvent;
+import me.chancesd.pvpmanager.event.PlayerUntagEvent;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
+import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
+import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
+import me.chancesd.pvpmanager.tasks.NewbieTask;
+import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.sdutils.utils.Log;
