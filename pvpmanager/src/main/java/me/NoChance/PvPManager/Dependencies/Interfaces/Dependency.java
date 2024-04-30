@@ -2,8 +2,8 @@ package me.NoChance.PvPManager.Dependencies.Interfaces;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.NoChance.PvPManager.Settings.Settings;
 import me.NoChance.PvPManager.Dependencies.Hook;
+import me.chancesd.pvpmanager.setting.Settings;
 
 public interface Dependency {
 

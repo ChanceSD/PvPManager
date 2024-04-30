@@ -11,7 +11,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Settings.Settings;
+import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 

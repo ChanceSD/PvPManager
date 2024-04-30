@@ -28,9 +28,11 @@ import me.NoChance.PvPManager.PvPManager;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.ProtectionType;
-import me.NoChance.PvPManager.Settings.Messages;
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.listener.EntityListener;
+import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.utils.CombatUtils;
 
 @ExtendWith(InstanceCreator.class)
 public class EntityListenerTest {

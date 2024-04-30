@@ -9,7 +9,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import me.NoChance.PvPManager.Dependencies.GroupDependency;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerHandler;
 
 public interface WorldGuardDependency extends GroupDependency, RegionDependency {
 
