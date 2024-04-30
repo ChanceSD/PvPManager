@@ -6,15 +6,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-import me.NoChance.PvPManager.PvPlayer;
 import me.chancesd.pvpmanager.manager.DisplayManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.sdutils.utils.Log;
 
 public class TagTask extends TimerTask {
 
 	private final Timer timer;
-	private final Set<PvPlayer> tagged = ConcurrentHashMap.newKeySet();
+	private final Set<CombatPlayer> tagged = ConcurrentHashMap.newKeySet();
 	private final DisplayManager display;
 
 	public TagTask(final DisplayManager display) {
@@ -26,9 +26,9 @@ public class TagTask extends TimerTask {
 	@Override
 	public final void run() {
 		try {
-			final Iterator<PvPlayer> iterator = tagged.iterator();
+			final Iterator<CombatPlayer> iterator = tagged.iterator();
 			while (iterator.hasNext()) {
-				final PvPlayer p = iterator.next();
+				final CombatPlayer p = iterator.next();
 				final long currentTime = System.currentTimeMillis();
 				if (currentTime >= p.getUntagTime()) {
 					p.unTag();
@@ -53,7 +53,7 @@ public class TagTask extends TimerTask {
 
 	@Override
 	public final boolean cancel() {
-		for (final PvPlayer pvPlayer : tagged)
+		for (final CombatPlayer pvPlayer : tagged)
 			if (pvPlayer.isInCombat()) {
 				display.discardPlayer(pvPlayer);
 				pvPlayer.unTag();
@@ -64,16 +64,16 @@ public class TagTask extends TimerTask {
 		return false;
 	}
 
-	public final void addTagged(final PvPlayer p) {
+	public final void addTagged(final CombatPlayer p) {
 		tagged.add(p);
 	}
 
-	public final void untag(final PvPlayer p) {
+	public final void untag(final CombatPlayer p) {
 		display.discardPlayer(p);
 		tagged.remove(p);
 	}
 
-	public Set<PvPlayer> getTaggedPlayers() {
+	public Set<CombatPlayer> getTaggedPlayers() {
 		return tagged;
 	}
 

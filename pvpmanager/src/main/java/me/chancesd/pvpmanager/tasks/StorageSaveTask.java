@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.storage.Storage;
 
 public class StorageSaveTask implements Runnable {
@@ -23,7 +23,7 @@ public class StorageSaveTask implements Runnable {
 	@Override
 	public void run() {
 		final long start = System.nanoTime();
-		final Map<UUID, PvPlayer> players = new HashMap<>(plugin.getPlayerHandler().getPlayers());
+		final Map<UUID, CombatPlayer> players = new HashMap<>(plugin.getPlayerHandler().getPlayers());
 
 		storage.saveUserDataBatch(players.values().stream().filter(p -> p.isLoaded()).collect(Collectors.toList()));
 		Log.debug("Finished saving data for " + players.size() + " players - " + (System.nanoTime() - start) / 1_000_000D + " ms");

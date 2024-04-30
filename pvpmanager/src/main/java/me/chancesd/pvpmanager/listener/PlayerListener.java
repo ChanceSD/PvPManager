@@ -43,11 +43,11 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
-import me.NoChance.PvPManager.Player.ProtectionResult;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
@@ -57,12 +57,12 @@ import me.chancesd.pvpmanager.utils.ScheduleUtils;
 @SuppressWarnings("deprecation")
 public class PlayerListener implements Listener {
 
-	private final PlayerHandler playerHandler;
+	private final PlayerManager playerHandler;
 	private final WorldGuardDependency wg;
 	private Material mushroomSoup;
 	private final Cache<UUID, String> msgCooldown = CacheBuilder.newBuilder().weakValues().expireAfterWrite(800, TimeUnit.MILLISECONDS).build();
 
-	public PlayerListener(final PlayerHandler ph) {
+	public PlayerListener(final PlayerManager ph) {
 		this.playerHandler = ph;
 		this.wg = (WorldGuardDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 		if (MCVersion.isAtLeast(MCVersion.V1_13)) {
@@ -77,7 +77,7 @@ public class PlayerListener implements Listener {
 		if (!Settings.isBlockPlaceBlocks() && !Settings.isBlockPlaceBlocksNewbie())
 			return;
 
-		final PvPlayer combatPlayer = playerHandler.get(event.getPlayer());
+		final CombatPlayer combatPlayer = playerHandler.get(event.getPlayer());
 		if (Settings.isBlockPlaceBlocks() && combatPlayer.isInCombat() || Settings.isBlockPlaceBlocksNewbie() && combatPlayer.isNewbie()) {
 			event.setCancelled(true);
 			combatPlayer.sendActionBar(Messages.getBlockPlaceBlockedInCombat(), 1000);
@@ -106,7 +106,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerEat(final PlayerItemConsumeEvent event) {
 		final Material type = event.getItem().getType();
-		final PvPlayer player = playerHandler.get(event.getPlayer());
+		final CombatPlayer player = playerHandler.get(event.getPlayer());
 		if (Settings.isBlockEat() && player.isInCombat() && type.isEdible()) {
 			event.setCancelled(true);
 			playerHandler.get(event.getPlayer()).sendActionBar(Messages.getEatBlockedInCombat(), 1000);
@@ -179,7 +179,7 @@ public class PlayerListener implements Listener {
 				.anyMatch(reason -> event.getReason().toLowerCase().contains(reason.toLowerCase()))))
 			return;
 
-		final PvPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 		if (pvPlayer.isInCombat()) {
 			pvPlayer.unTag();
 		}
@@ -188,7 +188,7 @@ public class PlayerListener implements Listener {
 	@EventHandler // normal priority to avoid conflict with griefprevention
 	public final void onPlayerLogout(final PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
-		final PvPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 		Log.debug(player.getName() + " quit with message: " + event.getQuitMessage() + " - In combat: " + pvPlayer.isInCombat());
 		if (pvPlayer.isInCombat() && !pvPlayer.hasPerm(Permissions.EXEMPT_COMBAT_LOG)) {
 			if (Settings.isLogToFile()) {
@@ -210,12 +210,12 @@ public class PlayerListener implements Listener {
 		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
 			return;
 
-		final PvPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 		final Player killer = player.getKiller();
 
 		// Player died in combat, process that
 		if (killer != null && !killer.equals(player)) {
-			final PvPlayer pKiller = playerHandler.get(killer);
+			final CombatPlayer pKiller = playerHandler.get(killer);
 			handlePvPDeath(player, pvPlayer, killer, pKiller, event);
 		}
 
@@ -236,7 +236,7 @@ public class PlayerListener implements Listener {
 		playerHandler.handlePlayerDrops(event, player, killer);
 	}
 
-	private void handlePvPDeath(final Player player, final PvPlayer pvPlayer, final Player killer, final PvPlayer pKiller, final PlayerDeathEvent event) {
+	private void handlePvPDeath(final Player player, final CombatPlayer pvPlayer, final Player killer, final CombatPlayer pKiller, final PlayerDeathEvent event) {
 		if (Settings.isKillAbuseEnabled() && !pKiller.hasPerm(Permissions.EXEMPT_KILL_ABUSE)) {
 			pKiller.addVictim(player);
 		}
@@ -285,7 +285,7 @@ public class PlayerListener implements Listener {
 				i.setType(Material.BOWL);
 			}
 		}
-		final PvPlayer pvplayer = playerHandler.get(player);
+		final CombatPlayer pvplayer = playerHandler.get(player);
 		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && Settings.getItemCooldowns().containsKey(type)) {
 			if (pvplayer.hasItemCooldown(type)) {
 				final String msg = Messages.getItemCooldown(pvplayer.getItemCooldown(type));
@@ -307,7 +307,7 @@ public class PlayerListener implements Listener {
 			return;
 
 		final ItemStack i = player.getItemInHand();
-		final PvPlayer pvplayer = playerHandler.get(player);
+		final CombatPlayer pvplayer = playerHandler.get(player);
 		final Block clickedBlock = e.getClickedBlock();
 		if (clickedBlock == null)
 			return;
@@ -317,7 +317,7 @@ public class PlayerListener implements Listener {
 				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
 					continue;
 				}
-				final PvPlayer target = playerHandler.get(p);
+				final CombatPlayer target = playerHandler.get(p);
 				if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 9) {
 					pvplayer.message(Messages.pvpDisabledOther(target.getName()));
 					e.setCancelled(true);
@@ -373,7 +373,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerPickup(final PlayerPickupItemEvent e) {
 		if (Settings.isNewbieProtectionEnabled() && Settings.isBlockPickNewbies()) {
-			final PvPlayer player = playerHandler.get(e.getPlayer());
+			final CombatPlayer player = playerHandler.get(e.getPlayer());
 			if (player.isNewbie()) {
 				e.setCancelled(true);
 				player.sendActionBar(Messages.getNewbiePickupItemBlocked(), 1000);
@@ -384,7 +384,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
-		final PvPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 		ScheduleUtils.runAsync(() -> {
 			if (player.isOp() || pvPlayer.hasPerm(Permissions.ADMIN)) {
 				Messages.sendQueuedMsgs(pvPlayer);
@@ -398,7 +398,7 @@ public class PlayerListener implements Listener {
 		if (CombatUtils.isNPC(player)) // Citizens seems to teleport NPCs very often so let's avoid creating new PvPlayer instances
 			return;
 
-		final PvPlayer pvplayer = playerHandler.get(player);
+		final CombatPlayer pvplayer = playerHandler.get(player);
 		if (!Settings.isInCombatEnabled() || !pvplayer.isInCombat())
 			return;
 
@@ -423,7 +423,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public final void onCommand(final PlayerCommandPreprocessEvent event) {
 		if (Settings.isInCombatEnabled() && Settings.isStopCommands() || Settings.isNewbieProtectionEnabled()) {
-			final PvPlayer player = playerHandler.get(event.getPlayer());
+			final CombatPlayer player = playerHandler.get(event.getPlayer());
 			final String[] givenCommand = event.getMessage().substring(1).split(" ", 3);
 
 			if (player.isInCombat() && !player.hasPerm(Permissions.EXEMPT_BLOCK_COMMANDS)) {
@@ -461,7 +461,7 @@ public class PlayerListener implements Listener {
 	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getPlayer().getWorld().getName()))
 			return;
-		final PvPlayer combatPlayer = ph.get(event.getPlayer());
+		final CombatPlayer combatPlayer = ph.get(event.getPlayer());
 		if (Settings.isKillAbuseEnabled() && Settings.getRespawnProtection() != 0) {
 			combatPlayer.setRespawnTime(System.currentTimeMillis());
 		}
@@ -475,7 +475,7 @@ public class PlayerListener implements Listener {
 	public final void onInventoryOpen(final InventoryOpenEvent event) {
 		if (!Settings.isBlockInventoryOpen())
 			return;
-		final PvPlayer combatPlayer = playerHandler.get((Player) event.getPlayer());
+		final CombatPlayer combatPlayer = playerHandler.get((Player) event.getPlayer());
 		if (combatPlayer.isInCombat()) {
 			event.setCancelled(true);
 			combatPlayer.sendActionBar(Messages.getInventoryBlockedInCombat(), 1000);
@@ -485,7 +485,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onChangeWorld(final PlayerChangedWorldEvent event) {
 		final Player player = event.getPlayer();
-		final PvPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 		final CombatWorld combatWorld = playerHandler.getPlugin().getWorldManager().getWorld(player.getWorld());
 		pvPlayer.setCombatWorld(combatWorld);
 

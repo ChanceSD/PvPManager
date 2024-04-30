@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.NoChance.PvPManager.PvPManager;
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.storage.Storage;
 import me.chancesd.pvpmanager.storage.fields.WorldDataFields;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;

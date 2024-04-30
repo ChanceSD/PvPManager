@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.ChatUtils;
@@ -19,13 +20,11 @@ import org.bukkit.entity.Player;
 
 import com.google.common.collect.Lists;
 
-import me.NoChance.PvPManager.PvPlayer;
-
 public class PvP implements TabExecutor {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 
-	public PvP(final PlayerHandler playerHandler) {
+	public PvP(final PlayerManager playerHandler) {
 		this.ph = playerHandler;
 	}
 
@@ -38,14 +37,14 @@ public class PvP implements TabExecutor {
 
 		if (sender instanceof Player && args.length == 0) {
 			final Player player = (Player) sender;
-			final PvPlayer pvpPlayer = ph.get(player);
+			final CombatPlayer pvpPlayer = ph.get(player);
 			togglePvP(pvpPlayer, !pvpPlayer.hasPvPEnabled());
 			return true;
 		}
 
 		if (args.length == 1) {
 			if (sender instanceof Player && (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on"))) {
-				final PvPlayer pvpPlayer = ph.get((Player) sender);
+				final CombatPlayer pvpPlayer = ph.get((Player) sender);
 				final boolean state = args[0].equalsIgnoreCase("on");
 				togglePvP(pvpPlayer, state);
 				return true;
@@ -73,7 +72,7 @@ public class PvP implements TabExecutor {
 		return true;
 	}
 
-	private void togglePvP(final PvPlayer player, final boolean state) {
+	private void togglePvP(final CombatPlayer player, final boolean state) {
 		if (!player.hasToggleCooldownPassed())
 			return;
 
@@ -97,7 +96,7 @@ public class PvP implements TabExecutor {
 	private void togglePvPAdmin(final CommandSender sender, final String playerName, final boolean state, final boolean toggle) {
 		if (!CombatUtils.isOnlineWithFeedback(sender, playerName))
 			return;
-		final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(playerName));
+		final CombatPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(playerName));
 		specifiedPlayer.setPvP(toggle ? !specifiedPlayer.hasPvPEnabled() : state);
 		final String stateMessage = specifiedPlayer.hasPvPEnabled() ? Messages.getEnabled() : Messages.getDisabled();
 		sender.sendMessage(Messages.getPvPToggleAdminChanged().replace("%p", playerName).replace("%state", stateMessage)); // TODO add replace variables

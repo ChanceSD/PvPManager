@@ -6,25 +6,25 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
 public class PvPStatus implements CommandExecutor {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 
-	public PvPStatus(final PlayerHandler ph) {
+	public PvPStatus(final PlayerManager ph) {
 		this.ph = ph;
 	}
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-		PvPlayer target;
+		CombatPlayer target;
 		if (args.length == 0 && sender instanceof Player) {
 			final Player player = (Player) sender;
-			final PvPlayer pvpPlayer = ph.get(player);
+			final CombatPlayer pvpPlayer = ph.get(player);
 			if (!pvpPlayer.hasPvPEnabled()) {
 				pvpPlayer.message(Messages.getSelfStatusDisabled());
 				return true;

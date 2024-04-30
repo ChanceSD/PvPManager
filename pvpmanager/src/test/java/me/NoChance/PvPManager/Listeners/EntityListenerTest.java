@@ -24,12 +24,11 @@ import org.mockito.Mockito;
 
 import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Player.ProtectionType;
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.listener.EntityListener;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -41,7 +40,7 @@ public class EntityListenerTest {
 	private static EntityListener damageListener;
 	private EntityDamageByEntityEvent mockEvent;
 	private EntityDamageByEntityEvent projMockEvent;
-	private static PlayerHandler ph;
+	private static PlayerManager ph;
 	private static Player attacker;
 	private static Player defender;
 
@@ -212,8 +211,8 @@ public class EntityListenerTest {
 
 	@Test
 	final void failCancel() {
-		final PvPlayer combatDefender = ph.get(defender);
-		final PvPlayer combatAttacker = ph.get(attacker);
+		final CombatPlayer combatDefender = ph.get(defender);
+		final CombatPlayer combatAttacker = ph.get(attacker);
 		combatDefender.setPvP(true);
 		combatAttacker.setPvP(true);
 

@@ -10,7 +10,7 @@ import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
@@ -29,7 +29,7 @@ public class BukkitNameTag extends NameTag {
 	private static final String HEALTHOBJ = "PvP_Health";
 	private static Objective health;
 
-	public BukkitNameTag(final PvPlayer p) {
+	public BukkitNameTag(final CombatPlayer p) {
 		super(p);
 		this.combatTeamID = "PVP-" + processPlayerID(pvPlayer.getUUID());
 		this.scoreboard = pvPlayer.getPlayer().getScoreboard();

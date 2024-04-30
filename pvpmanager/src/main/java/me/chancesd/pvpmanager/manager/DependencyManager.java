@@ -13,30 +13,30 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.Dependencies.AFKDependency;
-import me.NoChance.PvPManager.Dependencies.BaseDependency;
-import me.NoChance.PvPManager.Dependencies.DependencyException;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.Hooks.*;
-import me.NoChance.PvPManager.Dependencies.GroupDependency;
-import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
-import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.GriefPreventionHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.TownyHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.VaultHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
-import me.NoChance.PvPManager.Dependencies.Interfaces.Dependency;
-import me.NoChance.PvPManager.Dependencies.Interfaces.DisguiseDependency;
-import me.NoChance.PvPManager.Dependencies.Interfaces.GodDependency;
-import me.NoChance.PvPManager.Dependencies.Interfaces.RegionDependency;
-import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
-import me.NoChance.PvPManager.Player.ProtectionType;
+import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.integration.AFKDependency;
+import me.chancesd.pvpmanager.integration.BaseDependency;
+import me.chancesd.pvpmanager.integration.DependencyException;
+import me.chancesd.pvpmanager.integration.ForceToggleDependency;
+import me.chancesd.pvpmanager.integration.GroupDependency;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.hook.EssentialsHook;
+import me.chancesd.pvpmanager.integration.hook.GriefPreventionHook;
+import me.chancesd.pvpmanager.integration.hook.LibsDisguisesHook;
+import me.chancesd.pvpmanager.integration.hook.PlaceHolderAPIHook;
+import me.chancesd.pvpmanager.integration.hook.SimpleClansHook;
+import me.chancesd.pvpmanager.integration.hook.TownyHook;
+import me.chancesd.pvpmanager.integration.hook.VaultHook;
+import me.chancesd.pvpmanager.integration.hook.WorldGuardLegacyHook;
+import me.chancesd.pvpmanager.integration.hook.WorldGuardModernHook;
+import me.chancesd.pvpmanager.integration.type.Dependency;
+import me.chancesd.pvpmanager.integration.type.DisguiseDependency;
+import me.chancesd.pvpmanager.integration.type.GodDependency;
+import me.chancesd.pvpmanager.integration.type.RegionDependency;
+import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
 import me.chancesd.pvpmanager.listener.MoveListener;
 import me.chancesd.pvpmanager.listener.MoveListener1_9;
+import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -74,7 +74,7 @@ public class DependencyManager {
 			if (hooks.length == 0)
 				return;
 			final List<String> softDepend = PvPManager.getInstance().getDescription().getSoftDepend();
-			if (Arrays.stream(hooks).map(hook -> hook.toString()).anyMatch(h -> softDepend.contains(h))) {
+			if (Arrays.stream(hooks).anyMatch(h -> softDepend.contains(h.toString()))) {
 				Log.severe("Found plugins that PvPManager declared as soft dependencies but were still loaded out of order.");
 				Log.severe("If you're not using any server flags that cause this, please report it to your server software developers.");
 			}

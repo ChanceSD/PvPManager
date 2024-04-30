@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 
 /**
  * This event is called whenever a player combat logged.
@@ -15,9 +15,9 @@ public final class PlayerCombatLogEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
 	private final Player player;
-	private final PvPlayer pvplayer;
+	private final CombatPlayer pvplayer;
 
-	public PlayerCombatLogEvent(final Player player, final PvPlayer pvplayer) {
+	public PlayerCombatLogEvent(final Player player, final CombatPlayer pvplayer) {
 		this.player = player;
 		this.pvplayer = pvplayer;
 	}
@@ -36,7 +36,7 @@ public final class PlayerCombatLogEvent extends Event {
 	 *
 	 * @return PvPlayer instance of the player
 	 */
-	public final PvPlayer getPvPlayer() {
+	public final CombatPlayer getPvPlayer() {
 		return pvplayer;
 	}
 

@@ -3,7 +3,8 @@ package me.chancesd.pvpmanager.manager;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
-import me.NoChance.PvPManager.PvPManager;
+
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;

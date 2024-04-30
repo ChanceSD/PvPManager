@@ -10,18 +10,18 @@ import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PlayerListener1_11 implements Listener {
 
-	private final PlayerHandler playerHandler;
+	private final PlayerManager playerHandler;
 
-	public PlayerListener1_11(final PlayerHandler ph) {
+	public PlayerListener1_11(final PlayerManager ph) {
 		this.playerHandler = ph;
 	}
 
@@ -33,7 +33,7 @@ public class PlayerListener1_11 implements Listener {
 			return;
 
 		final Player player = (Player) shooter;
-		final PvPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 
 		if (pvPlayer.isInCombat()) {
 			// TODO add feedback while on cooldown
@@ -47,7 +47,7 @@ public class PlayerListener1_11 implements Listener {
 			return;
 
 		final Player player = (Player) event.getEntity();
-		final PvPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 		if (pvPlayer.isInCombat()) {
 			event.setCancelled(true);
 			pvPlayer.message(Messages.getTotemBlockedInCombat());

@@ -24,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
+import me.chancesd.pvpmanager.PvPManager;
+
 public class PluginTest {
 
 	private PvPManager plugin;

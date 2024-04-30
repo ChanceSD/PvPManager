@@ -6,7 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.Nullable;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 
 /**
  * This event is fired right before a player is tagged.
@@ -20,18 +20,18 @@ public final class PlayerTagEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled;
 	private final Player player;
-	private final PvPlayer pvplayer;
+	private final CombatPlayer pvplayer;
 	private final boolean isAttacker;
 	private final Player enemy;
 
-	public PlayerTagEvent(final Player player, final PvPlayer pvplayer, final boolean isAttacker, final Player enemy) {
+	public PlayerTagEvent(final Player player, final CombatPlayer pvplayer, final boolean isAttacker, final Player enemy) {
 		this.player = player;
 		this.pvplayer = pvplayer;
 		this.isAttacker = isAttacker;
 		this.enemy = enemy;
 	}
 
-	public PlayerTagEvent(final Player player, final PvPlayer pvplayer, final boolean isAttacker) {
+	public PlayerTagEvent(final Player player, final CombatPlayer pvplayer, final boolean isAttacker) {
 		this(player, pvplayer, isAttacker, null);
 	}
 
@@ -49,7 +49,7 @@ public final class PlayerTagEvent extends Event implements Cancellable {
 	 *
 	 * @return PvPlayer instance of the player
 	 */
-	public final PvPlayer getPvPlayer() {
+	public final CombatPlayer getPvPlayer() {
 		return pvplayer;
 	}
 

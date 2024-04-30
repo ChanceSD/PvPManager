@@ -26,8 +26,8 @@ import org.bukkit.projectiles.ProjectileSource;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import me.NoChance.PvPManager.Player.ProtectionResult;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -35,10 +35,10 @@ import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class EntityListener1_9 implements Listener {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 	private final Cache<UUID, Set<AreaEffectCloud>> potionMessageCache = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
 
-	public EntityListener1_9(final PlayerHandler ph) {
+	public EntityListener1_9(final PlayerManager ph) {
 		this.ph = ph;
 	}
 

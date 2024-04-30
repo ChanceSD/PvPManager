@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import me.NoChance.PvPManager.PvPManager;
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.sdutils.utils.Log;
 
 public class ScheduleUtils {
