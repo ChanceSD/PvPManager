@@ -2,14 +2,14 @@ package me.chancesd.pvpmanager.command;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import com.google.common.base.Preconditions;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
@@ -28,11 +28,12 @@ public class PvPInfo implements CommandExecutor {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-		if (args.length == 0 && sender instanceof Player) {
-			sendInfo(sender, ph.get((Player) sender));
+		if (args.length == 0 && sender instanceof final Player player) {
+			sendInfo(sender, ph.get(player));
 			return true;
 		} else if (args.length == 1 && sender.hasPermission("pvpmanager.info.others")) {
 			final String name = args[0];
+			Preconditions.checkNotNull(name);
 			if (CombatUtils.isOnline(name)) {
 				sendInfo(sender, ph.get(Bukkit.getPlayer(name)));
 				return true;
@@ -53,7 +54,7 @@ public class PvPInfo implements CommandExecutor {
 		sender.sendMessage(Messages.getString("PvPInfo_Line6") + target.getPlayer().getWorld().getName());
 		sender.sendMessage(Messages.getString("PvPInfo_Line7") + target.hasOverride());
 		sender.sendMessage(ChatUtils.colorize("&2- Enemies: &7"
-				+ (target.getEnemies().isEmpty() ? "&cNone" : target.getEnemies().stream().map(CombatPlayer::getName).collect(Collectors.toList()))));
+				+ (target.getEnemies().isEmpty() ? "&cNone" : target.getEnemies().stream().map(CombatPlayer::getName).toList())));
 		sender.sendMessage(ChatUtils.colorize("&2- Exempt Perms: &7" + getExemptions(target.getPlayer())));
 
 	}

@@ -1,4 +1,4 @@
-package me.NoChance.PvPManager.Listeners;
+package me.chancesd.pvpmanager.listener;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -22,10 +22,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
-import me.NoChance.PvPManager.InstanceCreator;
-import me.NoChance.PvPManager.PluginTest;
+import me.chancesd.pvpmanager.InstanceCreator;
+import me.chancesd.pvpmanager.PluginTest;
 import me.chancesd.pvpmanager.PvPManager;
-import me.chancesd.pvpmanager.listener.EntityListener;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Messages;

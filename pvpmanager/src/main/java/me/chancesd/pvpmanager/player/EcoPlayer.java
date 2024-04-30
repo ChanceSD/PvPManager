@@ -1,6 +1,8 @@
 package me.chancesd.pvpmanager.player;
 
+
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
@@ -13,7 +15,7 @@ public abstract class EcoPlayer extends BasePlayer {
 
 	private final Economy economy;
 
-	protected EcoPlayer(final Player player, final Economy economy) {
+	protected EcoPlayer(final @NotNull Player player, final Economy economy) {
 		super(player);
 		this.economy = economy;
 	}
@@ -90,6 +92,16 @@ public abstract class EcoPlayer extends BasePlayer {
 
 	private double roundMoney(final double money) {
 		return Math.round(money * 100.0) / 100.0;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }

@@ -521,8 +521,9 @@ public class Database {
 	}
 
 	private void setLogLevel(final Level level) {
-		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-		ctx.getConfiguration().getLoggerConfig("com.zaxxer.hikari.HikariDataSource").setLevel(level);
+		try (LoggerContext ctx = (LoggerContext) LogManager.getContext(false)) {
+			ctx.getConfiguration().getLoggerConfig("com.zaxxer.hikari.HikariDataSource").setLevel(level);
+		}
 	}
 
 	private StringBuilder getValueParameteres(final Collection<Object> values) {

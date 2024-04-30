@@ -68,6 +68,7 @@ public final class CombatUtils {
 	public static void executeCommands(final List<String> commands, final Player player, final String playerName, final String victim) {
 		for (final String command : commands) {
 			try {
+				@SuppressWarnings("deprecation")
 				final String preparedCommand = command.replace("<player>", playerName).replace("<victim>", victim).replace("%p", playerName)
 						.replace("<item>", getItemDisplay(player.getItemInHand()));
 				if (preparedCommand.toLowerCase().startsWith("!console")) {
@@ -187,7 +188,7 @@ public final class CombatUtils {
 		return Bukkit.getPlayer(name) != null;
 	}
 
-	public static boolean isOnlineWithFeedback(final CommandSender sender, final String name) {
+	public static boolean isOnlineWithFeedback(final CommandSender sender, @NotNull final String name) {
 		if (!isOnline(name)) {
 			sender.sendMessage(Messages.getErrorPlayerNotFound(name));
 			return false;
@@ -199,7 +200,7 @@ public final class CombatUtils {
 		return Bukkit.getPlayer(uuid) != null;
 	}
 
-	public static boolean isReal(final UUID id) {
+	public static boolean isReal(@NotNull final UUID id) {
 		return Bukkit.getPlayer(id) != null;
 	}
 
@@ -224,6 +225,7 @@ public final class CombatUtils {
 		return potionEffectType != null && isHarmfulPotion(potionEffectType);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isHarmfulPotion(final PotionEffectType type) {
 		return Settings.getHarmfulPotions().contains(type.getName());
 	}

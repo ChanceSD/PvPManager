@@ -101,10 +101,10 @@ public class ConfigManager {
 	}
 
 	private void prepareFile(final File file, final String resource) {
-		try {
+		try (InputStream stream = plugin.getResource(resource)) {
 			file.getParentFile().mkdirs();
 			if (file.createNewFile() && resource != null && !resource.isEmpty()) {
-				this.copyResource(plugin.getResource(resource), file);
+				this.copyResource(stream, file);
 			}
 		} catch (final IOException e) {
 			Log.severe("Error creating config file", e);
