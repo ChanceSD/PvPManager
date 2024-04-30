@@ -104,12 +104,12 @@ Tagged In Combat:
   Untag Enemy: false
   EnderPearl:
     # Time in seconds before the player can throw another enderpearl
-    Cooldown: 15
+    Cooldown: 10
     # If enabled, will retag the player when they throw an enderpearl
     Renew Tag: true
   Block:
-    EnderPearls: true
-    ChorusFruits: true
+    EnderPearls: false
+    ChorusFruits: false
     Teleport: true
     Place Blocks: false
     Interact:
@@ -128,7 +128,7 @@ Tagged In Combat:
       Whitelist: true
       Command List:
         - 'tell'
-        - 'tag'
+        - 'combattag'
   Punishments:
     Punish On Kick:
       Enabled: true
