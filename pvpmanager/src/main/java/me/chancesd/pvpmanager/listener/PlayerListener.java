@@ -245,6 +245,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
+	@SuppressWarnings("null") // p.getLocation() is not null
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // cancel on low since some plugins check cancels on normal instead of monitor
 	public final void onPlayerInteract(final PlayerInteractEvent e) {
 		final Player player = e.getPlayer();

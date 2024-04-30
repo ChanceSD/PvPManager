@@ -13,6 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -48,12 +50,9 @@ public class PM implements TabExecutor {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-		if (sender instanceof Player) {
-			final Player player = (Player) sender;
-			if (args.length == 0 && player.hasPermission("pvpmanager.menu")) {
-				Settings.helpMenu(player);
-				return true;
-			}
+		if (args.length == 0 && sender.hasPermission("pvpmanager.menu")) {
+			Settings.helpMenu(sender);
+			return true;
 		}
 		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("reload")) {
@@ -79,7 +78,7 @@ public class PM implements TabExecutor {
 				locale(sender, args);
 				return true;
 			} else if (args[0].equalsIgnoreCase("worlds") && Permissions.ADMIN.hasPerm(sender)) {
-				worldsSubcommand.onCommand(sender, cmd, label, args);
+				worldsSubcommand.onCommand(sender, args);
 				return true;
 			}
 		}
@@ -162,13 +161,13 @@ public class PM implements TabExecutor {
 
 	private void debug(final CommandSender sender, final String[] args) {
 		CombatPlayer p = null;
-		if (args.length == 2 && sender instanceof Player) {
-			p = plugin.getPlayerHandler().get((Player) sender);
+		if (args.length == 2 && sender instanceof final Player player) {
+			p = plugin.getPlayerHandler().get(player);
 		}
 		if (args.length == 2 && args[1].equalsIgnoreCase("toggle")) {
-			Settings.setDEBUG(!Settings.DEBUG);
-			Log.info("Debug mode: " + Settings.DEBUG);
-			sender.sendMessage("Debug mode: " + Settings.DEBUG);
+			Settings.setDEBUG(!Settings.isDebug());
+			Log.info("Debug mode: " + Settings.isDebug());
+			sender.sendMessage("Debug mode: " + Settings.isDebug());
 		} else if (args.length == 2 && args[1].equalsIgnoreCase("damagedebug")) {
 			if (damageListener == null) {
 				sender.sendMessage("§4Warning §f- Some plugin features are disabled while in this mode");
@@ -215,7 +214,8 @@ public class PM implements TabExecutor {
 			p.setTagged(true, p);
 		} else if (args[1].equalsIgnoreCase("attack")) {
 			plugin.getServer().getPluginManager()
-					.callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
+					.callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK,
+							DamageSource.builder(DamageType.PLAYER_ATTACK).build(), 5.0));
 			sender.sendMessage("Attacked player with 5 damage");
 		} 
 	}

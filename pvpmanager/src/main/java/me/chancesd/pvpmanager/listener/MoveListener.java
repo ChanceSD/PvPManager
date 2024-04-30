@@ -3,6 +3,7 @@ package me.chancesd.pvpmanager.listener;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,8 +32,10 @@ public class MoveListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerMove(final PlayerMoveEvent event) {
-		if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ()
-				&& event.getFrom().getBlockY() == event.getTo().getBlockY())
+		final Location locTo = event.getTo();
+		final Location locFrom = event.getFrom();
+		if (locTo == null || locFrom.getBlockX() == locTo.getBlockX() && locFrom.getBlockZ() == locTo.getBlockZ()
+				&& locFrom.getBlockY() == locTo.getBlockY())
 			return;
 
 		final Player player = event.getPlayer();
@@ -40,8 +43,8 @@ public class MoveListener implements Listener {
 		if (!pvplayer.isInCombat())
 			return;
 
-		if (!wg.canAttackAt(null, event.getTo()) && wg.canAttackAt(null, event.getFrom())) {
-			final Vector newVel = event.getFrom().toVector().subtract(event.getTo().toVector());
+		if (!wg.canAttackAt(null, locTo) && wg.canAttackAt(null, locFrom)) {
+			final Vector newVel = locFrom.toVector().subtract(locTo.toVector());
 			newVel.setY(newVel.getY() + 0.1).normalize().multiply(1.5);
 			player.setVelocity(newVel);
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {

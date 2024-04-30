@@ -12,6 +12,7 @@ import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
+@SuppressWarnings("null") // getClan can't be null because clan player isn't null
 public class SimpleClansHook extends BaseDependency implements GroupDependency, ForceToggleDependency {
 
 	private final ClanManager clanManager;

@@ -11,10 +11,11 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.command.CommandSender;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -26,11 +27,10 @@ public final class Settings {
 		ALWAYS, DROP, KEEP, TRANSFER, CLEAR
 	}
 
-	public static boolean DEBUG = false;
+	private static boolean debug = false;
 	private static boolean globalStatus = true;
 	private static int configVersion;
 	private static boolean isReloading;
-	private static MCVersion minecraftVersion;
 	private static boolean autoUpdate;
 	private static boolean blockEnderPearl;
 	private static boolean blockChorusFruit;
@@ -129,7 +129,6 @@ public final class Settings {
 	private static List<String> newbieBlacklist;
 	private static Set<String> worldsExcluded;
 	private static Set<String> playerKillsWGExclusions;
-	private static boolean simpleClansNoPvPInWar;
 	private static String cooldownsxEnderpearlID;
 	private static Set<String> harmfulPotions;
 	private static Map<Material, Integer> itemCooldowns;
@@ -291,7 +290,7 @@ public final class Settings {
 		configVersion = c.getInt("Config Version");
 	}
 
-	public static void helpMenu(final Player player) {
+	public static void helpMenu(final CommandSender player) {
 		player.sendMessage(ChatColor.GOLD + "-------------- PvPManager Help Page --------------");
 		player.sendMessage(ChatColor.GOLD + "/pvp [player]" + helpSeparator() + ChatColor.WHITE + "Set PvP enabled or disabled");
 		player.sendMessage(ChatColor.GOLD + "/pvpinfo [player]" + helpSeparator() + ChatColor.WHITE + "Check your or other player info");
@@ -779,16 +778,9 @@ public final class Settings {
 		return healthBelowName;
 	}
 
+	@NotNull
 	public static String getHealthBelowNameSymbol() {
 		return healthBelowNameSymbol;
-	}
-
-	public static MCVersion getMinecraftVersion() {
-		return minecraftVersion;
-	}
-
-	public static boolean isSimpleClansNoPvPInWar() {
-		return simpleClansNoPvPInWar;
 	}
 
 	public static String getCooldownsxEnderpearlID() {
@@ -816,8 +808,12 @@ public final class Settings {
 	}
 
 	public static void setDEBUG(final boolean dEBUG) {
-		Settings.DEBUG = dEBUG;
+		Settings.debug = dEBUG;
 		Log.setDebug(dEBUG);
+	}
+
+	public static boolean isDebug() {
+		return Settings.debug;
 	}
 
 	public static Set<String> getWorldguardOverridesList() {

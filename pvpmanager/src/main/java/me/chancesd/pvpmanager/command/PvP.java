@@ -35,16 +35,15 @@ public class PvP implements TabExecutor {
 			return true;
 		}
 
-		if (sender instanceof Player && args.length == 0) {
-			final Player player = (Player) sender;
+		if (sender instanceof final Player player && args.length == 0) {
 			final CombatPlayer pvpPlayer = ph.get(player);
 			togglePvP(pvpPlayer, !pvpPlayer.hasPvPEnabled());
 			return true;
 		}
 
 		if (args.length == 1) {
-			if (sender instanceof Player && (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on"))) {
-				final CombatPlayer pvpPlayer = ph.get((Player) sender);
+			if (sender instanceof final Player player && (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("on"))) {
+				final CombatPlayer pvpPlayer = ph.get(player);
 				final boolean state = args[0].equalsIgnoreCase("on");
 				togglePvP(pvpPlayer, state);
 				return true;

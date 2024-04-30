@@ -29,6 +29,8 @@ import org.bukkit.event.weather.LightningStrikeEvent.Cause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -78,6 +80,9 @@ public class EntityListener implements Listener {
 
 		final Player attacker = getAttacker(event.getDamager());
 		final Player attacked = (Player) event.getEntity();
+		if (attacker == null)
+			return;
+
 		final ProtectionResult result = playerHandler.checkProtection(attacker, attacked);
 
 		if (result.isProtected()) {
@@ -91,7 +96,10 @@ public class EntityListener implements Listener {
 		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (playerHandler.checkProtection(getAttacker(event.getDamager()), (Player) event.getEntity()).type() == ProtectionType.FAIL_OVERRIDE) {
+		final Player attacker = getAttacker(event.getDamager());
+		if (attacker == null)
+			return;
+		if (playerHandler.checkProtection(attacker, (Player) event.getEntity()).type() == ProtectionType.FAIL_OVERRIDE) {
 			event.setCancelled(false);
 		}
 	}
@@ -119,12 +127,15 @@ public class EntityListener implements Listener {
 
 		final Player attacker = getAttacker(event.getCombuster());
 		final Player attacked = (Player) event.getEntity();
+		if (attacker == null)
+			return;
 
 		if (!playerHandler.canAttack(attacker, attacked)) {
 			event.setCancelled(true);
 		}
 	}
 
+	@SuppressWarnings("null") // defender.getLocation() never null
 	public void processDamage(final Player attacker, final Player defender) {
 		final CombatPlayer pvpAttacker = playerHandler.get(attacker);
 		final CombatPlayer pvpDefender = playerHandler.get(defender);
@@ -143,6 +154,7 @@ public class EntityListener implements Listener {
 		}
 	}
 
+	@SuppressWarnings("null") // PotionEffectType.INVISIBILITY is not null
 	private void disableActions(final Player attacker, final Player defender, final CombatPlayer pvpAttacker, final CombatPlayer pvpDefender) {
 		final boolean hasExemptPerm = pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS);
 		if (Settings.isDisableFly()) {
@@ -183,6 +195,8 @@ public class EntityListener implements Listener {
 
 		final ThrownPotion potion = event.getPotion();
 		final Player player = (Player) potion.getShooter();
+		if (player == null)
+			return;
 		for (final LivingEntity e : event.getAffectedEntities()) {
 			if (e.getType() != EntityType.PLAYER || e.equals(player)) {
 				continue;
@@ -276,6 +290,7 @@ public class EntityListener implements Listener {
 		}
 	}
 
+	@Nullable
 	private Player getAttacker(final Entity damager) {
 		if (damager instanceof final Player player)
 			return player;

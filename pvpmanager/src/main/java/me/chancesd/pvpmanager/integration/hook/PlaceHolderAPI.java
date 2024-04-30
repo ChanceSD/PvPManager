@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
@@ -16,6 +17,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 public class PlaceHolderAPI extends PlaceholderExpansion {
 
 	private final PvPManager plugin;
+	@NotNull
 	private final List<String> placeholders = new ArrayList<>();
 	private final DecimalFormat df = new DecimalFormat("#.##");
 
@@ -95,6 +97,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		return true;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public String getAuthor() {
 		return plugin.getDescription().getAuthors().toString();

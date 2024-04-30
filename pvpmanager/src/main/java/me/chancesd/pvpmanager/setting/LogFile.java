@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.NoChance.PvPManager.PvPlayer;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.utils.Log;
 
 public class LogFile {
 
@@ -27,7 +28,7 @@ public class LogFile {
 				write("You can disable the logging in the config file\n");
 			}
 		} catch (final IOException e) {
-			e.printStackTrace();
+			Log.severe(e.getMessage(), e);
 		}
 	}
 
@@ -39,7 +40,7 @@ public class LogFile {
 					bw.write(line);
 					bw.newLine();
 				} catch (final IOException e) {
-					e.printStackTrace();
+					Log.severe(e.getMessage(), e);
 				}
 			}
 		});

@@ -5,9 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
-import org.jetbrains.annotations.NotNull;
-
-import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.display.ProgressBar;
 import me.chancesd.pvpmanager.setting.Settings;
@@ -18,11 +15,6 @@ public class DisplayManager {
 
 	private final Map<CombatPlayer, ProgressBar> actionBars = new ConcurrentHashMap<>();
 	private final Map<CombatPlayer, BossBar> bossBars = new ConcurrentHashMap<>();
-	private final PvPManager plugin;
-
-	public DisplayManager(final PvPManager plugin) {
-		this.plugin = plugin;
-	}
 
 	public void updateBossbar(final CombatPlayer player, final double timePassed, final int totalTime) {
 		final BossBar bossBar = bossBars.computeIfAbsent(player, this::setupBossbar);
@@ -60,11 +52,6 @@ public class DisplayManager {
 		final ProgressBar progressBar = actionBars.computeIfAbsent(p, x -> setupProgressBar(timePassedRounded, goal));
 		progressBar.setProgress(timePassedRounded).setGoal(goal).calculate();
 		p.sendActionBar(ChatUtils.setPlaceholders(p.getPlayer(), progressBar.getMessage()));
-	}
-
-	@NotNull
-	public PvPManager getPlugin() {
-		return plugin;
 	}
 
 }

@@ -56,7 +56,7 @@ public class CombatPlayer extends EcoPlayer {
 	private NameTag nametag;
 	private static ExecutorService executor;
 
-	public CombatPlayer(final Player player, final PvPManager plugin) {
+	public CombatPlayer(@NotNull final Player player, final PvPManager plugin) {
 		super(player, plugin.getDependencyManager().getEconomy());
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
@@ -453,7 +453,7 @@ public class CombatPlayer extends EcoPlayer {
 				wait(100);
 			}
 		} catch (final InterruptedException e) {
-			e.printStackTrace();
+			Log.severe(e.getMessage(), e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -482,6 +482,16 @@ public class CombatPlayer extends EcoPlayer {
 	 */
 	public static CombatPlayer get(final Player player) {
 		return PvPManager.getInstance().getPlayerHandler().get(player);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }
