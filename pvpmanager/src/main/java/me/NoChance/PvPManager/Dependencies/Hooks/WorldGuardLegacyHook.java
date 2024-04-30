@@ -18,8 +18,8 @@ import me.NoChance.PvPManager.Dependencies.BaseDependency;
 import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.Interfaces.WorldGuardDependency;
-import me.NoChance.PvPManager.Listeners.WGListenerLegacy;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.chancesd.pvpmanager.listener.WGListenerLegacy;
+import me.chancesd.pvpmanager.manager.PlayerHandler;
 
 public class WorldGuardLegacyHook extends BaseDependency implements WorldGuardDependency {
 
