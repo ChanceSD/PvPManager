@@ -1,4 +1,4 @@
-package me.chancesd.pvpmanager.integration.hook;
+package me.chancesd.pvpmanager.integration.hook.worldguard;
 
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -18,7 +18,6 @@ import me.chancesd.pvpmanager.integration.BaseDependency;
 import me.chancesd.pvpmanager.integration.DependencyException;
 import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
-import me.chancesd.pvpmanager.listener.WGListenerLegacy;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 
 public class WorldGuardLegacyHook extends BaseDependency implements WorldGuardDependency {

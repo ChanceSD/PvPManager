@@ -7,18 +7,17 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.pvpmanager.world.CombatWorld.WorldOptionState;
+import me.chancesd.sdutils.utils.Log;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Worlds {
 
@@ -38,7 +37,11 @@ public class Worlds {
 					ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "World: " + ChatColor.GOLD + combatWorld.getName() + ChatColor.AQUA + " \n  ");
 
 			final World world = Bukkit.getWorld(combatWorld.getName());
-			final List<CombatPlayer> pvPlayerList = world.getPlayers().stream().map(p -> plugin.getPlayerHandler().get(p)).collect(Collectors.toList());
+			if (world == null) {
+				Log.warning("Null world in world list!");
+				continue;
+			}
+			final List<CombatPlayer> pvPlayerList = world.getPlayers().stream().map(p -> plugin.getPlayerHandler().get(p)).toList();
 			worldItem.addExtra(createInfoText("Players", pvPlayerList.size()));
 			worldItem.addExtra(createSeparator());
 			worldItem.addExtra(createInfoText("In Combat", pvPlayerList.stream().filter(CombatPlayer::isInCombat).count()));
@@ -120,7 +123,7 @@ public class Worlds {
 		return new TextComponent(ChatColor.DARK_GRAY + " | ");
 	}
 
-	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+	public final void onCommand(final CommandSender sender, final String[] args) {
 		if (args.length == 5) {
 			final String subcommand = args[1];
 			if (subcommand.equalsIgnoreCase("set")) {
@@ -128,7 +131,7 @@ public class Worlds {
 				final CombatWorld combatWorld = plugin.getWorldManager().getWorld(world);
 				if (combatWorld == null) {
 					sender.sendMessage(Messages.PREFIXMSG + ChatColor.RED + "There is no world with that name");
-					return true;
+					return;
 				}
 				final String option = args[3];
 				if (option.equalsIgnoreCase("PvP")) {
@@ -142,10 +145,8 @@ public class Worlds {
 				}
 			}
 		}
-		if (sender instanceof Player) {
-			createWorldMenu((Player) sender);
+		if (sender instanceof final Player player) {
+			createWorldMenu(player);
 		}
-
-		return true;
 	}
 }

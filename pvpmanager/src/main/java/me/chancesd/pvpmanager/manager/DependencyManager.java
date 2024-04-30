@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.integration.AFKDependency;
@@ -26,8 +27,8 @@ import me.chancesd.pvpmanager.integration.hook.PlaceHolderAPIHook;
 import me.chancesd.pvpmanager.integration.hook.SimpleClansHook;
 import me.chancesd.pvpmanager.integration.hook.TownyHook;
 import me.chancesd.pvpmanager.integration.hook.VaultHook;
-import me.chancesd.pvpmanager.integration.hook.WorldGuardLegacyHook;
-import me.chancesd.pvpmanager.integration.hook.WorldGuardModernHook;
+import me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardLegacyHook;
+import me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardModernHook;
 import me.chancesd.pvpmanager.integration.type.Dependency;
 import me.chancesd.pvpmanager.integration.type.DisguiseDependency;
 import me.chancesd.pvpmanager.integration.type.GodDependency;
@@ -37,7 +38,6 @@ import me.chancesd.pvpmanager.listener.MoveListener;
 import me.chancesd.pvpmanager.listener.MoveListener1_9;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Settings;
-import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
@@ -97,8 +97,7 @@ public class DependencyManager {
 				// Ignore, only here for unit tests
 				Log.warning("Exception initializing " + hook);
 			} catch (final Exception | LinkageError e) {
-				Log.warning("Failed to enable support for " + hook.getDescription().getFullName() + ". Is " + hook + " up to date?");
-				e.printStackTrace();
+				Log.warning("Failed to enable support for " + hook.getDescription().getFullName() + ". Is " + hook + " up to date?", e);
 				failedHooks.add(hook);
 			}
 		}
@@ -163,7 +162,7 @@ public class DependencyManager {
 		}
 	}
 
-	public final boolean shouldDisableProtection(final Player attacker, final Player defender, final ProtectionType reason) {
+	public final boolean shouldDisableProtection(@NotNull final Player attacker, @NotNull final Player defender, final ProtectionType reason) {
 		for (final ForceToggleDependency togglePvPPlugin : togglePvPChecks) {
 			if (togglePvPPlugin.shouldDisable(attacker, defender, reason))
 				return true;
