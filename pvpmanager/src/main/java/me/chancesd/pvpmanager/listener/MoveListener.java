@@ -12,19 +12,19 @@ import org.bukkit.util.Vector;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.Interfaces.RegionDependency;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.RegionDependency;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 
 public class MoveListener implements Listener {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 	private final RegionDependency wg;
 	private final Cache<UUID, Player> cache = CacheBuilder.newBuilder().weakValues().expireAfterWrite(1, TimeUnit.SECONDS).build();
 
-	public MoveListener(final PlayerHandler ph) {
+	public MoveListener(final PlayerManager ph) {
 		this.ph = ph;
 		wg = (RegionDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 	}
@@ -36,7 +36,7 @@ public class MoveListener implements Listener {
 			return;
 
 		final Player player = event.getPlayer();
-		final PvPlayer pvplayer = ph.get(player);
+		final CombatPlayer pvplayer = ph.get(player);
 		if (!pvplayer.isInCombat())
 			return;
 

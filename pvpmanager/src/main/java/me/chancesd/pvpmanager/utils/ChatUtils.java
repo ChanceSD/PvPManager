@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import me.NoChance.PvPManager.Dependencies.Hook;
+import me.chancesd.pvpmanager.integration.Hook;
 import me.clip.placeholderapi.PlaceholderAPI;
 
 public class ChatUtils {

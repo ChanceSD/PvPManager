@@ -1,8 +1,9 @@
 package me.chancesd.pvpmanager.command;
 
 import com.google.common.base.Strings;
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
+
+import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.pvpmanager.world.CombatWorld.WorldOptionState;
@@ -37,12 +38,12 @@ public class Worlds {
 					ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "World: " + ChatColor.GOLD + combatWorld.getName() + ChatColor.AQUA + " \n  ");
 
 			final World world = Bukkit.getWorld(combatWorld.getName());
-			final List<PvPlayer> pvPlayerList = world.getPlayers().stream().map(p -> plugin.getPlayerHandler().get(p)).collect(Collectors.toList());
+			final List<CombatPlayer> pvPlayerList = world.getPlayers().stream().map(p -> plugin.getPlayerHandler().get(p)).collect(Collectors.toList());
 			worldItem.addExtra(createInfoText("Players", pvPlayerList.size()));
 			worldItem.addExtra(createSeparator());
-			worldItem.addExtra(createInfoText("In Combat", pvPlayerList.stream().filter(PvPlayer::isInCombat).count()));
+			worldItem.addExtra(createInfoText("In Combat", pvPlayerList.stream().filter(CombatPlayer::isInCombat).count()));
 			worldItem.addExtra(createSeparator());
-			worldItem.addExtra(createInfoText("PvP On", pvPlayerList.stream().filter(PvPlayer::hasPvPEnabled).count()));
+			worldItem.addExtra(createInfoText("PvP On", pvPlayerList.stream().filter(CombatPlayer::hasPvPEnabled).count()));
 			worldItem.addExtra(createSeparator());
 			worldItem.addExtra(createInfoText("PvP Off", pvPlayerList.stream().filter(pvPlayer -> !pvPlayer.hasPvPEnabled()).count()));
 			player.spigot().sendMessage(worldItem);

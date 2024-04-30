@@ -5,15 +5,15 @@ import org.bukkit.event.Listener;
 
 import com.sk89q.worldguard.protection.events.DisallowedPVPEvent;
 
-import me.NoChance.PvPManager.Player.ProtectionType;
-import me.chancesd.pvpmanager.manager.PlayerHandler;
+import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.sdutils.utils.Log;
 
 public class WGListenerLegacy implements Listener {
 
-	private final PlayerHandler ph;
+	private final PlayerManager ph;
 
-	public WGListenerLegacy(final PlayerHandler ph) {
+	public WGListenerLegacy(final PlayerManager ph) {
 		this.ph = ph;
 	}
 

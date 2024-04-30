@@ -21,10 +21,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.listener.DebugEntityListener;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Locale;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
@@ -161,7 +161,7 @@ public class PM implements TabExecutor {
 	}
 
 	private void debug(final CommandSender sender, final String[] args) {
-		PvPlayer p = null;
+		CombatPlayer p = null;
 		if (args.length == 2 && sender instanceof Player) {
 			p = plugin.getPlayerHandler().get((Player) sender);
 		}
@@ -186,7 +186,7 @@ public class PM implements TabExecutor {
 				sender.sendMessage("Debug damage listener disabled");
 			}
 		} else if (args[1].equalsIgnoreCase("tagall")) {
-			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
+			for (final CombatPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
 				player.setTagged(true, player);
 			}
 			sender.sendMessage("Tagged all players");
@@ -196,7 +196,7 @@ public class PM implements TabExecutor {
 			}
 			sender.sendMessage("Untagged all players");
 		} else if (args[1].equalsIgnoreCase("players")) {
-			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
+			for (final CombatPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
 				if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
 					Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
 				}
@@ -217,7 +217,7 @@ public class PM implements TabExecutor {
 			plugin.getServer().getPluginManager()
 					.callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
 			sender.sendMessage("Attacked player with 5 damage");
-		}
+		} 
 	}
 
 	private void locale(final CommandSender sender, final String[] args) {
