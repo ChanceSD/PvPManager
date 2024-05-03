@@ -43,6 +43,15 @@ public class PM implements TabExecutor {
 	private DebugEntityListener damageListener;
 	private final Worlds worldsSubcommand;
 
+	// subcommands
+	private static final String CLEANUP = "cleanup";
+	private static final String CONVERT = "convert";
+	private static final String DEBUG = "debug";
+	private static final String RELOAD = "reload";
+	private static final String UPDATE = "update";
+	private static final String LOCALE = "locale";
+	private static final String WORLDS = "worlds";
+
 	public PM(final PvPManager plugin) {
 		this.plugin = plugin;
 		worldsSubcommand = new Worlds(plugin);
@@ -55,29 +64,29 @@ public class PM implements TabExecutor {
 			return true;
 		}
 		if (args.length == 1) {
-			if (args[0].equalsIgnoreCase("reload")) {
+			if (args[0].equalsIgnoreCase(RELOAD)) {
 				reload(sender);
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("update") && Permissions.ADMIN.hasPerm(sender)) {
+			if (args[0].equalsIgnoreCase(UPDATE) && Permissions.ADMIN.hasPerm(sender)) {
 				update(sender);
 				return true;
 			}
 		}
 		if (args.length >= 1) {
-			if (args[0].equalsIgnoreCase("cleanup") && Permissions.ADMIN.hasPerm(sender)) {
+			if (args[0].equalsIgnoreCase(CLEANUP) && Permissions.ADMIN.hasPerm(sender)) {
 				cleanup(sender, args);
 				return true;
-			} else if (args[0].equalsIgnoreCase("convert") && Permissions.ADMIN.hasPerm(sender)) {
+			} else if (args[0].equalsIgnoreCase(CONVERT) && Permissions.ADMIN.hasPerm(sender)) {
 				convert(sender, args);
 				return true;
-			} else if (args[0].equalsIgnoreCase("debug") && sender.hasPermission("pvpmanager.debug")) {
+			} else if (args[0].equalsIgnoreCase(DEBUG) && sender.hasPermission("pvpmanager.debug")) {
 				debug(sender, args);
 				return true;
-			} else if (args[0].equalsIgnoreCase("locale") && Permissions.ADMIN.hasPerm(sender)) {
+			} else if (args[0].equalsIgnoreCase(LOCALE) && Permissions.ADMIN.hasPerm(sender)) {
 				locale(sender, args);
 				return true;
-			} else if (args[0].equalsIgnoreCase("worlds") && Permissions.ADMIN.hasPerm(sender)) {
+			} else if (args[0].equalsIgnoreCase(WORLDS) && Permissions.ADMIN.hasPerm(sender)) {
 				worldsSubcommand.onCommand(sender, args);
 				return true;
 			}
@@ -293,12 +302,12 @@ public class PM implements TabExecutor {
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
 		if (args.length == 1)
-			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("cleanup", "convert", "debug", "reload", "update", "locale", "worlds"));
-		if (args.length == 2 && args[0].equalsIgnoreCase("convert"))
+			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList(CLEANUP, CONVERT, DEBUG, RELOAD, UPDATE, LOCALE, WORLDS));
+		if (args.length == 2 && args[0].equalsIgnoreCase(CONVERT))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
-		if (args.length == 2 && args[0].equalsIgnoreCase("debug"))
+		if (args.length == 2 && args[0].equalsIgnoreCase(DEBUG))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "tag", "tagall", "attack", "players"));
-		if (args.length == 2 && args[0].equalsIgnoreCase("locale"))
+		if (args.length == 2 && args[0].equalsIgnoreCase(LOCALE))
 			return ChatUtils.getMatchingEntries(args[1], Locale.asStringList());
 
 		return Collections.emptyList();

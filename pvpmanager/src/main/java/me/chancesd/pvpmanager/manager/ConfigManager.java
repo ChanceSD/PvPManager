@@ -25,6 +25,7 @@ import me.chancesd.sdutils.utils.Log;
 
 public class ConfigManager {
 
+	private static final String CONFIG_VERSION = "Config Version";
 	private static final String CONFIG_NAME = "config.yml";
 	private final PvPManager plugin;
 	private final File configFile;
@@ -51,8 +52,8 @@ public class ConfigManager {
 
 		plugin.reloadConfig();
 		final Configuration defaults = plugin.getConfig().getDefaults();
-		final int oldVersion = plugin.getConfig().getInt("Config Version", 0);
-		final int currentVersion = defaults != null ? defaults.getInt("Config Version") : 0;
+		final int oldVersion = plugin.getConfig().getInt(CONFIG_VERSION, 0);
+		final int currentVersion = defaults != null ? defaults.getInt(CONFIG_VERSION) : 0;
 
 		if (oldVersion == 0) {
 			resetConfig();
@@ -60,7 +61,7 @@ public class ConfigManager {
 		}
 		if (oldVersion < currentVersion) {
 			try {
-				ConfigUpdater.update(plugin, CONFIG_NAME, configFile, Arrays.asList("Config Version", "Metrics", "Update Check.Enabled"));
+				ConfigUpdater.update(plugin, CONFIG_NAME, configFile, Arrays.asList(CONFIG_VERSION, "Metrics", "Update Check.Enabled"));
 				Log.infoColor("§aConfig file updated from version §c" + oldVersion + " §ato version §c" + currentVersion);
 				Log.warning("Checking the config file and adjusting the new settings is highly recommended");
 				Messages.queueAdminMsg(Messages.PREFIXMSG + " §aConfiguration updated from version §c" + oldVersion + " §ato §c" + currentVersion);

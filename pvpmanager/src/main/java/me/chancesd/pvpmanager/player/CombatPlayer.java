@@ -24,6 +24,7 @@ import me.chancesd.pvpmanager.event.PlayerUntagEvent;
 import me.chancesd.pvpmanager.library.rollbar.PMRUncaughExceptionHandler;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
+import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
@@ -31,7 +32,6 @@ import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.tasks.NewbieTask;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
-import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -68,16 +68,6 @@ public class CombatPlayer extends EcoPlayer {
 
 	public final long getToggleTime() {
 		return this.toggleTime;
-	}
-
-	public final boolean hasToggleCooldownPassed() {
-		if (!CombatUtils.hasTimePassed(toggleTime, Settings.getToggleCooldown()) && !getPlayer().hasPermission("pvpmanager.pvpstatus.nocooldown")) {
-			final long secondsLeft = CombatUtils.getTimeLeft(toggleTime, Settings.getToggleCooldown());
-			message(Messages.getErrorPvpCooldown().replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - secondsLeft / 60 * 60)).replace("%t",
-			        Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60))); // TODO use replaceTime
-			return false;
-		}
-		return true;
 	}
 
 	public final boolean isNewbie() {

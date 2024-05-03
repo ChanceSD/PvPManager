@@ -20,8 +20,8 @@ public class PvPOverride implements CommandExecutor {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-		if (sender instanceof Player) {
-			final CombatPlayer pvPlayer = ph.get((Player) sender);
+		if (sender instanceof final Player player) {
+			final CombatPlayer pvPlayer = ph.get(player);
 			final boolean override = pvPlayer.toggleOverride();
 			pvPlayer.message(Messages.PREFIXMSG + ChatColor.DARK_GREEN + "PvP Override set to: " + ChatColor.GOLD + override);
 		}
