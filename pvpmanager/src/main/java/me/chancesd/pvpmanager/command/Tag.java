@@ -12,6 +12,7 @@ import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
+import me.chancesd.pvpmanager.utils.TimeUtil;
 
 public class Tag implements CommandExecutor {
 
@@ -26,10 +27,10 @@ public class Tag implements CommandExecutor {
 		if (args.length == 0 && sender instanceof final Player player) {
 			final CombatPlayer pvPlayer = ph.get(player);
 			if (!pvPlayer.isInCombat()) {
-				pvPlayer.message(Messages.getTagNotInCombat());
+				pvPlayer.message(Messages.tagNotInCombat.getMsg());
 			} else {
-				final long timeLeft = (pvPlayer.getTaggedTime() + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis()) / 1000;
-				pvPlayer.message(String.format(Messages.getTagTimeLeft(), timeLeft));
+				final long timeLeft = pvPlayer.getTaggedTime() + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis();
+				pvPlayer.message(Messages.tagTimeLeft.getMsg(TimeUtil.getDiffMsg(timeLeft)));
 			}
 			return true;
 		} else if (args.length == 1 && Permissions.ADMIN.hasPerm(sender)) {

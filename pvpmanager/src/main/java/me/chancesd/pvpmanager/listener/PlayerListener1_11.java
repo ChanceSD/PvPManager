@@ -49,7 +49,7 @@ public class PlayerListener1_11 implements Listener {
 		final CombatPlayer pvPlayer = playerHandler.get(player);
 		if (pvPlayer.isInCombat()) {
 			event.setCancelled(true);
-			pvPlayer.message(Messages.getTotemBlockedInCombat());
+			pvPlayer.message(Messages.totemBlockedInCombat);
 		}
 
 	}
