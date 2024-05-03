@@ -23,8 +23,8 @@ public class Tag implements CommandExecutor {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (args.length == 0 && sender instanceof Player) {
-			final CombatPlayer pvPlayer = ph.get((Player) sender);
+		if (args.length == 0 && sender instanceof final Player player) {
+			final CombatPlayer pvPlayer = ph.get(player);
 			if (!pvPlayer.isInCombat()) {
 				pvPlayer.message(Messages.getTagNotInCombat());
 			} else {

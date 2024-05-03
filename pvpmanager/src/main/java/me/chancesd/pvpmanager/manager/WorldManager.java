@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.player.world.CombatWorld;
+import me.chancesd.pvpmanager.player.world.CombatWorld.WorldOptionState;
 import me.chancesd.pvpmanager.storage.Storage;
 import me.chancesd.pvpmanager.storage.fields.WorldDataFields;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
-import me.chancesd.pvpmanager.world.CombatWorld;
-import me.chancesd.pvpmanager.world.CombatWorld.WorldOptionState;
 import me.chancesd.sdutils.utils.Log;
 
 import org.bukkit.Bukkit;
@@ -60,8 +60,8 @@ public class WorldManager {
 		}
 
 		final Object forcePVPOption = worldData.get(WorldDataFields.FORCEDPVP);
-		if (forcePVPOption instanceof String) {
-			forcePVP = WorldOptionState.valueOf((String) forcePVPOption);
+		if (forcePVPOption instanceof final String string) {
+			forcePVP = WorldOptionState.valueOf(string);
 		}
 		return new CombatWorld(world.getUID(), world.getName(), pvpState, forcePVP);
 	}

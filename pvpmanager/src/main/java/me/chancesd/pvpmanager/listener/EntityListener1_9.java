@@ -22,11 +22,11 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.projectiles.ProjectileSource;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
@@ -46,8 +46,9 @@ public class EntityListener1_9 implements Listener {
 	public void onEntityGlide(final EntityToggleGlideEvent event) {
 		if (!Settings.isBlockGlide() || !event.isGliding())
 			return;
-		if (ph.get((Player) event.getEntity()).isInCombat()) {
-			// TODO add feedback message to player
+		final CombatPlayer combatPlayer = ph.get((Player) event.getEntity());
+		if (combatPlayer.isInCombat()) {
+			combatPlayer.sendActionBar(Messages.getElytraBlockedInCombat(), 1000);
 			event.setCancelled(true);
 		}
 	}

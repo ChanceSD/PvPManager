@@ -45,7 +45,4 @@ public final class PlayerCombatLogEvent extends Event {
 		return handlers;
 	}
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
 }

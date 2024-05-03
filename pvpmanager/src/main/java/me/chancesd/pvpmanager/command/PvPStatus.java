@@ -22,8 +22,7 @@ public class PvPStatus implements CommandExecutor {
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		CombatPlayer target;
-		if (args.length == 0 && sender instanceof Player) {
-			final Player player = (Player) sender;
+		if (args.length == 0 && sender instanceof final Player player) {
 			final CombatPlayer pvpPlayer = ph.get(player);
 			if (!pvpPlayer.hasPvPEnabled()) {
 				pvpPlayer.message(Messages.getSelfStatusDisabled());

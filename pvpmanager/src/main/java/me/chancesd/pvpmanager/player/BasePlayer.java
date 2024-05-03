@@ -2,9 +2,9 @@ package me.chancesd.pvpmanager.player;
 
 import java.util.UUID;
 
+import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.CombatUtils;
-import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.sdutils.utils.MCVersion;
 
 import org.bukkit.entity.Player;

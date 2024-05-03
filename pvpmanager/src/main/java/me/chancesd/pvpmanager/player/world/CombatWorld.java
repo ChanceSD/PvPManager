@@ -1,4 +1,4 @@
-package me.chancesd.pvpmanager.world;
+package me.chancesd.pvpmanager.player.world;
 
 import me.chancesd.pvpmanager.storage.fields.WorldDataFields;
 

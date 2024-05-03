@@ -7,11 +7,13 @@ import java.util.stream.Collectors;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
+import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.CombatUtils;
-import me.chancesd.pvpmanager.world.CombatWorld;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -72,7 +74,7 @@ public class PvP implements TabExecutor {
 	}
 
 	private void togglePvP(final CombatPlayer player, final boolean state) {
-		if (!player.hasToggleCooldownPassed())
+		if (!hasToggleCooldownPassed(player))
 			return;
 
 		if (player.hasPvPEnabled() == state) {
@@ -105,6 +107,18 @@ public class PvP implements TabExecutor {
 		for (final Player player : Bukkit.getOnlinePlayers()) {
 			togglePvPAdmin(sender, player.getName(), state, toggle);
 		}
+	}
+
+	public final boolean hasToggleCooldownPassed(final CombatPlayer player) {
+		if (!CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())
+				&& !player.hasPerm(Permissions.EXEMPT_PVPTOGGLE_COOLDOWN)) {
+			final long secondsLeft = CombatUtils.getTimeLeft(player.getToggleTime(), Settings.getToggleCooldown());
+			player.message(Messages.getErrorPvpCooldown()
+					.replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - secondsLeft / 60 * 60)).replace("%t",
+							Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60))); // TODO use replaceTime
+			return false;
+		}
+		return true;
 	}
 
 	@Override
