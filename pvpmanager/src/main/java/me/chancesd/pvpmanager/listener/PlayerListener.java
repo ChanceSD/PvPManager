@@ -48,7 +48,7 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.player.world.CombatWorld;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -80,7 +80,7 @@ public class PlayerListener implements Listener {
 		final CombatPlayer combatPlayer = playerHandler.get(event.getPlayer());
 		if (Settings.isBlockPlaceBlocks() && combatPlayer.isInCombat() || Settings.isBlockPlaceBlocksNewbie() && combatPlayer.isNewbie()) {
 			event.setCancelled(true);
-			combatPlayer.sendActionBar(Messages.blockPlaceBlockedInCombat.getMsg(), 1000);
+			combatPlayer.sendActionBar(Lang.BLOCK_PLACE_BLOCKED_IN_COMBAT.msg(), 1000);
 		}
 	}
 
@@ -109,12 +109,12 @@ public class PlayerListener implements Listener {
 		final CombatPlayer player = playerHandler.get(event.getPlayer());
 		if (Settings.isBlockEat() && player.isInCombat() && type.isEdible()) {
 			event.setCancelled(true);
-			playerHandler.get(event.getPlayer()).sendActionBar(Messages.eatBlockedInCombat.getMsg(), 1000);
+			playerHandler.get(event.getPlayer()).sendActionBar(Lang.EAT_BLOCKED_IN_COMBAT.msg(), 1000);
 		}
 		if (Settings.getItemCooldowns().containsKey(type)) {
 			if (player.hasItemCooldown(type)) {
 				event.setCancelled(true);
-				player.message(Messages.itemCooldown.getMsg(TimeUtil.getDiffMsg(player.getItemCooldown(type))));
+				player.message(Lang.ITEM_COOLDOWN.msg(TimeUtil.getDiffMsg(player.getItemCooldown(type))));
 				return;
 			}
 			player.setItemCooldown(type, Settings.getItemCooldowns().get(type));
@@ -206,7 +206,7 @@ public class PlayerListener implements Listener {
 				final int expWon = pKiller.giveExp(pvPlayer);
 				event.setDroppedExp(0);
 				event.setNewExp(player.getTotalExperience() - expWon);
-				pvPlayer.message(Messages.expStolen.getMsg(pKiller.getName(), String.valueOf(expWon)));
+				pvPlayer.message(Lang.EXP_STOLEN.msg(pKiller.getName(), String.valueOf(expWon)));
 			}
 		}
 	}
@@ -239,7 +239,7 @@ public class PlayerListener implements Listener {
 		final CombatPlayer pvplayer = playerHandler.get(player);
 		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && Settings.getItemCooldowns().containsKey(type)) {
 			if (pvplayer.hasItemCooldown(type)) {
-				final String msg = Messages.itemCooldown.getMsg(TimeUtil.getDiffMsg(pvplayer.getItemCooldown(type)));
+				final String msg = Lang.ITEM_COOLDOWN.msg(TimeUtil.getDiffMsg(pvplayer.getItemCooldown(type)));
 				if (!msg.equals(msgCooldown.getIfPresent(player.getUniqueId()))) {
 					pvplayer.message(msg);
 					msgCooldown.put(player.getUniqueId(), msg);
@@ -271,7 +271,7 @@ public class PlayerListener implements Listener {
 				}
 				final CombatPlayer target = playerHandler.get(p);
 				if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 9) {
-					pvplayer.message(Messages.attackDeniedOther.getMsg(target.getName()));
+					pvplayer.message(Lang.ATTACK_DENIED_OTHER.msg(target.getName()));
 					e.setCancelled(true);
 					return;
 				}
@@ -295,7 +295,7 @@ public class PlayerListener implements Listener {
 			for (final String material : Settings.getBlockInteractItemList()) {
 				if (type.name().endsWith(material)) {
 					e.setCancelled(true);
-					combatPlayer.sendActionBar(Messages.interactBlockedInCombat.getMsg(), 1000);
+					combatPlayer.sendActionBar(Lang.INTERACT_BLOCKED_IN_COMBAT.msg(), 1000);
 					return;
 				}
 			}
@@ -328,7 +328,7 @@ public class PlayerListener implements Listener {
 			final CombatPlayer player = playerHandler.get(e.getPlayer());
 			if (player.isNewbie()) {
 				e.setCancelled(true);
-				player.sendActionBar(Messages.newbiePickupItemBlocked.getMsg(), 1000);
+				player.sendActionBar(Lang.NEWBIE_PICKUP_ITEM_BLOCKED.msg(), 1000);
 			}
 		}
 	}
@@ -339,7 +339,7 @@ public class PlayerListener implements Listener {
 		final CombatPlayer pvPlayer = playerHandler.get(player);
 		ScheduleUtils.runAsync(() -> {
 			if (player.isOp() || pvPlayer.hasPerm(Permissions.ADMIN)) {
-				Messages.sendQueuedMsgs(pvPlayer);
+				Lang.sendQueuedMsgs(pvPlayer);
 			}
 		});
 	}
@@ -356,14 +356,14 @@ public class PlayerListener implements Listener {
 
 		if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
 			event.setCancelled(true);
-			pvplayer.message(Messages.enderpearlBlockedIncombat);
+			pvplayer.message(Lang.ENDERPEARL_BLOCKED_INCOMBAT);
 		} else if (MCVersion.isAtLeast(MCVersion.V1_9) && event.getCause() == TeleportCause.CHORUS_FRUIT
 		        && Settings.isBlockChorusFruit()) {
 			event.setCancelled(true);
-			pvplayer.message(Messages.chorusBlockedInCombat);
+			pvplayer.message(Lang.CHORUS_BLOCKED_IN_COMBAT);
 		} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
 			event.setCancelled(true);
-			pvplayer.message(Messages.teleportBlockedInCombat);
+			pvplayer.message(Lang.TELEPORT_BLOCKED_IN_COMBAT);
 		}
 	}
 
@@ -379,12 +379,12 @@ public class PlayerListener implements Listener {
 						+ " | Blocked: " + (Settings.isCommandsWhitelist() != contains));
 				if (Settings.isCommandsWhitelist() != contains) {
 					event.setCancelled(true);
-					player.message(Messages.commandDeniedIncombat);
+					player.message(Lang.COMMAND_DENIED_INCOMBAT);
 				}
 			}
 			if (player.isNewbie() && CombatUtils.recursiveContainsCommand(givenCommand, Settings.getNewbieBlacklist())) {
 				event.setCancelled(true);
-				player.message(Messages.newbieCommandBlocked.getMsg());
+				player.message(Lang.NEWBIE_COMMAND_BLOCKED.msg());
 			}
 		}
 	}
@@ -399,8 +399,10 @@ public class PlayerListener implements Listener {
 			final ProtectionResult result = playerHandler.checkProtection(player, caught);
 			if (result.isProtected()) {
 				event.setCancelled(true);
-				Messages.messageProtection(result, player, caught);
-			} // TODO trigger damage actions
+				Lang.messageProtection(result, player, caught);
+			} else {
+				playerHandler.getPlugin().getEntityListener().processDamage(player, caught);
+			}
 		}
 	}
 
@@ -425,7 +427,7 @@ public class PlayerListener implements Listener {
 		final CombatPlayer combatPlayer = playerHandler.get((Player) event.getPlayer());
 		if (combatPlayer.isInCombat()) {
 			event.setCancelled(true);
-			combatPlayer.sendActionBar(Messages.inventoryBlockedInCombat.getMsg(), 1000);
+			combatPlayer.sendActionBar(Lang.INVENTORY_BLOCKED_IN_COMBAT.msg(), 1000);
 		}
 	}
 
@@ -450,12 +452,12 @@ public class PlayerListener implements Listener {
 			return;
 		if (pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.OFF) {
 			pvPlayer.setPvP(false);
-			pvPlayer.message(Messages.errorPvpToggleNoPvp);
+			pvPlayer.message(Lang.ERROR_PVP_TOGGLE_NO_PVP);
 			return;
 		}
 		if (!pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.ON) {
 			pvPlayer.setPvP(true);
-			pvPlayer.message(Messages.errorPvpToggleForcePvp);
+			pvPlayer.message(Lang.ERROR_PVP_TOGGLE_FORCE_PVP);
 		}
 	}
 

@@ -3,7 +3,7 @@ package me.chancesd.pvpmanager.utils;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 
 public final class TimeUtil {
 
@@ -19,7 +19,7 @@ public final class TimeUtil {
 	public static String getDiffMsg(final Instant from, final Instant to) {
 		boolean future = false;
 		if (to.equals(from))
-			return Messages.getTime(ChronoUnit.FOREVER);
+			return Lang.getTime(ChronoUnit.FOREVER);
 		if (to.isAfter(from)) {
 			future = true;
 		}
@@ -33,11 +33,11 @@ public final class TimeUtil {
 			final int value = duration.get(types[i]);
 			if (value > 0) {
 				accuracy++;
-				sb.append(" ").append(value).append(" ").append(Messages.getTime(types[i]));
+				sb.append(" ").append(value).append(" ").append(Lang.getTime(types[i]));
 			}
 		}
 		if (sb.length() == 0)
-			return Messages.getTime(ChronoUnit.FOREVER);
+			return Lang.getTime(ChronoUnit.FOREVER);
 		return sb.toString().trim();
 	}
 

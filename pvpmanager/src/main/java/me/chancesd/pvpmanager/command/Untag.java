@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
 public class Untag implements CommandExecutor {
@@ -30,11 +30,11 @@ public class Untag implements CommandExecutor {
 
 			target = ph.get(Bukkit.getPlayer(name));
 			if (!target.isInCombat()) {
-				sender.sendMessage(Messages.PREFIXMSG + " §cThat player is not in combat");
+				sender.sendMessage(Lang.PREFIXMSG + " §cThat player is not in combat");
 				return true;
 			}
 			target.unTag();
-			sender.sendMessage(Messages.PREFIXMSG + " " + target.getName() + " §2has been untagged");
+			sender.sendMessage(Lang.PREFIXMSG + " " + target.getName() + " §2has been untagged");
 			return true;
 		}
 		return false;
