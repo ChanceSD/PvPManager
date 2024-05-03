@@ -4,7 +4,7 @@ package me.chancesd.pvpmanager.player;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -41,11 +41,11 @@ public abstract class EcoPlayer extends BasePlayer {
 	public final void applyPenalty() {
 		final double penalty = getMoneyPercentage(Settings.getMoneyPenalty());
 		withdrawMoney(penalty);
-		message(Messages.moneyPenalty.getMsg(CombatUtils.formatTo2Digits(penalty)));
+		message(Lang.MONEY_PENALTY.msg(CombatUtils.formatTo2Digits(penalty)));
 	}
 
 	public final boolean applyPvPDisabledFee() {
-		message(Messages.pvpDisabledFee.getMsg(CombatUtils.formatTo2Digits(Settings.getPvPDisabledFee())));
+		message(Lang.PVP_DISABLED_FEE.msg(CombatUtils.formatTo2Digits(Settings.getPvPDisabledFee())));
 		return withdrawMoney(Settings.getPvPDisabledFee());
 	}
 
@@ -59,10 +59,10 @@ public abstract class EcoPlayer extends BasePlayer {
 				moneyWon = vbalance;
 			}
 			victim.withdrawMoney(moneyWon);
-			victim.message(Messages.moneySteal.getMsg(getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
+			victim.message(Lang.MONEY_STEAL.msg(getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
 		}
 		depositMoney(moneyWon);
-		message(Messages.moneyReward.getMsg(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
+		message(Lang.MONEY_REWARD.msg(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
 	}
 
 	public final int giveExp(final EcoPlayer victim) {
@@ -74,7 +74,7 @@ public abstract class EcoPlayer extends BasePlayer {
 			expWon = exp;
 		}
 		setExp(getPlayer().getTotalExperience() + expWon);
-		message(Messages.expWon.getMsg(victim.getPlayer().getName(), String.valueOf(expWon)));
+		message(Lang.EXP_WON.msg(victim.getPlayer().getName(), String.valueOf(expWon)));
 		return expWon;
 	}
 

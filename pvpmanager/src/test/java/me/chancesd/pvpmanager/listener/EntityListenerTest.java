@@ -27,7 +27,7 @@ import me.chancesd.pvpmanager.PluginTest;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.ProtectionType;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
@@ -189,7 +189,7 @@ public class EntityListenerTest {
 		createAttack(false);
 
 		assertEquals(ProtectionType.NEWBIE, ph.checkProtection(attacker, defender).type());
-		verify(attacker, times(2)).sendMessage(Messages.newbieProtectionOnHit.getMsg());
+		verify(attacker, times(2)).sendMessage(Lang.NEWBIE_PROTECTION_ON_HIT.msg());
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);
@@ -201,7 +201,7 @@ public class EntityListenerTest {
 		createAttack(false);
 
 		assertEquals(ProtectionType.PVPDISABLED, ph.checkProtection(attacker, defender).type());
-		verify(attacker, times(2)).sendMessage(Messages.attackDeniedOther.getMsg(defender.getName()));
+		verify(attacker, times(2)).sendMessage(Lang.ATTACK_DENIED_OTHER.msg(defender.getName()));
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);

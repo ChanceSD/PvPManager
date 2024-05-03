@@ -24,7 +24,7 @@ import me.chancesd.pvpmanager.PluginTest;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Settings;
 
 @ExtendWith(InstanceCreator.class)
@@ -157,7 +157,7 @@ public class PlayerListenerTest {
 		tagPlayer(pvPlayer);
 		listener.onCommand(commandPreprocessEvent);
 		assertTrue(commandPreprocessEvent.isCancelled());
-		verify(player, atMostOnce()).sendMessage(Messages.commandDeniedIncombat.getMsg());
+		verify(player, atMostOnce()).sendMessage(Lang.COMMAND_DENIED_INCOMBAT.msg());
 
 		final PlayerCommandPreprocessEvent commandPreprocessEvent2 = new PlayerCommandPreprocessEvent(player, "/tell");
 		tagPlayer(pvPlayer);

@@ -28,7 +28,7 @@ import com.google.common.cache.CacheBuilder;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -48,7 +48,7 @@ public class EntityListener1_9 implements Listener {
 			return;
 		final CombatPlayer combatPlayer = ph.get((Player) event.getEntity());
 		if (combatPlayer.isInCombat()) {
-			combatPlayer.sendActionBar(Messages.elytraBlockedInCombat.getMsg(), 1000);
+			combatPlayer.sendActionBar(Lang.ELYTRA_BLOCKED_IN_COMBAT.msg(), 1000);
 			event.setCancelled(true);
 		}
 	}
@@ -78,7 +78,7 @@ public class EntityListener1_9 implements Listener {
 				toRemove.add(e);
 				final Set<AreaEffectCloud> clouds = potionMessageCache.getIfPresent(player.getUniqueId());
 				if (clouds == null || !clouds.contains(areaCloud)) {
-					Messages.messageProtection(result, player, attacked);
+					Lang.messageProtection(result, player, attacked);
 					final Set<AreaEffectCloud> newClouds = new HashSet<>();
 					newClouds.add(areaCloud);
 					if (clouds != null) {
