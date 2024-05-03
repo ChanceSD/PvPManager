@@ -12,7 +12,7 @@ import org.bukkit.projectiles.ProjectileSource;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
@@ -49,7 +49,7 @@ public class PlayerListener1_11 implements Listener {
 		final CombatPlayer pvPlayer = playerHandler.get(player);
 		if (pvPlayer.isInCombat()) {
 			event.setCancelled(true);
-			pvPlayer.message(Messages.totemBlockedInCombat);
+			pvPlayer.message(Lang.TOTEM_BLOCKED_IN_COMBAT);
 		}
 
 	}

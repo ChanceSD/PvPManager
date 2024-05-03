@@ -13,7 +13,7 @@ import com.google.common.collect.Lists;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.storage.Storage;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ChatUtils;
@@ -34,9 +34,9 @@ public class PvPList implements TabExecutor {
 			sendList(sender, isPlayer);
 		} else if (args.length == 1 && args[0].equalsIgnoreCase("offline")) {
 			ScheduleUtils.runAsync(() -> {
-				sender.sendMessage(Messages.pvpListTitle.getMsg());
+				sender.sendMessage(Lang.PVP_LIST_TITLE.msg());
 				sender.sendMessage(ChatColor.DARK_GRAY + "Gathering all offline players with PvP disabled, please wait...");
-				sender.sendMessage(Messages.pvpListDisabled.getMsg());
+				sender.sendMessage(Lang.PVP_LIST_DISABLED.msg());
 				sender.sendMessage(ChatColor.GRAY + "  " + pvpListOffline());
 			});
 		}
@@ -44,12 +44,12 @@ public class PvPList implements TabExecutor {
 	}
 
 	private void sendList(final CommandSender sender, final boolean isPlayer) {
-		sender.sendMessage(Messages.pvpListTitle.getMsg());
+		sender.sendMessage(Lang.PVP_LIST_TITLE.msg());
 
-		sender.sendMessage(Messages.pvpListEnabled.getMsg());
+		sender.sendMessage(Lang.PVP_LIST_ENABLED.msg());
 		sender.sendMessage(ChatColor.GRAY + "  " + pvpList(sender, true, !isPlayer));
 
-		sender.sendMessage(Messages.pvpListDisabled.getMsg());
+		sender.sendMessage(Lang.PVP_LIST_DISABLED.msg());
 		sender.sendMessage(ChatColor.GRAY + "  " + pvpList(sender, false, !isPlayer));
 	}
 
@@ -69,7 +69,7 @@ public class PvPList implements TabExecutor {
 				list.append(name).append(", ");
 		}
 		if (list.toString().isEmpty())
-			return Messages.pvpListNoResults.getMsg();
+			return Lang.PVP_LIST_NO_RESULTS.msg();
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
 	}
@@ -83,7 +83,7 @@ public class PvPList implements TabExecutor {
 			}
 		}
 		if (list.toString().isEmpty())
-			return Messages.pvpListNoResults.getMsg();
+			return Lang.PVP_LIST_NO_RESULTS.msg();
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
 	}

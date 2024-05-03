@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -27,10 +27,10 @@ public class Tag implements CommandExecutor {
 		if (args.length == 0 && sender instanceof final Player player) {
 			final CombatPlayer pvPlayer = ph.get(player);
 			if (!pvPlayer.isInCombat()) {
-				pvPlayer.message(Messages.tagNotInCombat.getMsg());
+				pvPlayer.message(Lang.TAG_NOT_IN_COMBAT.msg());
 			} else {
 				final long timeLeft = pvPlayer.getTaggedTime() + Settings.getTimeInCombat() * 1000 - System.currentTimeMillis();
-				pvPlayer.message(Messages.tagTimeLeft.getMsg(TimeUtil.getDiffMsg(timeLeft)));
+				pvPlayer.message(Lang.TAG_TIME_LEFT.msg(TimeUtil.getDiffMsg(timeLeft)));
 			}
 			return true;
 		} else if (args.length == 1 && Permissions.ADMIN.hasPerm(sender)) {
@@ -48,7 +48,7 @@ public class Tag implements CommandExecutor {
 				final int time = Integer.parseInt(args[1]);
 				tagPlayer(sender, name, time * 1000L);
 			} catch (final NumberFormatException e) {
-				sender.sendMessage(Messages.PREFIXMSG + " §cError, time must be a number!");
+				sender.sendMessage(Lang.PREFIXMSG + " §cError, time must be a number!");
 			}
 			return true;
 		}
@@ -58,11 +58,11 @@ public class Tag implements CommandExecutor {
 	private void tagPlayer(final CommandSender sender, final String name, final long time) {
 		final CombatPlayer target = ph.get(Bukkit.getPlayer(name));
 		if (target.isInCombat()) {
-			sender.sendMessage(Messages.PREFIXMSG + " §cThat player is already in combat");
+			sender.sendMessage(Lang.PREFIXMSG + " §cThat player is already in combat");
 			return;
 		}
 		target.setTagged(true, target, time);
-		sender.sendMessage(Messages.PREFIXMSG + " " + target.getName() + " §2has been tagged for §e" + time / 1000 + " §2seconds");
+		sender.sendMessage(Lang.PREFIXMSG + " " + target.getName() + " §2has been tagged for §e" + time / 1000 + " §2seconds");
 	}
 
 }

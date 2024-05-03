@@ -17,7 +17,7 @@ import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.type.RegionDependency;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 
 public class MoveListener implements Listener {
 
@@ -48,7 +48,7 @@ public class MoveListener implements Listener {
 			newVel.setY(newVel.getY() + 0.1).normalize().multiply(1.5);
 			player.setVelocity(newVel);
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {
-				pvplayer.message(Messages.pushbackWarning);
+				pvplayer.message(Lang.PUSHBACK_WARNING);
 				cache.put(player.getUniqueId(), player);
 			}
 		}

@@ -19,7 +19,7 @@ import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionType;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Settings;
 
 public class WorldGuardModernHook extends BaseDependency implements WorldGuardDependency, ForceToggleDependency {
@@ -103,14 +103,14 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 	private void disableNewbieProtection(final CombatPlayer player) {
 		if (player.isNewbie()) {
 			player.setNewbie(false);
-			player.message(Messages.newbieForceRemovedWG.getMsg());
+			player.message(Lang.NEWBIE_FORCE_REMOVED_WG.msg());
 		}
 	}
 
 	private void disablePvP(final CombatPlayer player) {
 		if (!player.hasPvPEnabled()) {
 			player.setPvP(true);
-			player.message(Messages.pvpForceEnabledWG.getMsg());
+			player.message(Lang.PVP_FORCE_ENABLED_WG.msg());
 		}
 	}
 

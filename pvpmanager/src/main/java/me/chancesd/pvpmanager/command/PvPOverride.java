@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 
 public class PvPOverride implements CommandExecutor {
 
@@ -23,7 +23,7 @@ public class PvPOverride implements CommandExecutor {
 		if (sender instanceof final Player player) {
 			final CombatPlayer pvPlayer = ph.get(player);
 			final boolean override = pvPlayer.toggleOverride();
-			pvPlayer.message(Messages.PREFIXMSG + ChatColor.DARK_GREEN + "PvP Override set to: " + ChatColor.GOLD + override);
+			pvPlayer.message(Lang.PREFIXMSG + ChatColor.DARK_GREEN + "PvP Override set to: " + ChatColor.GOLD + override);
 		}
 		return true;
 	}
