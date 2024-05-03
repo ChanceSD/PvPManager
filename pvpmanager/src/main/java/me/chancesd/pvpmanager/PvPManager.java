@@ -26,7 +26,7 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.manager.StorageManager;
 import me.chancesd.pvpmanager.manager.UpdateManager;
 import me.chancesd.pvpmanager.manager.WorldManager;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.library.PluginLibraries;
 import me.chancesd.sdutils.plugin.SDPlugin;
@@ -47,7 +47,7 @@ public class PvPManager extends SDPlugin {
 
 	@Override
 	public void onLoad() {
-		Log.setup(getLogger(), Messages.PREFIXMSG);
+		Log.setup(getLogger(), Lang.PREFIXMSG);
 		PluginLibraries.checkDependencies(this);
 	}
 
@@ -84,7 +84,7 @@ public class PvPManager extends SDPlugin {
 
 	private void loadFiles() {
 		this.configM = new ConfigManager(this);
-		Messages.setup(this);
+		Lang.setup(this);
 	}
 
 	private void startListeners() {

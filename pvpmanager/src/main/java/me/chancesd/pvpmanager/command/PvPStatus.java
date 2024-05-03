@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
 public class PvPStatus implements CommandExecutor {
@@ -25,23 +25,23 @@ public class PvPStatus implements CommandExecutor {
 		if (args.length == 0 && sender instanceof final Player player) {
 			final CombatPlayer pvpPlayer = ph.get(player);
 			if (!pvpPlayer.hasPvPEnabled()) {
-				pvpPlayer.message(Messages.selfStatusDisabled);
+				pvpPlayer.message(Lang.SELF_STATUS_DISABLED);
 				return true;
 			}
-			pvpPlayer.message(Messages.selfStatusEnabled);
+			pvpPlayer.message(Lang.SELF_STATUS_ENABLED);
 			return true;
 		} else if (args.length == 1 && sender.hasPermission("pvpmanager.pvpstatus.others")) {
 			final String name = args[0];
 			if (CombatUtils.isOnline(name)) {
 				target = ph.get(Bukkit.getPlayer(name));
 				if (!target.hasPvPEnabled()) {
-					sender.sendMessage(Messages.othersStatusDisabled.getMsg(name));
+					sender.sendMessage(Lang.OTHERS_STATUS_DISABLED.msg(name));
 					return true;
 				}
-				sender.sendMessage(Messages.otherStatusEnabled.getMsg(name));
+				sender.sendMessage(Lang.OTHER_STATUS_ENABLED.msg(name));
 				return true;
 			}
-			sender.sendMessage(Messages.errorPlayerNotFound.getMsg(name));
+			sender.sendMessage(Lang.ERROR_PLAYER_NOT_FOUND.msg(name));
 			return true;
 		}
 		return false;

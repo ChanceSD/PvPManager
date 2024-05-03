@@ -19,7 +19,7 @@ import com.google.common.cache.CacheBuilder;
 import me.chancesd.pvpmanager.manager.DependencyManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.tasks.RegionCheckTask;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
@@ -56,7 +56,7 @@ public class MoveListener1_9 implements Listener {
 			CombatUtils.checkGlide(player);
 			player.setVelocity(sanitizeVector(newVel));
 			if (!cache.asMap().containsKey(player.getUniqueId())) {
-				pvplayer.message(Messages.pushbackWarning);
+				pvplayer.message(Lang.PUSHBACK_WARNING);
 				player.getWorld().playEffect(player.getEyeLocation(), Effect.SMOKE, 3);
 				cache.put(player.getUniqueId(), player);
 			}

@@ -15,7 +15,7 @@ import com.google.common.collect.Lists;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ChatUtils;
@@ -33,10 +33,10 @@ public class Newbie implements TabExecutor {
 		if (args.length == 0 && sender instanceof final Player player) {
 			final CombatPlayer pvPlayer = ph.get(player);
 			if (!pvPlayer.isNewbie()) {
-				pvPlayer.message(Messages.errorNotNewbie.getMsg());
+				pvPlayer.message(Lang.ERROR_NOT_NEWBIE.msg());
 			} else {
 				final long timeLeft = pvPlayer.getNewbieTimeLeft();
-				pvPlayer.message(Messages.newbieTimeCheck.getMsg(TimeUtil.getDiffMsg(timeLeft)));
+				pvPlayer.message(Lang.NEWBIE_TIME_CHECK.msg(TimeUtil.getDiffMsg(timeLeft)));
 			}
 			return true;
 		} else if (args.length >= 1) {
@@ -47,7 +47,7 @@ public class Newbie implements TabExecutor {
 					combatPlayer.setNewbie(false);
 					return true;
 				}
-				combatPlayer.message(Messages.errorNotNewbie.getMsg());
+				combatPlayer.message(Lang.ERROR_NOT_NEWBIE.msg());
 				return true;
 			} else if (Permissions.ADMIN.hasPerm(sender) && args.length == 2) {
 				if (subcommand.equalsIgnoreCase("checktime")) {
@@ -73,7 +73,7 @@ public class Newbie implements TabExecutor {
 
 		final CombatPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(targetPlayerName));
 		final long timeLeft = specifiedPlayer.getNewbieTimeLeft();
-		sender.sendMessage(Messages.newbieTimeCheckOther.getMsg(specifiedPlayer.getName(), TimeUtil.getDiffMsg(timeLeft)));
+		sender.sendMessage(Lang.NEWBIE_TIME_CHECK_OTHER.msg(specifiedPlayer.getName(), TimeUtil.getDiffMsg(timeLeft)));
 	}
 
 	private void addNewbie(final CommandSender sender, final String targetPlayerName) {
@@ -83,7 +83,7 @@ public class Newbie implements TabExecutor {
 		final CombatPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(targetPlayerName));
 		specifiedPlayer.setNewbie(true);
 		sender.sendMessage(
-				ChatUtils.colorize(String.format(Messages.PREFIXMSG + " Added newbie protection to &e%s", specifiedPlayer.getName())));
+				ChatUtils.colorize(String.format(Lang.PREFIXMSG + " Added newbie protection to &e%s", specifiedPlayer.getName())));
 	}
 
 	private void removeNewbie(final CommandSender sender, final String targetPlayerName) {
@@ -93,7 +93,7 @@ public class Newbie implements TabExecutor {
 		final CombatPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(targetPlayerName));
 		specifiedPlayer.setNewbie(false);
 		sender.sendMessage(
-				ChatUtils.colorize(String.format(Messages.PREFIXMSG + " Removed newbie protection from &e%s", specifiedPlayer.getName())));
+				ChatUtils.colorize(String.format(Lang.PREFIXMSG + " Removed newbie protection from &e%s", specifiedPlayer.getName())));
 	}
 
 	@Override
