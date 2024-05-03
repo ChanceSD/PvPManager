@@ -41,11 +41,11 @@ public abstract class EcoPlayer extends BasePlayer {
 	public final void applyPenalty() {
 		final double penalty = getMoneyPercentage(Settings.getMoneyPenalty());
 		withdrawMoney(penalty);
-		message(Messages.getMoneyPenalty().replace("%m", CombatUtils.formatTo2Digits(penalty)));
+		message(Messages.moneyPenalty.getMsg(CombatUtils.formatTo2Digits(penalty)));
 	}
 
 	public final boolean applyPvPDisabledFee() {
-		message(Messages.getPvPDisabledFee().replace("%money", CombatUtils.formatTo2Digits(Settings.getPvPDisabledFee())));
+		message(Messages.pvpDisabledFee.getMsg(CombatUtils.formatTo2Digits(Settings.getPvPDisabledFee())));
 		return withdrawMoney(Settings.getPvPDisabledFee());
 	}
 
@@ -59,10 +59,10 @@ public abstract class EcoPlayer extends BasePlayer {
 				moneyWon = vbalance;
 			}
 			victim.withdrawMoney(moneyWon);
-			victim.message(Messages.getMoneySteal(getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
+			victim.message(Messages.moneySteal.getMsg(getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
 		}
 		depositMoney(moneyWon);
-		message(Messages.getMoneyReward(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
+		message(Messages.moneyReward.getMsg(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
 	}
 
 	public final int giveExp(final EcoPlayer victim) {
@@ -74,7 +74,7 @@ public abstract class EcoPlayer extends BasePlayer {
 			expWon = exp;
 		}
 		setExp(getPlayer().getTotalExperience() + expWon);
-		message(Messages.getExpWon(victim.getPlayer().getName(), String.valueOf(expWon)));
+		message(Messages.expWon.getMsg(victim.getPlayer().getName(), String.valueOf(expWon)));
 		return expWon;
 	}
 

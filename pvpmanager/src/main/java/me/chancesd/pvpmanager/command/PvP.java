@@ -13,6 +13,7 @@ import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.CombatUtils;
+import me.chancesd.pvpmanager.utils.TimeUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -33,7 +34,7 @@ public class PvP implements TabExecutor {
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		if (!sender.hasPermission("pvpmanager.pvpstatus.change")) {
-			sender.sendMessage(Messages.getErrorPermission());
+			sender.sendMessage(Messages.errorPermission.getMsg());
 			return true;
 		}
 
@@ -69,7 +70,7 @@ public class PvP implements TabExecutor {
 			return true;
 		}
 
-		sender.sendMessage(Messages.getErrorCommand());
+		sender.sendMessage(Messages.errorCommand.getMsg());
 		return true;
 	}
 
@@ -78,16 +79,16 @@ public class PvP implements TabExecutor {
 			return;
 
 		if (player.hasPvPEnabled() == state) {
-			player.message(state ? Messages.getAlreadyEnabled() : Messages.getAlreadyDisabled());
+			player.message(state ? Messages.pvpToggleAlreadyEnabled : Messages.pvpToggleAlreadyDisabled);
 			return;
 		}
 
 		final CombatWorld combatWorld = player.getCombatWorld();
 		if (state && combatWorld.isPvPForced() == CombatWorld.WorldOptionState.OFF) {
-			player.message(Messages.getErrorPvPToggleNoPvP());
+			player.message(Messages.errorPvpToggleNoPvp);
 			return;
 		} else if (!state && combatWorld.isPvPForced() == CombatWorld.WorldOptionState.ON) {
-			player.message(Messages.getErrorPvPToggleForcePvP());
+			player.message(Messages.errorPvpToggleForcePvp);
 			return;
 		}
 
@@ -99,8 +100,8 @@ public class PvP implements TabExecutor {
 			return;
 		final CombatPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(playerName));
 		specifiedPlayer.setPvP(toggle ? !specifiedPlayer.hasPvPEnabled() : state);
-		final String stateMessage = specifiedPlayer.hasPvPEnabled() ? Messages.getEnabled() : Messages.getDisabled();
-		sender.sendMessage(Messages.getPvPToggleAdminChanged().replace("%p", playerName).replace("%state", stateMessage)); // TODO add replace variables
+		final String stateMessage = specifiedPlayer.hasPvPEnabled() ? Messages.enabled.getMsg() : Messages.disabled.getMsg();
+		sender.sendMessage(Messages.pvpToggleAdminChanged.getMsg(playerName,stateMessage));
 	}
 
 	private void togglePvPAll(final CommandSender sender, final boolean state, final boolean toggle) {
@@ -112,10 +113,8 @@ public class PvP implements TabExecutor {
 	public final boolean hasToggleCooldownPassed(final CombatPlayer player) {
 		if (!CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())
 				&& !player.hasPerm(Permissions.EXEMPT_PVPTOGGLE_COOLDOWN)) {
-			final long secondsLeft = CombatUtils.getTimeLeft(player.getToggleTime(), Settings.getToggleCooldown());
-			player.message(Messages.getErrorPvpCooldown()
-					.replace("%m", Long.toString(secondsLeft <= 60 ? secondsLeft : secondsLeft - secondsLeft / 60 * 60)).replace("%t",
-							Long.toString(secondsLeft <= 60 ? 0 : secondsLeft / 60))); // TODO use replaceTime
+			final long timeLeft = CombatUtils.getTimeLeftMs(player.getToggleTime(), Settings.getToggleCooldown());
+			player.message(Messages.errorPvpCooldown.getMsg(TimeUtil.getDiffMsg(timeLeft)));
 			return false;
 		}
 		return true;

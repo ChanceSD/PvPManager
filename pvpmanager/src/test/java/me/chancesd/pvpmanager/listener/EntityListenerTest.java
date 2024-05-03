@@ -190,7 +190,7 @@ public class EntityListenerTest {
 		createAttack(false, newbieAttacker);
 
 		assertEquals(ProtectionType.NEWBIE, ph.checkProtection(newbieAttacker, defender).type());
-		verify(newbieAttacker, times(2)).sendMessage(Messages.newbieBlocked());
+		verify(newbieAttacker, times(2)).sendMessage(Messages.newbieProtectionOnHit.getMsg());
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);
@@ -202,7 +202,7 @@ public class EntityListenerTest {
 		createAttack(false);
 
 		assertEquals(ProtectionType.PVPDISABLED, ph.checkProtection(attacker, defender).type());
-		verify(attacker, times(2)).sendMessage(Messages.pvpDisabledOther(defender.getName()));
+		verify(attacker, times(2)).sendMessage(Messages.attackDeniedOther.getMsg(defender.getName()));
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);
@@ -210,6 +210,8 @@ public class EntityListenerTest {
 
 	@Test
 	final void failCancel() {
+		final Player playerAttacker = PT.createPlayer("FailCancelAtttacker");
+		final Player playerDefender = PT.createPlayer("FailCancelDefender");
 		final CombatPlayer combatDefender = ph.get(defender);
 		final CombatPlayer combatAttacker = ph.get(attacker);
 		combatDefender.setPvP(true);
@@ -217,14 +219,14 @@ public class EntityListenerTest {
 
 		when(attacker.getAllowFlight()).thenReturn(true);
 		when(defender.getAllowFlight()).thenReturn(true);
-		when(attacker.isFlying()).thenReturn(true);
-		when(defender.isFlying()).thenReturn(true);
-		assertEquals(ProtectionType.FAIL, ph.checkProtection(attacker, defender).type());
-		createAttack(false);
-		assertTrue(combatAttacker.isInCombat());
+		when(playerAttacker.isFlying()).thenReturn(true);
+		when(playerDefender.isFlying()).thenReturn(true);
+		assertEquals(ProtectionType.FAIL, ph.checkProtection(playerAttacker, playerDefender).type());
+		createAttack(playerAttacker, playerDefender, false);
+		assertTrue(combatAttacker).isInCombat());
 		assertTrue(combatDefender.isInCombat());
-		verify(attacker, times(2)).setFlying(false);
-		verify(defender, times(2)).setFlying(false);
+		verify(playerAttacker, times(2)).setFlying(false);
+		verify(playerDefender, times(2)).setFlying(false);
 
 		verify(mockEvent, never()).setCancelled(true);
 		verify(projMockEvent, never()).setCancelled(true);

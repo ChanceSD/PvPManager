@@ -56,7 +56,7 @@ public class MoveListener1_9 implements Listener {
 			CombatUtils.checkGlide(player);
 			player.setVelocity(sanitizeVector(newVel));
 			if (!cache.asMap().containsKey(player.getUniqueId())) {
-				pvplayer.message(Messages.getPushbackWarning());
+				pvplayer.message(Messages.pushbackWarning);
 				player.getWorld().playEffect(player.getEyeLocation(), Effect.SMOKE, 3);
 				cache.put(player.getUniqueId(), player);
 			}

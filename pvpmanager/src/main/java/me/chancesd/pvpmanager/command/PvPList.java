@@ -34,9 +34,9 @@ public class PvPList implements TabExecutor {
 			sendList(sender, isPlayer);
 		} else if (args.length == 1 && args[0].equalsIgnoreCase("offline")) {
 			ScheduleUtils.runAsync(() -> {
-				sender.sendMessage(Messages.getPvpListTitle());
+				sender.sendMessage(Messages.pvpListTitle.getMsg());
 				sender.sendMessage(ChatColor.DARK_GRAY + "Gathering all offline players with PvP disabled, please wait...");
-				sender.sendMessage(Messages.getPvpListDisabled());
+				sender.sendMessage(Messages.pvpListDisabled.getMsg());
 				sender.sendMessage(ChatColor.GRAY + "  " + pvpListOffline());
 			});
 		}
@@ -44,12 +44,12 @@ public class PvPList implements TabExecutor {
 	}
 
 	private void sendList(final CommandSender sender, final boolean isPlayer) {
-		sender.sendMessage(Messages.getPvpListTitle());
+		sender.sendMessage(Messages.pvpListTitle.getMsg());
 
-		sender.sendMessage(Messages.getPvpListEnabled());
+		sender.sendMessage(Messages.pvpListEnabled.getMsg());
 		sender.sendMessage(ChatColor.GRAY + "  " + pvpList(sender, true, !isPlayer));
 
-		sender.sendMessage(Messages.getPvpListDisabled());
+		sender.sendMessage(Messages.pvpListDisabled.getMsg());
 		sender.sendMessage(ChatColor.GRAY + "  " + pvpList(sender, false, !isPlayer));
 	}
 
@@ -69,7 +69,7 @@ public class PvPList implements TabExecutor {
 				list.append(name).append(", ");
 		}
 		if (list.toString().isEmpty())
-			return Messages.getPvpListNoResults();
+			return Messages.pvpListNoResults.getMsg();
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
 	}
@@ -83,7 +83,7 @@ public class PvPList implements TabExecutor {
 			}
 		}
 		if (list.toString().isEmpty())
-			return Messages.getPvpListNoResults();
+			return Messages.pvpListNoResults.getMsg();
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
 	}

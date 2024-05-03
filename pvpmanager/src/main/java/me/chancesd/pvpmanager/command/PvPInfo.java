@@ -38,7 +38,7 @@ public class PvPInfo implements CommandExecutor {
 				sendInfo(sender, ph.get(Bukkit.getPlayer(name)));
 				return true;
 			}
-			sender.sendMessage(Messages.getErrorPlayerNotFound(name));
+			sender.sendMessage(Messages.errorPlayerNotFound.getMsg(name));
 			return true;
 		}
 		return false;

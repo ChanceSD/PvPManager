@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import me.chancesd.pvpmanager.utils.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,10 +33,10 @@ public class Newbie implements TabExecutor {
 		if (args.length == 0 && sender instanceof final Player player) {
 			final CombatPlayer pvPlayer = ph.get(player);
 			if (!pvPlayer.isNewbie()) {
-				pvPlayer.message(Messages.getErrorNotNewbie());
+				pvPlayer.message(Messages.errorNotNewbie.getMsg());
 			} else {
-				final long timeLeft = pvPlayer.getNewbieTimeLeft() / 1000;
-				pvPlayer.message(String.format(Messages.getNewbieTimeCheck(), timeLeft));
+				final long timeLeft = pvPlayer.getNewbieTimeLeft();
+				pvPlayer.message(Messages.newbieTimeCheck.getMsg(TimeUtil.getDiffMsg(timeLeft)));
 			}
 			return true;
 		} else if (args.length >= 1) {
@@ -46,7 +47,7 @@ public class Newbie implements TabExecutor {
 					combatPlayer.setNewbie(false);
 					return true;
 				}
-				combatPlayer.message(Messages.getErrorNotNewbie());
+				combatPlayer.message(Messages.errorNotNewbie.getMsg());
 				return true;
 			} else if (Permissions.ADMIN.hasPerm(sender) && args.length == 2) {
 				if (subcommand.equalsIgnoreCase("checktime")) {
@@ -71,8 +72,8 @@ public class Newbie implements TabExecutor {
 			return;
 
 		final CombatPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(targetPlayerName));
-		final long timeLeft = specifiedPlayer.getNewbieTimeLeft() / 1000;
-		sender.sendMessage(String.format(Messages.getNewbieTimeCheckOther(), specifiedPlayer.getName(), timeLeft));
+		final long timeLeft = specifiedPlayer.getNewbieTimeLeft();
+		sender.sendMessage(Messages.newbieTimeCheckOther.getMsg(specifiedPlayer.getName(), TimeUtil.getDiffMsg(timeLeft)));
 	}
 
 	private void addNewbie(final CommandSender sender, final String targetPlayerName) {
