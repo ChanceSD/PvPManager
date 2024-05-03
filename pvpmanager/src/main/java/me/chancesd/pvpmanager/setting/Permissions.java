@@ -13,7 +13,8 @@ public enum Permissions {
 	EXEMPT_COMBAT_LOG("pvpmanager.nocombatlog"),
 	EXEMPT_COMBAT_TAG("pvpmanager.nocombattag"),
 	EXEMPT_DISABLE_ACTIONS("pvpmanager.nodisable"),
-	EXEMPT_KILL_ABUSE("pvpmanager.nokillabuse");
+	EXEMPT_KILL_ABUSE("pvpmanager.nokillabuse"),
+	EXEMPT_PVPTOGGLE_COOLDOWN("pvpmanager.pvpstatus.nocooldown");
 
 	@NotNull
 	private final String permission;
