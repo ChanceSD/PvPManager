@@ -48,7 +48,7 @@ public class MoveListener implements Listener {
 			newVel.setY(newVel.getY() + 0.1).normalize().multiply(1.5);
 			player.setVelocity(newVel);
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {
-				pvplayer.message(Messages.getPushbackWarning());
+				pvplayer.message(Messages.pushbackWarning);
 				cache.put(player.getUniqueId(), player);
 			}
 		}
