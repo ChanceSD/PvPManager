@@ -3,6 +3,7 @@ package me.chancesd.pvpmanager.player;
 import java.util.UUID;
 
 import me.chancesd.pvpmanager.player.world.CombatWorld;
+import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.MCVersion;
@@ -66,6 +67,12 @@ public abstract class BasePlayer {
 	public final void message(final String message) {
 		if (isOnline() && !message.isEmpty()) {
 			getPlayer().sendMessage(message);
+		}
+	}
+
+	public final void message(final Messages message, final String... args) {
+		if (isOnline()) {
+			getPlayer().sendMessage(message.getMsg(args));
 		}
 	}
 

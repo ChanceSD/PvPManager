@@ -192,7 +192,7 @@ public final class CombatUtils {
 
 	public static boolean isOnlineWithFeedback(final CommandSender sender, @NotNull final String name) {
 		if (!isOnline(name)) {
-			sender.sendMessage(Messages.getErrorPlayerNotFound(name));
+			sender.sendMessage(Messages.errorPlayerNotFound.getMsg(name));
 			return false;
 		}
 		return true;

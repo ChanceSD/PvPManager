@@ -48,7 +48,7 @@ public class EntityListener1_9 implements Listener {
 			return;
 		final CombatPlayer combatPlayer = ph.get((Player) event.getEntity());
 		if (combatPlayer.isInCombat()) {
-			combatPlayer.sendActionBar(Messages.getElytraBlockedInCombat(), 1000);
+			combatPlayer.sendActionBar(Messages.elytraBlockedInCombat.getMsg(), 1000);
 			event.setCancelled(true);
 		}
 	}
