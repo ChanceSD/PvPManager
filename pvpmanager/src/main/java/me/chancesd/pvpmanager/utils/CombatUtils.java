@@ -157,21 +157,23 @@ public final class CombatUtils {
 		return p.isFlying() || p.getAllowFlight();
 	}
 
+	@SuppressWarnings("null")
 	public static void checkGlide(final Player p) {
-		if (p.isGliding()) {
-			p.setGliding(false);
-			ScheduleUtils.teleport(p, p.getLocation());
-			p.setFallDistance(-200);
-			if (!Settings.isBorderPushbackTakeElytra())
-				return;
-			final ItemStack chestplate = p.getInventory().getChestplate();
-			if (chestplate == null || chestplate.getType() != Material.ELYTRA)
-				return;
-			p.getInventory().setChestplate(null);
-			final Map<Integer, ItemStack> item = p.getInventory().addItem(chestplate);
-			if (!item.isEmpty())
-				p.getWorld().dropItemNaturally(p.getLocation(), item.values().stream().findFirst().orElse(chestplate));
-		}
+		if (!p.isGliding())
+			return;
+		final Location playerLocation = p.getLocation();
+		p.setGliding(false);
+		ScheduleUtils.teleport(p, playerLocation);
+		p.setFallDistance(-200);
+		if (!Settings.isBorderPushbackTakeElytra())
+			return;
+		final ItemStack chestplate = p.getInventory().getChestplate();
+		if (chestplate == null || chestplate.getType() != Material.ELYTRA)
+			return;
+		p.getInventory().setChestplate(null);
+		final Map<Integer, ItemStack> item = p.getInventory().addItem(chestplate);
+		if (!item.isEmpty())
+			p.getWorld().dropItemNaturally(playerLocation, item.values().stream().findFirst().orElse(chestplate));
 	}
 
 	public static void fakeItemStackDrop(final Player player, final ItemStack[] inventory) {

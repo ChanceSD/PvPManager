@@ -68,7 +68,4 @@ public final class PlayerTogglePvPEvent extends Event implements Cancellable {
 		return handlers;
 	}
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
 }

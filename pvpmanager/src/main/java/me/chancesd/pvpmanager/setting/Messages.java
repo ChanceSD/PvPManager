@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.temporal.ChronoUnit;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ import me.chancesd.sdutils.utils.Log;
 
 public class Messages {
 
+	private static final String LOCALE_FOLDER = "locale/";
 	private static PvPManager plugin;
 	private static final Properties LANG = new Properties();
 	private static final Queue<String> messageQueue = new LinkedList<>();
@@ -97,6 +99,7 @@ public class Messages {
 	private static String blockPlaceBlockedInCombat;
 	private static String blockBreakBlockedInCombat;
 	private static String eatBlockedInCombat;
+	private static String elytraBlockedInCombat;
 	private static String interactBlockedInCombat;
 	private static String newbiePickupItemBlocked;
 	private static String enabled;
@@ -138,7 +141,11 @@ public class Messages {
 			for (final File file : listFiles) {
 				final String fileName = file.getName();
 				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.fileName())) {
-					file.delete();
+					try {
+						Files.delete(file.toPath());
+					} catch (final IOException e) {
+						Log.warning("Failed to delete messages file", e);
+					}
 				}
 			}
 		}
@@ -157,7 +164,7 @@ public class Messages {
 	private static void createMessagesFile() {
 		int readBytes;
 		final byte[] buffer = new byte[4096];
-		try (InputStream input = plugin.getResource("locale/" + locale.fileName());
+		try (InputStream input = plugin.getResource(LOCALE_FOLDER + locale.fileName());
 				OutputStream resStreamOut = new FileOutputStream(new File(plugin.getDataFolder() + File.separator + locale.fileName()))) {
 			if (input == null) {
 				Log.severe("Couldn't find the default locale file " + locale.fileName());
@@ -210,6 +217,7 @@ public class Messages {
 		blockPlaceBlockedInCombat = getString("Block_Place_Blocked_InCombat");
 		blockBreakBlockedInCombat = getString("Block_Break_Blocked_InCombat");
 		eatBlockedInCombat = getString("Eating_Blocked_InCombat");
+		elytraBlockedInCombat = getString("Elytra_Blocked_InCombat");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
 		chorusBlockedInCombat = getString("ChorusFruit_Blocked_InCombat");
 		interactBlockedInCombat = getString("Interact_Blocked_InCombat");
@@ -259,8 +267,8 @@ public class Messages {
 	private static void checkChanges() {
 		final Properties originalEN = new Properties();
 		final Properties original = new Properties();
-		try (InputStream inputStreamEN = plugin.getResource("locale/" + Locale.EN.fileName());
-				InputStream inputStream = plugin.getResource("locale/" + locale.fileName())) {
+		try (InputStream inputStreamEN = plugin.getResource(LOCALE_FOLDER + Locale.EN.fileName());
+				InputStream inputStream = plugin.getResource(LOCALE_FOLDER + locale.fileName())) {
 			originalEN.load(inputStreamEN);
 			original.load(inputStream);
 			final Enumeration<Object> originalKeys = originalEN.keys();
@@ -618,6 +626,10 @@ public class Messages {
 
 	public static String getEatBlockedInCombat() {
 		return eatBlockedInCombat;
+	}
+
+	public static String getElytraBlockedInCombat() {
+		return elytraBlockedInCombat;
 	}
 
 	public static String getInteractBlockedInCombat() {

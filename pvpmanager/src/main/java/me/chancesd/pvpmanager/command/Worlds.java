@@ -4,9 +4,9 @@ import com.google.common.base.Strings;
 
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.world.CombatWorld;
+import me.chancesd.pvpmanager.player.world.CombatWorld.WorldOptionState;
 import me.chancesd.pvpmanager.setting.Messages;
-import me.chancesd.pvpmanager.world.CombatWorld;
-import me.chancesd.pvpmanager.world.CombatWorld.WorldOptionState;
 import me.chancesd.sdutils.utils.Log;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
