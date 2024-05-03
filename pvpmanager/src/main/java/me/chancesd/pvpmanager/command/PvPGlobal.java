@@ -10,7 +10,7 @@ import org.bukkit.command.TabExecutor;
 
 import com.google.common.collect.Lists;
 
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 
@@ -21,7 +21,7 @@ public class PvPGlobal implements TabExecutor {
 		if (args.length == 1) {
 			final boolean status = args[0].equalsIgnoreCase("on");
 			Settings.setGlobalStatus(status);
-			sender.sendMessage(Messages.PREFIXMSG + ChatColor.DARK_GREEN + " Server PvP was set to " + status);
+			sender.sendMessage(Lang.PREFIXMSG + ChatColor.DARK_GREEN + " Server PvP was set to " + status);
 			return true;
 		}
 		return false;

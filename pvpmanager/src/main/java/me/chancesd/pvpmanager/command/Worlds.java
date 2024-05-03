@@ -6,7 +6,7 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.player.world.CombatWorld.WorldOptionState;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.utils.Log;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
@@ -130,7 +130,7 @@ public class Worlds {
 				final String world = args[2];
 				final CombatWorld combatWorld = plugin.getWorldManager().getWorld(world);
 				if (combatWorld == null) {
-					sender.sendMessage(Messages.PREFIXMSG + ChatColor.RED + "There is no world with that name");
+					sender.sendMessage(Lang.PREFIXMSG + ChatColor.RED + "There is no world with that name");
 					return;
 				}
 				final String option = args[3];

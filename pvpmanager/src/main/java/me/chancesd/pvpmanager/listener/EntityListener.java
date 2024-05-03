@@ -40,7 +40,7 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.player.ProtectionType;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -87,7 +87,7 @@ public class EntityListener implements Listener {
 
 		if (result.isProtected()) {
 			event.setCancelled(true);
-			Messages.messageProtection(result, attacker, attacked);
+			Lang.messageProtection(result, attacker, attacked);
 		}
 	}
 
@@ -206,7 +206,7 @@ public class EntityListener implements Listener {
 
 			if (result.isProtected()) {
 				event.setIntensity(attacked, 0);
-				Messages.messageProtection(result, player, attacked);
+				Lang.messageProtection(result, player, attacked);
 			}
 		}
 	}

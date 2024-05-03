@@ -13,7 +13,7 @@ import com.google.common.base.Preconditions;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -38,21 +38,21 @@ public class PvPInfo implements CommandExecutor {
 				sendInfo(sender, ph.get(Bukkit.getPlayer(name)));
 				return true;
 			}
-			sender.sendMessage(Messages.errorPlayerNotFound.getMsg(name));
+			sender.sendMessage(Lang.ERROR_PLAYER_NOT_FOUND.msg(name));
 			return true;
 		}
 		return false;
 	}
 
 	private void sendInfo(final CommandSender sender, final CombatPlayer target) {
-		sender.sendMessage(Messages.getString("PvPInfo_Title"));
-		sender.sendMessage(Messages.getString("PvPInfo_Line1") + target.getName());
-		sender.sendMessage(Messages.getString("PvPInfo_Line2") + target.getUUID());
-		sender.sendMessage(Messages.getString("PvPInfo_Line3") + target.hasPvPEnabled());
-		sender.sendMessage(Messages.getString("PvPInfo_Line4") + target.isInCombat());
-		sender.sendMessage(Messages.getString("PvPInfo_Line5") + target.isNewbie());
-		sender.sendMessage(Messages.getString("PvPInfo_Line6") + target.getPlayer().getWorld().getName());
-		sender.sendMessage(Messages.getString("PvPInfo_Line7") + target.hasOverride());
+		sender.sendMessage(Lang.getString("PvPInfo_Title"));
+		sender.sendMessage(Lang.getString("PvPInfo_Line1") + target.getName());
+		sender.sendMessage(Lang.getString("PvPInfo_Line2") + target.getUUID());
+		sender.sendMessage(Lang.getString("PvPInfo_Line3") + target.hasPvPEnabled());
+		sender.sendMessage(Lang.getString("PvPInfo_Line4") + target.isInCombat());
+		sender.sendMessage(Lang.getString("PvPInfo_Line5") + target.isNewbie());
+		sender.sendMessage(Lang.getString("PvPInfo_Line6") + target.getPlayer().getWorld().getName());
+		sender.sendMessage(Lang.getString("PvPInfo_Line7") + target.hasOverride());
 		sender.sendMessage(ChatUtils.colorize("&2- Enemies: &7"
 				+ (target.getEnemies().isEmpty() ? "&cNone" : target.getEnemies().stream().map(CombatPlayer::getName).toList())));
 		sender.sendMessage(ChatUtils.colorize("&2- Exempt Perms: &7" + getExemptions(target.getPlayer())));

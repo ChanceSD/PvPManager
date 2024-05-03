@@ -27,7 +27,7 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
@@ -192,7 +192,7 @@ public final class CombatUtils {
 
 	public static boolean isOnlineWithFeedback(final CommandSender sender, @NotNull final String name) {
 		if (!isOnline(name)) {
-			sender.sendMessage(Messages.errorPlayerNotFound.getMsg(name));
+			sender.sendMessage(Lang.ERROR_PLAYER_NOT_FOUND.msg(name));
 			return false;
 		}
 		return true;

@@ -26,9 +26,10 @@ import com.google.common.collect.Lists;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.listener.DebugEntityListener;
+import me.chancesd.pvpmanager.manager.UpdateManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Locale;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
@@ -91,7 +92,7 @@ public class PM implements TabExecutor {
 				return true;
 			}
 		}
-		sender.sendMessage(Messages.errorCommand.getMsg());
+		sender.sendMessage(Lang.ERROR_COMMAND.msg());
 		return false;
 	}
 
@@ -123,7 +124,7 @@ public class PM implements TabExecutor {
 						}
 					}
 					ids.forEach(plugin.getStorageManager().getStorage()::removeUserData);
-					sender.sendMessage(Messages.PREFIXMSG + " §2Finished. Cleaned up " + ids.size() + " inactive users.");
+					sender.sendMessage(Lang.PREFIXMSG + " §2Finished. Cleaned up " + ids.size() + " inactive users.");
 				}
 			}.runTaskAsynchronously(plugin);
 		} catch (final NumberFormatException e) {
@@ -133,8 +134,8 @@ public class PM implements TabExecutor {
 
 	private void convert(final CommandSender sender, final String[] args) {
 		if (args.length == 1) {
-			sender.sendMessage(Messages.PREFIXMSG + " §4§lUsage: §e/pmr convert <databaseType>");
-			sender.sendMessage(Messages.PREFIXMSG + " §cCurrently the database types are: " + Arrays.asList(DatabaseType.values()));
+			sender.sendMessage(Lang.PREFIXMSG + " §4§lUsage: §e/pmr convert <databaseType>");
+			sender.sendMessage(Lang.PREFIXMSG + " §cCurrently the database types are: " + Arrays.asList(DatabaseType.values()));
 			return;
 		}
 
@@ -143,13 +144,13 @@ public class PM implements TabExecutor {
 		try {
 			databaseType = DatabaseType.valueOf(dbType.toUpperCase());
 		} catch (final IllegalArgumentException e) {
-			sender.sendMessage(Messages.PREFIXMSG + " §cInvalid database type. Available types are: " + Arrays.asList(DatabaseType.values()));
+			sender.sendMessage(Lang.PREFIXMSG + " §cInvalid database type. Available types are: " + Arrays.asList(DatabaseType.values()));
 			return;
 		}
 
 		final DatabaseType currentType = plugin.getStorageManager().getStorage().getDatabaseType();
 		if (currentType == databaseType) {
-			sender.sendMessage(Messages.PREFIXMSG + " §cCan't convert. You are already running on " + databaseType);
+			sender.sendMessage(Lang.PREFIXMSG + " §cCan't convert. You are already running on " + databaseType);
 			return;
 		}
 
@@ -158,13 +159,13 @@ public class PM implements TabExecutor {
 			try {
 				plugin.getStorageManager().convertFromCurrent(databaseType, sender, System.currentTimeMillis());
 			} catch (final Exception e) {
-				sender.sendMessage(Messages.PREFIXMSG + " §cError! Make sure you entered the correct MySQL details in the config");
+				sender.sendMessage(Lang.PREFIXMSG + " §cError! Make sure you entered the correct MySQL details in the config");
 				return;
 			}
 			plugin.getConfig().set("Database.Type", databaseType.toString());
 			plugin.saveConfig();
 			reload(sender);
-			sender.sendMessage(Messages.PREFIXMSG + " §aYou are now running on " + plugin.getStorageManager().getStorage().getDatabaseType());
+			sender.sendMessage(Lang.PREFIXMSG + " §aYou are now running on " + plugin.getStorageManager().getStorage().getDatabaseType());
 		});
 	}
 
@@ -231,8 +232,8 @@ public class PM implements TabExecutor {
 
 	private void locale(final CommandSender sender, final String[] args) {
 		if (args.length == 1) {
-			sender.sendMessage(Messages.PREFIXMSG + " §aYour current Locale is: §c" + Messages.getLocale());
-			sender.sendMessage(Messages.PREFIXMSG + " §aAvailable languages are: §c" + Locale.asStringList());
+			sender.sendMessage(Lang.PREFIXMSG + " §aYour current Locale is: §c" + Lang.getLocale());
+			sender.sendMessage(Lang.PREFIXMSG + " §aAvailable languages are: §c" + Locale.asStringList());
 			return;
 		}
 
@@ -240,18 +241,18 @@ public class PM implements TabExecutor {
 		try {
 			locale = Locale.valueOf(args[1].toUpperCase());
 		} catch (final IllegalArgumentException e) {
-			sender.sendMessage(Messages.PREFIXMSG + " §cInvalid Locale. Available languages are: " + Locale.asStringList());
+			sender.sendMessage(Lang.PREFIXMSG + " §cInvalid Locale. Available languages are: " + Locale.asStringList());
 			return;
 		}
-		if (Messages.getLocale() == locale) {
-			sender.sendMessage(Messages.PREFIXMSG + " §cCan't change Locale. You are already using " + locale);
+		if (Lang.getLocale() == locale) {
+			sender.sendMessage(Lang.PREFIXMSG + " §cCan't change Locale. You are already using " + locale);
 			return;
 		}
 
 		Settings.setLocale(locale.name());
 		changeConfigSetting("General.Locale", locale.name());
-		Messages.setup(plugin);
-		sender.sendMessage(Messages.PREFIXMSG + " §aLanguage changed to " + Messages.getLocale() + " - Filename: " + Messages.getLocale().fileName());
+		Lang.setup(plugin);
+		sender.sendMessage(Lang.PREFIXMSG + " §aLanguage changed to " + Lang.getLocale() + " - Filename: " + Lang.getLocale().fileName());
 	}
 
 	private void changeConfigSetting(final String path, final String value) {
@@ -262,12 +263,12 @@ public class PM implements TabExecutor {
 
 	private void reload(final CommandSender sender) {
 		if (!sender.hasPermission("pvpmanager.reload")) {
-			sender.sendMessage(Messages.errorPermission.getMsg());
+			sender.sendMessage(Lang.ERROR_PERMISSION.msg());
 			return;
 		}
 
 		reload(false);
-		sender.sendMessage(Messages.PREFIXMSG + " §aPvPManager reloaded!");
+		sender.sendMessage(Lang.PREFIXMSG + " §aPvPManager reloaded!");
 	}
 
 	private void reload(final boolean silent) {
@@ -285,14 +286,15 @@ public class PM implements TabExecutor {
 
 	private void update(final CommandSender sender) {
 		if (Settings.isUpdateCheck()) {
+			final UpdateManager updateManager = plugin.getUpdateManager();
 			if (Settings.isUpdate()) {
-				if (plugin.getUpdateManager().getUpdater().downloadFile()) {
-					sender.sendMessage("§2Update Successful. On next restart you will have §e" + Messages.getNewVersion());
+				if (updateManager.getUpdater().downloadFile()) {
+					sender.sendMessage("§2Update Successful. On next restart you will have §e" + updateManager.getNewVersion());
 				} else {
 					sender.sendMessage("§4An error ocurred while updating, please report to the developer");
 				}
 			} else {
-				sender.sendMessage("§2You have the latest version: §ePvPManager v" + Messages.getCurrentversion());
+				sender.sendMessage("§2You have the latest version: §ePvPManager v" + updateManager.getCurrentversion());
 			}
 		} else {
 			sender.sendMessage("§4Update Checking is disabled, enable it in the Config file");

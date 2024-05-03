@@ -26,7 +26,7 @@ import me.chancesd.pvpmanager.library.rollbar.PMRUncaughExceptionHandler;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.player.world.CombatWorld;
-import me.chancesd.pvpmanager.setting.Messages;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
@@ -125,16 +125,16 @@ public class CombatPlayer extends EcoPlayer {
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
 			this.newbieTask = new NewbieTask(this, 0);
-			message(Messages.newbieProtection.getMsg(TimeUtil.getDiffMsg(newbieTask.getFinishTime())));
+			message(Lang.NEWBIE_PROTECTION.msg(TimeUtil.getDiffMsg(newbieTask.getFinishTime())));
 		} else if (this.newbie && newbieTask != null) {
 			if (newbieTask.isExpired()) {
-				message(Messages.newbieProtectionEnd.getMsg());
+				message(Lang.NEWBIE_PROTECTION_END.msg());
 			} else {
-				message(Messages.newbieProtectionRemoved.getMsg());
+				message(Lang.NEWBIE_PROTECTION_REMOVED.msg());
 				newbieTask.cancel();
 			}
 		} else {
-			message(Messages.errorNotNewbie.getMsg());
+			message(Lang.ERROR_NOT_NEWBIE.msg());
 		}
 		this.newbie = newbie;
 	}
@@ -175,11 +175,11 @@ public class CombatPlayer extends EcoPlayer {
 		final String message;
 		final String actionBarMessage;
 		if (isAttacker) {
-			message = Messages.taggedAttacker.getMsg(other.getName());
-			actionBarMessage = Messages.taggedAttackerActionbar.getMsg(other.getName());
+			message = Lang.TAGGED_ATTACKER.msg(other.getName());
+			actionBarMessage = Lang.TAGGED_ATTACKER_ACTIONBAR.msg(other.getName());
 		} else {
-			message = Messages.taggedDefender.getMsg(other.getName());
-			actionBarMessage = Messages.taggedDefenderActionbar.getMsg(other.getName());
+			message = Lang.TAGGED_DEFENDER.msg(other.getName());
+			actionBarMessage = Lang.TAGGED_DEFENDER_ACTIONBAR.msg(other.getName());
 		}
 		message(message);
 		sendActionBar(actionBarMessage, 400);
@@ -214,8 +214,8 @@ public class CombatPlayer extends EcoPlayer {
 				getPlayer().setGlowing(false);
 			}
 
-			message(Messages.outOfCombat);
-			sendActionBar(Messages.outOfCombatActionbar.getMsg());
+			message(Lang.OUT_OF_COMBAT);
+			sendActionBar(Lang.OUT_OF_COMBAT_ACTIONBAR.msg());
 		}
 
 		this.lastHitters.clear();
@@ -244,10 +244,10 @@ public class CombatPlayer extends EcoPlayer {
 			nametag.setPvP(pvpState);
 		}
 		if (!pvpState) {
-			message(Messages.pvpDisabled);
+			message(Lang.PVPDISABLED);
 			CombatUtils.executeCommands(Settings.getCommandsPvPOff(), getPlayer(), getName());
 		} else {
-			message(Messages.pvpEnabled);
+			message(Lang.PVPENABLED);
 			CombatUtils.executeCommands(Settings.getCommandsPvPOn(), getPlayer(), getName());
 		}
 	}
@@ -263,7 +263,7 @@ public class CombatPlayer extends EcoPlayer {
 				victim.put(victimName, totalKills);
 			}
 			if (Settings.isKillAbuseWarn() && totalKills + 1 == Settings.getKillAbuseMaxKills()) {
-				message(Messages.killAbuseWarning.getMsg());
+				message(Lang.KILL_ABUSE_WARNING.msg());
 			}
 			if (totalKills >= Settings.getKillAbuseMaxKills()) {
 				unTag();
