@@ -1,5 +1,6 @@
 package me.chancesd.pvpmanager.listener;
 
+import me.chancesd.pvpmanager.utils.TimeUtil;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -78,7 +79,7 @@ public class PlayerListener implements Listener {
 		final CombatPlayer combatPlayer = playerHandler.get(event.getPlayer());
 		if (Settings.isBlockPlaceBlocks() && combatPlayer.isInCombat() || Settings.isBlockPlaceBlocksNewbie() && combatPlayer.isNewbie()) {
 			event.setCancelled(true);
-			combatPlayer.sendActionBar(Messages.getBlockPlaceBlockedInCombat(), 1000);
+			combatPlayer.sendActionBar(Messages.blockPlaceBlockedInCombat.getMsg(), 1000);
 		}
 	}
 
@@ -107,12 +108,12 @@ public class PlayerListener implements Listener {
 		final CombatPlayer player = playerHandler.get(event.getPlayer());
 		if (Settings.isBlockEat() && player.isInCombat() && type.isEdible()) {
 			event.setCancelled(true);
-			playerHandler.get(event.getPlayer()).sendActionBar(Messages.getEatBlockedInCombat(), 1000);
+			playerHandler.get(event.getPlayer()).sendActionBar(Messages.eatBlockedInCombat.getMsg(), 1000);
 		}
 		if (Settings.getItemCooldowns().containsKey(type)) {
 			if (player.hasItemCooldown(type)) {
 				event.setCancelled(true);
-				player.message(Messages.getItemCooldown(player.getItemCooldown(type)));
+				player.message(Messages.itemCooldown.getMsg(TimeUtil.getDiffMsg(player.getItemCooldown(type))));
 				return;
 			}
 			player.setItemCooldown(type, Settings.getItemCooldowns().get(type));
@@ -199,7 +200,7 @@ public class PlayerListener implements Listener {
 				final int expWon = pKiller.giveExp(pvPlayer);
 				event.setDroppedExp(0);
 				event.setNewExp(player.getTotalExperience() - expWon);
-				pvPlayer.message(Messages.getExpStolen(pKiller.getName(), String.valueOf(expWon)));
+				pvPlayer.message(Messages.expStolen.getMsg(pKiller.getName(), String.valueOf(expWon)));
 			}
 			CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
 		}
@@ -233,7 +234,7 @@ public class PlayerListener implements Listener {
 		final CombatPlayer pvplayer = playerHandler.get(player);
 		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && Settings.getItemCooldowns().containsKey(type)) {
 			if (pvplayer.hasItemCooldown(type)) {
-				final String msg = Messages.getItemCooldown(pvplayer.getItemCooldown(type));
+				final String msg = Messages.itemCooldown.getMsg(TimeUtil.getDiffMsg(pvplayer.getItemCooldown(type)));
 				if (!msg.equals(msgCooldown.getIfPresent(player.getUniqueId()))) {
 					pvplayer.message(msg);
 					msgCooldown.put(player.getUniqueId(), msg);
@@ -265,7 +266,7 @@ public class PlayerListener implements Listener {
 				}
 				final CombatPlayer target = playerHandler.get(p);
 				if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 9) {
-					pvplayer.message(Messages.pvpDisabledOther(target.getName()));
+					pvplayer.message(Messages.attackDeniedOther.getMsg(target.getName()));
 					e.setCancelled(true);
 					return;
 				}
@@ -276,7 +277,7 @@ public class PlayerListener implements Listener {
 			for (final String material : Settings.getBlockInteractItemList()) {
 				if (type.name().endsWith(material)) {
 					e.setCancelled(true);
-					pvplayer.sendActionBar(Messages.getInteractBlockedInCombat(), 1000);
+					pvplayer.sendActionBar(Messages.interactBlockedInCombat.getMsg(), 1000);
 					return;
 				}
 			}
@@ -289,7 +290,7 @@ public class PlayerListener implements Listener {
 			final CombatPlayer player = playerHandler.get(e.getPlayer());
 			if (player.isNewbie()) {
 				e.setCancelled(true);
-				player.sendActionBar(Messages.getNewbiePickupItemBlocked(), 1000);
+				player.sendActionBar(Messages.newbiePickupItemBlocked.getMsg(), 1000);
 			}
 		}
 	}
@@ -317,14 +318,14 @@ public class PlayerListener implements Listener {
 
 		if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
 			event.setCancelled(true);
-			pvplayer.message(Messages.getEnderpearlBlockedIncombat());
+			pvplayer.message(Messages.enderpearlBlockedIncombat);
 		} else if (MCVersion.isAtLeast(MCVersion.V1_9) && event.getCause() == TeleportCause.CHORUS_FRUIT
 		        && Settings.isBlockChorusFruit()) {
 			event.setCancelled(true);
-			pvplayer.message(Messages.getChorusBlockedInCombat());
+			pvplayer.message(Messages.chorusBlockedInCombat);
 		} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
 			event.setCancelled(true);
-			pvplayer.message(Messages.getTeleportBlockedInCombat());
+			pvplayer.message(Messages.teleportBlockedInCombat);
 		}
 	}
 
@@ -340,12 +341,12 @@ public class PlayerListener implements Listener {
 						+ " | Blocked: " + (Settings.isCommandsWhitelist() != contains));
 				if (Settings.isCommandsWhitelist() != contains) {
 					event.setCancelled(true);
-					player.message(Messages.getCommandDeniedIncombat());
+					player.message(Messages.commandDeniedIncombat);
 				}
 			}
 			if (player.isNewbie() && CombatUtils.recursiveContainsCommand(givenCommand, Settings.getNewbieBlacklist())) {
 				event.setCancelled(true);
-				player.message(Messages.getNewbieCommandBlocked());
+				player.message(Messages.newbieCommandBlocked.getMsg());
 			}
 		}
 	}
@@ -382,7 +383,7 @@ public class PlayerListener implements Listener {
 		final CombatPlayer combatPlayer = playerHandler.get((Player) event.getPlayer());
 		if (combatPlayer.isInCombat()) {
 			event.setCancelled(true);
-			combatPlayer.sendActionBar(Messages.getInventoryBlockedInCombat(), 1000);
+			combatPlayer.sendActionBar(Messages.inventoryBlockedInCombat.getMsg(), 1000);
 		}
 	}
 
@@ -398,12 +399,12 @@ public class PlayerListener implements Listener {
 			return;
 		if (pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.OFF) {
 			pvPlayer.setPvP(false);
-			pvPlayer.message(Messages.getErrorPvPToggleNoPvP());
+			pvPlayer.message(Messages.errorPvpToggleNoPvp);
 			return;
 		}
 		if (!pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.ON) {
 			pvPlayer.setPvP(true);
-			pvPlayer.message(Messages.getErrorPvPToggleForcePvP());
+			pvPlayer.message(Messages.errorPvpToggleForcePvp);
 		}
 	}
 

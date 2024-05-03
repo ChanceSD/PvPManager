@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import me.chancesd.pvpmanager.utils.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -124,16 +125,16 @@ public class CombatPlayer extends EcoPlayer {
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
 			this.newbieTask = new NewbieTask(this, 0);
-			message(Messages.getNewbieProtection(newbieTask.getFinishTime()));
+			message(Messages.newbieProtection.getMsg(TimeUtil.getDiffMsg(newbieTask.getFinishTime())));
 		} else if (this.newbie && newbieTask != null) {
 			if (newbieTask.isExpired()) {
-				message(Messages.getNewbieProtectionEnd());
+				message(Messages.newbieProtectionEnd.getMsg());
 			} else {
-				message(Messages.getNewbieProtectionRemoved());
+				message(Messages.newbieProtectionRemoved.getMsg());
 				newbieTask.cancel();
 			}
 		} else {
-			message(Messages.getErrorNotNewbie());
+			message(Messages.errorNotNewbie.getMsg());
 		}
 		this.newbie = newbie;
 	}
@@ -174,11 +175,11 @@ public class CombatPlayer extends EcoPlayer {
 		final String message;
 		final String actionBarMessage;
 		if (isAttacker) {
-			message = Messages.getTaggedAttacker(other.getName());
-			actionBarMessage = Messages.getTaggedAttackerABar(other.getName());
+			message = Messages.taggedAttacker.getMsg(other.getName());
+			actionBarMessage = Messages.taggedAttackerActionbar.getMsg(other.getName());
 		} else {
-			message = Messages.getTaggedDefender(other.getName());
-			actionBarMessage = Messages.getTaggedDefenderABar(other.getName());
+			message = Messages.taggedDefender.getMsg(other.getName());
+			actionBarMessage = Messages.taggedDefenderActionbar.getMsg(other.getName());
 		}
 		message(message);
 		sendActionBar(actionBarMessage, 400);
@@ -213,8 +214,8 @@ public class CombatPlayer extends EcoPlayer {
 				getPlayer().setGlowing(false);
 			}
 
-			message(Messages.getOutOfCombat());
-			sendActionBar(Messages.getOutOfCombatABar());
+			message(Messages.outOfCombat);
+			sendActionBar(Messages.outOfCombatActionbar.getMsg());
 		}
 
 		this.lastHitters.clear();
@@ -243,10 +244,10 @@ public class CombatPlayer extends EcoPlayer {
 			nametag.setPvP(pvpState);
 		}
 		if (!pvpState) {
-			message(Messages.getPvpDisabled());
+			message(Messages.pvpDisabled);
 			CombatUtils.executeCommands(Settings.getCommandsPvPOff(), getPlayer(), getName());
 		} else {
-			message(Messages.getPvpEnabled());
+			message(Messages.pvpEnabled);
 			CombatUtils.executeCommands(Settings.getCommandsPvPOn(), getPlayer(), getName());
 		}
 	}
@@ -262,7 +263,7 @@ public class CombatPlayer extends EcoPlayer {
 				victim.put(victimName, totalKills);
 			}
 			if (Settings.isKillAbuseWarn() && totalKills + 1 == Settings.getKillAbuseMaxKills()) {
-				message(Messages.getKillAbuseWarning());
+				message(Messages.killAbuseWarning.getMsg());
 			}
 			if (totalKills >= Settings.getKillAbuseMaxKills()) {
 				unTag();

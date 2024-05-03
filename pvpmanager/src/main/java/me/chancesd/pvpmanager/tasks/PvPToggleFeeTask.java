@@ -18,7 +18,7 @@ public class PvPToggleFeeTask implements Runnable {
 		for (final CombatPlayer combatPlayer : ph.getPlayers().values()) {
 			if (!combatPlayer.hasPvPEnabled() && !combatPlayer.applyPvPDisabledFee()) {
 				ScheduleUtils.ensureMainThread(() -> combatPlayer.setPvP(true), combatPlayer.getPlayer());
-				combatPlayer.message(Messages.getPvpFeeNotEnough());
+				combatPlayer.message(Messages.pvpFeeNotEnough);
 			}
 		}
 	}

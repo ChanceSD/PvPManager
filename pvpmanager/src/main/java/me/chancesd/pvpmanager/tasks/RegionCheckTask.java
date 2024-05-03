@@ -40,7 +40,7 @@ public class RegionCheckTask extends BukkitRunnable implements Listener {
 				lastLocation.setPitch(playerLocation.getPitch());
 				lastLocation.setYaw(playerLocation.getYaw());
 				player.teleport(lastLocation);
-				pvPlayer.message(Messages.getPushbackWarning());
+				pvPlayer.message(Messages.pushbackWarning);
 			} else {
 				lastLocations.put(pvPlayer, playerLocation);
 			}

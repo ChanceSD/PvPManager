@@ -91,7 +91,7 @@ public class PM implements TabExecutor {
 				return true;
 			}
 		}
-		sender.sendMessage(Messages.getErrorCommand());
+		sender.sendMessage(Messages.errorCommand.getMsg());
 		return false;
 	}
 
@@ -262,7 +262,7 @@ public class PM implements TabExecutor {
 
 	private void reload(final CommandSender sender) {
 		if (!sender.hasPermission("pvpmanager.reload")) {
-			sender.sendMessage(Messages.getErrorPermission());
+			sender.sendMessage(Messages.errorPermission.getMsg());
 			return;
 		}
 

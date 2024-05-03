@@ -19,11 +19,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import me.chancesd.pvpmanager.InstanceCreator;
 import me.chancesd.pvpmanager.PluginTest;
 import me.chancesd.pvpmanager.PvPManager;
-import me.chancesd.pvpmanager.listener.PlayerListener;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
@@ -159,7 +157,7 @@ public class PlayerListenerTest {
 		tagPlayer(pvPlayer);
 		listener.onCommand(commandPreprocessEvent);
 		assertTrue(commandPreprocessEvent.isCancelled());
-		verify(player, atMostOnce()).sendMessage(Messages.getCommandDeniedIncombat());
+		verify(player, atMostOnce()).sendMessage(Messages.commandDeniedIncombat.getMsg());
 
 		final PlayerCommandPreprocessEvent commandPreprocessEvent2 = new PlayerCommandPreprocessEvent(player, "/tell");
 		tagPlayer(pvPlayer);

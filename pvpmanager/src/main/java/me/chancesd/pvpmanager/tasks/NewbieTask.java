@@ -7,6 +7,7 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Messages;
 import me.chancesd.pvpmanager.setting.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.pvpmanager.utils.TimeUtil;
 
 public class NewbieTask implements Runnable {
 
@@ -21,7 +22,7 @@ public class NewbieTask implements Runnable {
 		this.finishTime = System.currentTimeMillis() + timeLeft;
 		task = ScheduleUtils.runAsyncLater(this, timeLeft / 1000, TimeUnit.SECONDS);
 		if (time != 0) {
-			player.message(String.format(Messages.getNewbieTimeCheck(), time / 1000));
+			player.message(Messages.newbieTimeCheck.getMsg(TimeUtil.getDiffMsg(time)));
 		}
 	}
 
