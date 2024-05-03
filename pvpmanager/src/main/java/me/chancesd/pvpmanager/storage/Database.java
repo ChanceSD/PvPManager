@@ -30,7 +30,6 @@ import me.chancesd.sdutils.utils.MCVersion;
 public class Database {
 
 	private static final String MYSQL_URL_TEMPLATE = "jdbc:mysql://%s/%s";
-	// private static final String MARIADB_URL_TEMPLATE = "jdbc:mariadb://%s/%s";
 	private static final String SQLITE_URL_TEMPLATE = "jdbc:sqlite:%s";
 	private final JavaPlugin plugin;
 	private final DatabaseType databaseType;
@@ -57,11 +56,6 @@ public class Database {
 				config.addDataSourceProperty("journal_mode", "wal");
 			}
 			config.addDataSourceProperty("synchronous", "normal");
-//		} else if (databaseType == DatabaseType.MARIADB) {
-//			// Use MARIADB
-//			config.setJdbcUrl(String.format(MARIADB_URL_TEMPLATE, builder.getUrl(), builder.getDatabase()));
-//			config.setUsername(builder.getUser());
-//			config.setPassword(builder.getPassword());
 		} else {
 			// Use MYSQL
 			config.setJdbcUrl(String.format(MYSQL_URL_TEMPLATE, builder.getUrl(), builder.getDatabase()));

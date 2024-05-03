@@ -32,23 +32,21 @@ public class CustomMetrics {
 		metrics.addCustomChart(new Metrics.DrilldownPie("features", () -> {
 			final Map<String, Map<String, Integer>> map = new HashMap<>();
 
-				map.put("Newbie Protection", getMapEntry(Settings.isNewbieProtectionEnabled() ? "Enabled" : "Disabled"));
-				map.put("Kill Abuse", getMapEntry(Settings.isKillAbuseEnabled() ? "Enabled" : "Disabled"));
-				map.put("Update Check",
-						getMapEntry(!Settings.isUpdateCheck() ? "Disabled" : !Settings.isAutoUpdate() ? "Update Check" : "Auto Update"));
-				map.put("PvP Blood", getMapEntry(Settings.isPvpBlood() ? "Enabled" : "Disabled"));
-				map.put("Drop Mode", getMapEntry(Settings.getDropMode().toString()));
-				map.put("Combat Nametags", getMapEntry(Settings.useNameTag() ? "Enabled" : "Disabled"));
-				map.put("Database Type", getMapEntry(plugin.getStorageManager().getStorage().getDatabaseType().toString()));
-				if (Settings.isBossBarEnabled() && Settings.isActionBarEnabled())
-					map.put("Display Type", getMapEntry("Both"));
-				else if (!Settings.isBossBarEnabled() && !Settings.isActionBarEnabled())
-					map.put("Display Type", getMapEntry("None"));
-				else
-					map.put("Display Type", getMapEntry(Settings.isBossBarEnabled() ? "Only Bossbar" : "Only Actionbar"));
-				return map;
-			}
-		));
+			map.put("Newbie Protection", getMapEntryFeature(Settings.isNewbieProtectionEnabled()));
+			map.put("Kill Abuse", getMapEntryFeature(Settings.isKillAbuseEnabled()));
+			map.put("Update Check", getMapEntry(!Settings.isUpdateCheck() ? "Disabled" : !Settings.isAutoUpdate() ? "Update Check" : "Auto Update"));
+			map.put("PvP Blood", getMapEntryFeature(Settings.isPvpBlood()));
+			map.put("Drop Mode", getMapEntry(Settings.getDropMode().toString()));
+			map.put("Combat Nametags", getMapEntryFeature(Settings.useNameTag()));
+			map.put("Database Type", getMapEntry(plugin.getStorageManager().getStorage().getDatabaseType().toString()));
+			if (Settings.isBossBarEnabled() && Settings.isActionBarEnabled())
+				map.put("Display Type", getMapEntry("Both"));
+			else if (!Settings.isBossBarEnabled() && !Settings.isActionBarEnabled())
+				map.put("Display Type", getMapEntry("None"));
+			else
+				map.put("Display Type", getMapEntry(Settings.isBossBarEnabled() ? "Only Bossbar" : "Only Actionbar"));
+			return map;
+		}));
 
 		if (Settings.isInCombatEnabled()) {
 			metrics.addCustomChart(new Metrics.SimplePie("player_drops_on_logout", () -> {
@@ -80,7 +78,7 @@ public class CustomMetrics {
 				valueMap.put(entry.getValue().getName(), 1);
 			}
 			final List<String> extra = Arrays.asList("GSit", "NametagEdit", "RedProtect", "GriefDefender", "Citizens",
-			"CMI", "TAB", "ProtectionStones");
+					"CMI", "TAB", "ProtectionStones");
 			for (final String extraPlugin : extra) {
 				if (Bukkit.getPluginManager().isPluginEnabled(extraPlugin)) {
 					valueMap.put(extraPlugin, 1);
@@ -117,6 +115,10 @@ public class CustomMetrics {
 			map.put("Commands", result);
 			return map;
 		}));
+	}
+
+	private Map<String, Integer> getMapEntryFeature(final boolean value) {
+		return value ? getMapEntry("Enabled") : getMapEntry("Disabled");
 	}
 
 	private Map<String, Integer> getMapEntry(final boolean value) {
