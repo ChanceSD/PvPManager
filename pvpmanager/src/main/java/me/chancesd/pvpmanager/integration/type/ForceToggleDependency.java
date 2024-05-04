@@ -1,9 +1,8 @@
-package me.chancesd.pvpmanager.integration;
+package me.chancesd.pvpmanager.integration.type;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import me.chancesd.pvpmanager.integration.type.Dependency;
 import me.chancesd.pvpmanager.player.ProtectionType;
 
 public interface ForceToggleDependency extends Dependency {

@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
 public class PvPStatus implements CommandExecutor {
@@ -30,7 +31,7 @@ public class PvPStatus implements CommandExecutor {
 			}
 			pvpPlayer.message(Lang.SELF_STATUS_ENABLED);
 			return true;
-		} else if (args.length == 1 && sender.hasPermission("pvpmanager.pvpstatus.others")) {
+		} else if (args.length == 1 && Permissions.COMMAND_PVP_TOGGLE_OTHERS.hasPerm(sender)) {
 			final String name = args[0];
 			if (CombatUtils.isOnline(name)) {
 				target = ph.get(Bukkit.getPlayer(name));

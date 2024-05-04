@@ -17,7 +17,7 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
@@ -41,7 +41,7 @@ public class Newbie implements TabExecutor {
 			return true;
 		} else if (args.length >= 1) {
 			final String subcommand = args[0];
-			if (Settings.isNewbieDisableAllowed() && subcommand.equalsIgnoreCase("disable") && sender instanceof final Player player) {
+			if (Conf.NEWBIE_ALLOW_DISABLE.asBool() && subcommand.equalsIgnoreCase("disable") && sender instanceof final Player player) {
 				final CombatPlayer combatPlayer = ph.get(player);
 				if (combatPlayer.isNewbie()) {
 					combatPlayer.setNewbie(false);

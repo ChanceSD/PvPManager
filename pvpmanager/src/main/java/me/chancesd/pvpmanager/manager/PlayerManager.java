@@ -23,7 +23,8 @@ import me.chancesd.pvpmanager.event.PlayerCombatLogEvent;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.player.ProtectionType;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.player.UntagReason;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.tasks.CleanKillersTask;
 import me.chancesd.pvpmanager.tasks.PvPToggleFeeTask;
 import me.chancesd.pvpmanager.tasks.TagTask;
@@ -38,16 +39,17 @@ public class PlayerManager {
 	@NotNull
 	private final PvPManager plugin;
 	private final TagTask tagTask;
+	private boolean globalStatus = true;
 
 	public PlayerManager(@NotNull final PvPManager plugin) {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
 		this.tagTask = new TagTask(plugin.getDisplayManager());
-		if (Settings.isKillAbuseEnabled()) {
-			ScheduleUtils.runAsyncTimer(new CleanKillersTask(this), Settings.getKillAbuseTime(), Settings.getKillAbuseTime(), TimeUnit.SECONDS);
+		if (Conf.KILL_ABUSE_ENABLED.asBool()) {
+			ScheduleUtils.runAsyncTimer(new CleanKillersTask(this), Conf.KILL_ABUSE_TIME.asInt(), Conf.KILL_ABUSE_TIME.asInt(), TimeUnit.SECONDS);
 		}
-		if (Settings.getPvPDisabledFee() != 0) {
+		if (Conf.PVP_DISABLED_FEE.asInt() != 0) {
 			ScheduleUtils.runAsyncTimer(new PvPToggleFeeTask(this), 0, 1, TimeUnit.HOURS);
 		}
 
@@ -58,9 +60,9 @@ public class PlayerManager {
 		final CombatPlayer attacker = get(damager);
 		final CombatPlayer attacked = get(defender);
 
-		if (attacker.hasOverride() || Settings.borderHoppingVulnerable() && canAttackHooks(attacker, attacked))
+		if (attacker.hasOverride() || Conf.VULNERABLE_ENABLED.asBool() && canAttackHooks(attacker, attacked))
 			return new ProtectionResult(ProtectionType.FAIL_OVERRIDE);
-		if (!Settings.isGlobalStatus())
+		if (!globalStatus)
 			return new ProtectionResult(ProtectionType.GLOBAL_PROTECTION);
 		if (!attacked.getCombatWorld().isCombatAllowed())
 			return new ProtectionResult(ProtectionType.WORLD_PROTECTION);
@@ -110,9 +112,9 @@ public class PlayerManager {
 	@NotNull
 	public final CombatPlayer get(final Player player) {
 		final CombatPlayer pvPlayer = players.get(player.getUniqueId());
-		if (pvPlayer == null)
-			return addUser(new CombatPlayer(player, plugin));
-		return pvPlayer;
+		if (pvPlayer != null)
+			return pvPlayer;
+		return addUser(new CombatPlayer(player, plugin, tagTask));
 	}
 
 	@NotNull
@@ -128,7 +130,7 @@ public class PlayerManager {
 
 	public final void removeUser(final CombatPlayer player) {
 		if (player.isInCombat()) {
-			player.unTag();
+			player.untag(UntagReason.LOGOUT);
 		}
 		player.cleanForRemoval();
 		players.remove(player.getUUID());
@@ -138,34 +140,34 @@ public class PlayerManager {
 		final Player p = player.getPlayer();
 		final PlayerCombatLogEvent event = new PlayerCombatLogEvent(p, player);
 		Bukkit.getPluginManager().callEvent(event);
-		if (Settings.isKillOnLogout()) {
+		if (Conf.KILL_ON_LOGOUT.asBool()) {
 			player.setPvpLogged(true);
 			p.setHealth(0);
 			player.setPvpLogged(false);
 		}
-		if (Settings.getFineAmount() != 0) {
+		if (Conf.FINE_AMOUNT.asDouble() != 0) {
 			player.applyFine();
 		}
 	}
 
 	public void handleCombatLogDrops(final PlayerDeathEvent event, final Player player) {
-		if (!Settings.isDropExp()) {
+		if (!Conf.DROP_EXP.asBool()) {
 			keepExp(event);
 		}
-		if (!Settings.isDropInventory() && Settings.isDropArmor()) {
+		if (!Conf.DROP_INVENTORY.asBool() && Conf.DROP_ARMOR.asBool()) {
 			CombatUtils.fakeItemStackDrop(player, player.getInventory().getArmorContents());
 			player.getInventory().setArmorContents(null);
-		} else if (Settings.isDropInventory() && !Settings.isDropArmor()) {
+		} else if (Conf.DROP_INVENTORY.asBool() && !Conf.DROP_ARMOR.asBool()) {
 			CombatUtils.fakeItemStackDrop(player, player.getInventory().getContents());
 			player.getInventory().clear();
 		}
-		if (!Settings.isDropInventory() || !Settings.isDropArmor()) {
+		if (!Conf.DROP_INVENTORY.asBool() || !Conf.DROP_ARMOR.asBool()) {
 			keepInv(event);
 		}
 	}
 
 	public void handlePlayerDrops(final PlayerDeathEvent event, final Player player, final Player killer) {
-		switch (Settings.getDropMode()) {
+		switch (Conf.PLAYER_DROP_MODE.asEnum(Conf.DropMode.class)) {
 		case DROP:
 			if (killer == null) {
 				keepInv(event);
@@ -244,13 +246,8 @@ public class PlayerManager {
 		}
 	}
 
-	// TODO replace untag and tag with gettagtask
-	public final void removeFromTagTask(final CombatPlayer p) {
-		tagTask.untag(p);
-	}
-
-	public final void addToTagTask(final CombatPlayer p) {
-		tagTask.addTagged(p);
+	public void setGlobalStatus(final boolean globalStatus) {
+		this.globalStatus = globalStatus;
 	}
 
 	public final Map<UUID, CombatPlayer> getPlayers() {

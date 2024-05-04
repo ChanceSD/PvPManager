@@ -16,10 +16,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.google.common.collect.Lists;
+
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.setting.LogFile;
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.sdutils.config.ConfigUpdater;
 import me.chancesd.sdutils.utils.Log;
 
@@ -27,18 +29,21 @@ public class ConfigManager {
 
 	private static final String CONFIG_VERSION = "Config Version";
 	private static final String CONFIG_NAME = "config.yml";
+	private static final String HOOKS_CONFIG_NAME = "plugin-hooks.yml";
 	private final PvPManager plugin;
 	private final File configFile;
-	private YamlConfiguration config;
-	private LogFile log;
+	private final LogFile log;
+	private final File pluginHooksFile;
+	private final YamlConfiguration pluginHooksConfig;
 
 	public ConfigManager(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.configFile = new File(plugin.getDataFolder(), CONFIG_NAME);
+		pluginHooksFile = new File(plugin.getDataFolder(), HOOKS_CONFIG_NAME);
+		prepareFile(pluginHooksFile, HOOKS_CONFIG_NAME);
 		loadConfig();
-		if (Settings.isLogToFile()) {
-			log = new LogFile(new File(plugin.getDataFolder(), "combatlogs.log"));
-		}
+		log = new LogFile(new File(plugin.getDataFolder(), "combatlogs.log"));
+		pluginHooksConfig = loadYamlConfiguration(pluginHooksFile);
 	}
 
 	private void loadConfig() {
@@ -62,6 +67,7 @@ public class ConfigManager {
 		if (oldVersion < currentVersion) {
 			try {
 				ConfigUpdater.update(plugin, CONFIG_NAME, configFile, Arrays.asList(CONFIG_VERSION, "Metrics", "Update Check.Enabled"));
+				ConfigUpdater.update(plugin, HOOKS_CONFIG_NAME, pluginHooksFile, Lists.newArrayList());
 				Log.infoColor("§aConfig file updated from version §c" + oldVersion + " §ato version §c" + currentVersion);
 				Log.warning("Checking the config file and adjusting the new settings is highly recommended");
 				Lang.queueAdminMsg(Lang.PREFIXMSG + " §aConfiguration updated from version §c" + oldVersion + " §ato §c" + currentVersion);
@@ -78,12 +84,16 @@ public class ConfigManager {
 			this.prepareFile(configFile, CONFIG_NAME);
 			Log.infoColor(ChatColor.DARK_GREEN + "New config file created successfully!");
 		}
-		try (InputStreamReader inputStream = new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8)) {
-			this.config = YamlConfiguration.loadConfiguration(inputStream);
+		Conf.initialize(plugin, loadYamlConfiguration(configFile));
+	}
+
+	private YamlConfiguration loadYamlConfiguration(final File file) {
+		try (InputStreamReader inputStream = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+			return YamlConfiguration.loadConfiguration(inputStream);
 		} catch (final IOException e) {
 			Log.severe("Config file not found", e);
+			return null;
 		}
-		Settings.initizalizeVariables(config);
 	}
 
 	private void resetConfig() {
@@ -124,6 +134,10 @@ public class ConfigManager {
 		} catch (final Exception e) {
 			Log.severe("Error copying config file", e);
 		}
+	}
+
+	public YamlConfiguration getHooksConfig() {
+		return pluginHooksConfig;
 	}
 
 	public LogFile getLog() {

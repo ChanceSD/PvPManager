@@ -2,7 +2,8 @@ package me.chancesd.pvpmanager.manager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,30 +15,31 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.PvPManager;
-import me.chancesd.pvpmanager.integration.AFKDependency;
 import me.chancesd.pvpmanager.integration.BaseDependency;
 import me.chancesd.pvpmanager.integration.DependencyException;
-import me.chancesd.pvpmanager.integration.ForceToggleDependency;
-import me.chancesd.pvpmanager.integration.GroupDependency;
 import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.hook.EssentialsHook;
 import me.chancesd.pvpmanager.integration.hook.GriefPreventionHook;
 import me.chancesd.pvpmanager.integration.hook.LibsDisguisesHook;
 import me.chancesd.pvpmanager.integration.hook.PlaceHolderAPIHook;
 import me.chancesd.pvpmanager.integration.hook.SimpleClansHook;
+import me.chancesd.pvpmanager.integration.hook.TABHook;
 import me.chancesd.pvpmanager.integration.hook.TownyHook;
 import me.chancesd.pvpmanager.integration.hook.VaultHook;
 import me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardLegacyHook;
 import me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardModernHook;
+import me.chancesd.pvpmanager.integration.type.AFKDependency;
 import me.chancesd.pvpmanager.integration.type.Dependency;
 import me.chancesd.pvpmanager.integration.type.DisguiseDependency;
+import me.chancesd.pvpmanager.integration.type.ForceToggleDependency;
 import me.chancesd.pvpmanager.integration.type.GodDependency;
+import me.chancesd.pvpmanager.integration.type.GroupDependency;
 import me.chancesd.pvpmanager.integration.type.RegionDependency;
 import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
 import me.chancesd.pvpmanager.listener.MoveListener;
 import me.chancesd.pvpmanager.listener.MoveListener1_9;
 import me.chancesd.pvpmanager.player.ProtectionType;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
@@ -46,7 +48,7 @@ import net.milkbowl.vault.economy.Economy;
 
 public class DependencyManager {
 
-	private final HashMap<Hook, Dependency> dependencies = new HashMap<>();
+	private final Map<Hook, Dependency> dependencies = new EnumMap<>(Hook.class);
 	private final ArrayList<GroupDependency> attackChecks = new ArrayList<>();
 	private final ArrayList<RegionDependency> regionChecks = new ArrayList<>();
 	private final ArrayList<GodDependency> godChecks = new ArrayList<>();
@@ -55,11 +57,6 @@ public class DependencyManager {
 	private final ArrayList<AFKDependency> afkChecks = new ArrayList<>();
 
 	public DependencyManager() {
-		if (Bukkit.getPluginManager().getPlugin("TAB") != null && Settings.useNameTag()) {
-			Log.info("TAB detected. If you want nametags to change while in combat, set 'anti-override' to false in TAB's config."
-					+ " (Doing that will prevent TAB from changing nametags)");
-			Log.info("Or use the premium version of PvPManager which hooks into TAB for nametag/tablist changes.");
-		}
 		final List<Hook> failedHooks = setupHooks(Hook.values());
 		// Delayed check for hooks that do not use softdepend
 		ScheduleUtils.runPlatformTask(() -> {
@@ -105,30 +102,25 @@ public class DependencyManager {
 	}
 
 	private boolean attemptHookingInto(final Hook hook) {
-		switch (hook) {
-		case SIMPLECLANS:
-			return registerDependency(new SimpleClansHook(hook));
-		case VAULT:
-			return registerDependency(new VaultHook(hook));
-		case WORLDGUARD:
+		final Dependency dependency = switch (hook) {
+		case SIMPLECLANS -> new SimpleClansHook(hook);
+		case VAULT -> new VaultHook(hook);
+		case WORLDGUARD -> {
 			if (Utils.isVersionAtLeast(Utils.stripTags(hook.getVersion()), "7.0")) {
-				return registerDependency(new WorldGuardModernHook(hook));
+				yield new WorldGuardModernHook(hook);
 			} else {
-				return registerDependency(new WorldGuardLegacyHook(hook));
+				yield new WorldGuardLegacyHook(hook);
 			}
-		case ESSENTIALS:
-			return registerDependency(new EssentialsHook(hook));
-		case PLACEHOLDERAPI:
-			return registerDependency(new PlaceHolderAPIHook(hook));
-		case LIBSDISGUISES:
-			return registerDependency(new LibsDisguisesHook(hook));
-		case TOWNY:
-			return registerDependency(new TownyHook(hook));
-		case GRIEFPREVENTION:
-			return registerDependency(new GriefPreventionHook(hook));
-		default:
-			return registerDependency(new BaseDependency(hook));
 		}
+		case ESSENTIALS -> new EssentialsHook(hook);
+		case PLACEHOLDERAPI -> new PlaceHolderAPIHook(hook);
+		case LIBSDISGUISES -> new LibsDisguisesHook(hook);
+		case TOWNY -> new TownyHook(hook);
+		case GRIEFPREVENTION -> new GriefPreventionHook(hook);
+		case TAB -> new TABHook(hook);
+		default -> new BaseDependency(hook);
+		};
+		return registerDependency(dependency);
 	}
 
 	public final boolean canAttack(final Player attacker, final Player defender) {
@@ -179,18 +171,18 @@ public class DependencyManager {
 	}
 
 	public void startListeners(final PvPManager plugin) {
-		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
+		if (Conf.PUSHBACK_ENABLED.asBool() && !regionChecks.isEmpty()) {
 			if (MCVersion.isAtLeast(MCVersion.V1_9)) {
-				Bukkit.getPluginManager().registerEvents(new MoveListener1_9(plugin.getPlayerHandler()), plugin);
+				Bukkit.getPluginManager().registerEvents(new MoveListener1_9(plugin.getPlayerManager(), this), plugin);
 			} else if (MCVersion.isAtLeast(MCVersion.V1_8)) {
-				Bukkit.getPluginManager().registerEvents(new MoveListener(plugin.getPlayerHandler()), plugin);
+				Bukkit.getPluginManager().registerEvents(new MoveListener(plugin.getPlayerManager()), plugin);
 			} else {
 				Log.warning("Pushback on border hopping not available for 1.7.10 or below! Feature disabled!");
-				Settings.setBorderHoppingPushback(false);
+				Conf.PUSHBACK_ENABLED.disable();
 			}
 		}
 		if (isDependencyEnabled(Hook.WORLDGUARD)) {
-			((WorldGuardDependency) getDependency(Hook.WORLDGUARD)).startListener(plugin.getPlayerHandler());
+			((WorldGuardDependency) getDependency(Hook.WORLDGUARD)).startListener(plugin.getPlayerManager());
 		}
 	}
 
@@ -246,9 +238,8 @@ public class DependencyManager {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map<Hook, Dependency> getDependencies() {
-		return (Map<Hook, Dependency>) dependencies.clone();
+	public Collection<Dependency> getDependencies() {
+		return dependencies.values();
 	}
 
 }

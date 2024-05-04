@@ -3,7 +3,6 @@ package me.chancesd.pvpmanager.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -20,26 +18,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import me.chancesd.pvpmanager.InstanceCreator;
-import me.chancesd.pvpmanager.PluginTest;
+import me.chancesd.pvpmanager.PluginSetup;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 
 @ExtendWith(InstanceCreator.class)
 public class PlayerListenerTest {
 
 	private static PlayerListener listener;
 	private static PlayerManager ph;
-	private static PluginTest pt;
+	private static PluginSetup pt;
 
 	@BeforeAll
 	public static void setupClass() {
 		pt = InstanceCreator.getPt();
 		final PvPManager plugin = pt.getPlugin();
-		ph = plugin.getPlayerHandler();
-		listener = new PlayerListener(plugin.getPlayerHandler());
+		ph = plugin.getPlayerManager();
+		listener = new PlayerListener(plugin.getPlayerManager());
 	}
 
 	@BeforeEach
@@ -48,7 +45,7 @@ public class PlayerListenerTest {
 	}
 
 	private void tagPlayer(final CombatPlayer player, final CombatPlayer enemy) {
-		player.setTagged(true, enemy);
+		player.tag(true, enemy);
 		assertTrue(player.isInCombat());
 	}
 
@@ -91,7 +88,7 @@ public class PlayerListenerTest {
 		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "", ""));
 		assertTrue(pvPlayer.isInCombat());
 
-		Settings.setMatchKickReason(true);
+		Conf.MATCH_KICK_REASON.set(true);
 		tagPlayer(pvPlayer);
 		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "", ""));
 		assertFalse(pvPlayer.isInCombat());
@@ -128,7 +125,7 @@ public class PlayerListenerTest {
 		assertFalse(pDefender.isInCombat());
 		assertTrue(pAttacker.isInCombat());
 
-		Settings.setUntagEnemy(true);
+		Conf.UNTAG_ON_KILL.set(true);
 		tagPlayer(pDefender, pAttacker);
 		tagPlayer(pAttacker, pDefender);
 		listener.onPlayerDeath(createDeathEvent(defender));
@@ -142,27 +139,6 @@ public class PlayerListenerTest {
 		listener.onPlayerDeath(createDeathEvent(defender));
 		assertFalse(pDefender.isInCombat());
 		assertFalse(pAttacker.isInCombat());
-	}
-
-	@Test
-	final void onCommandTest() {
-		final Player player = pt.createPlayer("onCommandTest");
-		final CombatPlayer pvPlayer = ph.get(player);
-		final PlayerCommandPreprocessEvent commandPreprocessEvent = new PlayerCommandPreprocessEvent(player, "/spawn");
-
-		assertFalse(commandPreprocessEvent.isCancelled());
-		listener.onCommand(commandPreprocessEvent);
-		assertFalse(commandPreprocessEvent.isCancelled());
-
-		tagPlayer(pvPlayer);
-		listener.onCommand(commandPreprocessEvent);
-		assertTrue(commandPreprocessEvent.isCancelled());
-		verify(player, atMostOnce()).sendMessage(Lang.COMMAND_DENIED_INCOMBAT.msg());
-
-		final PlayerCommandPreprocessEvent commandPreprocessEvent2 = new PlayerCommandPreprocessEvent(player, "/tell");
-		tagPlayer(pvPlayer);
-		listener.onCommand(commandPreprocessEvent2);
-		assertFalse(commandPreprocessEvent2.isCancelled());
 	}
 
 }

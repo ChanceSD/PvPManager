@@ -1,8 +1,6 @@
-package me.chancesd.pvpmanager.integration;
+package me.chancesd.pvpmanager.integration.type;
 
 import org.bukkit.entity.Player;
-
-import me.chancesd.pvpmanager.integration.type.Dependency;
 
 public interface AFKDependency extends Dependency {
 

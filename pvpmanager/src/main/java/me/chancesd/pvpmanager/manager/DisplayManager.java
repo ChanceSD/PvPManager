@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.display.ProgressBar;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
 
@@ -19,7 +21,7 @@ public class DisplayManager {
 
 	public void updateBossbar(final CombatPlayer player, final double timePassed, final int totalTime) {
 		final BossBar bossBar = bossBars.computeIfAbsent(player, this::setupBossbar);
-		final String message = Settings.getBossBarMessage().replace("<time>", Long.toString(totalTime - Math.round(timePassed)));
+		final String message = Conf.BOSS_BAR_MESSAGE.asString().replace("<time>", Long.toString(totalTime - Math.round(timePassed)));
 		final String placeHolderMessage = ChatUtils.setPlaceholders(player.getPlayer(), message);
 		if (!bossBar.getTitle().equals(placeHolderMessage))
 			bossBar.setTitle(placeHolderMessage);
@@ -27,7 +29,7 @@ public class DisplayManager {
 	}
 
 	private BossBar setupBossbar(final CombatPlayer player) {
-		final BossBar bossBar = Bukkit.createBossBar("", Settings.getBossBarColor(), Settings.getBossBarStyle());
+		final BossBar bossBar = Bukkit.createBossBar("", Conf.BOSS_BAR_COLOR.asEnum(BarColor.class), Conf.BOSS_BAR_STYLE.asEnum(BarStyle.class));
 		bossBar.addPlayer(player.getPlayer());
 		return bossBar;
 	}
@@ -43,7 +45,7 @@ public class DisplayManager {
 	}
 
 	private ProgressBar setupProgressBar(final long time, final int goal) {
-		return new ProgressBar(Settings.getActionBarMessage(), Settings.getActionBarBars(), goal, Settings.getActionBarSymbol(), time);
+		return new ProgressBar(Conf.ACTION_BAR_MESSAGE.asString(), Conf.ACTION_BAR_BARS.asInt(), goal, Conf.ACTION_BAR_SYMBOL.asString(), time);
 	}
 
 	public void showProgress(final CombatPlayer p, final double timePassed, final int goal) {
