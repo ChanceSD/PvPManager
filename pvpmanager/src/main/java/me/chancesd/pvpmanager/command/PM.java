@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,7 +32,7 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Locale;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ChatUtils;
@@ -60,8 +61,8 @@ public class PM implements TabExecutor {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-		if (args.length == 0 && sender.hasPermission("pvpmanager.menu")) {
-			Settings.helpMenu(sender);
+		if (args.length == 0 && Permissions.COMMAND_MENU.hasPerm(sender)) {
+			helpMenu(sender);
 			return true;
 		}
 		if (args.length == 1) {
@@ -81,7 +82,7 @@ public class PM implements TabExecutor {
 			} else if (args[0].equalsIgnoreCase(CONVERT) && Permissions.ADMIN.hasPerm(sender)) {
 				convert(sender, args);
 				return true;
-			} else if (args[0].equalsIgnoreCase(DEBUG) && sender.hasPermission("pvpmanager.debug")) {
+			} else if (args[0].equalsIgnoreCase(DEBUG) && Permissions.COMMAND_DEBUG.hasPerm(sender)) {
 				debug(sender, args);
 				return true;
 			} else if (args[0].equalsIgnoreCase(LOCALE) && Permissions.ADMIN.hasPerm(sender)) {
@@ -172,31 +173,31 @@ public class PM implements TabExecutor {
 	private void debug(final CommandSender sender, final String[] args) {
 		CombatPlayer p = null;
 		if (args.length == 2 && sender instanceof final Player player) {
-			p = plugin.getPlayerHandler().get(player);
+			p = plugin.getPlayerManager().get(player);
 		}
 		if (args.length == 2 && args[1].equalsIgnoreCase("toggle")) {
-			Settings.setDEBUG(!Settings.isDebug());
-			Log.info("Debug mode: " + Settings.isDebug());
-			sender.sendMessage("Debug mode: " + Settings.isDebug());
+			Conf.setDebug(!Conf.DEBUG_MODE.asBool());
+			Log.info("Debug mode: " + Conf.DEBUG_MODE.asBool());
+			sender.sendMessage("Debug mode: " + Conf.DEBUG_MODE.asBool());
 		} else if (args.length == 2 && args[1].equalsIgnoreCase("damagedebug")) {
 			if (damageListener == null) {
 				sender.sendMessage("§4Warning §f- Some plugin features are disabled while in this mode");
 				sender.sendMessage("Enabling a damage listener for debugging, check the console for details on every entity hit");
 				sender.sendMessage("§cRun this command again §fafter you are done to disable debugging or reload the plugin");
-				Settings.setDEBUG(true);
-				damageListener = new DebugEntityListener(plugin.getPlayerHandler());
+				Conf.setDebug(true);
+				damageListener = new DebugEntityListener(plugin.getPlayerManager());
 				HandlerList.unregisterAll(plugin.getEntityListener());
 				Bukkit.getServer().getPluginManager().registerEvents(damageListener, plugin);
 			} else {
 				HandlerList.unregisterAll(damageListener);
 				Bukkit.getServer().getPluginManager().registerEvents(plugin.getEntityListener(), plugin);
 				damageListener = null;
-				Settings.setDEBUG(false);
+				Conf.setDebug(false);
 				sender.sendMessage("Debug damage listener disabled");
 			}
 		} else if (args[1].equalsIgnoreCase("tagall")) {
-			for (final CombatPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
-				player.setTagged(true, player);
+			for (final CombatPlayer player : plugin.getPlayerManager().getPlayers().values()) {
+				player.tag(true, player);
 			}
 			sender.sendMessage("Tagged all players");
 		} else if (args[1].equalsIgnoreCase("untagall")) {
@@ -205,23 +206,23 @@ public class PM implements TabExecutor {
 			}
 			sender.sendMessage("Untagged all players");
 		} else if (args[1].equalsIgnoreCase("players")) {
-			for (final CombatPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
+			for (final CombatPlayer player : plugin.getPlayerManager().getPlayers().values()) {
 				if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
 					Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
 				}
 			}
-			Log.info("Players: " + plugin.getPlayerHandler().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
+			Log.info("Players: " + plugin.getPlayerManager().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
 		} else if (args.length == 3) {
 			if (!CombatUtils.isOnline(args[2])) {
 				sender.sendMessage("§4Player not online!");
 				return;
 			}
-			p = plugin.getPlayerHandler().get(Bukkit.getPlayer(args[2]));
+			p = plugin.getPlayerManager().get(Bukkit.getPlayer(args[2]));
 		}
 		if (p == null)
 			return;
 		if (args[1].equalsIgnoreCase("tag")) {
-			p.setTagged(true, p);
+			p.tag(true, p);
 		} else if (args[1].equalsIgnoreCase("attack")) {
 			plugin.getServer().getPluginManager()
 					.callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK,
@@ -249,7 +250,7 @@ public class PM implements TabExecutor {
 			return;
 		}
 
-		Settings.setLocale(locale.name());
+		Conf.LOCALE.set(locale.name());
 		changeConfigSetting("General.Locale", locale.name());
 		Lang.setup(plugin);
 		sender.sendMessage(Lang.PREFIXMSG + " §aLanguage changed to " + Lang.getLocale() + " - Filename: " + Lang.getLocale().fileName());
@@ -262,7 +263,7 @@ public class PM implements TabExecutor {
 	}
 
 	private void reload(final CommandSender sender) {
-		if (!sender.hasPermission("pvpmanager.reload")) {
+		if (!Permissions.COMMAND_RELOAD.hasPerm(sender)) {
 			sender.sendMessage(Lang.ERROR_PERMISSION.msg());
 			return;
 		}
@@ -273,21 +274,21 @@ public class PM implements TabExecutor {
 
 	private void reload(final boolean silent) {
 		Log.setSilent(silent);
-		Settings.setReloading(true);
-		Settings.setUpdate(false);
+		plugin.setReloading(true);
+		plugin.getUpdateManager().setUpdateAvailable(false);
 		plugin.onDisable();
 		ScheduleUtils.cancelAllTasks();
 		HandlerList.unregisterAll(plugin);
 		plugin.onEnable();
-		Settings.setReloading(false);
+		plugin.setReloading(false);
 		if (silent)
 			Log.setSilent(false);
 	}
 
 	private void update(final CommandSender sender) {
-		if (Settings.isUpdateCheck()) {
+		if (Conf.CHECK_UPDATES.asBool()) {
 			final UpdateManager updateManager = plugin.getUpdateManager();
-			if (Settings.isUpdate()) {
+			if (updateManager.hasUpdateAvailable()) {
 				if (updateManager.getUpdater().downloadFile()) {
 					sender.sendMessage("§2Update Successful. On next restart you will have §e" + updateManager.getNewVersion());
 				} else {
@@ -313,6 +314,29 @@ public class PM implements TabExecutor {
 			return ChatUtils.getMatchingEntries(args[1], Locale.asStringList());
 
 		return Collections.emptyList();
+	}
+
+	public static void helpMenu(final CommandSender player) {
+		player.sendMessage(ChatColor.GOLD + "-------------- PvPManager Help Page --------------");
+		player.sendMessage(ChatColor.GOLD + "/pvp [player]" + helpSeparator() + ChatColor.WHITE + "Set PvP enabled or disabled");
+		player.sendMessage(ChatColor.GOLD + "/pvpinfo [player]" + helpSeparator() + ChatColor.WHITE + "Check your or other player info");
+		player.sendMessage(ChatColor.GOLD + "/pvplist [offline]" + helpSeparator() + ChatColor.WHITE + "List all online or offline players");
+		player.sendMessage(ChatColor.GOLD + "/pvpo " + helpSeparator() + ChatColor.WHITE + "Override all PvP protections");
+		player.sendMessage(ChatColor.GOLD + "/pvpstatus [player]" + helpSeparator() + ChatColor.WHITE + "Check your or other player PvP status");
+		player.sendMessage(ChatColor.GOLD + "/pvpglobal <on|off>" + helpSeparator() + ChatColor.WHITE + "Toggle PvP for the whole server");
+		player.sendMessage(ChatColor.GOLD + "/pvptag <player> <time>" + helpSeparator() + ChatColor.WHITE + "Check tag time left or tag a player");
+		player.sendMessage(ChatColor.GOLD + "/untag <player>" + helpSeparator() + ChatColor.WHITE + "Untags a player");
+		player.sendMessage(ChatColor.GOLD + "/newbie disable" + helpSeparator() + ChatColor.WHITE + "Disable newbie protection");
+		player.sendMessage(ChatColor.GOLD + "/pmr" + helpSeparator() + ChatColor.WHITE + "Shows this help page");
+		player.sendMessage(ChatColor.GOLD + "/pmr worlds" + helpSeparator() + ChatColor.WHITE + "Control panel to manage world PvP");
+		player.sendMessage(ChatColor.GOLD + "/pmr reload" + helpSeparator() + ChatColor.WHITE + "Reload PvPManager");
+		player.sendMessage(ChatColor.GOLD + "/pmr cleanup" + helpSeparator() + ChatColor.WHITE + "Cleanup inactive users from database");
+		player.sendMessage(ChatColor.GOLD + "/pmr update" + helpSeparator() + ChatColor.WHITE + "Update to latest version");
+		player.sendMessage(ChatColor.GOLD + "-------------------------------------------------");
+	}
+
+	private static String helpSeparator() {
+		return ChatColor.RED + " >> ";
 	}
 
 }

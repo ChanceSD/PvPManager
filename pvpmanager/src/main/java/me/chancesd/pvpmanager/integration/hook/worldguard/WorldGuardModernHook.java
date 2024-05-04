@@ -13,14 +13,14 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.chancesd.pvpmanager.integration.BaseDependency;
-import me.chancesd.pvpmanager.integration.ForceToggleDependency;
 import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.ForceToggleDependency;
 import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 
 public class WorldGuardModernHook extends BaseDependency implements WorldGuardDependency, ForceToggleDependency {
 
@@ -85,7 +85,7 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 
 	@Override
 	public boolean shouldDisable(final Player damager, final Player defender, final ProtectionType reason) {
-		if (hasAllowPvPFlag(defender) || containsRegionsAt(defender.getLocation(), Settings.getWorldguardOverridesList())) {
+		if (hasAllowPvPFlag(defender) || containsRegionsAt(defender.getLocation(), Conf.WORLDGUARD_OVERRIDES_LIST.asSet())) {
 			final CombatPlayer attacker = CombatPlayer.get(damager);
 			final CombatPlayer attacked = CombatPlayer.get(defender);
 			if (reason == ProtectionType.PVPDISABLED) {
@@ -116,7 +116,7 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 
 	@Override
 	public boolean shouldDisableProtection() {
-		return Settings.isWorldguardOverrides();
+		return Conf.WORLDGUARD_OVERRIDES.asBool();
 	}
 
 }

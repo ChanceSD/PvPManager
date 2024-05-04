@@ -8,7 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import me.chancesd.pvpmanager.manager.DisplayManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.player.UntagReason;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.sdutils.utils.Log;
 
 public class TagTask extends TimerTask {
@@ -28,21 +29,20 @@ public class TagTask extends TimerTask {
 		try {
 			final Iterator<CombatPlayer> iterator = tagged.iterator();
 			while (iterator.hasNext()) {
-				final CombatPlayer p = iterator.next();
+				final CombatPlayer combatPlayer = iterator.next();
 				final long currentTime = System.currentTimeMillis();
-				if (currentTime >= p.getUntagTime()) {
-					p.unTag();
-					display.discardPlayer(p);
+				if (currentTime >= combatPlayer.getUntagTime()) {
+					combatPlayer.untag(UntagReason.TIME_EXPIRED);
 					iterator.remove();
 					continue;
 				}
-				final double timePassed = (currentTime - p.getTaggedTime()) / 1000D;
-				final int totalTagTimeInSeconds = (int) (p.getTotalTagTime() / 1000);
-				if (Settings.isActionBarEnabled()) {
-					display.showProgress(p, timePassed, totalTagTimeInSeconds);
+				final double timePassed = (currentTime - combatPlayer.getTaggedTime()) / 1000D;
+				final int totalTagTimeInSeconds = (int) (combatPlayer.getTotalTagTime() / 1000);
+				if (Conf.ACTION_BAR_ENABLED.asBool()) {
+					display.showProgress(combatPlayer, timePassed, totalTagTimeInSeconds);
 				}
-				if (Settings.isBossBarEnabled()) {
-					display.updateBossbar(p, timePassed, totalTagTimeInSeconds);
+				if (Conf.BOSS_BAR_ENABLED.asBool()) {
+					display.updateBossbar(combatPlayer, timePassed, totalTagTimeInSeconds);
 				}
 			}
 		} catch (final Exception e) {
@@ -53,24 +53,25 @@ public class TagTask extends TimerTask {
 
 	@Override
 	public final boolean cancel() {
-		for (final CombatPlayer pvPlayer : tagged)
-			if (pvPlayer.isInCombat()) {
-				display.discardPlayer(pvPlayer);
-				pvPlayer.unTag();
+		for (final CombatPlayer combatPlayer : tagged) {
+			if (combatPlayer.isInCombat()) {
+				display.discardPlayer(combatPlayer);
+				combatPlayer.untag(UntagReason.PLUGIN_DISABLE);
 			}
+		}
 		tagged.clear();
 		super.cancel();
 		timer.cancel();
 		return false;
 	}
 
-	public final void addTagged(final CombatPlayer p) {
-		tagged.add(p);
+	public final void startTracking(final CombatPlayer combatPlayer) {
+		tagged.add(combatPlayer);
 	}
 
-	public final void untag(final CombatPlayer p) {
-		display.discardPlayer(p);
-		tagged.remove(p);
+	public final void stopTracking(final CombatPlayer combatPlayer) {
+		display.discardPlayer(combatPlayer);
+		tagged.remove(combatPlayer);
 	}
 
 	public Set<CombatPlayer> getTaggedPlayers() {

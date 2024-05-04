@@ -5,6 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.UntagReason;
 
 /**
  * This event is called before a player is set as no longer in combat.
@@ -16,10 +17,12 @@ public final class PlayerUntagEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
 	private final Player player;
 	private final CombatPlayer pvplayer;
+	private final UntagReason reason;
 
-	public PlayerUntagEvent(final Player player, final CombatPlayer pvplayer) {
+	public PlayerUntagEvent(final Player player, final CombatPlayer pvplayer, final UntagReason reason) {
 		this.player = player;
 		this.pvplayer = pvplayer;
+		this.reason = reason;
 	}
 
 	/**
@@ -40,8 +43,20 @@ public final class PlayerUntagEvent extends Event {
 		return pvplayer;
 	}
 
+
+	/**
+	 * @return The reason for this player being untagged
+	 */
+	public UntagReason getReason() {
+		return reason;
+	}
+
 	@Override
 	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 

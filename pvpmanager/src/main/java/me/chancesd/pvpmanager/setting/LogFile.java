@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 
@@ -50,10 +50,10 @@ public class LogFile {
 		write(format.format(new Date()) + line);
 	}
 
-	public final void logCombatLog(final PvPlayer player) {
+	public final void logCombatLog(final CombatPlayer player) {
 		final Location loc = player.getPlayer().getLocation();
 		final String data = player.getName() + " tried to escape combat! (" + player.getTagTimeLeft() / 1000 + "s left)"
-				+ " | In combat with: " + player.getEnemies().stream().map(PvPlayer::getName).collect(Collectors.toList())
+				+ " | In combat with: " + player.getEnemies().stream().map(CombatPlayer::getName).collect(Collectors.toList())
 				+ String.format(" | World:%s, X:%.2f, Y:%.2f, Z:%.2f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ());
 		write(format.format(new Date()) + data);
 	}

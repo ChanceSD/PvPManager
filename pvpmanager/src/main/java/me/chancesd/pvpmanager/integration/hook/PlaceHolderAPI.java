@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -42,7 +42,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		if (player == null)
 			return "";
 
-		final CombatPlayer p = plugin.getPlayerHandler().get(player);
+		final CombatPlayer p = plugin.getPlayerManager().get(player);
 		switch (identifier) {
 		case "in_combat":
 			return getPAPIBoolean(p.isInCombat());
@@ -55,13 +55,13 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		case "has_respawn_prot":
 			return getPAPIBoolean(p.hasRespawnProtection());
 		case "combat_prefix":
-			return p.isInCombat() ? Settings.getNameTagPrefix() : "";
+			return p.isInCombat() ? Conf.NAMETAG_PREFIX.asString() : "";
 		case "combat_timeleft":
 			return String.valueOf(p.getTagTimeLeft() / 1000);
 		case "newbie_timeleft":
 			return String.valueOf(p.getNewbieTimeLeft() / 1000);
 		case "pvp_command_timeleft":
-			final int timeLeft = CombatUtils.getTimeLeft(p.getToggleTime(), Settings.getToggleCooldown());
+			final int timeLeft = CombatUtils.getTimeLeft(p.getToggleTime(), Conf.TOGGLE_COOLDOWN.asInt());
 			return String.valueOf(Math.max(timeLeft, 0));
 		case "current_enemy":
 			final CombatPlayer pPlayer = p.getEnemy();

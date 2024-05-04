@@ -4,69 +4,67 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 
 import me.chancesd.pvpmanager.PvPManager;
-import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.type.Dependency;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.sdutils.metrics.Metrics;
 
 public class CustomMetrics {
 
 	public CustomMetrics(final PvPManager plugin) {
-		if (Settings.isReloading())
+		if (plugin.isReloading())
 			return;
 		initMetrics(plugin);
 	}
 
 	private void initMetrics(final PvPManager plugin) {
 
-		final Metrics metrics = new Metrics(plugin, 5653, Settings.isOptOutMetrics());
+		final Metrics metrics = new Metrics(plugin, 5653, Conf.METRICS_OPT_OUT.asBool());
 
 		metrics.addCustomChart(
-				new Metrics.SimplePie("time_in_combat", () -> Settings.isInCombatEnabled() ? Settings.getTimeInCombat() + " seconds" : "Disabled"));
+				new Metrics.SimplePie("time_in_combat",
+						() -> Conf.COMBAT_TAG_ENABLED.asBool() ? Conf.TIME_IN_COMBAT.asInt() + " seconds" : "Disabled"));
 
 		metrics.addCustomChart(new Metrics.DrilldownPie("features", () -> {
 			final Map<String, Map<String, Integer>> map = new HashMap<>();
 
-			map.put("Newbie Protection", getMapEntryFeature(Settings.isNewbieProtectionEnabled()));
-			map.put("Kill Abuse", getMapEntryFeature(Settings.isKillAbuseEnabled()));
-			map.put("Update Check", getMapEntry(!Settings.isUpdateCheck() ? "Disabled" : !Settings.isAutoUpdate() ? "Update Check" : "Auto Update"));
-			map.put("PvP Blood", getMapEntryFeature(Settings.isPvpBlood()));
-			map.put("Drop Mode", getMapEntry(Settings.getDropMode().toString()));
-			map.put("Combat Nametags", getMapEntryFeature(Settings.useNameTag()));
+			map.put("Newbie Protection", getMapEntryFeature(Conf.NEWBIE_ENABLED.asBool()));
+			map.put("Kill Abuse", getMapEntryFeature(Conf.KILL_ABUSE_ENABLED.asBool()));
+			map.put("Update Check", getMapEntry(!Conf.CHECK_UPDATES.asBool() ? "Disabled" : !Conf.AUTO_UPDATE.asBool() ? "Update Check" : "Auto Update"));
+			map.put("PvP Blood", getMapEntryFeature(Conf.PVP_BLOOD.asBool()));
+			map.put("Drop Mode", getMapEntry(Conf.PLAYER_DROP_MODE.asEnum(Conf.DropMode.class).toString()));
+			map.put("Combat Nametags", getMapEntryFeature(Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool()));
 			map.put("Database Type", getMapEntry(plugin.getStorageManager().getStorage().getDatabaseType().toString()));
-			if (Settings.isBossBarEnabled() && Settings.isActionBarEnabled())
+			if (Conf.BOSS_BAR_ENABLED.asBool() && Conf.ACTION_BAR_ENABLED.asBool())
 				map.put("Display Type", getMapEntry("Both"));
-			else if (!Settings.isBossBarEnabled() && !Settings.isActionBarEnabled())
+			else if (!Conf.BOSS_BAR_ENABLED.asBool() && !Conf.ACTION_BAR_ENABLED.asBool())
 				map.put("Display Type", getMapEntry("None"));
 			else
-				map.put("Display Type", getMapEntry(Settings.isBossBarEnabled() ? "Only Bossbar" : "Only Actionbar"));
+				map.put("Display Type", getMapEntry(Conf.BOSS_BAR_ENABLED.asBool() ? "Only Bossbar" : "Only Actionbar"));
 			return map;
 		}));
 
-		if (Settings.isInCombatEnabled()) {
+		if (Conf.COMBAT_TAG_ENABLED.asBool()) {
 			metrics.addCustomChart(new Metrics.SimplePie("player_drops_on_logout", () -> {
-				if (!Settings.isKillOnLogout())
+				if (!Conf.KILL_ON_LOGOUT.asBool())
 					return "Kill On Logout Disabled";
-				else if (!Settings.isDropInventory() && !Settings.isDropExp() && !Settings.isDropArmor())
+				else if (!Conf.DROP_INVENTORY.asBool() && !Conf.DROP_EXP.asBool() && !Conf.DROP_ARMOR.asBool())
 					return "Keep Everything";
-				else if (Settings.isDropInventory() && Settings.isDropExp() && Settings.isDropArmor())
+				else if (Conf.DROP_INVENTORY.asBool() && Conf.DROP_EXP.asBool() && Conf.DROP_ARMOR.asBool())
 					return "Drop Everything";
-				else if (!Settings.isDropInventory() && !Settings.isDropArmor() && Settings.isDropExp())
+				else if (!Conf.DROP_INVENTORY.asBool() && !Conf.DROP_ARMOR.asBool() && Conf.DROP_EXP.asBool())
 					return "Only Drop Exp";
-				else if (!Settings.isDropInventory() && !Settings.isDropExp() && Settings.isDropArmor())
+				else if (!Conf.DROP_INVENTORY.asBool() && !Conf.DROP_EXP.asBool() && Conf.DROP_ARMOR.asBool())
 					return "Only Drop Armor";
-				else if (Settings.isDropInventory() && !Settings.isDropExp() && !Settings.isDropArmor())
+				else if (Conf.DROP_INVENTORY.asBool() && !Conf.DROP_EXP.asBool() && !Conf.DROP_ARMOR.asBool())
 					return "Only Drop Inventory";
-				else if (!Settings.isDropInventory() && Settings.isDropExp() && Settings.isDropArmor())
+				else if (!Conf.DROP_INVENTORY.asBool() && Conf.DROP_EXP.asBool() && Conf.DROP_ARMOR.asBool())
 					return "Only Keep Inventory";
-				else if (Settings.isDropInventory() && Settings.isDropExp() && !Settings.isDropArmor())
+				else if (Conf.DROP_INVENTORY.asBool() && Conf.DROP_EXP.asBool() && !Conf.DROP_ARMOR.asBool())
 					return "Only Keep Armor";
-				else if (Settings.isDropInventory() && !Settings.isDropExp() && Settings.isDropArmor())
+				else if (Conf.DROP_INVENTORY.asBool() && !Conf.DROP_EXP.asBool() && Conf.DROP_ARMOR.asBool())
 					return "Only Keep Exp";
 				return "";
 			}));
@@ -74,8 +72,8 @@ public class CustomMetrics {
 
 		metrics.addCustomChart(new Metrics.AdvancedPie("hooks", () -> {
 			final Map<String, Integer> valueMap = new HashMap<>();
-			for (final Entry<Hook, Dependency> entry : plugin.getDependencyManager().getDependencies().entrySet()) {
-				valueMap.put(entry.getValue().getName(), 1);
+			for (final Dependency entry : plugin.getDependencyManager().getDependencies()) {
+				valueMap.put(entry.getName(), 1);
 			}
 			final List<String> extra = Arrays.asList("GSit", "NametagEdit", "RedProtect", "GriefDefender", "Citizens",
 					"CMI", "TAB", "ProtectionStones");
@@ -87,26 +85,26 @@ public class CustomMetrics {
 			return valueMap;
 		}));
 
-		metrics.addCustomChart(new Metrics.SimplePie("locale", Settings::getLocale));
+		metrics.addCustomChart(new Metrics.SimplePie("locale", Conf.LOCALE::asString));
 
 		metrics.addCustomChart(
-				new Metrics.SingleLineChart("players_in_combat", () -> PvPManager.getInstance().getPlayerHandler().getPlayersInCombat().size()));
+				new Metrics.SingleLineChart("players_in_combat", () -> PvPManager.getInstance().getPlayerManager().getPlayersInCombat().size()));
 
 		metrics.addCustomChart(new Metrics.DrilldownPie("blocked_actions", () -> {
 			final Map<String, Map<String, Integer>> map = new HashMap<>();
 
-			map.put("EnderPearls", getMapEntry(Settings.isBlockEnderPearl()));
-			map.put("ChorusFruits", getMapEntry(Settings.isBlockChorusFruit()));
-			map.put("Teleport", getMapEntry(Settings.isBlockTeleport()));
-			map.put("Place Blocks", getMapEntry(Settings.isBlockPlaceBlocks()));
-			map.put("Interact", getMapEntry(Settings.blockInteract()));
-			map.put("Elytra", getMapEntry(Settings.isBlockGlide()));
-			map.put("Eat", getMapEntry(Settings.isBlockEat()));
-			map.put("Totem of Undying", getMapEntry(Settings.isBlockTotemUndying()));
-			map.put("Open Inventory", getMapEntry(Settings.isBlockInventoryOpen()));
+			map.put("EnderPearls", getMapEntry(Conf.BLOCK_ENDERPEARL.asBool()));
+			map.put("ChorusFruits", getMapEntry(Conf.BLOCK_CHORUSFRUIT.asBool()));
+			map.put("Teleport", getMapEntry(Conf.BLOCK_TELEPORT.asBool()));
+			map.put("Place Blocks", getMapEntry(Conf.BLOCK_PLACE_BLOCKS.asBool()));
+			map.put("Interact", getMapEntry(Conf.BLOCK_INTERACT_IN_COMBAT.asBool()));
+			map.put("Elytra", getMapEntry(Conf.BLOCK_GLIDE_IN_COMBAT.asBool()));
+			map.put("Eat", getMapEntry(Conf.BLOCK_EAT.asBool()));
+			map.put("Totem of Undying", getMapEntry(Conf.BLOCK_TOTEM_UNDYING.asBool()));
+			map.put("Open Inventory", getMapEntry(Conf.BLOCK_INVENTORY_OPEN.asBool()));
 			final HashMap<String, Integer> result = new HashMap<>();
-			if (Settings.isStopCommands()) {
-				if (Settings.isCommandsWhitelist())
+			if (Conf.BLOCK_COMMANDS.asBool()) {
+				if (Conf.BLOCK_COMMANDS_WHITELIST.asBool())
 					result.put("Whitelist", 1);
 				else
 					result.put("Blacklist", 1);

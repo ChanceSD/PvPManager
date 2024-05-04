@@ -28,6 +28,11 @@ import me.chancesd.pvpmanager.setting.lang.Replacement;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
 
+/**
+ * Message class to easily send messages to players, with replacements if necessary
+ *
+ * @author ChanceSD
+ */
 public enum Lang {
 
 	PREFIX("Prefix", Lang.PREFIXMSG),
@@ -112,7 +117,6 @@ public enum Lang {
 	public static final String PREFIXMSG = "§c[§8PvPManager§c]";
 	private static File messagesFile;
 	private static Locale locale;
-
 	private final String messageKey;
 	private final String[] replacements;
 	private String message;
@@ -153,10 +157,11 @@ public enum Lang {
 	public static void setup(final PvPManager plugin) {
 		Lang.plugin = plugin;
 		messageQueue.clear();
+		final String localeString = Conf.LOCALE.asString();
 		try {
-			locale = Locale.valueOf(Settings.getLocale());
+			locale = Locale.valueOf(localeString);
 		} catch (final IllegalArgumentException e) {
-			Log.warning("Error! Locale '" + Settings.getLocale() + "' does not exist! Using default messages");
+			Log.warning("Error! Locale '" + localeString + "' does not exist! Using default messages");
 			locale = Locale.EN;
 		}
 		load();
@@ -249,7 +254,7 @@ public enum Lang {
 
 	public static void messageProtection(final ProtectionResult result, final Player player, final Player attacked) {
 		final String message = getProtectionMessage(result, attacked);
-		final CombatPlayer receiver = plugin.getPlayerHandler().get(player);
+		final CombatPlayer receiver = plugin.getPlayerManager().get(player);
 		receiver.message(message);
 	}
 

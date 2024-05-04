@@ -13,12 +13,14 @@ import org.bukkit.World;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AreaEffectCloud;
+import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -28,7 +30,7 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.sdutils.utils.ReflectionUtil;
@@ -115,14 +117,30 @@ public final class CombatUtils {
 			final ProjectileSource projSource = getSource(attacker);
 			if (projSource instanceof Player) {
 				final Entity shooter = (Entity) projSource;
-				if (Settings.isSelfTag() || !shooter.equals(defender) && !isNPC(shooter))
-					return !Settings.isIgnoreNoDamageHits() || event.getDamage() != 0;
+				if (Conf.SELF_TAG.asBool() || !shooter.equals(defender) && !isNPC(shooter))
+					return !Conf.IGNORE_NO_DMG_HITS.asBool() || event.getDamage() != 0;
 			}
 		}
 		if (attacker instanceof final TNTPrimed tnt) {
 			final Entity tntAttacker = tnt.getSource();
-			if (tntAttacker instanceof Player && (Settings.isSelfTag() || !tntAttacker.equals(defender))) {
+			if (tntAttacker instanceof Player && (Conf.SELF_TAG.asBool() || !tntAttacker.equals(defender))) {
 				return true;
+			}
+		}
+		if (attacker instanceof final EnderCrystal endercrystal) {
+			final EntityDamageEvent lastDamageCause = endercrystal.getLastDamageCause();
+			if (!(lastDamageCause instanceof final EntityDamageByEntityEvent damageEvent))
+				return false;
+			final Entity crystalSource = damageEvent.getDamager();
+			if (crystalSource instanceof Player && !crystalSource.equals(defender))
+				return true;
+			if (crystalSource instanceof final Projectile projectile) {
+				final ProjectileSource projSource = projectile.getShooter();
+				if (projSource instanceof Player) {
+					final Entity shooter = (Entity) projSource;
+					if (Conf.SELF_TAG.asBool() || !shooter.equals(defender))
+						return true;
+				}
 			}
 		}
 
@@ -165,7 +183,7 @@ public final class CombatUtils {
 		p.setGliding(false);
 		ScheduleUtils.teleport(p, playerLocation);
 		p.setFallDistance(-200);
-		if (!Settings.isBorderPushbackTakeElytra())
+		if (!Conf.PUSHBACK_REMOVE_ELYTRA.asBool())
 			return;
 		final ItemStack chestplate = p.getInventory().getChestplate();
 		if (chestplate == null || chestplate.getType() != Material.ELYTRA)
@@ -207,7 +225,7 @@ public final class CombatUtils {
 	}
 
 	public static boolean isWorldExcluded(final String worldName) {
-		return Settings.getWorldsExcluded().contains(worldName);
+		return Conf.WORLD_EXCLUSIONS.asSet().contains(worldName);
 	}
 
 	public static boolean hasHarmfulPotion(final AreaEffectCloud areaCloud) {
@@ -229,7 +247,7 @@ public final class CombatUtils {
 
 	@SuppressWarnings("deprecation")
 	public static boolean isHarmfulPotion(final PotionEffectType type) {
-		return Settings.getHarmfulPotions().contains(type.getName());
+		return Conf.HARMFUL_POTIONS.asSet().contains(type.getName());
 	}
 
 	public static boolean recursiveContainsCommand(final String[] givenCommand, final List<String> list) {

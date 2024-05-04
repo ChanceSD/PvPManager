@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
-public class PluginTest {
+public class PluginSetup {
 
 	private PvPManager plugin;
 	private Server server;
@@ -33,7 +33,7 @@ public class PluginTest {
 	private Player defender;
 
 	public final void setup() throws Exception {
-		filePath = URLDecoder.decode(PluginTest.class.getClassLoader().getResource("").getPath(), "UTF-8");
+		filePath = URLDecoder.decode(PluginSetup.class.getClassLoader().getResource("").getPath(), "UTF-8");
 		final String decoded = filePath + "TestServer/plugins/PvPManager";
 		final File pluginDirectory = new File(decoded);
 		pluginDirectory.mkdirs();
@@ -47,11 +47,12 @@ public class PluginTest {
 		Mockito.when(server.getWorlds()).thenReturn(Arrays.asList(world));
 		Bukkit.setServer(server);
 		plugin = Mockito.mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
-		final PluginDescriptionFile pdf = new PluginDescriptionFile(PluginTest.class.getClassLoader().getResource("plugin.yml").openStream());
+		@SuppressWarnings({ "resource", "null" })
+		final PluginDescriptionFile pdf = new PluginDescriptionFile(PluginSetup.class.getClassLoader().getResource("plugin.yml").openStream());
 		final Method method = JavaPlugin.class.getDeclaredMethod("init", PluginLoader.class, Server.class, PluginDescriptionFile.class, File.class, File.class,
 		        ClassLoader.class);
 		method.setAccessible(true);
-		method.invoke(plugin, (Object) null, server, pdf, pluginDirectory, new File(filePath), PluginTest.class.getClassLoader());
+		method.invoke(plugin, (Object) null, server, pdf, pluginDirectory, new File(filePath), PluginSetup.class.getClassLoader());
 		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(ArgumentMatchers.anyString());
 		plugin.onLoad();
 		plugin.onEnable();

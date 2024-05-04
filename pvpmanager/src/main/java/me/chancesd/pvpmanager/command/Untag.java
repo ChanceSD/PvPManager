@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
@@ -33,7 +34,7 @@ public class Untag implements CommandExecutor {
 				sender.sendMessage(Lang.PREFIXMSG + " §cThat player is not in combat");
 				return true;
 			}
-			target.unTag();
+			target.untag(UntagReason.COMMAND);
 			sender.sendMessage(Lang.PREFIXMSG + " " + target.getName() + " §2has been untagged");
 			return true;
 		}

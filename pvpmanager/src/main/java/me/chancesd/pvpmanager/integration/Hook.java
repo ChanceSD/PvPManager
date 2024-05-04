@@ -5,20 +5,21 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.jetbrains.annotations.NotNull;
 
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 
 public enum Hook {
 	WORLDGUARD("WorldGuard"),
 	ESSENTIALS("Essentials"),
 	VAULT("Vault", "Vault not found! Features requiring Vault won't work!", () -> {
-		Settings.setFineAmount(0);
-		Settings.setMoneyPenalty(0);
-		Settings.setMoneyReward(0);
+		Conf.FINE_AMOUNT.disable();
+		Conf.MONEY_PENALTY.disable();
+		Conf.MONEY_REWARD.disable();
 	}),
 	SIMPLECLANS("SimpleClans"),
 	PLACEHOLDERAPI("PlaceholderAPI"),
 	LIBSDISGUISES("LibsDisguises"),
 	GRIEFPREVENTION("GriefPrevention"),
+	TAB("TAB"),
 	TOWNY("Towny"),
 	KINGDOMSX("Kingdoms");
 

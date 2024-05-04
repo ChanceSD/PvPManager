@@ -42,7 +42,7 @@ import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -66,7 +66,7 @@ public class EntityListener implements Listener {
 				return;
 
 			final CombatPlayer attacked = playerHandler.get((Player) event.getEntity());
-			if (attacked.isNewbie() && Settings.isNewbieGodMode()) {
+			if (attacked.isNewbie() && Conf.NEWBIE_GODMODE.asBool()) {
 				event.setCancelled(true);
 			} else if (event.getDamager() instanceof final LightningStrike lightning) {
 				if (!lightningCache.asMap().containsKey(lightning))
@@ -119,7 +119,7 @@ public class EntityListener implements Listener {
 		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
 		if (!CombatUtils.isPvP(event)) {
-			if (event.getEntity() instanceof final Player player && playerHandler.get(player).isNewbie() && Settings.isNewbieGodMode()) {
+			if (event.getEntity() instanceof final Player player && playerHandler.get(player).isNewbie() && Conf.NEWBIE_GODMODE.asBool()) {
 				event.setCancelled(true);
 			}
 			return;
@@ -140,24 +140,24 @@ public class EntityListener implements Listener {
 		final CombatPlayer pvpAttacker = playerHandler.get(attacker);
 		final CombatPlayer pvpDefender = playerHandler.get(defender);
 
-		if (Settings.isPvpBlood()) {
+		if (Conf.PVP_BLOOD.asBool()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 		}
 		disableActions(attacker, defender, pvpAttacker, pvpDefender);
-		if (Settings.isInCombatEnabled()) {
-			if (Settings.borderHoppingVulnerable() && wg != null && !Settings.borderHoppingResetCombatTag() && wg.hasDenyPvPFlag(attacker)
+		if (Conf.COMBAT_TAG_ENABLED.asBool()) {
+			if (Conf.VULNERABLE_ENABLED.asBool() && wg != null && !Conf.VULNERABLE_RENEW_TAG.asBool() && wg.hasDenyPvPFlag(attacker)
 					&& wg.hasDenyPvPFlag(defender)) {
 				return;
 			}
-			pvpAttacker.setTagged(true, pvpDefender);
-			pvpDefender.setTagged(false, pvpAttacker);
+			pvpAttacker.tag(true, pvpDefender);
+			pvpDefender.tag(false, pvpAttacker);
 		}
 	}
 
 	@SuppressWarnings("null") // PotionEffectType.INVISIBILITY is not null
 	private void disableActions(final Player attacker, final Player defender, final CombatPlayer pvpAttacker, final CombatPlayer pvpDefender) {
 		final boolean hasExemptPerm = pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS);
-		if (Settings.isDisableFly()) {
+		if (Conf.DISABLE_FLY.asBool()) {
 			if (CombatUtils.canFly(attacker) && !hasExemptPerm) {
 				pvpAttacker.disableFly();
 			}
@@ -165,7 +165,7 @@ public class EntityListener implements Listener {
 				pvpDefender.disableFly();
 			}
 		}
-		if (Settings.isDisableElytra()) {
+		if (Conf.DISABLE_ELYTRA.asBool()) {
 			if (!hasExemptPerm)
 				CombatUtils.checkGlide(attacker);
 			if (!pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS))
@@ -174,16 +174,16 @@ public class EntityListener implements Listener {
 
 		if (hasExemptPerm)
 			return;
-		if (Settings.isDisableGamemode() && attacker.getGameMode() != GameMode.SURVIVAL) {
+		if (Conf.DISABLE_GAMEMODE.asBool() && attacker.getGameMode() != GameMode.SURVIVAL) {
 			attacker.setGameMode(GameMode.SURVIVAL);
 		}
-		if (Settings.isDisableDisguise()) {
+		if (Conf.DISABLE_DISGUISE.asBool()) {
 			playerHandler.getPlugin().getDependencyManager().disableDisguise(attacker);
 		}
-		if (Settings.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+		if (Conf.DISABLE_INVISIBILITY.asBool() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 			attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
 		}
-		if (Settings.isDisableGodMode()) {
+		if (Conf.DISABLE_GODMODE.asBool()) {
 			playerHandler.getPlugin().getDependencyManager().disableGodMode(attacker);
 		}
 	}
@@ -279,14 +279,14 @@ public class EntityListener implements Listener {
 	public void onProjectileHitEvent(final ProjectileHitEvent event) {
 		final Projectile entity = event.getEntity();
 		final ProjectileSource shooter = entity.getShooter();
-		if (!Settings.isEnderPearlRenewTag() || entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof final Player player))
+		if (!Conf.PEARL_RENEW_TAG.asBool() || entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof final Player player))
 			return;
 
 		final CombatPlayer pvPlayer = playerHandler.get(player);
 
 		if (pvPlayer.isInCombat()) {
-			final PvPlayer enemy = pvPlayer.getEnemy();
-			pvPlayer.setTagged(true, enemy != null ? enemy : pvPlayer);
+			final CombatPlayer enemy = pvPlayer.getEnemy();
+			pvPlayer.tag(true, enemy != null ? enemy : pvPlayer);
 		}
 	}
 
