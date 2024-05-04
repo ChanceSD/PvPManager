@@ -77,6 +77,12 @@ public abstract class BasePlayer {
 		}
 	}
 
+	public final void message(final Lang message) {
+		if (isOnline()) {
+			getPlayer().sendMessage(message.msg());
+		}
+	}
+
 	/**
 	 * Sends an action bar message with the specified duration
 	 *

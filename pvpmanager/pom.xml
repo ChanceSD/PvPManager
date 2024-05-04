@@ -58,6 +58,12 @@
 			<url>https://repo.md-5.net/content/groups/public/</url>
 		</repository>
 
+		<!-- TAB -->
+		<repository>
+			<id>krypton</id>
+			<url>https://repo.kryptonmc.org/releases</url>
+		</repository>
+
 		<repository>
 			<id>codemc-repo</id>
 			<url>https://repo.codemc.org/repository/maven-public</url>
@@ -204,6 +210,14 @@
 			</exclusions>
 		</dependency>
 
+		<!-- TAB -->
+		<dependency>
+			<groupId>me.neznamy</groupId>
+			<artifactId>tab-api</artifactId>
+			<version>4.0.2</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- Towny -->
 		<dependency>
 			<groupId>com.palmergames.bukkit.towny</groupId>
@@ -249,7 +263,7 @@
 			<version>1.16.8.1.1</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- GriefPrevention -->
 		<dependency>
 			<groupId>com.github.TechFortress</groupId>

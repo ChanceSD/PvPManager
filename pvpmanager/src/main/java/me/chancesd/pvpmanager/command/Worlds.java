@@ -41,7 +41,7 @@ public class Worlds {
 				Log.warning("Null world in world list!");
 				continue;
 			}
-			final List<CombatPlayer> pvPlayerList = world.getPlayers().stream().map(p -> plugin.getPlayerHandler().get(p)).toList();
+			final List<CombatPlayer> pvPlayerList = world.getPlayers().stream().map(p -> plugin.getPlayerManager().get(p)).toList();
 			worldItem.addExtra(createInfoText("Players", pvPlayerList.size()));
 			worldItem.addExtra(createSeparator());
 			worldItem.addExtra(createInfoText("In Combat", pvPlayerList.stream().filter(CombatPlayer::isInCombat).count()));

@@ -1,8 +1,6 @@
-package me.chancesd.pvpmanager.integration;
+package me.chancesd.pvpmanager.integration.type;
 
 import org.bukkit.entity.Player;
-
-import me.chancesd.pvpmanager.integration.type.Dependency;
 
 /**
  * Represents a plugin that groups players in clans/factions/teams/etc. <br>

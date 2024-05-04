@@ -23,18 +23,18 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import me.chancesd.pvpmanager.InstanceCreator;
-import me.chancesd.pvpmanager.PluginTest;
+import me.chancesd.pvpmanager.PluginSetup;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
 @ExtendWith(InstanceCreator.class)
 public class EntityListenerTest {
 
-	private static final PluginTest PT = InstanceCreator.getPt();
+	private static final PluginSetup PT = InstanceCreator.getPt();
 	private static EntityListener damageListener;
 	private EntityDamageByEntityEvent mockEvent;
 	private EntityDamageByEntityEvent projMockEvent;
@@ -45,9 +45,9 @@ public class EntityListenerTest {
 	@BeforeAll
 	public static void setupClass() {
 		final PvPManager plugin = PT.getPlugin();
-		ph = plugin.getPlayerHandler();
+		ph = plugin.getPlayerManager();
 		damageListener = new EntityListener(ph);
-		Settings.setPvpBlood(false); // avoid loading Material class while testing
+		Conf.PVP_BLOOD.disable(); // avoid loading Material class while testing
 		attacker = PT.getAttacker();
 		defender = PT.getDefender();
 	}
@@ -126,8 +126,10 @@ public class EntityListenerTest {
 
 	@Test
 	final void testSelfTag() {
-		assertFalse(Settings.isSelfTag());
+		final Projectile proj = mock(Projectile.class);
+		projMockEvent = createDamageEvent(proj, defender, false);
 
+		assertFalse(Conf.SELF_TAG.asBool());
 		// attacker different from defender
 		createAttack(false, attacker);
 		assertTrue(CombatUtils.isPvP(mockEvent));
@@ -139,9 +141,8 @@ public class EntityListenerTest {
 		assertFalse(CombatUtils.isPvP(projMockEvent));
 
 		// now allow self tagging
-		Settings.setSelfTag(true);
-		assertTrue(Settings.isSelfTag());
-
+		Conf.SELF_TAG.set(true);
+		assertTrue(Conf.SELF_TAG.asBool());
 		// attacker different from defender
 		createAttack(false, attacker);
 		assertTrue(CombatUtils.isPvP(mockEvent));
@@ -159,7 +160,7 @@ public class EntityListenerTest {
 		when(proj.getShooter()).thenReturn(attacker);
 
 		// ignore no damage hits
-		assertTrue(Settings.isIgnoreNoDamageHits());
+		assertTrue(Conf.IGNORE_NO_DMG_HITS.asBool());
 
 		projMockEvent = createDamageEvent(proj, defender, false);
 		when(projMockEvent.getDamage()).thenReturn(5.0);
@@ -170,8 +171,8 @@ public class EntityListenerTest {
 		assertFalse(CombatUtils.isPvP(projMockEvent));
 
 		// don't ignore any hits
-		Settings.setIgnoreNoDamageHits(false);
-		assertFalse(Settings.isIgnoreNoDamageHits());
+		Conf.IGNORE_NO_DMG_HITS.set(false);
+		assertFalse(Conf.IGNORE_NO_DMG_HITS.asBool());
 
 		projMockEvent = createDamageEvent(proj, defender, false);
 		when(projMockEvent.getDamage()).thenReturn(5.0);
