@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import me.chancesd.pvpmanager.integration.GroupDependency;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 
 public interface WorldGuardDependency extends GroupDependency, RegionDependency {

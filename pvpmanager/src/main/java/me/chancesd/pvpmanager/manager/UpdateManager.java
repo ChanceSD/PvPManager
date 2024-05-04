@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.updater.BukkitUpdater;
 import me.chancesd.sdutils.updater.SpigotUpdater;
@@ -23,6 +23,7 @@ public class UpdateManager {
 	private Updater updater;
 	private String newVersion;
 	private final String currentVersion;
+	private boolean updateAvailable;
 
 	public UpdateManager(final PvPManager plugin) {
 		this.plugin = plugin;
@@ -31,7 +32,7 @@ public class UpdateManager {
 	}
 
 	private void setup() {
-		if (Settings.isUpdateCheck()) {
+		if (Conf.CHECK_UPDATES.asBool()) {
 			ScheduleUtils.runAsyncTimer(this::checkForUpdates, 3, 18000, TimeUnit.SECONDS);
 		}
 	}
@@ -48,7 +49,7 @@ public class UpdateManager {
 					+ getCurrentversion();
 			Lang.queueAdminMsg(updateMsg);
 			Bukkit.broadcast(updateMsg, Permissions.ADMIN.getPermission());
-			if (Settings.isAutoUpdate() && Utils.isVersionAtLeast(getNewVersion(), "4.0")
+			if (Conf.AUTO_UPDATE.asBool() && Utils.isVersionAtLeast(getNewVersion(), "4.0")
 					&& !Utils.isVersionAtLeast(getNewVersion(), "4.1")) {
 				final String v4message = Lang.PREFIXMSG
 						+ " §aSince §b§lv4.0 is a huge update§a, it changes a lot of the config and messages file. "
@@ -56,7 +57,7 @@ public class UpdateManager {
 						+ "Please §b§lmanually download the update§a from the link below and copy any settings you need from the old config.";
 				Lang.queueAdminMsg(v4message);
 				Bukkit.broadcast(v4message, Permissions.ADMIN.getPermission());
-			} else if (Settings.isAutoUpdate()) {
+			} else if (Conf.AUTO_UPDATE.asBool()) {
 				if (updater.downloadFile()) {
 					Lang.queueAdminMsg(Lang.PREFIXMSG + " §aUpdate downloaded, it will be applied automatically on the next server restart");
 					Bukkit.broadcast(
@@ -66,7 +67,7 @@ public class UpdateManager {
 				}
 				Log.info("Could not download latest update. Please update manually from one of the links below.");
 			}
-			Settings.setUpdate(true);
+			updateAvailable = true;
 			final String linkMsg = Lang.PREFIXMSG + " §aFollow the link to download: §7" + updater.getUpdateLink();
 			Lang.queueAdminMsg(linkMsg);
 			Bukkit.broadcast(linkMsg, Permissions.ADMIN.getPermission());
@@ -85,6 +86,14 @@ public class UpdateManager {
 
 	public void setNewVersion(final String newVersion) {
 		this.newVersion = newVersion;
+	}
+
+	public boolean hasUpdateAvailable() {
+		return updateAvailable;
+	}
+
+	public void setUpdateAvailable(final boolean updateAvailable) {
+		this.updateAvailable = updateAvailable;
 	}
 
 	public Updater getUpdater() {

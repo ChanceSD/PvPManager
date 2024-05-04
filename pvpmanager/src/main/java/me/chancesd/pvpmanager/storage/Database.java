@@ -37,6 +37,11 @@ public class Database {
 	private boolean converted;
 	private final HikariDataSource connectionPool;
 
+	private static final String SQL_SELECT_ALL = "SELECT * FROM ";
+	private static final String SQL_INSERT_INTO = "INSERT INTO ";
+	private static final String SQL_WHERE = " WHERE ";
+	private static final String SQL_VALUES = " VALUES(";
+
 	protected Database(final DatabaseFactory databaseFactory, final DatabaseConfigBuilder builder) {
 		this.plugin = databaseFactory.getPlugin();
 		this.databaseType = builder.getType();
@@ -62,7 +67,7 @@ public class Database {
 			config.setUsername(builder.getUser());
 			config.setPassword(builder.getPassword());
 		}
-		config.setPoolName("PvPManager");
+		config.setPoolName(plugin.getName());
 		config.addDataSourceProperty("cachePrepStmts", "true");
 		config.addDataSourceProperty("prepStmtCacheSize", "250");
 		config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -184,7 +189,7 @@ public class Database {
 	public void insertDefault(final Table table, final Object... values) {
 		try (Connection connection = getConnection()) {
 			final StringBuilder valueCount = getValueParameteres(Arrays.asList(values));
-			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + " VALUES(" + valueCount + ");")) {
+			try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT_INTO + table.getName() + SQL_VALUES + valueCount + ");")) {
 				for (int i = 0; i < values.length; i++) {
 					ps.setObject(i + 1, values[i]);
 				}
@@ -216,7 +221,7 @@ public class Database {
 				}
 			}
 			columnList.append(")");
-			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");")) {
+			try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT_INTO + table.getName() + columnList + SQL_VALUES + valueCount + ");")) {
 				int i = 0;
 				for (final Object object : values) {
 					ps.setObject(++i, object);
@@ -254,7 +259,7 @@ public class Database {
 				}
 			}
 			columnList.append(")");
-			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + table.getName() + columnList + " VALUES(" + valueCount + ");")) {
+			try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT_INTO + table.getName() + columnList + SQL_VALUES + valueCount + ");")) {
 				int inserts = 0;
 				for (final Collection<Object> object : values) {
 					int i = 0;
@@ -284,7 +289,7 @@ public class Database {
 	 */
 	public Object getValue(final Table table, final String index, final String toGet, final Object value) {
 		try (Connection connection = getConnection();
-				final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
+				final PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ALL + table.getName() + SQL_WHERE + index + "=?")) {
 			ps.setObject(1, value);
 			try (ResultSet result = ps.executeQuery()) {
 				if (result.next())
@@ -307,7 +312,7 @@ public class Database {
 	 */
 	public Map<String, Object> getRow(final Table table, final String index, final Object value) {
 		try (Connection connection = getConnection();
-				final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
+				final PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ALL + table.getName() + SQL_WHERE + index + "=?")) {
 			ps.setObject(1, value);
 			try (final ResultSet result = ps.executeQuery()) {
 				if (result.next()) {
@@ -334,7 +339,7 @@ public class Database {
 	 */
 	public List<Map<String, Object>> getAllRows(final Table table) {
 		try (Connection connection = getConnection();
-				final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + ";")) {
+				final PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ALL + table.getName() + ";")) {
 			try (final ResultSet result = ps.executeQuery()) {
 				final List<Map<String, Object>> rows = new ArrayList<>();
 				while (result.next()) {
@@ -363,7 +368,7 @@ public class Database {
 	 */
 	public boolean contains(final Table table, final String index, final Object value) {
 		try (Connection connection = getConnection();
-				PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + table.getName() + " WHERE " + index + "=?;")) {
+				PreparedStatement ps = connection.prepareStatement(SQL_SELECT_ALL + table.getName() + SQL_WHERE + index + "=?")) {
 			ps.setObject(1, value);
 			try (ResultSet result = ps.executeQuery()) {
 				return result.next();
@@ -389,7 +394,7 @@ public class Database {
 		try (Connection connection = getConnection()) {
 			final String update = extra.isEmpty() ? "?" : updateValue + extra;
 			try (PreparedStatement ps = connection
-					.prepareStatement("UPDATE " + table.getName() + " SET " + toUpdate + "=" + update + " WHERE " + index + "=?;")) {
+					.prepareStatement("UPDATE " + table.getName() + " SET " + toUpdate + "=" + update + SQL_WHERE + index + "=?;")) {
 				if (extra.isEmpty()) {
 					ps.setObject(1, updateValue);
 					ps.setObject(2, indexValue);
@@ -438,7 +443,7 @@ public class Database {
 				}
 			}
 			try (PreparedStatement ps = connection
-					.prepareStatement("UPDATE " + table.getName() + " SET " + updateString + " WHERE " + index + "=?;")) {
+					.prepareStatement("UPDATE " + table.getName() + " SET " + updateString + SQL_WHERE + index + "=?;")) {
 				i = 0;
 				for (final Object object : values) {
 					ps.setObject(++i, object);
@@ -462,7 +467,7 @@ public class Database {
 	 */
 	public void remove(final Table table, final String index, final Object value) {
 		try (Connection connection = getConnection();
-				PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table.getName() + " WHERE " + index + "=?;")) {
+				PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table.getName() + SQL_WHERE + index + "=?;")) {
 			ps.setObject(1, value);
 			ps.executeUpdate();
 		} catch (final SQLException e) {
@@ -515,9 +520,9 @@ public class Database {
 	}
 
 	private void setLogLevel(final Level level) {
-		try (LoggerContext ctx = (LoggerContext) LogManager.getContext(false)) {
-			ctx.getConfiguration().getLoggerConfig("com.zaxxer.hikari.HikariDataSource").setLevel(level);
-		}
+		@SuppressWarnings("resource")
+		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+		ctx.getConfiguration().getLoggerConfig("com.zaxxer.hikari.HikariDataSource").setLevel(level);
 	}
 
 	private StringBuilder getValueParameteres(final Collection<Object> values) {

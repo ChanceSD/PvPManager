@@ -31,7 +31,7 @@ public class PvPInfo implements CommandExecutor {
 		if (args.length == 0 && sender instanceof final Player player) {
 			sendInfo(sender, ph.get(player));
 			return true;
-		} else if (args.length == 1 && sender.hasPermission("pvpmanager.info.others")) {
+		} else if (args.length == 1 && Permissions.COMMAND_PVP_INFO_OTHERS.hasPerm(sender)) {
 			final String name = args[0];
 			Preconditions.checkNotNull(name);
 			if (CombatUtils.isOnline(name)) {

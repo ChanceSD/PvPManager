@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.pvpmanager.utils.TimeUtil;
 
@@ -18,7 +18,7 @@ public class NewbieTask implements Runnable {
 
 	public NewbieTask(final CombatPlayer player, final long time) {
 		this.player = player;
-		final long timeLeft = time == 0 ? Settings.getNewbieProtectionTime() * 60000 : time;
+		final long timeLeft = time == 0 ? Conf.NEWBIE_TIME.asInt() * 1000 : time;
 		this.finishTime = System.currentTimeMillis() + timeLeft;
 		task = ScheduleUtils.runAsyncLater(this, timeLeft / 1000, TimeUnit.SECONDS);
 		if (time != 0) {

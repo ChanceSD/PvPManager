@@ -15,6 +15,7 @@ import me.chancesd.pvpmanager.command.PvPStatus;
 import me.chancesd.pvpmanager.command.Tag;
 import me.chancesd.pvpmanager.command.Untag;
 import me.chancesd.pvpmanager.library.metrics.CustomMetrics;
+import me.chancesd.pvpmanager.listener.BlockedActionsListener;
 import me.chancesd.pvpmanager.listener.EntityListener;
 import me.chancesd.pvpmanager.listener.EntityListener1_9;
 import me.chancesd.pvpmanager.listener.PlayerListener;
@@ -97,6 +98,7 @@ public class PvPManager extends SDPlugin {
 			registerListener(new PlayerListener1_11(playerHandler));
 		}
 		registerListener(new PlayerListener(playerHandler));
+		registerListener(new BlockedActionsListener(playerHandler));
 		dependencyManager.startListeners(this);
 	}
 
@@ -111,7 +113,7 @@ public class PvPManager extends SDPlugin {
 		registerCommand(getCommand("pvptag"), new Tag(playerHandler));
 		registerCommand(getCommand("untag"), new Untag(playerHandler));
 		registerCommand(getCommand("announce"), new Announce());
-		registerCommand(getCommand("pvpglobal"), new PvPGlobal());
+		registerCommand(getCommand("pvpglobal"), new PvPGlobal(playerHandler));
 	}
 
 	private void startMetrics() {
@@ -132,7 +134,7 @@ public class PvPManager extends SDPlugin {
 		return configM;
 	}
 
-	public PlayerManager getPlayerHandler() {
+	public PlayerManager getPlayerManager() {
 		return playerHandler;
 	}
 
