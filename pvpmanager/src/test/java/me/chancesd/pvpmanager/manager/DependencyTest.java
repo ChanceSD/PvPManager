@@ -17,8 +17,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import me.chancesd.pvpmanager.InstanceCreator;
-import me.chancesd.pvpmanager.PluginTest;
-import me.chancesd.pvpmanager.manager.DependencyManager;
+import me.chancesd.pvpmanager.PluginSetup;
 import me.chancesd.sdutils.utils.Utils;
 
 @ExtendWith(InstanceCreator.class)
@@ -28,7 +27,7 @@ public class DependencyTest {
 
 	@BeforeAll
 	public static void setupClass() {
-		final PluginTest pt = InstanceCreator.getPt();
+		final PluginSetup pt = InstanceCreator.getPt();
 		server = pt.getServer();
 		when(server.getServicesManager()).thenReturn(mock(ServicesManager.class));
 	}

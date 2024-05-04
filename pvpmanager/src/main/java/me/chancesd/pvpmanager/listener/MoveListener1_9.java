@@ -30,11 +30,11 @@ public class MoveListener1_9 implements Listener {
 	private final DependencyManager depManager;
 	private final Cache<UUID, Player> cache = CacheBuilder.newBuilder().weakValues().expireAfterWrite(1, TimeUnit.SECONDS).build();
 
-	public MoveListener1_9(final PlayerManager ph, final DependencyManager depManager) {
-		this.ph = ph;
-		this.dependencyManager = ph.getPlugin().getDependencyManager();
-		final RegionCheckTask regionCheckTask = new RegionCheckTask(ph, dependencyManager);
-		Bukkit.getPluginManager().registerEvents(regionCheckTask, ph.getPlugin());
+	public MoveListener1_9(final PlayerManager playerManager, final DependencyManager depManager) {
+		this.playerManager = playerManager;
+		this.depManager = depManager;
+		final RegionCheckTask regionCheckTask = new RegionCheckTask(playerManager, depManager);
+		Bukkit.getPluginManager().registerEvents(regionCheckTask, playerManager.getPlugin());
 		ScheduleUtils.runPlatformTaskTimer(regionCheckTask, 20, 20);
 	}
 
@@ -50,7 +50,7 @@ public class MoveListener1_9 implements Listener {
 		if (!pvplayer.isInCombat())
 			return;
 
-		if (!dependencyManager.canAttackAt(null, locTo) && dependencyManager.canAttackAt(null, locFrom)) {
+		if (!depManager.canAttackAt(null, locTo) && depManager.canAttackAt(null, locFrom)) {
 			final Vector newVel = locFrom.toVector().subtract(locTo.toVector());
 			newVel.setY(0).normalize().multiply(1.6).setY(0.5);
 			CombatUtils.checkGlide(player);

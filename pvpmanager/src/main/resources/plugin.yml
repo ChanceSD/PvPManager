@@ -12,7 +12,6 @@ softdepend:
   - WorldGuard
   - LibsDisguises
   - SimpleClans
-  - EZRanksLite
   - Essentials
   - PlaceholderAPI
   - GriefPrevention

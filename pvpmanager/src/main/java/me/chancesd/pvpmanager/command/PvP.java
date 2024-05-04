@@ -10,7 +10,7 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.TimeUtil;
@@ -33,7 +33,7 @@ public class PvP implements TabExecutor {
 
 	@Override
 	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-		if (!sender.hasPermission("pvpmanager.pvpstatus.change")) {
+		if (!Permissions.COMMAND_PVP_TOGGLE.hasPerm(sender)) {
 			sender.sendMessage(Lang.ERROR_PERMISSION.msg());
 			return true;
 		}
@@ -111,9 +111,9 @@ public class PvP implements TabExecutor {
 	}
 
 	public final boolean hasToggleCooldownPassed(final CombatPlayer player) {
-		if (!CombatUtils.hasTimePassed(player.getToggleTime(), Settings.getToggleCooldown())
+		if (!CombatUtils.hasTimePassed(player.getToggleTime(), Conf.TOGGLE_COOLDOWN.asInt())
 				&& !player.hasPerm(Permissions.EXEMPT_PVPTOGGLE_COOLDOWN)) {
-			final long timeLeft = CombatUtils.getTimeLeftMs(player.getToggleTime(), Settings.getToggleCooldown());
+			final long timeLeft = CombatUtils.getTimeLeftMs(player.getToggleTime(), Conf.TOGGLE_COOLDOWN.asInt());
 			player.message(Lang.ERROR_PVP_COOLDOWN.msg(TimeUtil.getDiffMsg(timeLeft)));
 			return false;
 		}

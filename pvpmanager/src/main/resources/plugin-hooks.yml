@@ -1,0 +1,22 @@
+# In this file you can configure how PvPManager interacts with other supported plugins
+Plugin Hooks:
+  Essentials:
+    # Should AFK players be protected from other players
+    Protect AFK: true
+  Kingdoms:
+    # Disable PvP and newbie protection if the players are in an invasion
+    No Protection In War: true
+  SimpleClans:
+    # Disable PvP and newbie protection if the players are in a SimpleClans war
+    No Protection In War: true
+  Towny:
+    # Disable PvP and newbie protection if the players are in a siege war
+    No Protection In War: true
+    # Essentially only pushes back if a town is peaceful, it ignores if the town PvP is on or off, can be useful to prevent traps
+    Pushback on Peaceful: false
+  # This only works if you have the TAB plugin, disabling both options will make PvPManager use normal scoreboard teams
+  TAB:
+    # Show combat prefix/suffix in the playerlist (tab)
+    Show In Tab: true
+    # Show combat prefix/suffix above the player's head
+    Show Above Player: true

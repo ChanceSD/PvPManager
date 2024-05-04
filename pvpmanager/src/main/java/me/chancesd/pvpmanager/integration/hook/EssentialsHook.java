@@ -4,9 +4,9 @@ import org.bukkit.entity.Player;
 
 import com.earth2me.essentials.Essentials;
 
-import me.chancesd.pvpmanager.integration.AFKDependency;
 import me.chancesd.pvpmanager.integration.BaseDependency;
 import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.AFKDependency;
 import me.chancesd.pvpmanager.integration.type.GodDependency;
 
 public class EssentialsHook extends BaseDependency implements AFKDependency, GodDependency {

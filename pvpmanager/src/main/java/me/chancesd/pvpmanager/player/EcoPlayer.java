@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
 import net.milkbowl.vault.economy.Economy;
@@ -34,28 +34,28 @@ public abstract class EcoPlayer extends BasePlayer {
 	}
 
 	public final void applyFine() {
-		final double penalty = getMoneyPercentage(Settings.getFineAmount());
+		final double penalty = getMoneyPercentage(Conf.FINE_AMOUNT.asDouble());
 		withdrawMoney(penalty);
 	}
 
 	public final void applyPenalty() {
-		final double penalty = getMoneyPercentage(Settings.getMoneyPenalty());
+		final double penalty = getMoneyPercentage(Conf.MONEY_PENALTY.asDouble());
 		withdrawMoney(penalty);
 		message(Lang.MONEY_PENALTY.msg(CombatUtils.formatTo2Digits(penalty)));
 	}
 
 	public final boolean applyPvPDisabledFee() {
-		message(Lang.PVP_DISABLED_FEE.msg(CombatUtils.formatTo2Digits(Settings.getPvPDisabledFee())));
-		return withdrawMoney(Settings.getPvPDisabledFee());
+		message(Lang.PVP_DISABLED_FEE.msg(CombatUtils.formatTo2Digits(Conf.PVP_DISABLED_FEE.asInt())));
+		return withdrawMoney(Conf.PVP_DISABLED_FEE.asInt());
 	}
 
 	public final void giveReward(final EcoPlayer victim) {
-		double moneyWon = getMoneyPercentage(Settings.getMoneyReward());
-		if (Settings.isMoneySteal()) {
+		double moneyWon = getMoneyPercentage(Conf.MONEY_REWARD.asDouble());
+		if (Conf.MONEY_STEAL.asBool()) {
 			final double vbalance = economy.getBalance(victim.getPlayer());
-			if (Settings.getMoneyReward() <= 1) {
-				moneyWon = roundMoney(Settings.getMoneyReward() * vbalance);
-			} else if (Settings.getMoneyReward() > vbalance) {
+			if (Conf.MONEY_REWARD.asDouble() <= 1) {
+				moneyWon = roundMoney(Conf.MONEY_REWARD.asDouble() * vbalance);
+			} else if (Conf.MONEY_REWARD.asDouble() > vbalance) {
 				moneyWon = vbalance;
 			}
 			victim.withdrawMoney(moneyWon);
@@ -68,8 +68,8 @@ public abstract class EcoPlayer extends BasePlayer {
 	public final int giveExp(final EcoPlayer victim) {
 		int expWon = 0;
 		final int exp = victim.getPlayer().getTotalExperience();
-		if (Settings.getExpSteal() <= 1) {
-			expWon = (int) (Settings.getExpSteal() * exp);
+		if (Conf.EXP_STEAL.asDouble() <= 1) {
+			expWon = (int) (Conf.EXP_STEAL.asDouble() * exp);
 		} else {
 			expWon = exp;
 		}

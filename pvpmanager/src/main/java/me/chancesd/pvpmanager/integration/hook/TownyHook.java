@@ -13,8 +13,9 @@ import com.palmergames.bukkit.towny.object.metadata.StringDataField;
 import com.palmergames.bukkit.towny.utils.MetaDataUtil;
 
 import me.chancesd.pvpmanager.integration.BaseDependency;
-import me.chancesd.pvpmanager.integration.ForceToggleDependency;
 import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.ForceToggleDependency;
+import me.chancesd.pvpmanager.integration.type.RegionDependency;
 import me.chancesd.pvpmanager.player.ProtectionType;
 
 public class TownyHook extends BaseDependency implements ForceToggleDependency, RegionDependency {

@@ -6,16 +6,17 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
+import me.chancesd.pvpmanager.listener.BlockedActionsListenerTest;
 import me.chancesd.pvpmanager.listener.EntityListenerTest;
 import me.chancesd.pvpmanager.listener.PlayerListenerTest;
 import me.chancesd.pvpmanager.manager.DependencyTest;
 
 @Suite
-@SelectClasses({ UpdaterTest.class, DependencyTest.class, EntityListenerTest.class, PlayerListenerTest.class })
+@SelectClasses({ UpdaterTest.class, DependencyTest.class, EntityListenerTest.class, PlayerListenerTest.class, BlockedActionsListenerTest.class })
 public final class InstanceCreator implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
 	private static boolean started = false;
-	private static PluginTest pt;
+	private static PluginSetup pt;
 
 	private InstanceCreator() {
 	}
@@ -24,7 +25,7 @@ public final class InstanceCreator implements BeforeAllCallback, ExtensionContex
 	public void beforeAll(final ExtensionContext context) throws Exception {
 		if (!started) {
 			started = true;
-			pt = new PluginTest();
+			pt = new PluginSetup();
 			pt.setup();
 			context.getRoot().getStore(Namespace.GLOBAL).put("pvpmanager", this);
 		}
@@ -35,7 +36,7 @@ public final class InstanceCreator implements BeforeAllCallback, ExtensionContex
 		pt.tearDown();
 	}
 
-	public static PluginTest getPt() {
+	public static PluginSetup getPt() {
 		return pt;
 	}
 

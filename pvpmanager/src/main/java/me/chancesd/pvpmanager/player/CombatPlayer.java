@@ -22,15 +22,20 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.event.PlayerTagEvent;
 import me.chancesd.pvpmanager.event.PlayerTogglePvPEvent;
 import me.chancesd.pvpmanager.event.PlayerUntagEvent;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.hook.TABHook;
 import me.chancesd.pvpmanager.library.rollbar.PMRUncaughExceptionHandler;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
+import me.chancesd.pvpmanager.player.nametag.TABNameTag;
 import me.chancesd.pvpmanager.player.world.CombatWorld;
+import me.chancesd.pvpmanager.setting.ItemCooldown;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.tasks.NewbieTask;
+import me.chancesd.pvpmanager.tasks.TagTask;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -56,13 +61,15 @@ public class CombatPlayer extends EcoPlayer {
 	private final Map<String, Integer> victim = new HashMap<>();
 	private final Map<Material, Long> itemCooldown = new EnumMap<>(Material.class);
 	private final PvPManager plugin;
+	private final TagTask tagTask;
 	private NameTag nametag;
 	private static ExecutorService executor;
 
-	public CombatPlayer(@NotNull final Player player, final PvPManager plugin) {
+	public CombatPlayer(@NotNull final Player player, final PvPManager plugin, final TagTask tagTask) {
 		super(player, plugin.getDependencyManager().getEconomy());
-		this.pvpState = Settings.isDefaultPvp() || CombatUtils.isNPC(player);
+		this.pvpState = Conf.DEFAULT_PVP.asBool() || CombatUtils.isNPC(player);
 		this.plugin = plugin;
+		this.tagTask = tagTask;
 		setCombatWorld(plugin.getWorldManager().getWorld(getPlayer().getWorld()));
 		if (!CombatUtils.isNPC(player)) {
 			executor.execute(this::loadData);
@@ -111,7 +118,7 @@ public class CombatPlayer extends EcoPlayer {
 	public boolean removeEnemy(final CombatPlayer enemyPlayer) {
 		final boolean success = this.lastHitters.remove(enemyPlayer);
 		if (isInCombat() && getEnemies().isEmpty())
-			plugin.getPlayerHandler().untag(this);
+			untag(UntagReason.KILLED_ENEMY);
 		return success;
 	}
 
@@ -133,14 +140,14 @@ public class CombatPlayer extends EcoPlayer {
 			message(Lang.NEWBIE_PROTECTION.msg(TimeUtil.getDiffMsg(newbieTask.getFinishTime())));
 		} else if (this.newbie && newbieTask != null) {
 			if (newbieTask.isExpired()) {
-				message(Lang.NEWBIE_PROTECTION_END.msg());
+				message(Lang.NEWBIE_PROTECTION_END);
 			} else {
-				message(Lang.NEWBIE_PROTECTION_REMOVED.msg());
+				message(Lang.NEWBIE_PROTECTION_REMOVED);
 				newbieTask.cancel();
 			}
 			this.newbieTask = null;
 		} else {
-			message(Lang.ERROR_NOT_NEWBIE.msg());
+			message(Lang.ERROR_NOT_NEWBIE);
 		}
 
 		// Fire event if the newbie state actually changed
@@ -159,7 +166,7 @@ public class CombatPlayer extends EcoPlayer {
 	 * @param other           The other player involved in the attack
 	 * @param timeMiliseconds How long the player should be tagged for
 	 */
-	public final void setTagged(final boolean isAttacker, final CombatPlayer other, final long timeMiliseconds) {
+	public final void tag(final boolean isAttacker, final CombatPlayer other, final long timeMiliseconds) {
 		if (hasPerm(Permissions.EXEMPT_COMBAT_TAG)) {
 			Log.debug("Not tagging " + getName() + " because player has permission: " + Permissions.EXEMPT_COMBAT_TAG);
 			return;
@@ -177,13 +184,13 @@ public class CombatPlayer extends EcoPlayer {
 		if (event.isCancelled())
 			return;
 
-		if (Settings.isGlowingInCombat() && MCVersion.isAtLeast(MCVersion.V1_9)) {
+		if (Conf.GLOWING_IN_COMBAT.asBool() && MCVersion.isAtLeast(MCVersion.V1_9)) {
 			getPlayer().setGlowing(true);
 		}
 
 		getPlayer().closeInventory();
 
-		if (nametag != null && Settings.useNameTag()) {
+		if (nametag != null) {
 			executor.execute(nametag::setInCombat);
 		}
 
@@ -201,7 +208,7 @@ public class CombatPlayer extends EcoPlayer {
 
 		this.tagged = true;
 		this.totalTagTime = timeMiliseconds;
-		plugin.getPlayerHandler().addToTagTask(this);
+		tagTask.startTracking(this);
 	}
 
 	/**
@@ -210,15 +217,15 @@ public class CombatPlayer extends EcoPlayer {
 	 * @param isAttacker Whether this player initiated the attack or not
 	 * @param other      The other player involved in the attack
 	 */
-	public final void setTagged(final boolean isAttacker, final CombatPlayer other) {
-		setTagged(isAttacker, other, Settings.getTimeInCombatMs());
+	public final void tag(final boolean isAttacker, final CombatPlayer other) {
+		tag(isAttacker, other, Conf.TIME_IN_COMBAT.asInt() * 1000L);
 	}
 
 	/**
 	 * Takes the player out of combat
 	 */
-	public final void unTag() {
-		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this);
+	public final void untag(final UntagReason reason) {
+		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this, reason);
 		ScheduleUtils.ensureMainThread(() -> {
 			Bukkit.getPluginManager().callEvent(event);
 			if (Settings.isDisableFly() && getWasAllowedFlight()) {
@@ -226,20 +233,20 @@ public class CombatPlayer extends EcoPlayer {
 			}
 		}, getPlayer());
 
-		if (isOnline()) {
-			if (nametag != null && Settings.useNameTag()) {
-				nametag.restoreNametag();
-			}
-			if (Settings.isGlowingInCombat() && MCVersion.isAtLeast(MCVersion.V1_9)) {
-				getPlayer().setGlowing(false);
-			}
-
-			message(Lang.OUT_OF_COMBAT);
-			sendActionBar(Lang.OUT_OF_COMBAT_ACTIONBAR.msg());
+		if (Conf.GLOWING_IN_COMBAT.asBool() && MCVersion.isAtLeast(MCVersion.V1_9)) {
+			getPlayer().setGlowing(false);
 		}
+
+		if (nametag != null) {
+			executor.execute(nametag::restoreNametag);
+		}
+
+		message(Lang.OUT_OF_COMBAT);
+		sendActionBar(Lang.OUT_OF_COMBAT_ACTIONBAR.msg());
 
 		this.lastHitters.clear();
 		this.tagged = false;
+		tagTask.stopTracking(this);
 	}
 
 	/**
@@ -259,15 +266,15 @@ public class CombatPlayer extends EcoPlayer {
 		this.pvpState = pvpState;
 		this.toggleTime = System.currentTimeMillis();
 
-		if (nametag != null && Settings.isToggleNametagsEnabled()) {
+		if (nametag != null && Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
 			nametag.setPvP(pvpState);
 		}
 		if (!pvpState) {
 			message(Lang.PVPDISABLED);
-			CombatUtils.executeCommands(Settings.getCommandsPvPOff(), getPlayer(), getName());
+			CombatUtils.executeCommands(Conf.COMMANDS_PVP_OFF.asList(), getPlayer(), getName());
 		} else {
 			message(Lang.PVPENABLED);
-			CombatUtils.executeCommands(Settings.getCommandsPvPOn(), getPlayer(), getName());
+			CombatUtils.executeCommands(Conf.COMMANDS_PVP_ON.asList(), getPlayer(), getName());
 		}
 	}
 
@@ -277,16 +284,16 @@ public class CombatPlayer extends EcoPlayer {
 			victim.put(victimName, 1);
 		} else {
 			int totalKills = victim.get(victimName);
-			if (totalKills < Settings.getKillAbuseMaxKills()) {
+			if (totalKills < Conf.KILL_ABUSE_MAX.asInt()) {
 				totalKills++;
 				victim.put(victimName, totalKills);
 			}
-			if (Settings.isKillAbuseWarn() && totalKills + 1 == Settings.getKillAbuseMaxKills()) {
+			if (Conf.KILL_ABUSE_WARN.asBool() && totalKills + 1 == Conf.KILL_ABUSE_MAX.asInt()) {
 				message(Lang.KILL_ABUSE_WARNING.msg());
 			}
-			if (totalKills >= Settings.getKillAbuseMaxKills()) {
-				unTag();
-				CombatUtils.executeCommands(Settings.getKillAbuseCommands(), getPlayer(), getName(), victimName);
+			if (totalKills >= Conf.KILL_ABUSE_MAX.asInt()) {
+				untag(UntagReason.KICKED);
+				CombatUtils.executeCommands(Conf.KILL_ABUSE_COMMANDS.asList(), getPlayer(), getName(), victimName);
 			}
 		}
 	}
@@ -314,16 +321,18 @@ public class CombatPlayer extends EcoPlayer {
 		return true;
 	}
 
-	public final void setItemCooldown(@NotNull final Material material, final int time) {
+	public final void setItemCooldown(@NotNull final Material material, final ItemCooldown cooldown) {
+		final int time = isInCombat() ? cooldown.getCombatCooldown() : cooldown.getGlobalCooldown();
+		if (time < 0)
+			return;
 		itemCooldown.put(material, System.currentTimeMillis() + time * 1000);
 		if (MCVersion.isAtLeast(MCVersion.V1_11_2)) {
 			getPlayer().setCooldown(material, time * 20);
 		}
 	}
 
-	@Nullable
 	public final Long getItemCooldown(final Material material) {
-		return itemCooldown.get(material);
+		return itemCooldown.getOrDefault(material, 0L);
 	}
 
 	public final void clearVictims() {
@@ -337,11 +346,11 @@ public class CombatPlayer extends EcoPlayer {
 	public final boolean hasRespawnProtection() {
 		if (respawnTime == 0)
 			return false;
-		if (CombatUtils.hasTimePassed(respawnTime, Settings.getRespawnProtection())) {
+		if (CombatUtils.hasTimePassed(respawnTime, Conf.RESPAWN_PROTECTION.asInt())) {
 			respawnTime = 0;
 			return false;
 		}
-		return !getPlayer().hasPermission("pvpmanager.bypass.protection.respawn");
+		return !hasPerm(Permissions.EXEMPT_PROTECTION_RESPAWN);
 	}
 
 	public final void setRespawnTime(final long respawnTime) {
@@ -399,23 +408,24 @@ public class CombatPlayer extends EcoPlayer {
 	private synchronized void loadData() {
 		final Map<String, Object> userData = plugin.getStorageManager().getStorage().getUserData(this);
 		loadUserData(userData);
-		if (Settings.isNewbieProtectionEnabled() && userData.isEmpty() && !getPlayer().hasPlayedBefore()) {
+		if (Conf.NEWBIE_ENABLED.asBool() && userData.isEmpty() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
-		if (getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON) {
-			this.pvpState = true;
-		} else if (getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.OFF) {
-			this.pvpState = false;
+		if (getCombatWorld().isPvPForced() != CombatWorld.WorldOptionState.NONE) {
+			this.pvpState = getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON;
 		}
-		if (Settings.useNameTag()) {
+		if (Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
 			try {
-				this.nametag = new BukkitNameTag(this);
+				final TABHook tab = (TABHook) plugin.getDependencyManager().getDependency(Hook.TAB);
+				this.nametag = tab != null && (tab.showAboveHead() || tab.showInPlayerlist()) ? new TABNameTag(tab, this) : new BukkitNameTag(this);
 			} catch (final NoSuchMethodError e) {
-				Settings.setUseNameTag(false);
+				Conf.NAMETAG_COMBAT_ENABLED.disable();
+				Conf.TOGGLE_NAMETAG_ENABLED.disable();
 				this.nametag = null;
 				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
 			} catch (final UnsupportedOperationException e) {
-				Settings.setUseNameTag(false);
+				Conf.NAMETAG_COMBAT_ENABLED.disable();
+				Conf.TOGGLE_NAMETAG_ENABLED.disable();
 				this.nametag = null;
 				Log.infoColor(ChatColor.RED
 						+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
@@ -474,10 +484,14 @@ public class CombatPlayer extends EcoPlayer {
 		if (newbieTask != null) {
 			newbieTask.cancel();
 		}
-		if (nametag != null && Settings.useNameTag()) {
+		if (nametag != null) {
 			nametag.cleanup();
 		}
 		executor.execute(() -> plugin.getStorageManager().getStorage().saveUserData(this));
+	}
+
+	public NameTag getNameTag() {
+		return nametag;
 	}
 
 	public boolean isLoaded() {
@@ -519,7 +533,7 @@ public class CombatPlayer extends EcoPlayer {
 	 * @return PvPlayer instance for the provided player
 	 */
 	public static CombatPlayer get(final Player player) {
-		return PvPManager.getInstance().getPlayerHandler().get(player);
+		return PvPManager.getInstance().getPlayerManager().get(player);
 	}
 
 	@Override

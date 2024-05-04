@@ -12,7 +12,7 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -29,7 +29,7 @@ public class BukkitNameTag extends NameTag {
 	private static final String PVPOFF = "PvPOff";
 	private static final String PVPON = "PvPOn";
 	private static final String HEALTHOBJ = "PvP_Health";
-	private static Objective health;
+	private Objective health;
 
 	public BukkitNameTag(final CombatPlayer p) {
 		super(p);
@@ -40,52 +40,22 @@ public class BukkitNameTag extends NameTag {
 
 	@SuppressWarnings({ "deprecation", "null" })
 	private void setup() {
-		if (!combatPrefix.isEmpty() || !combatSuffix.isEmpty()) {
-			inCombat = registerTeam(combatTeamID);
-			Log.debug("Creating combat team with name " + combatTeamID);
-			inCombat.setPrefix(combatPrefix);
-			if (MCVersion.isAtLeast(MCVersion.V1_13)) {
-				final ChatColor nameColor = getLastColor(combatPrefix);
-				if (nameColor != null) {
-					inCombat.setColor(nameColor);
-				}
-			}
-		}
-		if (Settings.isToggleNametagsEnabled()) {
-			if (!pvpOnPrefix.isEmpty()) {
-				pvpOnTeam = registerTeam(PVPON);
-				pvpOnTeam.setCanSeeFriendlyInvisibles(false);
-				pvpOnTeam.setPrefix(pvpOnPrefix);
-				if (MCVersion.isAtLeast(MCVersion.V1_13)) {
-					final ChatColor nameColor = getLastColor(pvpOnPrefix);
-					if (nameColor != null) {
-						pvpOnTeam.setColor(nameColor);
-					}
-				}
-			}
-			if (!pvpOffPrefix.isEmpty()) {
-				pvpOffTeam = registerTeam(PVPOFF);
-				pvpOffTeam.setCanSeeFriendlyInvisibles(false);
-				pvpOffTeam.setPrefix(pvpOffPrefix);
-				if (MCVersion.isAtLeast(MCVersion.V1_13)) {
-					final ChatColor nameColor = getLastColor(pvpOffPrefix);
-					if (nameColor != null) {
-						pvpOffTeam.setColor(nameColor);
-					}
-				}
-			}
+		setupCombatTeam();
+		if (Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
+			pvpOnTeam = setupToggleTeam(pvpOnPrefix, PVPON);
+			pvpOffTeam = setupToggleTeam(pvpOffPrefix, PVPOFF);
 			// set pvp tag if player has pvp nametags on
 			setPvP(pvPlayer.hasPvPEnabled());
 		}
-		if (Settings.isHealthBelowName() && (health == null || scoreboard.getObjective(HEALTHOBJ) == null)) {
+		if (Conf.HEALTH_BELOW_NAME.asBool() && (health == null || scoreboard.getObjective(HEALTHOBJ) == null)) {
 			if (scoreboard.getObjective(HEALTHOBJ) != null) {
 				health = scoreboard.getObjective(HEALTHOBJ);
 			} else if (MCVersion.isAtLeast(MCVersion.V1_19)) {
-				health = scoreboard.registerNewObjective(HEALTHOBJ, Criteria.HEALTH, Settings.getHealthBelowNameSymbol(), RenderType.HEARTS);
+				health = scoreboard.registerNewObjective(HEALTHOBJ, Criteria.HEALTH, Conf.HEALTH_BELOW_NAME_SYMBOL.asString(), RenderType.HEARTS);
 				health.setDisplaySlot(DisplaySlot.BELOW_NAME);
 			} else {
 				health = scoreboard.registerNewObjective(HEALTHOBJ, "health");
-				health.setDisplayName(Settings.getHealthBelowNameSymbol());
+				health.setDisplayName(Conf.HEALTH_BELOW_NAME_SYMBOL.asString());
 				health.setDisplaySlot(DisplaySlot.BELOW_NAME);
 			}
 		}
@@ -109,6 +79,33 @@ public class BukkitNameTag extends NameTag {
 		synchronized (scoreboard) {
 			team.removeEntry(entry);
 		}
+	}
+
+	private void setupCombatTeam() {
+		if (combatPrefix.isEmpty() && combatSuffix.isEmpty())
+			return;
+		inCombat = registerTeam(combatTeamID);
+		Log.debug("Creating combat team with name " + combatTeamID);
+		inCombat.setPrefix(combatPrefix);
+		setTeamColor(inCombat, combatPrefix);
+	}
+
+	private void setTeamColor(final Team team, final String teamPrefix) {
+		if (MCVersion.isAtLeast(MCVersion.V1_13)) {
+			final ChatColor nameColor = getLastColor(teamPrefix);
+			if (nameColor != null) {
+				team.setColor(nameColor);
+			}
+		}
+	}
+
+	private Team setupToggleTeam(final String teamPrefix, @NotNull final String teamName) {
+		if (teamPrefix.isEmpty())
+			return null;
+		Team toggleTeam = registerTeam(teamName);
+		toggleTeam.setCanSeeFriendlyInvisibles(false);
+		toggleTeam.setPrefix(teamPrefix);
+		setTeamColor(toggleTeam, teamPrefix);
 	}
 
 	private String processPlayerID(final UUID uuid) {

@@ -9,11 +9,18 @@ import com.google.common.base.Preconditions;
 public enum Permissions {
 
 	ADMIN("pvpmanager.admin"),
+	COMMAND_DEBUG("pvpmanager.debug"),
+	COMMAND_MENU("pvpmanager.menu"),
+	COMMAND_PVP_INFO_OTHERS("pvpmanager.info.others"),
+	COMMAND_PVP_TOGGLE("pvpmanager.pvpstatus.change"),
+	COMMAND_PVP_TOGGLE_OTHERS("pvpmanager.pvpstatus.others"),
+	COMMAND_RELOAD("pvpmanager.reload"),
 	EXEMPT_BLOCK_COMMANDS("pvpmanager.exempt.block.commands"),
 	EXEMPT_COMBAT_LOG("pvpmanager.nocombatlog"),
 	EXEMPT_COMBAT_TAG("pvpmanager.nocombattag"),
 	EXEMPT_DISABLE_ACTIONS("pvpmanager.nodisable"),
 	EXEMPT_KILL_ABUSE("pvpmanager.nokillabuse"),
+	EXEMPT_PROTECTION_RESPAWN("pvpmanager.bypass.protection.respawn"),
 	EXEMPT_PVPTOGGLE_COOLDOWN("pvpmanager.pvpstatus.nocooldown");
 
 	@NotNull

@@ -29,7 +29,7 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
@@ -64,7 +64,7 @@ public class DebugEntityListener implements Listener {
 				return;
 			}
 			final CombatPlayer attacked = ph.get((Player) event.getEntity());
-			if (attacked.isNewbie() && Settings.isNewbieGodMode()) {
+			if (attacked.isNewbie() && Conf.NEWBIE_GODMODE.asBool()) {
 				event.setCancelled(true);
 				Log.debug("Blocking damage to newbie because newbie god mode is enabled");
 				return;
@@ -124,11 +124,11 @@ public class DebugEntityListener implements Listener {
 		final CombatPlayer pvpAttacker = ph.get(attacker);
 		final CombatPlayer pvpDefender = ph.get(defender);
 
-		if (Settings.isPvpBlood()) {
+		if (Conf.PVP_BLOOD.asBool()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 		}
 		if (!pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS)) {
-			if (Settings.isDisableFly()) {
+			if (Conf.DISABLE_FLY.asBool()) {
 				if (CombatUtils.canFly(attacker)) {
 					pvpAttacker.disableFly();
 				}
@@ -136,29 +136,29 @@ public class DebugEntityListener implements Listener {
 					pvpDefender.disableFly();
 				}
 			}
-			if (Settings.isDisableGamemode() && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
+			if (Conf.DISABLE_GAMEMODE.asBool() && !attacker.getGameMode().equals(GameMode.SURVIVAL)) {
 				attacker.setGameMode(GameMode.SURVIVAL);
 			}
-			if (Settings.isDisableDisguise()) {
+			if (Conf.DISABLE_DISGUISE.asBool()) {
 				ph.getPlugin().getDependencyManager().disableDisguise(attacker);
 			}
-			if (Settings.isDisableInvisibility() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+			if (Conf.DISABLE_INVISIBILITY.asBool() && attacker.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 				attacker.removePotionEffect(PotionEffectType.INVISIBILITY);
 			}
-			if (Settings.isDisableGodMode()) {
+			if (Conf.DISABLE_GODMODE.asBool()) {
 				ph.getPlugin().getDependencyManager().disableGodMode(attacker);
 			}
 		} else {
 			Log.debug("Didn't disable fly/gamemode/etc because attacker has permission " + Permissions.EXEMPT_DISABLE_ACTIONS);
 		}
-		if (Settings.isInCombatEnabled()) {
-			if (Settings.borderHoppingVulnerable() && wg != null && !Settings.borderHoppingResetCombatTag() && wg.hasDenyPvPFlag(attacker)
+		if (Conf.COMBAT_TAG_ENABLED.asBool()) {
+			if (Conf.VULNERABLE_ENABLED.asBool() && wg != null && !Conf.VULNERABLE_RENEW_TAG.asBool() && wg.hasDenyPvPFlag(attacker)
 					&& wg.hasDenyPvPFlag(defender)) {
 					return;
 			}
 			Log.debug("Tagging players " + pvpAttacker.getName() + " and " + pvpDefender.getName());
-			pvpAttacker.setTagged(true, pvpDefender);
-			pvpDefender.setTagged(false, pvpAttacker);
+			pvpAttacker.tag(true, pvpDefender);
+			pvpDefender.tag(false, pvpAttacker);
 		}
 	}
 

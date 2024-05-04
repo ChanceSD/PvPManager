@@ -10,6 +10,9 @@ public class Replacement {
 	public static final String STATE = prepare("state");
 	public static final String PREFIX = prepare("prefix");
 
+	private Replacement() {
+	}
+
 	private static String prepare(final String value) {
 		return "{" + value + "}";
 	}

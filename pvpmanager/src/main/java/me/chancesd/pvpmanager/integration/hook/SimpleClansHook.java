@@ -4,9 +4,9 @@ import org.bukkit.entity.Player;
 
 import me.chancesd.pvpmanager.integration.BaseDependency;
 import me.chancesd.pvpmanager.integration.DependencyException;
-import me.chancesd.pvpmanager.integration.ForceToggleDependency;
-import me.chancesd.pvpmanager.integration.GroupDependency;
 import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.ForceToggleDependency;
+import me.chancesd.pvpmanager.integration.type.GroupDependency;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
