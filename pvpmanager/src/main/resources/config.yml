@@ -258,9 +258,12 @@ Metrics:
 # Potions considered harmful, players will be tagged by them and protected from them
 # See list here https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html
 Harmful Potions:
-  - SLOWNESS
-  - MINING_FATIGUE
-  - NAUSEA
+  - SLOW
+  - SLOWNESS # SLOW 1.20.5+
+  - SLOW_DIGGING
+  - MINING_FATIGUE # SLOW_DIGGING 1.20.5+
+  - CONFUSION
+  - NAUSEA # CONFUSION 1.20.5+
   - BLINDNESS
   - HUNGER
   - WEAKNESS
@@ -270,6 +273,7 @@ Harmful Potions:
   - LEVITATION
   - UNLUCK
   - BAD_OMEN
+  - INFESTED
 
 Debug Mode: false
 
