@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import java.util.ArrayList;
+import static org.mockito.Mockito.when;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -78,7 +78,7 @@ public class PlayerListenerTest {
 		verify(player, times(1)).setHealth(0);
 		assertFalse(pvPlayer.isInCombat());
 
-		assertEquals(1, ph.getPlayers().size());
+		assertEquals(1, ph.getPlayers().size()); // attacker and defender
 		listener.onPlayerLogout(new PlayerQuitEvent(attacker, ""));
 		assertEquals(0, ph.getPlayers().size());
 	}
@@ -102,12 +102,18 @@ public class PlayerListenerTest {
 		assertTrue(pvPlayer.isInCombat());
 	}
 
+	private PlayerDeathEvent createDeathEvent(final Player player) {
+		final PlayerDeathEvent event = mock(PlayerDeathEvent.class);
+		when(event.getEntity()).thenReturn(player);
+		return event;
+	}
+
 	@Test
 	final void regularDeath() {
 		final Player player = pt.createPlayer("regularDeath");
 		final PvPlayer pDefender = ph.get(player);
 		assertFalse(pDefender.isInCombat());
-		listener.onPlayerDeath(new PlayerDeathEvent(player, new ArrayList<>(), 0, ""));
+		listener.onPlayerDeath(createDeathEvent(player));
 	}
 
 	@Test
@@ -118,13 +124,13 @@ public class PlayerListenerTest {
 		final PvPlayer pDefender = ph.get(defender);
 
 		tagPlayer(pDefender);
-		listener.onPlayerDeath(new PlayerDeathEvent(defender, new ArrayList<>(), 0, ""));
+		listener.onPlayerDeath(createDeathEvent(defender));
 		assertFalse(pDefender.isInCombat());
 
 		Settings.setUntagEnemy(true);
 		tagPlayer(pDefender, pAttacker);
 		tagPlayer(pAttacker, pDefender);
-		listener.onPlayerDeath(new PlayerDeathEvent(defender, new ArrayList<>(), 0, ""));
+		listener.onPlayerDeath(createDeathEvent(defender));
 		assertFalse(pDefender.isInCombat());
 		assertFalse(pAttacker.isInCombat());
 	}
