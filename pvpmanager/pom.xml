@@ -58,7 +58,7 @@
 			<id>md_5-public</id>
 			<url>https://repo.md-5.net/content/groups/public/</url>
 		</repository>
-		
+
 		<repository>
 			<id>codemc-repo</id>
 			<url>https://repo.codemc.org/repository/maven-public</url>
