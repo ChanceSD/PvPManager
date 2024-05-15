@@ -15,21 +15,20 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.RegionDependency;
+import me.NoChance.PvPManager.Managers.DependencyManager;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 
 public class MoveListener1_9 implements Listener {
 
-	private final PlayerHandler ph;
-	private final RegionDependency wg;
+	private final PlayerHandler playerManager;
+	private final DependencyManager depManager;
 	private final Cache<UUID, Player> cache = CacheBuilder.newBuilder().weakValues().expireAfterWrite(1, TimeUnit.SECONDS).build();
 
-	public MoveListener1_9(final PlayerHandler ph) {
-		this.ph = ph;
-		wg = (RegionDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
+	public MoveListener1_9(final PlayerHandler playerManager, final DependencyManager depManager) {
+		this.playerManager = playerManager;
+		this.depManager = depManager;
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -39,11 +38,11 @@ public class MoveListener1_9 implements Listener {
 			return;
 
 		final Player player = event.getPlayer();
-		final PvPlayer pvplayer = ph.get(player);
+		final PvPlayer pvplayer = playerManager.get(player);
 		if (!pvplayer.isInCombat())
 			return;
 
-		if (!wg.canAttackAt(null, event.getTo()) && wg.canAttackAt(null, event.getFrom())) {
+		if (!depManager.canAttackAt(null, event.getTo()) && depManager.canAttackAt(null, event.getFrom())) {
 			final Vector newVel = event.getFrom().toVector().subtract(event.getTo().toVector());
 			newVel.setY(0).normalize().multiply(1.6).setY(0.5);
 			CombatUtils.checkGlide(player);

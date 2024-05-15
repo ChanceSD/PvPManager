@@ -194,7 +194,7 @@ public class DependencyManager {
 	public void startListeners(final PvPManager plugin) {
 		if (Settings.borderHoppingPushback() && !regionChecks.isEmpty()) {
 			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
-				Bukkit.getPluginManager().registerEvents(new MoveListener1_9(plugin.getPlayerHandler()), plugin);
+				Bukkit.getPluginManager().registerEvents(new MoveListener1_9(plugin.getPlayerHandler(), this), plugin);
 			} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.8")) {
 				Bukkit.getPluginManager().registerEvents(new MoveListener(plugin.getPlayerHandler()), plugin);
 			} else {
