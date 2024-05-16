@@ -17,7 +17,7 @@
 	<url>https://github.com/ChanceSD/PvPManager</url>
 
 	<properties>
-		<config.version>78</config.version>
+		<config.version>79</config.version>
 		<database.version>1</database.version>
 	</properties>
 
@@ -199,7 +199,7 @@
 		<dependency>
 			<groupId>com.github.TownyAdvanced</groupId>
 			<artifactId>towny</artifactId>
-			<version>0.100.1.15</version>
+			<version>0.100.2.0</version>
 			<scope>provided</scope>
 		</dependency>
 
