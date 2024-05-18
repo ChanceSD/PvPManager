@@ -46,6 +46,7 @@ public enum Lang {
 	ATTACK_DENIED_YOU("Attack_Denied_You"),
 	ATTACK_DENIED_OTHER("Attack_Denied_Other",Replacement.PLAYER),
 	PVP_DISABLED_FEE("PvP_Disabled_Fee", Replacement.MONEY),
+	PVP_FEE_NOT_ENOUGH("PvP_Disabled_Fee_Not_Enough"),
 	TAGGED_ATTACKER("Tagged_Attacker",Replacement.PLAYER),
 	TAGGED_ATTACKER_ACTIONBAR("Tagged_Attacker_ActionBar",Replacement.PLAYER),
 	TAGGED_DEFENDER("Tagged_Defender", Replacement.PLAYER),
@@ -63,6 +64,7 @@ public enum Lang {
 	NEWBIE_PICKUP_ITEM_BLOCKED("Newbie_Pickup_Items_Blocked"),
 	NEWBIE_FORCE_REMOVED_WG("Newbie_Force_Removed_WorldGuard"),
 	BLOCK_PLACE_BLOCKED_IN_COMBAT("Block_Place_Blocked_InCombat"),
+	BLOCK_BREAK_BLOCKED_IN_COMBAT("Block_Break_Blocked_InCombat"),
 	EAT_BLOCKED_IN_COMBAT("Eating_Blocked_InCombat"),
 	ELYTRA_BLOCKED_IN_COMBAT("Elytra_Blocked_InCombat"),
 	ENDERPEARL_BLOCKED_INCOMBAT("EnderPearl_Blocked_InCombat"),
@@ -142,6 +144,14 @@ public enum Lang {
 	@NotNull
 	public String msg() {
 		return message;
+	}
+
+	public String[] getReplacements() {
+		return replacements;
+	}
+
+	public String getMessageKey() {
+		return messageKey;
 	}
 
 	@NotNull

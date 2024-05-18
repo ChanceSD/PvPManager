@@ -36,12 +36,16 @@ public final class PlayerCombatLogEvent extends Event {
 	 *
 	 * @return PvPlayer instance of the player
 	 */
-	public final CombatPlayer getPvPlayer() {
+	public final CombatPlayer getCombatPlayer() {
 		return pvplayer;
 	}
 
 	@Override
 	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 

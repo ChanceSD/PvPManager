@@ -17,6 +17,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
@@ -223,11 +224,14 @@ public class PlayerManager {
 
 	private void addOnlinePlayers() {
 		CombatPlayer.startExecutor();
-		for (final Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-			if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
-				Log.debug("Unregistered leftover team: " + team.getName() + " Entries: " + team.getEntries());
-				team.unregister();
-			}
+		final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		if (scoreboardManager != null) {
+			scoreboardManager.getMainScoreboard().getTeams().forEach(team -> {
+				if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
+					Log.debug("Unregistered leftover team: " + team.getName() + " Entries: " + team.getEntries());
+					team.unregister();
+				}
+			});
 		}
 		for (final Player p : plugin.getServer().getOnlinePlayers()) {
 			get(p);
@@ -245,7 +249,10 @@ public class PlayerManager {
 	}
 
 	private void removeTeams() {
-		final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+		final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		if (scoreboardManager == null)
+			return;
+		final Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
 		final Team pvpon = scoreboard.getTeam("PvPOn");
 		if (pvpon != null) {
 			pvpon.unregister();

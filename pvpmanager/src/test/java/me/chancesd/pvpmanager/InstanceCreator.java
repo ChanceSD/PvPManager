@@ -10,9 +10,11 @@ import me.chancesd.pvpmanager.listener.BlockedActionsListenerTest;
 import me.chancesd.pvpmanager.listener.EntityListenerTest;
 import me.chancesd.pvpmanager.listener.PlayerListenerTest;
 import me.chancesd.pvpmanager.manager.DependencyTest;
+import me.chancesd.pvpmanager.setting.LangTest;
 
 @Suite
-@SelectClasses({ UpdaterTest.class, DependencyTest.class, EntityListenerTest.class, PlayerListenerTest.class, BlockedActionsListenerTest.class })
+@SelectClasses({ UpdaterTest.class, DependencyTest.class, EntityListenerTest.class, PlayerListenerTest.class, BlockedActionsListenerTest.class,
+		LangTest.class })
 public final class InstanceCreator implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
 	private static boolean started = false;

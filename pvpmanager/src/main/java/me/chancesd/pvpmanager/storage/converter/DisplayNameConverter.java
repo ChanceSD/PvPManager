@@ -7,11 +7,11 @@ import java.sql.Statement;
 
 import org.bukkit.ChatColor;
 
+import me.chancesd.sdutils.database.Converter;
+import me.chancesd.sdutils.database.Database;
+import me.chancesd.sdutils.database.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.sdutils.database.Table;
 import me.chancesd.sdutils.utils.Log;
-import me.chancesd.pvpmanager.storage.Converter;
-import me.chancesd.pvpmanager.storage.Database;
-import me.chancesd.pvpmanager.storage.Table;
-import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 
 public class DisplayNameConverter implements Converter {
 

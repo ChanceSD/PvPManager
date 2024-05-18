@@ -39,10 +39,9 @@ public final class PlayerUntagEvent extends Event {
 	 *
 	 * @return PvPlayer instance of the player
 	 */
-	public final CombatPlayer getPvPlayer() {
+	public final CombatPlayer getCombatPlayer() {
 		return pvplayer;
 	}
-
 
 	/**
 	 * @return The reason for this player being untagged

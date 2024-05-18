@@ -49,12 +49,12 @@ public class RegionCheckTask extends BukkitRunnable implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerTag(final PlayerTagEvent event) {
-		lastLocations.put(event.getPvPlayer(), event.getPlayer().getLocation());
+		lastLocations.put(event.getCombatPlayer(), event.getPlayer().getLocation());
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerTag(final PlayerUntagEvent event) {
-		lastLocations.remove(event.getPvPlayer());
+		lastLocations.remove(event.getCombatPlayer());
 	}
 
 }

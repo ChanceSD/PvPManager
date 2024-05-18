@@ -13,6 +13,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
@@ -53,13 +54,9 @@ public class EntityListener1_9 implements Listener {
 			return;
 		final AreaEffectCloud areaCloud = event.getEntity();
 		final ProjectileSource areaCloudSource = areaCloud.getSource();
-		if (event.getAffectedEntities().isEmpty() || !(areaCloudSource instanceof Player))
+		if (event.getAffectedEntities().isEmpty() || !(areaCloudSource instanceof final Player player) || !CombatUtils.hasHarmfulPotion(areaCloud))
 			return;
 
-		if (!CombatUtils.hasHarmfulPotion(areaCloud))
-			return;
-
-		final Player player = (Player) areaCloudSource;
 		final List<Entity> toRemove = new ArrayList<>();
 		for (final LivingEntity e : event.getAffectedEntities()) {
 			if (e.getType() != EntityType.PLAYER || e.equals(player)) {
@@ -103,9 +100,9 @@ public class EntityListener1_9 implements Listener {
 				continue;
 			}
 			final Player attacked = (Player) e;
-			final CancelResult result = ph.tryCancel(player, attacked);
+			final ProtectionResult result = ph.checkProtection(player, attacked);
 
-			if (result.canAttack()) {
+			if (result.isVulnerable()) {
 				ph.getPlugin().getEntityListener().processDamage(player, attacked);
 			}
 		}

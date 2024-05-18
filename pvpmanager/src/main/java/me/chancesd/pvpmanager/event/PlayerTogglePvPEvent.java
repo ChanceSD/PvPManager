@@ -40,7 +40,7 @@ public final class PlayerTogglePvPEvent extends Event implements Cancellable {
 	 *
 	 * @return PvPlayer instance of the player
 	 */
-	public final CombatPlayer getPvPlayer() {
+	public final CombatPlayer getCombatPlayer() {
 		return pvplayer;
 	}
 
@@ -68,4 +68,7 @@ public final class PlayerTogglePvPEvent extends Event implements Cancellable {
 		return handlers;
 	}
 
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 }

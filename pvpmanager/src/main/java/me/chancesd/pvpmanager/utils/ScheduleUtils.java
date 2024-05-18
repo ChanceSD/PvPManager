@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
@@ -135,14 +134,11 @@ public class ScheduleUtils {
 			}
 		};
 		final ThreadPoolExecutor threadPool = new ThreadPoolExecutor(corePoolSize, maxPoolSize, 60, TimeUnit.SECONDS, queue, threadFactory);
-		threadPool.setRejectedExecutionHandler(new RejectedExecutionHandler() {
-			@Override
-			public void rejectedExecution(final Runnable r, final ThreadPoolExecutor localExecutor) {
-				try {
-					localExecutor.getQueue().put(r);
-				} catch (final InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
+		threadPool.setRejectedExecutionHandler((runnable, poolExecutor) -> {
+			try {
+				poolExecutor.getQueue().put(runnable);
+			} catch (final InterruptedException e) {
+				Thread.currentThread().interrupt();
 			}
 		});
 		return threadPool;
