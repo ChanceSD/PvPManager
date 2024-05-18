@@ -17,7 +17,7 @@ Useful Links
 **Bukkit:** https://dev.bukkit.org/bukkit-plugins/pvpmanager/  
 **Discord:** https://discord.gg/QFTjs3g  
 **Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/  
-**Crowdin Translations:** https://crowdin.com/project/pvpmanager
+**Crowdin Translations:** https://crowdin.com/project/pvpmanager  
 
 Developers ([API](https://github.com/ChanceSD/PvPManager/wiki/Developer-API))
 ------
@@ -33,7 +33,7 @@ Artifact Information:
 <dependency>
     <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>3.18.5</version>
+    <version>3.18.7</version>
     <scope>provided</scope>
 </dependency>
  ```
@@ -41,10 +41,10 @@ Artifact Information:
 Description
 ------------
 PvPManager is an all in one PvP plugin.
-There are some features that are better covered by a dedicated separate plugin. Even so, PvPManager aims to cover most of those even if in a more superficial way, always maintaining good performance as a goal. 
+There are some features that are better covered by a dedicated separate plugin. Even so, PvPManager aims to cover most of those even if in a more superficial way, always maintaining good performance as a goal.  
 
 **Some of the plugin's main features are:**
-- Toggle PvP for each player  
+- Toggle PvP for each player, world, server
 - Stop combat logging by issuing punishments
 - Disable several actions while in combat such as fly, gamemode, blocking commands, etc
 - Stop what we named as "border hopping" which happens when a player enters combat and attempts to run away to a safezone
