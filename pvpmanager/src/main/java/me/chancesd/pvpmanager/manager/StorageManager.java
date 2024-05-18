@@ -22,8 +22,8 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import me.chancesd.sdutils.database.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.sdutils.utils.Log;
-import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.storage.SQLStorage;
 import me.chancesd.pvpmanager.storage.Storage;
