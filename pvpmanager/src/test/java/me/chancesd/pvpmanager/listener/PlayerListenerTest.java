@@ -132,7 +132,7 @@ public class PlayerListenerTest {
 		assertFalse(pDefender.isInCombat());
 		assertFalse(pAttacker.isInCombat());
 
-		Settings.setSelfTag(true);
+		Conf.SELF_TAG.set(true);
 		tagPlayer(pAttacker, pAttacker);
 		tagPlayer(pDefender, pAttacker);
 		tagPlayer(pAttacker, pDefender);

@@ -28,8 +28,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -122,11 +120,11 @@ public class PlayerListener implements Listener {
 		}
 
 		if (pvPlayer.isInCombat()) {
-			final Set<PvPlayer> enemies = pvPlayer.getEnemies();
+			final Set<CombatPlayer> enemies = pvPlayer.getEnemies();
 			if (Conf.UNTAG_ON_KILL.asBool()) {
 				enemies.forEach(enemy -> enemy.removeEnemy(pvPlayer));
 			}
-			pvPlayer.unTag(UntagReason.DEATH);
+			pvPlayer.untag(UntagReason.DEATH);
 		}
 
 		// Let's process player's inventory/exp according to config file
@@ -159,17 +157,15 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public final void onPlayerCooldown(final PlayerInteractEvent e) {
 		final Player player = e.getPlayer();
 		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
 			return;
 
-		final ItemStack i = player.getItemInHand();
-		final Material type = i.getType();
-		final CombatPlayer pvplayer = playerHandler.get(player);
+		final Material type = e.getMaterial();
 		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && Conf.ITEM_COOLDOWNS.asMap().containsKey(type)) {
+			final CombatPlayer pvplayer = playerHandler.get(player);
 			if (pvplayer.hasItemCooldown(type)) {
 				final String msg = Lang.ITEM_COOLDOWN.msg(TimeUtil.getDiffMsg(pvplayer.getItemCooldown(type)));
 				if (!msg.equals(msgCooldown.getIfPresent(player.getUniqueId()))) {
@@ -190,13 +186,13 @@ public class PlayerListener implements Listener {
 		if (CombatUtils.isWorldExcluded(player.getWorld().getName()) || e.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
 
-		final ItemStack i = player.getItemInHand();
-		final CombatPlayer pvplayer = playerHandler.get(player);
 		final Block clickedBlock = e.getClickedBlock();
 		if (clickedBlock == null)
 			return;
 
-		if (i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) {
+		final CombatPlayer pvplayer = playerHandler.get(player);
+		final Material type = e.getMaterial();
+		if (type == Material.FLINT_AND_STEEL || type == Material.LAVA_BUCKET) {
 			for (final Player p : clickedBlock.getWorld().getPlayers()) {
 				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
 					continue;
@@ -210,9 +206,9 @@ public class PlayerListener implements Listener {
 			}
 		}
 		if (Conf.BLOCK_INTERACT_IN_COMBAT.asBool() && pvplayer.isInCombat()) {
-			final Material type = clickedBlock.getType();
+			final Material blockType = clickedBlock.getType();
 			for (final String material : Conf.BLOCK_INTERACT_ITEM_LIST.asList()) {
-				if (type.name().endsWith(material)) {
+				if (blockType.name().endsWith(material)) {
 					e.setCancelled(true);
 					pvplayer.sendActionBar(Lang.INTERACT_BLOCKED_IN_COMBAT.msg(), 1000);
 					return;

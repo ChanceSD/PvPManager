@@ -46,13 +46,13 @@ public class BlockedActionsListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public final void onBlockBreak(final BlockBreakEvent event) {
-		if (!Settings.isBlockBreakBlocks() && !Settings.isBlockBreakBlocksNewbie())
+		if (!Conf.BLOCK_BREAK_BLOCKS.asBool() && !Conf.NEWBIE_BLOCK_BREAK.asBool())
 			return;
 
-		final PvPlayer combatPlayer = ph.get(event.getPlayer());
-		if (Settings.isBlockBreakBlocks() && combatPlayer.isInCombat() || Settings.isBlockBreakBlocksNewbie() && combatPlayer.isNewbie()) {
+		final CombatPlayer combatPlayer = playerHandler.get(event.getPlayer());
+		if (Conf.BLOCK_BREAK_BLOCKS.asBool() && combatPlayer.isInCombat() || Conf.NEWBIE_BLOCK_BREAK.asBool() && combatPlayer.isNewbie()) {
 			event.setCancelled(true);
-			combatPlayer.sendActionBar(Messages.getBlockBreakBlockedInCombat(), 1000);
+			combatPlayer.sendActionBar(Lang.BLOCK_BREAK_BLOCKED_IN_COMBAT.msg(), 1000);
 		}
 	}
 
