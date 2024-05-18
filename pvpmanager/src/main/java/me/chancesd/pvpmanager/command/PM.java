@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
 
+import me.chancesd.sdutils.database.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.listener.DebugEntityListener;
@@ -33,7 +34,6 @@ import me.chancesd.pvpmanager.setting.Locale;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.CombatUtils;

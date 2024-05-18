@@ -15,9 +15,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.chancesd.sdutils.database.Database;
+import me.chancesd.sdutils.database.DatabaseConfigBuilder;
+import me.chancesd.sdutils.database.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.sdutils.database.DatabaseFactory;
+import me.chancesd.sdutils.database.Table;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.PvPManager;
-import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.converter.DisplayNameConverter;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.sdutils.utils.Log;
@@ -27,7 +31,6 @@ public class SQLStorage implements Storage {
 	private Table usersTable;
 	private Table worldsTable;
 	private final JavaPlugin plugin;
-	private final File sqliteFile;
 	private final ConfigurationSection dbConfigSection;
 	private final Database database;
 
@@ -37,8 +40,8 @@ public class SQLStorage implements Storage {
 
 	public SQLStorage(final PvPManager plugin, final DatabaseType dbType) {
 		this.plugin = plugin;
-		this.sqliteFile = new File(plugin.getDataFolder(), "database.db");
 		this.dbConfigSection = plugin.getConfig().getConfigurationSection("Database");
+		final File sqliteFile = new File(plugin.getDataFolder(), "database.db");
 		final DatabaseConfigBuilder config;
 		if (dbType == null) {
 			config = new DatabaseConfigBuilder(dbConfigSection, sqliteFile);

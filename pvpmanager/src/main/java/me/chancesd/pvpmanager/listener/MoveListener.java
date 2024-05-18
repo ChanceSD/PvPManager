@@ -17,6 +17,7 @@ import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.type.RegionDependency;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.setting.Lang;
 
 public class MoveListener implements Listener {
@@ -24,6 +25,7 @@ public class MoveListener implements Listener {
 	private final PlayerManager ph;
 	private final RegionDependency wg;
 	private final Cache<UUID, Player> cache = CacheBuilder.newBuilder().weakValues().expireAfterWrite(1, TimeUnit.SECONDS).build();
+	private final double pushbackForce = Conf.PUSHBACK_FORCE.asDouble();
 
 	public MoveListener(final PlayerManager ph) {
 		this.ph = ph;
@@ -45,7 +47,7 @@ public class MoveListener implements Listener {
 
 		if (!wg.canAttackAt(null, locTo) && wg.canAttackAt(null, locFrom)) {
 			final Vector newVel = locFrom.toVector().subtract(locTo.toVector());
-			newVel.setY(newVel.getY() + 0.1).normalize().multiply(1.5);
+			newVel.setY(newVel.getY() + 0.1).normalize().multiply(pushbackForce);
 			player.setVelocity(newVel);
 			if (!cache.asMap().containsKey(event.getPlayer().getUniqueId())) {
 				pvplayer.message(Lang.PUSHBACK_WARNING);

@@ -4,8 +4,7 @@ import org.bukkit.ChatColor;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.Messages;
-import me.chancesd.pvpmanager.setting.Settings;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 
@@ -23,7 +22,7 @@ public class PvPToggleFeeTask implements Runnable {
 		for (final CombatPlayer combatPlayer : ph.getPlayers().values()) {
 			if (!combatPlayer.hasPvPEnabled() && !combatPlayer.applyPvPDisabledFee()) {
 				ScheduleUtils.ensureMainThread(() -> combatPlayer.setPvP(true), combatPlayer.getPlayer());
-				combatPlayer.message(Messages.pvpFeeNotEnough);
+				combatPlayer.message(Lang.PVP_FEE_NOT_ENOUGH);
 				i++;
 			}
 		}

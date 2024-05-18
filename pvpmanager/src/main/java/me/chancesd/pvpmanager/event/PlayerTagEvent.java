@@ -49,7 +49,7 @@ public final class PlayerTagEvent extends Event implements Cancellable {
 	 *
 	 * @return PvPlayer instance of the player
 	 */
-	public final CombatPlayer getPvPlayer() {
+	public final CombatPlayer getCombatPlayer() {
 		return pvplayer;
 	}
 
