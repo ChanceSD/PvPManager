@@ -10,9 +10,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.chancesd.sdutils.database.Database;
+import me.chancesd.sdutils.database.DatabaseConfigBuilder;
+import me.chancesd.sdutils.database.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.sdutils.database.DatabaseFactory;
+import me.chancesd.sdutils.database.Table;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.PvPManager;
-import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.pvpmanager.storage.converter.DisplayNameConverter;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 
@@ -21,7 +25,6 @@ public class SQLStorage implements Storage {
 	private Table usersTable;
 	private Table worldsTable;
 	private final JavaPlugin plugin;
-	private final File sqliteFile;
 	private final ConfigurationSection dbConfigSection;
 	private final Database database;
 
@@ -31,8 +34,8 @@ public class SQLStorage implements Storage {
 
 	public SQLStorage(final PvPManager plugin, final DatabaseType dbType) {
 		this.plugin = plugin;
-		this.sqliteFile = new File(plugin.getDataFolder(), "database.db");
 		this.dbConfigSection = plugin.getConfig().getConfigurationSection("Database");
+		final File sqliteFile = new File(plugin.getDataFolder(), "database.db");
 		final DatabaseConfigBuilder config;
 		if (dbType == null) {
 			config = new DatabaseConfigBuilder(dbConfigSection, sqliteFile);
@@ -90,13 +93,13 @@ public class SQLStorage implements Storage {
 	}
 
 	@Override
-	public Map<String, Object> getWorldData(String name) {
+	public Map<String, Object> getWorldData(final String name) {
 		return database.getRow(worldsTable, WorldDataFields.NAME, name);
 	}
 
 	@Override
-	public boolean saveWorldData(String name, Map<String, Object> worldData) {
-		Map<String, Object> data = getWorldData(name);
+	public boolean saveWorldData(final String name, final Map<String, Object> worldData) {
+		final Map<String, Object> data = getWorldData(name);
 		if (data.isEmpty()) {
 			return database.insertColumns(worldsTable, worldData.keySet(), worldData.values());
 		} else {

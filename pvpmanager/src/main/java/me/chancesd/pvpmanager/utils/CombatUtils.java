@@ -34,7 +34,6 @@ import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.sdutils.utils.ReflectionUtil;
-import me.chancesd.sdutils.utils.MCVersion;
 
 public final class CombatUtils {
 
@@ -194,6 +193,7 @@ public final class CombatUtils {
 			p.getWorld().dropItemNaturally(playerLocation, item.values().stream().findFirst().orElse(chestplate));
 	}
 
+	@SuppressWarnings("null")
 	public static void fakeItemStackDrop(final Player player, final ItemStack[] inventory) {
 		final Location playerLocation = player.getLocation();
 		final World playerWorld = player.getWorld();

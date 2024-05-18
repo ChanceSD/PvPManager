@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import me.chancesd.sdutils.database.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
 
 public interface Storage {
 
