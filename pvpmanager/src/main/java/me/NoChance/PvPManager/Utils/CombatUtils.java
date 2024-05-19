@@ -20,6 +20,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
@@ -66,7 +67,7 @@ public final class CombatUtils {
 		for (final String command : commands) {
 			try {
 				final String preparedCommand = command.replace("<player>", playerName).replace("<victim>", victim).replace("%p", playerName)
-						.replace("<item>", player.getItemInHand().getType().toString());
+						.replace("<item>", getItemDisplay(player.getItemInHand()));
 				if (preparedCommand.toLowerCase().startsWith("!console")) {
 					ScheduleUtils.executeConsoleCommand(preparedCommand.substring(9));
 				} else if (preparedCommand.toLowerCase().startsWith("!player")) {
@@ -84,6 +85,18 @@ public final class CombatUtils {
 
 	public static void executeCommands(final List<String> commands, final Player player, final String playerName) {
 		executeCommands(commands, player, playerName, "");
+	}
+
+	@SuppressWarnings("null")
+	private static String getItemDisplay(final ItemStack item) {
+		if (item.hasItemMeta()) {
+			final ItemMeta itemMeta = item.getItemMeta();
+			if (itemMeta.hasDisplayName())
+				return itemMeta.getDisplayName();
+			if (itemMeta.hasItemName())
+				return itemMeta.getItemName();
+		}
+		return item.getType().name();
 	}
 
 	public static final boolean isPvP(final EntityDamageByEntityEvent event) {
