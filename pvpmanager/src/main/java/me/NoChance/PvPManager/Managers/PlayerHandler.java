@@ -112,7 +112,9 @@ public class PlayerHandler {
 	@NotNull
 	public final PvPlayer get(final Player player) {
 		final PvPlayer pvPlayer = players.get(player.getUniqueId());
-		return pvPlayer != null ? pvPlayer : addUser(new PvPlayer(player, plugin));
+		if (pvPlayer == null)
+			return addUser(new PvPlayer(player, plugin));
+		return pvPlayer;
 	}
 
 	@NotNull

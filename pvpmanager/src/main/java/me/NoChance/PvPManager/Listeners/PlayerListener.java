@@ -109,7 +109,11 @@ public class PlayerListener implements Listener {
 			CombatUtils.executeCommands(Settings.getCommandsOnPvPLog(), player, player.getName());
 			ph.applyPunishments(pvPlayer);
 		}
-		ph.removeUser(pvPlayer);
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public final void onPlayerLogoutMonitor(final PlayerQuitEvent event) {
+		ph.removeUser(ph.get(event.getPlayer()));
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
