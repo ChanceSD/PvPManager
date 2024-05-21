@@ -366,15 +366,6 @@ public class PvPlayer extends EcoPlayer {
 		return userData;
 	}
 
-	public final void updatePlayer(final Player p) {
-		if (!p.equals(getPlayer())) {
-			setPlayer(p);
-			if (nametag != null) {
-				nametag = new BukkitNameTag(this);
-			}
-		}
-	}
-
 	public final void cleanForRemoval() {
 		if (newbieTask != null) {
 			newbieTask.cancel();
