@@ -75,11 +75,12 @@ public class PlayerListenerTest {
 		tagPlayer(pvPlayer, pvpAttacker);
 
 		listener.onPlayerLogout(new PlayerQuitEvent(player, ""));
+		listener.onPlayerLogoutMonitor(new PlayerQuitEvent(player, ""));
 		verify(player, times(1)).setHealth(0);
 		assertFalse(pvPlayer.isInCombat());
 
 		assertEquals(1, ph.getPlayers().size()); // attacker and defender
-		listener.onPlayerLogout(new PlayerQuitEvent(attacker, ""));
+		listener.onPlayerLogoutMonitor(new PlayerQuitEvent(attacker, ""));
 		assertEquals(0, ph.getPlayers().size());
 	}
 
