@@ -13,11 +13,11 @@ To install and use the plugin, check the [Wiki](https://github.com/ChanceSD/PvPM
 
 Useful Links
 ------------
-**Spigot:** https://www.spigotmc.org/resources/pvpmanager-lite.845/  
-**Bukkit:** https://dev.bukkit.org/bukkit-plugins/pvpmanager/  
-**Discord:** https://discord.gg/QFTjs3g  
-**Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/  
-**Crowdin Translations:** https://crowdin.com/project/pvpmanager  
+**Spigot:** https://www.spigotmc.org/resources/pvpmanager-lite.845/
+**Bukkit:** https://dev.bukkit.org/bukkit-plugins/pvpmanager/
+**Discord:** https://discord.gg/QFTjs3g
+**Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/
+**Crowdin Translations:** https://crowdin.com/project/pvpmanager
 
 Developers ([API](https://github.com/ChanceSD/PvPManager/wiki/Developer-API))
 ------
@@ -33,7 +33,7 @@ Artifact Information:
 <dependency>
     <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>3.18.7</version>
+    <version>3.18.10</version>
     <scope>provided</scope>
 </dependency>
  ```
@@ -41,7 +41,7 @@ Artifact Information:
 Description
 ------------
 PvPManager is an all in one PvP plugin.
-There are some features that are better covered by a dedicated separate plugin. Even so, PvPManager aims to cover most of those even if in a more superficial way, always maintaining good performance as a goal.  
+There are some features that are better covered by a dedicated separate plugin. Even so, PvPManager aims to cover most of those even if in a more superficial way, always maintaining good performance as a goal.
 
 **Some of the plugin's main features are:**
 - Toggle PvP for each player, world, server
@@ -53,7 +53,7 @@ There are some features that are better covered by a dedicated separate plugin. 
 - Give money rewards, penalties, steal money or execute commands when a player kills another
 - Keep/Drop player inventory depending whether they died in PvP or transfer drops directly to the killer
 
-There is a more detailed description of all features on the plugin page and in the config.  
+There is a more detailed description of all features on the plugin page and in the config.
 
 bStats
 -----------
@@ -62,7 +62,7 @@ bStats
 
 ![YourKit](https://www.yourkit.com/images/yklogo.png)
 
-PvPManager uses YourKit to make sure everything runs smoothly in your server.  
+PvPManager uses YourKit to make sure everything runs smoothly in your server.
 YourKit supports open source projects with innovative and intelligent tools
 for monitoring and profiling Java and .NET applications.
 YourKit is the creator of <a href="https://www.yourkit.com/java/profiler/">YourKit Java Profiler</a>,

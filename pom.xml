@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.organization>chancesd</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<revision>3.18.7</revision>
+		<revision>3.18.10</revision>
 	</properties>
 
 	<distributionManagement>
