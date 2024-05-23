@@ -18,10 +18,11 @@ public abstract class EcoPlayer extends BasePlayer {
 		this.economy = economy;
 	}
 
-	private void withdrawMoney(final double amount) {
+	private boolean withdrawMoney(final double amount) {
 		final EconomyResponse response = economy.withdrawPlayer(getPlayer(), amount);
 		Log.debug(
 		        "Withdraw money from " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " " + response.errorMessage);
+		return response.transactionSuccess() && response.balance > 0;
 	}
 
 	private void depositMoney(final double amount) {
@@ -40,9 +41,9 @@ public abstract class EcoPlayer extends BasePlayer {
 		message(Messages.getMoneyPenalty().replace("%m", CombatUtils.formatTo2Digits(penalty)));
 	}
 
-	public final void applyPvPDisabledFee() {
-		withdrawMoney(Settings.getPvPDisabledFee());
+	public final boolean applyPvPDisabledFee() {
 		message(Messages.getPvPDisabledFee().replace("%money", CombatUtils.formatTo2Digits(Settings.getPvPDisabledFee())));
+		return withdrawMoney(Settings.getPvPDisabledFee());
 	}
 
 	public final void giveReward(final EcoPlayer victim) {
