@@ -30,6 +30,7 @@ import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.sdutils.utils.ReflectionUtil;
 
 public final class CombatUtils {
@@ -93,7 +94,7 @@ public final class CombatUtils {
 			final ItemMeta itemMeta = item.getItemMeta();
 			if (itemMeta.hasDisplayName())
 				return itemMeta.getDisplayName();
-			if (itemMeta.hasItemName())
+			if (MCVersion.isAtLeast(MCVersion.V1_20_5) && itemMeta.hasItemName())
 				return itemMeta.getItemName();
 		}
 		return item.getType().name();
