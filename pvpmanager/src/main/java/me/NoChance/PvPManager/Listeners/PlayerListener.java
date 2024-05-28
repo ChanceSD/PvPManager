@@ -3,6 +3,8 @@ package me.NoChance.PvPManager.Listeners;
 import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.sdutils.utils.Log;
 
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -132,11 +134,15 @@ public class PlayerListener implements Listener {
 		}
 
 		if (pvPlayer.isInCombat()) {
-			ph.untag(pvPlayer);
-			final PvPlayer enemy = pvPlayer.getEnemy();
-			if (Settings.isUntagEnemy() && enemy != null && pvPlayer.equals(enemy.getEnemy())) {
-				ph.untag(enemy);
+			final Set<PvPlayer> enemies = pvPlayer.getEnemies();
+			if (Settings.isUntagEnemy()) {
+				enemies.forEach(enemy -> {
+					if (enemy.removeEnemy(pvPlayer) && enemy.getEnemies().isEmpty()) {
+						ph.untag(enemy);
+					}
+				});
 			}
+			ph.untag(pvPlayer);
 		}
 
 		// Let's process player's inventory/exp according to config file

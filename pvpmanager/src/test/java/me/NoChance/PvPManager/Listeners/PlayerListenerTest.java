@@ -124,9 +124,11 @@ public class PlayerListenerTest {
 		final Player defender = pt.createPlayer("Defender", attacker);
 		final PvPlayer pDefender = ph.get(defender);
 
-		tagPlayer(pDefender);
+		tagPlayer(pDefender, pAttacker);
+		tagPlayer(pAttacker, pDefender);
 		listener.onPlayerDeath(createDeathEvent(defender));
 		assertFalse(pDefender.isInCombat());
+		assertTrue(pAttacker.isInCombat());
 
 		Settings.setUntagEnemy(true);
 		tagPlayer(pDefender, pAttacker);

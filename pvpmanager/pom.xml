@@ -92,6 +92,13 @@
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<minimizeJar>true</minimizeJar>
+					<transformers>
+						<!-- Avoid overlapping MANIFEST.MF file -->
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+							<resource>MANIFEST.MF</resource>
+						</transformer>
+					</transformers>
 				</configuration>
 				<executions>
 					<execution>

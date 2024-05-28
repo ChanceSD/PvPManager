@@ -108,6 +108,10 @@ public class PvPlayer extends EcoPlayer {
 		return this.lastHitters.contains(enemyPlayer);
 	}
 
+	public boolean removeEnemy(final PvPlayer enemyPlayer) {
+		return this.lastHitters.remove(enemyPlayer);
+	}
+
 	public Set<PvPlayer> getEnemies() {
 		return this.lastHitters;
 	}
