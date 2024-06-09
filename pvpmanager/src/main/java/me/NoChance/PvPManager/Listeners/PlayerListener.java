@@ -136,11 +136,7 @@ public class PlayerListener implements Listener {
 		if (pvPlayer.isInCombat()) {
 			final Set<PvPlayer> enemies = pvPlayer.getEnemies();
 			if (Settings.isUntagEnemy()) {
-				enemies.forEach(enemy -> {
-					if (enemy.removeEnemy(pvPlayer) && enemy.getEnemies().isEmpty()) {
-						ph.untag(enemy);
-					}
-				});
+				enemies.forEach(enemy -> enemy.removeEnemy(pvPlayer));
 			}
 			ph.untag(pvPlayer);
 		}

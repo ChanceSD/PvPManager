@@ -136,6 +136,14 @@ public class PlayerListenerTest {
 		listener.onPlayerDeath(createDeathEvent(defender));
 		assertFalse(pDefender.isInCombat());
 		assertFalse(pAttacker.isInCombat());
+
+		Settings.setSelfTag(true);
+		tagPlayer(pAttacker, pAttacker);
+		tagPlayer(pDefender, pAttacker);
+		tagPlayer(pAttacker, pDefender);
+		listener.onPlayerDeath(createDeathEvent(defender));
+		assertFalse(pDefender.isInCombat());
+		assertFalse(pAttacker.isInCombat());
 	}
 
 	@Test

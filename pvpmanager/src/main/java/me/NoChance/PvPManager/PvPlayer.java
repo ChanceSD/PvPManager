@@ -108,8 +108,17 @@ public class PvPlayer extends EcoPlayer {
 		return this.lastHitters.contains(enemyPlayer);
 	}
 
+	public void addEnemy(final PvPlayer enemyPlayer) {
+		if (enemyPlayer == this)
+			return;
+		this.lastHitters.add(enemyPlayer);
+	}
+
 	public boolean removeEnemy(final PvPlayer enemyPlayer) {
-		return this.lastHitters.remove(enemyPlayer);
+		final boolean success = this.lastHitters.remove(enemyPlayer);
+		if (isInCombat() && getEnemies().isEmpty())
+			plugin.getPlayerHandler().untag(this);
+		return success;
 	}
 
 	public Set<PvPlayer> getEnemies() {
@@ -146,7 +155,7 @@ public class PvPlayer extends EcoPlayer {
 
 		this.taggedTime = System.currentTimeMillis();
 		this.enemy = tagger;
-		this.lastHitters.add(tagger);
+		addEnemy(tagger);
 
 		if (tagged)
 			return;
