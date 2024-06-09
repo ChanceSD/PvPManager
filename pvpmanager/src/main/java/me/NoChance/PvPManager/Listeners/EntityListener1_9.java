@@ -85,11 +85,35 @@ public class EntityListener1_9 implements Listener {
 					}
 					potionMessageCache.put(player.getUniqueId(), newClouds);
 				}
-			} else {
-				ph.getPlugin().getEntityListener().processDamage(player, attacked);
 			}
 		}
 		event.getAffectedEntities().removeAll(toRemove);
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public final void onLingeringPotionSplashMon(final AreaEffectCloudApplyEvent event) {
+		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
+			return;
+		final AreaEffectCloud areaCloud = event.getEntity();
+		final ProjectileSource areaCloudSource = areaCloud.getSource();
+		if (event.getAffectedEntities().isEmpty() || !(areaCloudSource instanceof Player))
+			return;
+
+		if (!CombatUtils.hasHarmfulPotion(areaCloud))
+			return;
+
+		final Player player = (Player) areaCloudSource;
+		for (final LivingEntity e : event.getAffectedEntities()) {
+			if (e.getType() != EntityType.PLAYER || e.equals(player)) {
+				continue;
+			}
+			final Player attacked = (Player) e;
+			final CancelResult result = ph.tryCancel(player, attacked);
+
+			if (result.canAttack()) {
+				ph.getPlugin().getEntityListener().processDamage(player, attacked);
+			}
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
