@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
@@ -24,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import me.NoChance.PvPManager.PvPManager;
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.sdutils.utils.Log;
 
 public class ScheduleUtils {
@@ -126,21 +125,20 @@ public class ScheduleUtils {
 	}
 
 	public static ExecutorService newBoundedCachedThreadPool(final int corePoolSize, final int maxPoolSize, final ThreadFactory threadFactory) {
-		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<Runnable>() {
+		final BlockingQueue<Runnable> queue = new LinkedTransferQueue<>() {
+			private static final long serialVersionUID = 4672233456178006928L;
+
 			@Override
 			public boolean offer(final Runnable e) {
 				return tryTransfer(e);
 			}
 		};
 		final ThreadPoolExecutor threadPool = new ThreadPoolExecutor(corePoolSize, maxPoolSize, 60, TimeUnit.SECONDS, queue, threadFactory);
-		threadPool.setRejectedExecutionHandler(new RejectedExecutionHandler() {
-			@Override
-			public void rejectedExecution(final Runnable r, final ThreadPoolExecutor localExecutor) {
-				try {
-					localExecutor.getQueue().put(r);
-				} catch (final InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
+		threadPool.setRejectedExecutionHandler((runnable, poolExecutor) -> {
+			try {
+				poolExecutor.getQueue().put(runnable);
+			} catch (final InterruptedException e) {
+				Thread.currentThread().interrupt();
 			}
 		});
 		return threadPool;
@@ -149,7 +147,7 @@ public class ScheduleUtils {
 	public static boolean checkFolia() {
 		try {
 			Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
-			Log.debug("Method " + Bukkit.class.getDeclaredMethod("getAsyncScheduler", null));
+			Log.debug("Method " + Bukkit.class.getDeclaredMethod("getAsyncScheduler"));
 			return true;
 		} catch (final Throwable ignored) {
 			return false;

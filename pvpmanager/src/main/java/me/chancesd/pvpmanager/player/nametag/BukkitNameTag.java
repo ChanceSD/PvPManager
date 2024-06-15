@@ -3,82 +3,99 @@ package me.chancesd.pvpmanager.player.nametag;
 import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.scoreboard.Criteria;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.NotNull;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.CombatUtils;
+import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
 
 public class BukkitNameTag extends NameTag {
 
 	private Team inCombat;
-	private Team pvpOn;
-	private Team pvpOff;
+	private Team pvpOnTeam;
+	private Team pvpOffTeam;
 	private Team previousTeam;
 	private String previousTeamName;
+	@NotNull
 	private final String combatTeamID;
 	private final Scoreboard scoreboard;
+	private static final String PVPOFF = "PvPOff";
+	private static final String PVPON = "PvPOn";
+	private static final String HEALTHOBJ = "PvP_Health";
+	private Objective health;
 
-
-	public BukkitNameTag(final PvPlayer p) {
+	public BukkitNameTag(final CombatPlayer p) {
 		super(p);
 		this.combatTeamID = "PVP-" + processPlayerID(pvPlayer.getUUID());
 		this.scoreboard = pvPlayer.getPlayer().getScoreboard();
 		setup();
 	}
 
+	@SuppressWarnings({ "deprecation", "null" })
 	private void setup() {
-		if (!combatPrefix.isEmpty() || !combatSuffix.isEmpty()) {
-			if (scoreboard.getTeam(combatTeamID) != null) {
-				inCombat = scoreboard.getTeam(combatTeamID);
-			} else {
-				inCombat = scoreboard.registerNewTeam(combatTeamID);
-				Log.debug("Creating combat team with name " + combatTeamID);
-				inCombat.setPrefix(combatPrefix);
-				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-					final ChatColor nameColor = getLastColor(combatPrefix);
-					if (nameColor != null) {
-						inCombat.setColor(nameColor);
-					}
-				}
-			}
-		}
-		if (Settings.isToggleNametagsEnabled()) {
-			if (!pvpOnPrefix.isEmpty()) {
-				if (scoreboard.getTeam("PvPOn") != null) {
-					pvpOn = scoreboard.getTeam("PvPOn");
-				} else {
-					pvpOn = scoreboard.registerNewTeam("PvPOn");
-					pvpOn.setCanSeeFriendlyInvisibles(false);
-					pvpOn.setPrefix(pvpOnPrefix);
-					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-						final ChatColor nameColor = getLastColor(pvpOnPrefix);
-						if (nameColor != null) {
-							pvpOn.setColor(nameColor);
-						}
-					}
-				}
-			}
-			if (!pvpOffPrefix.isEmpty()) {
-				if (scoreboard.getTeam("PvPOff") != null) {
-					pvpOff = scoreboard.getTeam("PvPOff");
-				} else {
-					pvpOff = scoreboard.registerNewTeam("PvPOff");
-					pvpOff.setCanSeeFriendlyInvisibles(false);
-					pvpOff.setPrefix(pvpOffPrefix);
-					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-						final ChatColor nameColor = getLastColor(pvpOffPrefix);
-						if (nameColor != null) {
-							pvpOff.setColor(nameColor);
-						}
-					}
-				}
-			}
+		setupCombatTeam();
+		if (Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
+			pvpOnTeam = setupToggleTeam(pvpOnPrefix, PVPON);
+			pvpOffTeam = setupToggleTeam(pvpOffPrefix, PVPOFF);
 			// set pvp tag if player has pvp nametags on
 			setPvP(pvPlayer.hasPvPEnabled());
 		}
+		if (Conf.HEALTH_BELOW_NAME.asBool() && (health == null || scoreboard.getObjective(HEALTHOBJ) == null)) {
+			if (scoreboard.getObjective(HEALTHOBJ) != null) {
+				health = scoreboard.getObjective(HEALTHOBJ);
+			} else if (MCVersion.isAtLeast(MCVersion.V1_19)) {
+				health = scoreboard.registerNewObjective(HEALTHOBJ, Criteria.HEALTH, Conf.HEALTH_BELOW_NAME_SYMBOL.asString(), RenderType.HEARTS);
+				health.setDisplaySlot(DisplaySlot.BELOW_NAME);
+			} else {
+				health = scoreboard.registerNewObjective(HEALTHOBJ, "health");
+				health.setDisplayName(Conf.HEALTH_BELOW_NAME_SYMBOL.asString());
+				health.setDisplaySlot(DisplaySlot.BELOW_NAME);
+			}
+		}
+	}
+
+	private void setupCombatTeam() {
+		if (combatPrefix.isEmpty() && combatSuffix.isEmpty())
+			return;
+		if (scoreboard.getTeam(combatTeamID) != null) {
+			inCombat = scoreboard.getTeam(combatTeamID);
+		} else {
+			inCombat = scoreboard.registerNewTeam(combatTeamID);
+			Log.debug("Creating combat team with name " + combatTeamID);
+			inCombat.setPrefix(combatPrefix);
+			setTeamColor(inCombat, combatPrefix);
+		}
+	}
+
+	private void setTeamColor(final Team team, final String teamPrefix) {
+		if (MCVersion.isAtLeast(MCVersion.V1_13)) {
+			final ChatColor nameColor = getLastColor(teamPrefix);
+			if (nameColor != null) {
+				team.setColor(nameColor);
+			}
+		}
+	}
+
+	private Team setupToggleTeam(final String teamPrefix, @NotNull final String teamName) {
+		if (teamPrefix.isEmpty())
+			return null;
+		Team toggleTeam;
+		if (scoreboard.getTeam(teamName) != null) {
+			toggleTeam = scoreboard.getTeam(teamName);
+		} else {
+			toggleTeam = scoreboard.registerNewTeam(teamName);
+			toggleTeam.setCanSeeFriendlyInvisibles(false);
+			toggleTeam.setPrefix(teamPrefix);
+			setTeamColor(toggleTeam, teamPrefix);
+		}
+		return toggleTeam;
 	}
 
 	private String processPlayerID(final UUID uuid) {
@@ -122,8 +139,6 @@ public class BukkitNameTag extends NameTag {
 		}
 	}
 
-	private static boolean restoringSent;
-
 	@Override
 	public final void restoreNametag() {
 		try {
@@ -133,11 +148,8 @@ public class BukkitNameTag extends NameTag {
 				inCombat.removeEntry(pvPlayer.getName());
 			}
 		} catch (final IllegalStateException e) {
-			if (restoringSent)
-				return;
-			restoringSent = true;
 			// Some plugin is unregistering teams when it shouldn't
-			Log.severe("Error restoring nametag for: " + pvPlayer.getName());
+			Log.warning("Error restoring nametag for: " + pvPlayer.getName());
 		} finally {
 			previousTeamName = null;
 		}
@@ -146,19 +158,17 @@ public class BukkitNameTag extends NameTag {
 	@Override
 	public final void setPvP(final boolean state) {
 		if (state) {
-			if (pvpOn == null) {
+			if (pvpOnTeam == null) {
 				restoreNametag();
 			} else {
-				pvpOn.addEntry(pvPlayer.getName());
+				pvpOnTeam.addEntry(pvPlayer.getName());
 			}
-		} else if (pvpOff == null) {
+		} else if (pvpOffTeam == null) {
 			restoreNametag();
 		} else {
-			pvpOff.addEntry(pvPlayer.getName());
+			pvpOffTeam.addEntry(pvPlayer.getName());
 		}
 	}
-
-	private static boolean unregisteredSent;
 
 	@Override
 	public void cleanup() {
@@ -166,10 +176,7 @@ public class BukkitNameTag extends NameTag {
 			Log.debug("Unregistering team: " + inCombat.getName());
 			inCombat.unregister();
 		} catch (final IllegalStateException e) {
-			if (unregisteredSent)
-				return;
-			unregisteredSent = true;
-			Log.severe("Team was already unregistered for player: " + pvPlayer.getName());
+			Log.warning("Team was already unregistered for player: " + pvPlayer.getName());
 		}
 	}
 
