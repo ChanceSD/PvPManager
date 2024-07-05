@@ -12,6 +12,7 @@ import me.chancesd.pvpmanager.player.display.ProgressBar;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.Utils;
 
 public class DisplayManager {
 
@@ -33,7 +34,7 @@ public class DisplayManager {
 		return bossBar;
 	}
 
-	public void discardBossbar(final CombatPlayer player) {
+	public void discardPlayer(final CombatPlayer player) {
 		if (actionBars.remove(player) == null)
 			Log.debug("Tried to discard action bar that didn't exist");
 		final BossBar bossBar = bossBars.get(player);
@@ -45,12 +46,12 @@ public class DisplayManager {
 		bossBars.remove(player);
 	}
 
-	private ProgressBar setupProgressBar(final long time, final int goal) {
+	private ProgressBar setupProgressBar(final double time, final int goal) {
 		return new ProgressBar(Conf.ACTION_BAR_MESSAGE.asString(), Conf.ACTION_BAR_BARS.asInt(), goal, Conf.ACTION_BAR_SYMBOL.asString(), time);
 	}
 
 	public void showProgress(final CombatPlayer p, final double timePassed, final int goal) {
-		final long timePassedRounded = Math.round(timePassed);
+		final double timePassedRounded = Utils.roundTo1Decimal(timePassed);
 		final ProgressBar progressBar = actionBars.computeIfAbsent(p, x -> setupProgressBar(timePassedRounded, goal));
 		progressBar.setProgress(timePassedRounded).setGoal(goal).calculate();
 		p.sendActionBar(ChatUtils.setPlaceholders(p.getPlayer(), progressBar.getMessage()));

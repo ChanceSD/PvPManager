@@ -17,6 +17,7 @@ import me.chancesd.pvpmanager.command.Untag;
 import me.chancesd.pvpmanager.library.metrics.CustomMetrics;
 import me.chancesd.pvpmanager.listener.BlockedActionsListener;
 import me.chancesd.pvpmanager.listener.EntityListener;
+import me.chancesd.pvpmanager.listener.EntityListener1_20_4;
 import me.chancesd.pvpmanager.listener.EntityListener1_9;
 import me.chancesd.pvpmanager.listener.PlayerListener;
 import me.chancesd.pvpmanager.listener.PlayerListener1_11;
@@ -28,9 +29,9 @@ import me.chancesd.pvpmanager.manager.StorageManager;
 import me.chancesd.pvpmanager.manager.UpdateManager;
 import me.chancesd.pvpmanager.manager.WorldManager;
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
 import me.chancesd.sdutils.library.PluginLibraries;
 import me.chancesd.sdutils.plugin.SDPlugin;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -56,7 +57,7 @@ public class PvPManager extends SDPlugin {
 	public void onEnable() {
 		final long start = System.currentTimeMillis();
 		instance = this;
-		ScheduleUtils.setupExecutor();
+		ScheduleUtils.setupExecutor(this);
 		if (ScheduleUtils.checkFolia()) {
 			Log.infoColor(ChatColor.AQUA + "Running on Folia. Support for Folia is still experimental");
 			Log.infoColor(ChatColor.AQUA + "Please report any errors you find, most likely nobody reported them yet as not many people use Folia");
@@ -99,6 +100,9 @@ public class PvPManager extends SDPlugin {
 		}
 		registerListener(new PlayerListener(playerHandler));
 		registerListener(new BlockedActionsListener(playerHandler));
+		if (MCVersion.isAtLeast(MCVersion.V1_20_4)) {
+			new EntityListener1_20_4(playerHandler);
+		}
 		dependencyManager.startListeners(this);
 	}
 

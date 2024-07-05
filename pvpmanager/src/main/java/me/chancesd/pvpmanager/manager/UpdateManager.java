@@ -8,7 +8,7 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.updater.BukkitUpdater;
 import me.chancesd.sdutils.updater.SpigotUpdater;
 import me.chancesd.sdutils.updater.Updater;

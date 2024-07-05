@@ -9,7 +9,7 @@ import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.player.world.CombatWorld.WorldOptionState;
 import me.chancesd.pvpmanager.storage.Storage;
 import me.chancesd.pvpmanager.storage.fields.WorldDataFields;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 
 import org.bukkit.Bukkit;

@@ -41,7 +41,7 @@ import me.chancesd.pvpmanager.listener.MoveListener;
 import me.chancesd.pvpmanager.listener.MoveListener1_9;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.sdutils.utils.Utils;
@@ -58,9 +58,10 @@ public class DependencyManager {
 	private final ArrayList<AFKDependency> afkChecks = new ArrayList<>();
 
 	public DependencyManager() {
-		if (Bukkit.getPluginManager().getPlugin("TAB-Bridge") != null && Settings.useNameTag()) {
+		if (Bukkit.getPluginManager().getPlugin("TAB-Bridge") != null && (Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool())) {
 			Log.info("TAB-Bridge detected. Nametags in combat disabled due to incompatibility. Use the prefix/suffix placeholders instead");
-			Settings.setUseNameTag(false);
+			Conf.NAMETAG_COMBAT_ENABLED.disable();
+			Conf.TOGGLE_NAMETAG_ENABLED.disable();
 		}
 		final List<Hook> failedHooks = setupHooks(Hook.values());
 		// Delayed check for hooks that do not use softdepend

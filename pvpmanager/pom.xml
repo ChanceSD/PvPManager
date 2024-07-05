@@ -144,6 +144,19 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>io.papermc.paper</groupId>
+			<artifactId>paper-api</artifactId>
+			<version>1.21-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<!-- SimpleClans -->
 		<dependency>
 			<groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
@@ -312,11 +325,6 @@
 		</dependency>
 
 		<!-- Internal -->
-		<dependency>
-			<groupId>me.chancesd.pvpmanager</groupId>
-			<artifactId>pvpmanager-folia</artifactId>
-			<version>${revision}</version>
-		</dependency>
 		<dependency>
 			<groupId>me.chancesd.sdutils</groupId>
 			<artifactId>sdutils</artifactId>
