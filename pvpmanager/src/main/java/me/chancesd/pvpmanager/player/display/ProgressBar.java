@@ -19,7 +19,7 @@ public class ProgressBar {
 		this.symbol = symbol;
 	}
 
-	public ProgressBar(final String message, final int totalBars, final int goal, final String symbol, final long secondsPassed) {
+	public ProgressBar(final String message, final int totalBars, final int goal, final String symbol, final double secondsPassed) {
 		this(message, totalBars, goal, symbol);
 		setProgress(secondsPassed);
 		calculate();
@@ -48,7 +48,7 @@ public class ProgressBar {
 		final int progressBars = (int) (totalBars * percent);
 		message = originalMessage.replace("<barsLeft>", Strings.repeat(symbol, totalBars - progressBars))
 				.replace("<barsPassed>", Strings.repeat(symbol, progressBars))
-		        .replace("<time>", Integer.toString((int) (goal - progress)));
+				.replace("<time>", Double.toString(goal - progress));
 		this.dirty = false;
 		return this;
 	}

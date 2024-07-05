@@ -30,7 +30,7 @@ import me.chancesd.pvpmanager.storage.Storage;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.tasks.StorageSaveTask;
 import me.chancesd.pvpmanager.utils.ChatUtils;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import net.md_5.bungee.api.ChatColor;
 
 public class StorageManager {

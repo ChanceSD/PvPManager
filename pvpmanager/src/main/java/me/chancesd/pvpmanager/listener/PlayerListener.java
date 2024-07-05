@@ -1,6 +1,5 @@
 package me.chancesd.pvpmanager.listener;
 
-import me.chancesd.pvpmanager.utils.TimeUtil;
 import me.chancesd.sdutils.utils.Log;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +46,7 @@ import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PlayerListener implements Listener {
 
@@ -71,7 +70,7 @@ public class PlayerListener implements Listener {
 		if (Conf.ITEM_COOLDOWNS.asMap().containsKey(type)) {
 			if (player.hasItemCooldown(type)) {
 				event.setCancelled(true);
-				player.message(Lang.ITEM_COOLDOWN.msg(TimeUtil.getDiffMsg(player.getItemCooldown(type))));
+				player.message(Lang.ITEM_COOLDOWN.msgTime(player.getItemCooldown(type)));
 				return;
 			}
 			player.setItemCooldown(type, Conf.ITEM_COOLDOWNS.asMap().get(type));
@@ -225,7 +224,7 @@ public class PlayerListener implements Listener {
 		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && Conf.ITEM_COOLDOWNS.asMap().containsKey(type)) {
 			final CombatPlayer pvplayer = playerHandler.get(player);
 			if (pvplayer.hasItemCooldown(type)) {
-				final String msg = Lang.ITEM_COOLDOWN.msg(TimeUtil.getDiffMsg(pvplayer.getItemCooldown(type)));
+				final String msg = Lang.ITEM_COOLDOWN.msgTime(pvplayer.getItemCooldown(type));
 				if (!msg.equals(msgCooldown.getIfPresent(player.getUniqueId()))) {
 					pvplayer.message(msg);
 					msgCooldown.put(player.getUniqueId(), msg);
@@ -340,6 +339,7 @@ public class PlayerListener implements Listener {
 			final ProtectionResult result = playerHandler.checkProtection(player, caught);
 			if (result.isProtected()) {
 				event.setCancelled(true);
+				event.getHook().setHookedEntity(null);
 				Lang.messageProtection(result, player, caught);
 			} else {
 				playerHandler.getPlugin().getEntityListener().processDamage(player, caught);

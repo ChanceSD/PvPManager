@@ -3,12 +3,15 @@ package me.chancesd.pvpmanager.integration.hook;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.entity.Player;
+
+import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.integration.BaseDependency;
 import me.chancesd.pvpmanager.integration.DependencyException;
 import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Utils;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
@@ -33,14 +36,18 @@ public class TABHook extends BaseDependency {
 
 	private void registerLoadEvent() {
 		final EventBus eventBus = TabAPI.getInstance().getEventBus();
-		if (eventBus == null || !Conf.TOGGLE_NAMETAG_ENABLED.asBool())
+		if (eventBus == null || !Conf.TOGGLE_NAMETAG_ENABLED.asBool() || PvPManager.getInstance().isReloading())
 			return;
 		eventBus.register(PlayerLoadEvent.class, event -> {
 			final TabPlayer tabPlayer = event.getPlayer();
 			if (event.isJoin()) {
 				final CombatPlayer pvPlayer = CombatPlayer.get((Player) tabPlayer.getPlayer());
 				// wait 1 second because TAB was overwriting it
-				ScheduleUtils.runAsyncLater(() -> pvPlayer.getNameTag().setPvP(pvPlayer.hasPvPEnabled()), 1, TimeUnit.SECONDS);
+				ScheduleUtils.runAsyncLater(() -> {
+					final NameTag nameTag = pvPlayer.getNameTag();
+					if (nameTag != null)
+						nameTag.setPvP(pvPlayer.hasPvPEnabled());
+				}, 1, TimeUnit.SECONDS);
 			}
 		});
 	}

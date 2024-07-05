@@ -27,39 +27,42 @@ import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.setting.lang.Replacement;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.TimeUtil;
+import me.chancesd.sdutils.utils.TimeUtil.TimeLangProvider;
+import me.chancesd.sdutils.utils.Utils;
 
 /**
  * Message class to easily send messages to players, with replacements if necessary
  *
  * @author ChanceSD
  */
-public enum Lang {
+public enum Lang implements TimeLangProvider {
 
 	PREFIX("Prefix", Lang.PREFIXMSG),
 	OTHER_STATUS_ENABLED("Other_Status_Enabled", Replacement.PLAYER),
-	OTHERS_STATUS_DISABLED("Others_Status_Disabled",Replacement.PLAYER),
+	OTHERS_STATUS_DISABLED("Others_Status_Disabled", Replacement.PLAYER),
 	PVPDISABLED("PvP_Disabled"),
 	PVPENABLED("PvP_Enabled"),
 	SELF_STATUS_DISABLED("Self_Status_Disabled"),
 	SELF_STATUS_ENABLED("Self_Status_Enabled"),
 	COMMAND_DENIED_INCOMBAT("Command_Denied_InCombat"),
 	ATTACK_DENIED_YOU("Attack_Denied_You"),
-	ATTACK_DENIED_OTHER("Attack_Denied_Other",Replacement.PLAYER),
+	ATTACK_DENIED_OTHER("Attack_Denied_Other", Replacement.PLAYER),
 	PVP_DISABLED_FEE("PvP_Disabled_Fee", Replacement.MONEY),
 	PVP_FEE_NOT_ENOUGH("PvP_Disabled_Fee_Not_Enough"),
-	TAGGED_ATTACKER("Tagged_Attacker",Replacement.PLAYER),
-	TAGGED_ATTACKER_ACTIONBAR("Tagged_Attacker_ActionBar",Replacement.PLAYER),
+	TAGGED_ATTACKER("Tagged_Attacker", Replacement.PLAYER),
+	TAGGED_ATTACKER_ACTIONBAR("Tagged_Attacker_ActionBar", Replacement.PLAYER),
 	TAGGED_DEFENDER("Tagged_Defender", Replacement.PLAYER),
-	TAGGED_DEFENDER_ACTIONBAR("Tagged_Defender_ActionBar",Replacement.PLAYER),
+	TAGGED_DEFENDER_ACTIONBAR("Tagged_Defender_ActionBar", Replacement.PLAYER),
 	OUT_OF_COMBAT("Out_Of_Combat"),
 	OUT_OF_COMBAT_ACTIONBAR("Out_Of_Combat_ActionBar"),
 	NEWBIE_PROTECTION("Newbie_Protection", Replacement.TIME),
 	NEWBIE_PROTECTION_END("Newbie_Protection_End"),
 	NEWBIE_PROTECTION_REMOVED("Newbie_Protection_Removed"),
 	NEWBIE_PROTECTION_ON_HIT("Newbie_Protection_On_Hit"),
-	NEWBIE_PROTECTION_ATTACKER("Newbie_Protection_Atacker",Replacement.PLAYER),
+	NEWBIE_PROTECTION_ATTACKER("Newbie_Protection_Atacker", Replacement.PLAYER),
 	NEWBIE_TIME_CHECK("Newbie_Time_Check", Replacement.TIME),
-	NEWBIE_TIME_CHECK_OTHER("Newbie_Time_Check_Other",Replacement.PLAYER,Replacement.TIME),
+	NEWBIE_TIME_CHECK_OTHER("Newbie_Time_Check_Other", Replacement.PLAYER, Replacement.TIME),
 	NEWBIE_COMMAND_BLOCKED("Newbie_Command_Blocked"),
 	NEWBIE_PICKUP_ITEM_BLOCKED("Newbie_Pickup_Items_Blocked"),
 	NEWBIE_FORCE_REMOVED_WG("Newbie_Force_Removed_WorldGuard"),
@@ -83,9 +86,9 @@ public enum Lang {
 	ERROR_NOT_PLAYER("Error_Not_Player"),
 	MONEY_REWARD("Money_Reward", Replacement.VICTIM, Replacement.MONEY),
 	MONEY_PENALTY("Money_Penalty", Replacement.MONEY),
-	MONEY_STEAL("Money_Steal",Replacement.PLAYER, Replacement.MONEY),
+	MONEY_STEAL("Money_Steal", Replacement.PLAYER, Replacement.MONEY),
 	EXP_WON("Exp_Won", Replacement.VICTIM, Replacement.EXP),
-	EXP_STOLEN("Exp_Stolen",Replacement.PLAYER, Replacement.EXP),
+	EXP_STOLEN("Exp_Stolen", Replacement.PLAYER, Replacement.EXP),
 	PVP_LIST_TITLE("PvPList_Title"),
 	PVP_LIST_ENABLED("PvPList_Enabled"),
 	PVP_LIST_DISABLED("PvPList_Disabled"),
@@ -120,10 +123,10 @@ public enum Lang {
 	private static File messagesFile;
 	private static Locale locale;
 	private final String messageKey;
-	private final String[] replacements;
+	private final Replacement[] replacements;
 	private String message;
 
-	Lang(final String messageKey, final String... replacements) {
+	Lang(final String messageKey, final Replacement... replacements) {
 		this.messageKey = messageKey;
 		this.replacements = replacements;
 	}
@@ -134,7 +137,7 @@ public enum Lang {
 	}
 
 	Lang(final String messageKey) {
-		this(messageKey, new String[0]);
+		this(messageKey, new Replacement[0]);
 	}
 
 	public void loadMessage() {
@@ -146,7 +149,7 @@ public enum Lang {
 		return message;
 	}
 
-	public String[] getReplacements() {
+	public Replacement[] getReplacements() {
 		return replacements;
 	}
 
@@ -158,15 +161,24 @@ public enum Lang {
 	public String msg(final String... arguments) {
 		String finalMessage = message;
 		for (int i = 0; i < replacements.length; i++) {
-			final String placeholder = replacements[i];
+			final String placeholder = replacements[i].getPlaceholder();
 			finalMessage = finalMessage.replace(placeholder, arguments[i]);
 		}
 		return finalMessage;
 	}
 
+	@NotNull
+	public String msgTimeUntil(final long time) {
+		return message.replace(Replacement.TIME.getPlaceholder(), TimeUtil.getDiffUntil(this, time));
+	}
+
+	@NotNull
+	public String msgTime(final long time) {
+		return message.replace(Replacement.TIME.getPlaceholder(), TimeUtil.getDiffDuration(this, time));
+	}
+
 	public static void setup(final PvPManager plugin) {
 		Lang.plugin = plugin;
-		messageQueue.clear();
 		final String localeString = Conf.LOCALE.asString();
 		try {
 			locale = Locale.valueOf(localeString);
@@ -179,22 +191,13 @@ public enum Lang {
 
 	private static void load() {
 		messagesFile = new File(plugin.getDataFolder(), locale.fileName());
+		checkForVersionUpgrade();
+		deletePreviousMessageFile();
+
 		if (!messagesFile.exists()) {
 			createMessagesFile();
 		}
-		final File[] listFiles = plugin.getDataFolder().listFiles();
-		if (listFiles != null) {
-			for (final File file : listFiles) {
-				final String fileName = file.getName();
-				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.fileName())) {
-					try {
-						Files.delete(file.toPath());
-					} catch (final IOException e) {
-						Log.warning("Failed to delete messages file", e);
-					}
-				}
-			}
-		}
+
 		try (FileInputStream in = new FileInputStream(messagesFile)) {
 			if (messagesFile.exists()) {
 				LANG_PROPERTIES.clear();
@@ -204,6 +207,29 @@ public enum Lang {
 			}
 		} catch (final IOException e) {
 			Log.severe("Error reading locale file", e);
+		}
+	}
+
+	private static void checkForVersionUpgrade() {
+		if (plugin.getConfigM().isMajorVersionUpgrade()) {
+			final String fileName = locale.fileName();
+			Utils.renameFile(messagesFile, fileName.substring(0, fileName.length() - 11) + "_v3_old" + ".properties");
+		}
+	}
+
+	private static void deletePreviousMessageFile() {
+		final File[] listFiles = plugin.getDataFolder().listFiles();
+		if (listFiles != null) {
+			for (final File file : listFiles) {
+				final String fileName = file.getName();
+				if (fileName.contains("messages") && !fileName.equalsIgnoreCase(locale.fileName()) && !fileName.contains("old")) {
+					try {
+						Files.delete(file.toPath());
+					} catch (final IOException e) {
+						Log.warning("Failed to delete messages file", e);
+					}
+				}
+			}
 		}
 	}
 
@@ -228,9 +254,8 @@ public enum Lang {
 	@NotNull
 	public static String getString(final String key) {
 		final String message = new String(LANG_PROPERTIES.getProperty(key).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-		return ChatUtils.colorize(message).replace(Replacement.PREFIX, PREFIX.msg());
+		return ChatUtils.colorize(message).replace(Replacement.PREFIX.getPlaceholder(), PREFIX.msg());
 	}
-
 
 	private static void checkChanges() {
 		final Properties originalEN = new Properties();
@@ -270,26 +295,27 @@ public enum Lang {
 
 	public static String getProtectionMessage(final ProtectionResult result, final Player attacked) {
 		return switch (result.type()) {
-			case NEWBIE ->
-					result.isAttacker() ? NEWBIE_PROTECTION_ON_HIT.msg() : NEWBIE_PROTECTION_ATTACKER.msg(attacked.getName());
-			case PVPDISABLED ->
-					result.isAttacker() ? ATTACK_DENIED_YOU.msg() : ATTACK_DENIED_OTHER.msg(attacked.getName());
-			case RESPAWN_PROTECTION ->
-					result.isAttacker() ? RESPAWN_PROTECTION_SELF.msg() : RESPAWN_PROTECTION_OTHER.msg(attacked.getName());
-			case WORLD_PROTECTION -> WORLD_PROTECTION.msg();
-			case AFK_PROTECTION -> AFK_PROTECTION.msg();
-			case GLOBAL_PROTECTION -> GLOBAL_PROTECTION.msg();
-			default -> "";
+		case NEWBIE ->
+			result.isAttacker() ? NEWBIE_PROTECTION_ON_HIT.msg() : NEWBIE_PROTECTION_ATTACKER.msg(attacked.getName());
+		case PVPDISABLED ->
+			result.isAttacker() ? ATTACK_DENIED_YOU.msg() : ATTACK_DENIED_OTHER.msg(attacked.getName());
+		case RESPAWN_PROTECTION ->
+			result.isAttacker() ? RESPAWN_PROTECTION_SELF.msg() : RESPAWN_PROTECTION_OTHER.msg(attacked.getName());
+		case WORLD_PROTECTION -> WORLD_PROTECTION.msg();
+		case AFK_PROTECTION -> AFK_PROTECTION.msg();
+		case GLOBAL_PROTECTION -> GLOBAL_PROTECTION.msg();
+		default -> "";
 		};
 	}
 
-	public static String getTime(final ChronoUnit time) {
+	@Override
+	public String getTime(final ChronoUnit time) {
 		return switch (time) {
-			case DAYS -> TIME_DAYS.msg();
-			case HOURS -> TIME_HOURS.msg();
-			case MINUTES -> TIME_MINUTES.msg();
-			case SECONDS -> TIME_SECONDS.msg();
-			default -> TIME_NOW.msg();
+		case DAYS -> TIME_DAYS.msg();
+		case HOURS -> TIME_HOURS.msg();
+		case MINUTES -> TIME_MINUTES.msg();
+		case SECONDS -> TIME_SECONDS.msg();
+		default -> TIME_NOW.msg();
 		};
 	}
 
@@ -298,7 +324,7 @@ public enum Lang {
 	}
 
 	public static void sendQueuedMsgs(final CombatPlayer player) {
-		messageQueue.forEach(player::message);
+		messageQueue.forEach(msg -> player.getPlayer().sendMessage(msg));
 	}
 
 	public static void queueAdminMsg(final String message) {

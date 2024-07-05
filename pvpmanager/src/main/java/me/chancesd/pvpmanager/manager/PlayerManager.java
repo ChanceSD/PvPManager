@@ -22,6 +22,7 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.event.PlayerCombatLogEvent;
 import me.chancesd.pvpmanager.player.CombatPlayer;
@@ -33,9 +34,7 @@ import me.chancesd.pvpmanager.tasks.CleanKillersTask;
 import me.chancesd.pvpmanager.tasks.PvPToggleFeeTask;
 import me.chancesd.pvpmanager.tasks.TagTask;
 import me.chancesd.pvpmanager.utils.CombatUtils;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
-import me.chancesd.sdutils.utils.Log;
-import me.chancesd.sdutils.utils.MCVersion;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PlayerManager {
 
@@ -265,6 +264,10 @@ public class PlayerManager {
 		if (health != null) {
 			health.unregister();
 		}
+	}
+
+	public boolean getGlobalStatus() {
+		return globalStatus;
 	}
 
 	public void setGlobalStatus(final boolean globalStatus) {

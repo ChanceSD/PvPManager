@@ -13,8 +13,6 @@ import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.CombatUtils;
-import me.chancesd.pvpmanager.utils.TimeUtil;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -113,8 +111,8 @@ public class PvP implements TabExecutor {
 	public final boolean hasToggleCooldownPassed(final CombatPlayer player) {
 		if (!CombatUtils.hasTimePassed(player.getToggleTime(), Conf.TOGGLE_COOLDOWN.asInt())
 				&& !player.hasPerm(Permissions.EXEMPT_PVPTOGGLE_COOLDOWN)) {
-			final long timeLeft = CombatUtils.getTimeLeftMs(player.getToggleTime(), Conf.TOGGLE_COOLDOWN.asInt());
-			player.message(Lang.ERROR_PVP_COOLDOWN.msg(TimeUtil.getDiffMsg(timeLeft)));
+			final long timeLeft = CombatUtils.getTimeLeftMs(player.getToggleTime(), Conf.TOGGLE_COOLDOWN.asInt() * 1000L);
+			player.message(Lang.ERROR_PVP_COOLDOWN.msgTime(timeLeft));
 			return false;
 		}
 		return true;

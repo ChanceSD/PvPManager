@@ -11,6 +11,7 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
+import me.chancesd.sdutils.utils.Utils;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
@@ -25,6 +26,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		this.plugin = plugin;
 		registerPlaceholder("in_combat");
 		registerPlaceholder("combat_timeleft");
+		registerPlaceholder("combat_timeleft_ms");
 		registerPlaceholder("pvp_status");
 		registerPlaceholder("pvp_command_timeleft");
 		registerPlaceholder("is_newbie");
@@ -58,6 +60,8 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 			return p.isInCombat() ? Conf.NAMETAG_PREFIX.asString() : "";
 		case "combat_timeleft":
 			return String.valueOf(p.getTagTimeLeft() / 1000);
+		case "combat_timeleft_ms":
+			return String.valueOf(Utils.roundTo1Decimal(p.getTagTimeLeft() / 1000D));
 		case "newbie_timeleft":
 			return String.valueOf(p.getNewbieTimeLeft() / 1000);
 		case "pvp_command_timeleft":
@@ -70,7 +74,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 			final CombatPlayer enemy = p.getEnemy();
 			return enemy != null ? df.format(enemy.getPlayer().getHealth()) : "0";
 		case "global_pvp_status":
-			return getPAPIBoolean(Settings.isGlobalStatus());
+			return getPAPIBoolean(plugin.getPlayerManager().getGlobalStatus());
 		default:
 			return null;
 		}

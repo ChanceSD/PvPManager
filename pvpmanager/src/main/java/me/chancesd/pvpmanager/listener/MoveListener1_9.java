@@ -24,7 +24,7 @@ import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.tasks.RegionCheckTask;
 import me.chancesd.pvpmanager.utils.CombatUtils;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 
 public class MoveListener1_9 implements Listener {
