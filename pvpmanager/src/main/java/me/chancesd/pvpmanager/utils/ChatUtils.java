@@ -39,17 +39,22 @@ public class ChatUtils {
 		return colorizeHex(ChatColor.translateAlternateColorCodes('&', message));
 	}
 
-	@SuppressWarnings("null")
 	@NotNull
 	private static String colorizeHex(@NotNull final String message) {
-		if (!HEXSUPPORTED)
-			return message;
-
 		final Matcher matcher = HEX_PATTERN.matcher(message);
 		final StringBuffer buffer = new StringBuffer();
 
 		while (matcher.find()) {
-			matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of(matcher.group(1)).toString());
+			if (!HEXSUPPORTED) {
+				final char COLOR_CHAR = ChatColor.COLOR_CHAR;
+				final String group = matcher.group(1);
+				matcher.appendReplacement(buffer, COLOR_CHAR + "x"
+						+ COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
+						+ COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
+						+ COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5));
+			} else {
+				matcher.appendReplacement(buffer, net.md_5.bungee.api.ChatColor.of(matcher.group(1)).toString());
+			}
 		}
 
 		return matcher.appendTail(buffer).toString();

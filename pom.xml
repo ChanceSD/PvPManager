@@ -27,7 +27,6 @@
 
 	<modules>
 		<module>pvpmanager</module>
-		<module>pvpmanager-folia</module>
 	</modules>
 
 	<scm>
