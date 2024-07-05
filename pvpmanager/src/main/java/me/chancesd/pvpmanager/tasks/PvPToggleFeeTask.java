@@ -3,7 +3,7 @@ package me.chancesd.pvpmanager.tasks;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PvPToggleFeeTask implements Runnable {
 

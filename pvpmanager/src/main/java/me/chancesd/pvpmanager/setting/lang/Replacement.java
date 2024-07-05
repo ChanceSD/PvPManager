@@ -2,19 +2,26 @@ package me.chancesd.pvpmanager.setting.lang;
 
 public class Replacement {
 
-	public static final String PLAYER = prepare("player");
-	public static final String TIME = prepare("time");
-	public static final String VICTIM = prepare("victim");
-	public static final String MONEY = prepare("money");
-	public static final String EXP = prepare("exp");
-	public static final String STATE = prepare("state");
-	public static final String PREFIX = prepare("prefix");
+	public static final Replacement PLAYER = prepare("player");
+	public static final Replacement TIME = prepare("time");
+	public static final Replacement VICTIM = prepare("victim");
+	public static final Replacement MONEY = prepare("money");
+	public static final Replacement EXP = prepare("exp");
+	public static final Replacement STATE = prepare("state");
+	public static final Replacement PREFIX = prepare("prefix");
 
-	private Replacement() {
+	private final String placeholder;
+
+	private Replacement(final String placeholder) {
+		this.placeholder = placeholder;
 	}
 
-	private static String prepare(final String value) {
-		return "{" + value + "}";
+	private static Replacement prepare(final String value) {
+		return new Replacement("{" + value + "}");
+	}
+
+	public String getPlaceholder() {
+		return placeholder;
 	}
 
 }

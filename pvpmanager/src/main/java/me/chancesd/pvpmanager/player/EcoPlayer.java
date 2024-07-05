@@ -8,6 +8,7 @@ import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.Utils;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
@@ -54,7 +55,7 @@ public abstract class EcoPlayer extends BasePlayer {
 		if (Conf.MONEY_STEAL.asBool()) {
 			final double vbalance = economy.getBalance(victim.getPlayer());
 			if (Conf.MONEY_REWARD.asDouble() <= 1) {
-				moneyWon = roundMoney(Conf.MONEY_REWARD.asDouble() * vbalance);
+				moneyWon = Utils.roundTo1Decimal(Conf.MONEY_REWARD.asDouble() * vbalance);
 			} else if (Conf.MONEY_REWARD.asDouble() > vbalance) {
 				moneyWon = vbalance;
 			}
@@ -87,11 +88,7 @@ public abstract class EcoPlayer extends BasePlayer {
 	private double getMoneyPercentage(final double percentage) {
 		if (percentage > 1)
 			return percentage;
-		return roundMoney(percentage * economy.getBalance(getPlayer()));
-	}
-
-	private double roundMoney(final double money) {
-		return Math.round(money * 100.0) / 100.0;
+		return Utils.roundTo1Decimal(percentage * economy.getBalance(getPlayer()));
 	}
 
 	@Override

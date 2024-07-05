@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import me.chancesd.pvpmanager.utils.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,15 +28,15 @@ import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.player.nametag.TABNameTag;
 import me.chancesd.pvpmanager.player.world.CombatWorld;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.setting.ItemCooldown;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.tasks.NewbieTask;
 import me.chancesd.pvpmanager.tasks.TagTask;
 import me.chancesd.pvpmanager.utils.CombatUtils;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -132,7 +131,7 @@ public class CombatPlayer extends EcoPlayer {
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
 			this.newbieTask = new NewbieTask(this, 0);
-			message(Lang.NEWBIE_PROTECTION.msg(TimeUtil.getDiffMsg(newbieTask.getFinishTime())));
+			message(Lang.NEWBIE_PROTECTION.msgTimeUntil(newbieTask.getFinishTime()));
 		} else if (this.newbie && newbieTask != null) {
 			if (newbieTask.isExpired()) {
 				message(Lang.NEWBIE_PROTECTION_END);
@@ -442,6 +441,7 @@ public class CombatPlayer extends EcoPlayer {
 		executor.execute(() -> plugin.getStorageManager().getStorage().saveUserData(this));
 	}
 
+	@Nullable
 	public NameTag getNameTag() {
 		return nametag;
 	}

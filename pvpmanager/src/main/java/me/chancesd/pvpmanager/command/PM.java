@@ -30,6 +30,7 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.listener.DebugEntityListener;
 import me.chancesd.pvpmanager.manager.UpdateManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Locale;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
@@ -37,7 +38,7 @@ import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.ChatUtils;
 import me.chancesd.pvpmanager.utils.CombatUtils;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PM implements TabExecutor {
 
@@ -201,8 +202,8 @@ public class PM implements TabExecutor {
 			}
 			sender.sendMessage("Tagged all players");
 		} else if (args[1].equalsIgnoreCase("untagall")) {
-			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
-				plugin.getPlayerHandler().untag(player);
+			for (final CombatPlayer player : plugin.getPlayerManager().getPlayers().values()) {
+				player.untag(UntagReason.COMMAND);
 			}
 			sender.sendMessage("Untagged all players");
 		} else if (args[1].equalsIgnoreCase("players")) {
@@ -228,7 +229,7 @@ public class PM implements TabExecutor {
 					.callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK,
 							DamageSource.builder(DamageType.PLAYER_ATTACK).build(), 5.0));
 			sender.sendMessage("Attacked player with 5 damage");
-		} 
+		}
 	}
 
 	private void locale(final CommandSender sender, final String[] args) {

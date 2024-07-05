@@ -15,7 +15,7 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.ItemCooldown;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PlayerListener1_11 implements Listener {
 
