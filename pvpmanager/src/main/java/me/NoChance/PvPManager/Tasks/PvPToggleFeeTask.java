@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Tasks;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Settings.Messages;
+import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class PvPToggleFeeTask implements Runnable {
 
@@ -16,7 +17,7 @@ public class PvPToggleFeeTask implements Runnable {
 	public final void run() {
 		for (final PvPlayer combatPlayer : ph.getPlayers().values()) {
 			if (!combatPlayer.hasPvPEnabled() && !combatPlayer.applyPvPDisabledFee()) {
-				combatPlayer.setPvP(true);
+				ScheduleUtils.ensureMainThread(() -> combatPlayer.setPvP(true), combatPlayer.getPlayer());
 				combatPlayer.message(Messages.getPvpFeeNotEnough());
 			}
 		}
