@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -24,8 +26,9 @@ import me.NoChance.PvPManager.Tasks.CleanKillersTask;
 import me.NoChance.PvPManager.Tasks.PvPToggleFeeTask;
 import me.NoChance.PvPManager.Tasks.TagTask;
 import me.NoChance.PvPManager.Utils.CombatUtils;
-import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
 
 /**
  * @deprecated Will be moved to another package when v4 is released.
@@ -142,7 +145,11 @@ public class PlayerHandler {
 		Bukkit.getPluginManager().callEvent(event);
 		if (Settings.isKillOnLogout()) {
 			player.setPvpLogged(true);
-			p.setHealth(0);
+			if (MCVersion.isAtLeast(MCVersion.V1_20_5)) {
+				p.damage(Float.MAX_VALUE, DamageSource.builder(DamageType.GENERIC_KILL).build());
+			} else {
+				p.setHealth(0);
+			}
 			player.setPvpLogged(false);
 		}
 		if (Settings.getFineAmount() != 0) {
