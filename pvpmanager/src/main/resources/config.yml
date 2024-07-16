@@ -119,6 +119,9 @@ Tagged In Combat:
         - 'DOOR'
         - 'BUTTON'
         - 'BED'
+        - 'SLAB'
+        - 'STAIRS'
+        - 'CARPET'
     Elytra: false
     Eat: false
     Totem of Undying: false

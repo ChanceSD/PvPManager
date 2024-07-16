@@ -39,7 +39,9 @@ public class DisplayManager {
 		return bossBar;
 	}
 
-	public void discardBossbar(final PvPlayer player) {
+	public void discardPlayer(final PvPlayer player) {
+		if (actionBars.remove(player) == null)
+			Log.debug("Tried to discard action bar that didn't exist");
 		final BossBar bossBar = bossBars.get(player);
 		if (bossBar == null) {
 			Log.debug("Tried to discard bossbar that didn't exist"); // display task might not have created one yet

@@ -33,7 +33,7 @@ public class TagTask extends TimerTask {
 				final long currentTime = System.currentTimeMillis();
 				if (currentTime >= p.getUntagTime()) {
 					p.unTag();
-					display.discardBossbar(p);
+					display.discardPlayer(p);
 					iterator.remove();
 					continue;
 				}
@@ -56,7 +56,7 @@ public class TagTask extends TimerTask {
 	public final boolean cancel() {
 		for (final PvPlayer pvPlayer : tagged)
 			if (pvPlayer.isInCombat()) {
-				display.discardBossbar(pvPlayer);
+				display.discardPlayer(pvPlayer);
 				pvPlayer.unTag();
 			}
 		tagged.clear();
@@ -70,7 +70,7 @@ public class TagTask extends TimerTask {
 	}
 
 	public final void untag(final PvPlayer p) {
-		display.discardBossbar(p);
+		display.discardPlayer(p);
 		tagged.remove(p);
 		if (p.isInCombat()) {
 			p.unTag();
