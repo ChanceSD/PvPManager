@@ -21,7 +21,6 @@ public class BukkitNameTag extends NameTag {
 	private final String combatTeamID;
 	private final Scoreboard scoreboard;
 
-
 	public BukkitNameTag(final PvPlayer p) {
 		super(p);
 		this.combatTeamID = "PVP-" + processPlayerID(pvPlayer.getUUID());
@@ -100,7 +99,8 @@ public class BukkitNameTag extends NameTag {
 	public final void setInCombat() {
 		storePreviousTeam();
 		try {
-			inCombat.addEntry(pvPlayer.getName());
+			if (inCombat != null) // combat nametags off and toggle nametags on
+				inCombat.addEntry(pvPlayer.getName());
 		} catch (final IllegalStateException e) {
 			Log.info("Failed to add player to combat team");
 			Log.info(
@@ -129,7 +129,7 @@ public class BukkitNameTag extends NameTag {
 		try {
 			if (previousTeamName != null && scoreboard.getTeam(previousTeamName) != null) {
 				previousTeam.addEntry(pvPlayer.getName());
-			} else {
+			} else if (inCombat != null) { // combat nametags off and toggle nametags on
 				inCombat.removeEntry(pvPlayer.getName());
 			}
 		} catch (final IllegalStateException e) {
