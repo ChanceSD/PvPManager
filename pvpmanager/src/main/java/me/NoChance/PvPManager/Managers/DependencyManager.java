@@ -63,6 +63,10 @@ public class DependencyManager {
 					+ " (Doing that will prevent TAB from changing nametags)");
 			Log.info("Or use the premium version of PvPManager which hooks into TAB for nametag/tablist changes.");
 		}
+		if (Bukkit.getPluginManager().getPlugin("TAB-Bridge") != null && Settings.useNameTag()) {
+			Log.info("TAB-Bridge detected. Nametags in combat disabled due to incompatibility. Use the prefix/suffix placeholders instead");
+			Settings.setUseNameTag(false);
+		}
 		final List<Hook> failedHooks = setupHooks(Hook.values());
 		// Delayed check for hooks that do not use softdepend
 		ScheduleUtils.runPlatformTask(() -> {
