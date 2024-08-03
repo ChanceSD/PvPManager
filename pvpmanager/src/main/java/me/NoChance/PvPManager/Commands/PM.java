@@ -190,6 +190,18 @@ public class PM implements TabExecutor {
 				player.setTagged(true, player);
 			}
 			sender.sendMessage("Tagged all players");
+		} else if (args[1].equalsIgnoreCase("untagall")) {
+			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
+				plugin.getPlayerHandler().untag(player);
+			}
+			sender.sendMessage("Untagged all players");
+		} else if (args[1].equalsIgnoreCase("players")) {
+			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
+				if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
+					Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
+				}
+			}
+			Log.info("Players: " + plugin.getPlayerHandler().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
 		} else if (args.length == 3) {
 			if (!CombatUtils.isOnline(args[2])) {
 				sender.sendMessage("§4Player not online!");
@@ -205,13 +217,6 @@ public class PM implements TabExecutor {
 			plugin.getServer().getPluginManager()
 					.callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK, 5.0));
 			sender.sendMessage("Attacked player with 5 damage");
-		} else if (args[1].equalsIgnoreCase("players")) {
-			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
-				if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
-					Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
-				}
-			}
-			Log.info("Players: " + plugin.getPlayerHandler().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
 		}
 	}
 

@@ -33,7 +33,7 @@ public class BukkitNameTag extends NameTag {
 			if (scoreboard.getTeam(combatTeamID) != null) {
 				inCombat = scoreboard.getTeam(combatTeamID);
 			} else {
-				inCombat = scoreboard.registerNewTeam(combatTeamID);
+				inCombat = registerTeam(combatTeamID);
 				Log.debug("Creating combat team with name " + combatTeamID);
 				inCombat.setPrefix(combatPrefix);
 				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
@@ -49,7 +49,7 @@ public class BukkitNameTag extends NameTag {
 				if (scoreboard.getTeam("PvPOn") != null) {
 					pvpOn = scoreboard.getTeam("PvPOn");
 				} else {
-					pvpOn = scoreboard.registerNewTeam("PvPOn");
+					pvpOn = registerTeam("PvPOn");
 					pvpOn.setCanSeeFriendlyInvisibles(false);
 					pvpOn.setPrefix(pvpOnPrefix);
 					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
@@ -64,7 +64,7 @@ public class BukkitNameTag extends NameTag {
 				if (scoreboard.getTeam("PvPOff") != null) {
 					pvpOff = scoreboard.getTeam("PvPOff");
 				} else {
-					pvpOff = scoreboard.registerNewTeam("PvPOff");
+					pvpOff = registerTeam("PvPOff");
 					pvpOff.setCanSeeFriendlyInvisibles(false);
 					pvpOff.setPrefix(pvpOffPrefix);
 					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
@@ -77,6 +77,12 @@ public class BukkitNameTag extends NameTag {
 			}
 			// set pvp tag if player has pvp nametags on
 			setPvP(pvPlayer.hasPvPEnabled());
+		}
+	}
+
+	private Team registerTeam(final String teamID) {
+		synchronized (scoreboard) {
+			return scoreboard.registerNewTeam(teamID);
 		}
 	}
 
@@ -99,13 +105,13 @@ public class BukkitNameTag extends NameTag {
 	public final void setInCombat() {
 		storePreviousTeam();
 		try {
-			if (inCombat != null) // combat nametags off and toggle nametags on
+			if (inCombat != null) { // combat nametags off and toggle nametags on
 				inCombat.addEntry(pvPlayer.getName());
+			}
 		} catch (final IllegalStateException e) {
 			Log.info("Failed to add player to combat team");
 			Log.info(
 					"This warning can be ignored but if it happens often it means one of your plugins is removing PvPManager teams and causing a conflict");
-			setup();
 		}
 	}
 
@@ -137,7 +143,7 @@ public class BukkitNameTag extends NameTag {
 				return;
 			restoringSent = true;
 			// Some plugin is unregistering teams when it shouldn't
-			Log.severe("Error restoring nametag for: " + pvPlayer.getName());
+			Log.severe("Error restoring nametag for: " + pvPlayer.getName(), e);
 		} finally {
 			previousTeamName = null;
 		}
@@ -169,7 +175,7 @@ public class BukkitNameTag extends NameTag {
 			if (unregisteredSent)
 				return;
 			unregisteredSent = true;
-			Log.severe("Team was already unregistered for player: " + pvPlayer.getName());
+			Log.severe("Team was already unregistered for player: " + pvPlayer.getName(), e);
 		}
 	}
 

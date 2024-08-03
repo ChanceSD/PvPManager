@@ -61,8 +61,9 @@ public class PvPlayer extends EcoPlayer {
 		this.pvpState = Settings.isDefaultPvp();
 		this.plugin = plugin;
 		setCombatWorld(plugin.getWorldManager().getWorld(getPlayer().getWorld()));
-		if (!CombatUtils.isNPC(player))
+		if (!CombatUtils.isNPC(player)) {
 			executor.execute(this::loadData);
+		}
 	}
 
 	public final long getToggleTime() {
