@@ -1,6 +1,5 @@
 package me.NoChance.PvPManager.Managers;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,7 +15,7 @@ import me.chancesd.sdutils.utils.Log;
 
 public class DisplayManager {
 
-	private final Map<PvPlayer, ProgressBar> actionBars = new HashMap<>();
+	private final Map<PvPlayer, ProgressBar> actionBars = new ConcurrentHashMap<>();
 	private final Map<PvPlayer, BossBar> bossBars = new ConcurrentHashMap<>();
 	private final PvPManager plugin;
 

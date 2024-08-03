@@ -48,8 +48,6 @@ public class TagTask extends TimerTask {
 			}
 		} catch (final Exception e) {
 			Log.severe("Error in tag task", e);
-			e.printStackTrace();
-			Thread.currentThread().dumpStack();
 			throw e;
 		}
 	}
