@@ -168,6 +168,9 @@ public class BukkitNameTag extends NameTag {
 
 	@Override
 	public void cleanup() {
+		if (inCombat == null) // combat nametags off and toggle nametags on
+			return;
+
 		try {
 			Log.debug("Unregistering team: " + inCombat.getName());
 			inCombat.unregister();
