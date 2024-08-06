@@ -32,6 +32,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		registerPlaceholder("current_enemy");
 		registerPlaceholder("current_enemy_health");
 		registerPlaceholder("combat_prefix");
+		registerPlaceholder("global_pvp_status");
 	}
 
 	@Override
@@ -66,6 +67,8 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		case "current_enemy_health":
 			final PvPlayer enemy = p.getEnemy();
 			return enemy != null ? df.format(enemy.getPlayer().getHealth()) : "0";
+		case "global_pvp_status":
+			return Boolean.toString(Settings.isGlobalStatus());
 		default:
 			return null;
 		}
