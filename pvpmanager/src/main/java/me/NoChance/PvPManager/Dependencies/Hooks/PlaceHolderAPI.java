@@ -68,7 +68,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 			final PvPlayer enemy = p.getEnemy();
 			return enemy != null ? df.format(enemy.getPlayer().getHealth()) : "0";
 		case "global_pvp_status":
-			return Boolean.toString(Settings.isGlobalStatus());
+			return getPAPIBoolean(Settings.isGlobalStatus());
 		default:
 			return null;
 		}

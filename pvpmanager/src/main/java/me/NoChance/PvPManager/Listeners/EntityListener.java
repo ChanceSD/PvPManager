@@ -29,7 +29,6 @@ import org.bukkit.event.weather.LightningStrikeEvent.Cause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -273,7 +272,8 @@ public class EntityListener implements Listener {
 		final PvPlayer pvPlayer = ph.get(player);
 
 		if (pvPlayer.isInCombat()) {
-			pvPlayer.setTagged(true, pvPlayer);
+			final PvPlayer enemy = pvPlayer.getEnemy();
+			pvPlayer.setTagged(true, enemy != null ? enemy : pvPlayer);
 		}
 	}
 
