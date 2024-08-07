@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import me.NoChance.PvPManager.Utils.ChatUtils;
 import me.NoChance.PvPManager.Utils.CombatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
 
 public final class Settings {
 
@@ -175,7 +176,7 @@ public final class Settings {
 		disableGamemode = DISABLE.getBoolean("GameMode", true);
 		disableDisguise = DISABLE.getBoolean("Disguise", true);
 		disableGodMode = DISABLE.getBoolean("GodMode", true);
-		disableELytra = DISABLE.getBoolean("Elytra", false);
+		disableELytra = MCVersion.isAtLeast(MCVersion.V1_9) && DISABLE.getBoolean("Elytra", false);
 		disableInvisibility = DISABLE.getBoolean("Invisibility", false);
 
 		inCombatEnabled = TAGGEDCOMBAT.getBoolean("Enabled", true);
