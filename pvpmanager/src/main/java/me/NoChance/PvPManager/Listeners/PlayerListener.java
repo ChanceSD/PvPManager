@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -67,6 +68,18 @@ public class PlayerListener implements Listener {
 		if (Settings.isBlockPlaceBlocks() && combatPlayer.isInCombat() || Settings.isBlockPlaceBlocksNewbie() && combatPlayer.isNewbie()) {
 			event.setCancelled(true);
 			combatPlayer.sendActionBar(Messages.getBlockPlaceBlockedInCombat(), 1000);
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public final void onBlockBreak(final BlockBreakEvent event) {
+		if (!Settings.isBlockBreakBlocks() && !Settings.isBlockBreakBlocksNewbie())
+			return;
+
+		final PvPlayer combatPlayer = ph.get(event.getPlayer());
+		if (Settings.isBlockBreakBlocks() && combatPlayer.isInCombat() || Settings.isBlockBreakBlocksNewbie() && combatPlayer.isNewbie()) {
+			event.setCancelled(true);
+			combatPlayer.sendActionBar(Messages.getBlockBreakBlockedInCombat(), 1000);
 		}
 	}
 

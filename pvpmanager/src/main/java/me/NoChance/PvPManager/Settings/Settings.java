@@ -37,6 +37,8 @@ public final class Settings {
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocksNewbie;
 	private static boolean blockPlaceBlocks;
+	private static boolean blockBreakBlocksNewbie;
+	private static boolean blockBreakBlocks;
 	private static boolean blockGlideInCombat;
 	private static boolean blockEat;
 	private static boolean blockTotemUndying;
@@ -205,6 +207,7 @@ public final class Settings {
 		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
+		blockBreakBlocks = TAGGEDCOMBAT.getBoolean("Block.Break Blocks", false);
 		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact.Enabled", false);
 		blockInteractItemList = TAGGEDCOMBAT.getStringList("Block.Interact.List");
 		blockGlideInCombat = TAGGEDCOMBAT.getBoolean("Block.Elytra", false);
@@ -230,6 +233,7 @@ public final class Settings {
 		newbieAllowDisable = NEWBIEPROTECTION.getBoolean("Allow Player Disable", true);
 		blockPickNewbies = NEWBIEPROTECTION.getBoolean("Block Pick Items", false);
 		blockPlaceBlocksNewbie = NEWBIEPROTECTION.getBoolean("Block Place Blocks", false);
+		blockBreakBlocksNewbie = NEWBIEPROTECTION.getBoolean("Block Break Blocks", false);
 		newbieGodMode = NEWBIEPROTECTION.getBoolean("Protect From Everything", false);
 		newbieBlacklist = getList(NEWBIEPROTECTION.getStringList("Command Blacklist"));
 
@@ -447,8 +451,16 @@ public final class Settings {
 		return blockPlaceBlocksNewbie;
 	}
 
+	public static boolean isBlockBreakBlocksNewbie() {
+		return blockBreakBlocksNewbie;
+	}
+
 	public static boolean isBlockPlaceBlocks() {
 		return blockPlaceBlocks;
+	}
+
+	public static boolean isBlockBreakBlocks() {
+		return blockBreakBlocks;
 	}
 
 	public static boolean isBlockGlide() {
