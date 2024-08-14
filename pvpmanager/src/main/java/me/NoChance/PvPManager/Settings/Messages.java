@@ -91,6 +91,7 @@ public class Messages {
 	private static String pvpForceEnabledWG;
 	private static String teleportBlockedInCombat;
 	private static String blockPlaceBlockedInCombat;
+	private static String blockBreakBlockedInCombat;
 	private static String eatBlockedInCombat;
 	private static String interactBlockedInCombat;
 	private static String newbiePickupItemBlocked;
@@ -189,6 +190,7 @@ public class Messages {
 		newbiePickupItemBlocked = getString("Newbie_Pickup_Items_Blocked");
 		newbieForceRemovedWG = getString("Newbie_Force_Removed_WorldGuard");
 		blockPlaceBlockedInCombat = getString("Block_Place_Blocked_InCombat");
+		blockBreakBlockedInCombat = getString("Block_Break_Blocked_InCombat");
 		eatBlockedInCombat = getString("Eating_Blocked_InCombat");
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
 		chorusBlockedInCombat = getString("ChorusFruit_Blocked_InCombat");
@@ -526,6 +528,10 @@ public class Messages {
 
 	public static String getBlockPlaceBlockedInCombat() {
 		return blockPlaceBlockedInCombat;
+	}
+
+	public static String getBlockBreakBlockedInCombat() {
+		return blockBreakBlockedInCombat;
 	}
 
 	public static String getEatBlockedInCombat() {

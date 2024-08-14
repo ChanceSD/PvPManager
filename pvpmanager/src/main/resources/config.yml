@@ -112,6 +112,7 @@ Tagged In Combat:
     ChorusFruits: false
     Teleport: true
     Place Blocks: false
+    Break Blocks: false
     Interact:
       Enabled: false
       # List of materials to block interaction, adding DOOR means all materials that end with DOOR like IRON_DOOR and so on
@@ -161,6 +162,7 @@ Newbie Protection:
   # Block players from picking up items or place blocks while they have protection
   Block Pick Items: false
   Block Place Blocks: false
+  Block Break Blocks: false
   # Protect newbies from all types of damage including PvE
   Protect From Everything: false
   Command Blacklist:
