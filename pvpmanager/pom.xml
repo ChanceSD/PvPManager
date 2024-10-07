@@ -262,7 +262,7 @@
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite</artifactId>
-			<version>1.11.0</version>
+			<version>1.11.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
