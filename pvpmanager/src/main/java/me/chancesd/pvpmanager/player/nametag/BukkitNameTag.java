@@ -30,48 +30,36 @@ public class BukkitNameTag extends NameTag {
 
 	private void setup() {
 		if (!combatPrefix.isEmpty() || !combatSuffix.isEmpty()) {
-			if (scoreboard.getTeam(combatTeamID) != null) {
-				inCombat = scoreboard.getTeam(combatTeamID);
-			} else {
-				inCombat = registerTeam(combatTeamID);
-				Log.debug("Creating combat team with name " + combatTeamID);
-				inCombat.setPrefix(combatPrefix);
-				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-					final ChatColor nameColor = getLastColor(combatPrefix);
-					if (nameColor != null) {
-						inCombat.setColor(nameColor);
-					}
+			inCombat = registerTeam(combatTeamID);
+			Log.debug("Creating combat team with name " + combatTeamID);
+			inCombat.setPrefix(combatPrefix);
+			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+				final ChatColor nameColor = getLastColor(combatPrefix);
+				if (nameColor != null) {
+					inCombat.setColor(nameColor);
 				}
 			}
 		}
 		if (Settings.isToggleNametagsEnabled()) {
 			if (!pvpOnPrefix.isEmpty()) {
-				if (scoreboard.getTeam("PvPOn") != null) {
-					pvpOn = scoreboard.getTeam("PvPOn");
-				} else {
-					pvpOn = registerTeam("PvPOn");
-					pvpOn.setCanSeeFriendlyInvisibles(false);
-					pvpOn.setPrefix(pvpOnPrefix);
-					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-						final ChatColor nameColor = getLastColor(pvpOnPrefix);
-						if (nameColor != null) {
-							pvpOn.setColor(nameColor);
-						}
+				pvpOn = registerTeam("PvPOn");
+				pvpOn.setCanSeeFriendlyInvisibles(false);
+				pvpOn.setPrefix(pvpOnPrefix);
+				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+					final ChatColor nameColor = getLastColor(pvpOnPrefix);
+					if (nameColor != null) {
+						pvpOn.setColor(nameColor);
 					}
 				}
 			}
 			if (!pvpOffPrefix.isEmpty()) {
-				if (scoreboard.getTeam("PvPOff") != null) {
-					pvpOff = scoreboard.getTeam("PvPOff");
-				} else {
-					pvpOff = registerTeam("PvPOff");
-					pvpOff.setCanSeeFriendlyInvisibles(false);
-					pvpOff.setPrefix(pvpOffPrefix);
-					if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
-						final ChatColor nameColor = getLastColor(pvpOffPrefix);
-						if (nameColor != null) {
-							pvpOff.setColor(nameColor);
-						}
+				pvpOff = registerTeam("PvPOff");
+				pvpOff.setCanSeeFriendlyInvisibles(false);
+				pvpOff.setPrefix(pvpOffPrefix);
+				if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+					final ChatColor nameColor = getLastColor(pvpOffPrefix);
+					if (nameColor != null) {
+						pvpOff.setColor(nameColor);
 					}
 				}
 			}
@@ -82,6 +70,8 @@ public class BukkitNameTag extends NameTag {
 
 	private Team registerTeam(final String teamID) {
 		synchronized (scoreboard) {
+			if (scoreboard.getTeam(teamID) != null)
+				return scoreboard.getTeam(teamID);
 			return scoreboard.registerNewTeam(teamID);
 		}
 	}
