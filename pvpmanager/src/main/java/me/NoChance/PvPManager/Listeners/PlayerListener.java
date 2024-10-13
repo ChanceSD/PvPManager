@@ -3,6 +3,7 @@ package me.NoChance.PvPManager.Listeners;
 import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.sdutils.utils.Log;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -295,6 +296,8 @@ public class PlayerListener implements Listener {
 
 			if (player.isInCombat() && !player.hasPerm(Permissions.EXEMPT_BLOCK_COMMANDS)) {
 				final boolean contains = CombatUtils.recursiveContainsCommand(givenCommand, Settings.getCommandsAllowed());
+				Log.debug("Command: " + Arrays.asList(givenCommand) + " | Whitelist: " + Settings.isCommandsWhitelist() + " | In list: " + contains
+						+ " | Blocked: " + (Settings.isCommandsWhitelist() != contains));
 				if (Settings.isCommandsWhitelist() != contains) {
 					event.setCancelled(true);
 					player.message(Messages.getCommandDeniedIncombat());
