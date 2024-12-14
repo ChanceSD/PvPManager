@@ -21,7 +21,7 @@ public class PvPGlobal implements TabExecutor {
 		if (args.length == 1) {
 			final boolean status = args[0].equalsIgnoreCase("on");
 			Settings.setGlobalStatus(status);
-			sender.sendMessage(Messages.PREFIXMSG + ChatColor.DARK_GREEN + "Server PvP was set to " + status);
+			sender.sendMessage(Messages.PREFIXMSG + ChatColor.DARK_GREEN + " Server PvP was set to " + status);
 			return true;
 		}
 		return false;
