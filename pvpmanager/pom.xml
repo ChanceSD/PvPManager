@@ -206,7 +206,7 @@
 		<dependency>
 			<groupId>com.github.TownyAdvanced</groupId>
 			<artifactId>towny</artifactId>
-			<version>0.100.2.0</version>
+			<version>0.101.0.3</version>
 			<scope>provided</scope>
 		</dependency>
 
