@@ -120,7 +120,7 @@ public class PlayerListener implements Listener {
 		Log.debug(player.getName() + " quit with reason: " + event.getQuitMessage() + " - In combat: " + pvPlayer.isInCombat());
 		if (pvPlayer.isInCombat() && !pvPlayer.hasPerm(Permissions.EXEMPT_COMBAT_LOG)) {
 			if (Settings.isLogToFile()) {
-				ph.getConfigManager().getLog().log(player.getName() + " tried to escape combat!");
+				ph.getConfigManager().getLog().logCombatLog(pvPlayer);
 			}
 			CombatUtils.executeCommands(Settings.getCommandsOnPvPLog(), player, player.getName());
 			ph.applyPunishments(pvPlayer);

@@ -6,9 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Collectors;
 
+import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.NoChance.PvPManager.PvPlayer;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
 
 public class LogFile {
@@ -44,6 +47,14 @@ public class LogFile {
 
 	public final void log(final String line) {
 		write(format.format(new Date()) + line);
+	}
+
+	public final void logCombatLog(final PvPlayer player) {
+		final Location loc = player.getPlayer().getLocation();
+		final String data = player.getName() + " tried to escape combat! (" + player.getTagTimeLeft() / 1000 + "s left)"
+				+ " | In combat with: " + player.getEnemies().stream().map(PvPlayer::getName).collect(Collectors.toList())
+				+ String.format(" | World:%s, X:%.2f, Y:%.2f, Z:%.2f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ());
+		write(format.format(new Date()) + data);
 	}
 
 }

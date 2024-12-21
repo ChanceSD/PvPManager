@@ -64,6 +64,12 @@
 			<url>https://repo.codemc.org/repository/maven-public</url>
 		</repository>
 
+		<!-- Towny -->
+		<repository>
+			<id>glaremasters repo</id>
+			<url>https://repo.glaremasters.me/repository/towny/</url>
+		</repository>
+
 	</repositories>
 
 	<build>
@@ -204,9 +210,9 @@
 
 		<!-- Towny -->
 		<dependency>
-			<groupId>com.github.TownyAdvanced</groupId>
+			<groupId>com.palmergames.bukkit.towny</groupId>
 			<artifactId>towny</artifactId>
-			<version>0.101.0.3</version>
+			<version>0.101.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 
