@@ -1,0 +1,45 @@
+package me.chancesd.pvpmanager;
+
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
+import me.chancesd.pvpmanager.listener.BlockedActionsListenerTest;
+import me.chancesd.pvpmanager.listener.EntityListenerTest;
+import me.chancesd.pvpmanager.listener.PlayerListenerTest;
+import me.chancesd.pvpmanager.manager.DependencyTest;
+import me.chancesd.pvpmanager.setting.LangTest;
+
+@Suite
+@SelectClasses({ UpdaterTest.class, DependencyTest.class, EntityListenerTest.class, PlayerListenerTest.class, BlockedActionsListenerTest.class,
+		LangTest.class })
+public final class InstanceCreator implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+
+	private static boolean started = false;
+	private static PluginSetup pt;
+
+	private InstanceCreator() {
+	}
+
+	@Override
+	public void beforeAll(final ExtensionContext context) throws Exception {
+		if (!started) {
+			started = true;
+			pt = new PluginSetup();
+			pt.setup();
+			context.getRoot().getStore(Namespace.GLOBAL).put("pvpmanager", this);
+		}
+	}
+
+	@Override
+	public void close() {
+		pt.tearDown();
+	}
+
+	public static PluginSetup getPt() {
+		return pt;
+	}
+
+}
