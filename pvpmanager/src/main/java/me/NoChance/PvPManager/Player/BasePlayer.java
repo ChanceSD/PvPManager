@@ -71,7 +71,8 @@ public abstract class BasePlayer {
 	 * @param duration The duration in milliseconds
 	 */
 	public void sendActionBar(final String message, final long duration) {
-		if (System.currentTimeMillis() < actionBarCooldown || message.isEmpty() || message.equals(lastActionBarMessage))
+		if (System.currentTimeMillis() < actionBarCooldown || message.isEmpty()
+				|| System.currentTimeMillis() - actionBarCooldown < 1000 && message.equals(lastActionBarMessage))
 			return;
 		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.10")) { // Premium PvPManager supports lower versions with NMS
 			if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.16.5")) {
