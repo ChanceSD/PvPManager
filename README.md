@@ -15,6 +15,8 @@ Useful Links
 ------------
 **Spigot:** https://www.spigotmc.org/resources/pvpmanager-lite.845/  
 **Bukkit:** https://dev.bukkit.org/bukkit-plugins/pvpmanager/  
+**Modrinth:** https://modrinth.com/plugin/pvpmanager
+
 **Discord:** https://discord.gg/QFTjs3g  
 **Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/  
 **Crowdin Translations:** https://crowdin.com/project/pvpmanager  
@@ -33,7 +35,7 @@ Artifact Information:
 <dependency>
     <groupId>me.NoChance.PvPManager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>3.18.29</version>
+    <version>3.18.30</version>
     <scope>provided</scope>
 </dependency>
  ```
