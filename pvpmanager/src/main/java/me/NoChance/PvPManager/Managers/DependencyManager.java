@@ -1,5 +1,6 @@
 package me.NoChance.PvPManager.Managers;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,7 +32,6 @@ import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.TownyHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.VaultHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook;
 import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
 import me.NoChance.PvPManager.Listeners.MoveListener;
 import me.NoChance.PvPManager.Listeners.MoveListener1_9;
@@ -124,7 +124,15 @@ public class DependencyManager {
 			if (CombatUtils.isVersionAtLeast(CombatUtils.stripTags(hook.getVersion()), "7.0")) {
 				registerDependency(new WorldGuardModernHook(hook));
 			} else {
-				registerDependency(new WorldGuardLegacyHook(hook));
+				// Use reflection to instantiate WorldGuardLegacyHook from the pvpmanager-worldguard-legacy module
+				try {
+					Class<?> clazz = Class.forName("me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook");
+					Constructor<?> constructor = clazz.getConstructor(Hook.class);
+					WorldGuardHook legacyHook = (WorldGuardHook) constructor.newInstance(hook);
+					registerDependency(legacyHook);
+				} catch (Exception e) {
+					throw new DependencyException("Failed to load WorldGuardLegacyHook", e, hook);
+				}
 			}
 			break;
 		case ESSENTIALS:

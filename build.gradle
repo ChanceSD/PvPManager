@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group = 'me.chancesd.pvpmanager'
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+        maven { url = 'https://jitpack.io' }
+        maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+        maven { url = 'https://maven.enginehub.org/repo/' }
+        maven { url = 'https://repo.roinujnosde.me/releases/' }
+        maven { url = 'https://repo.md-5.net/content/groups/public/' }
+        maven { url = 'https://repo.codemc.org/repository/maven-public' }
+        maven { url = 'https://repo.glaremasters.me/repository/towny/' }
+        maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+    }
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+        testImplementation 'org.junit.platform:junit-platform-suite:1.11.4'
+        testImplementation 'org.mockito:mockito-core:5.12.0'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url = uri('https://repo.codemc.io/repository/maven-releases/')
+        }
+        maven {
+            url = uri('https://repo.codemc.io/repository/maven-snapshots/')
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

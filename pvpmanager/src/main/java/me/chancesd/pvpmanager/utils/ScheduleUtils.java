@@ -149,7 +149,7 @@ public class ScheduleUtils {
 	public static boolean checkFolia() {
 		try {
 			Class.forName("io.papermc.paper.threadedregions.RegionizedServerInitEvent");
-			Log.debug("Method " + Bukkit.class.getDeclaredMethod("getAsyncScheduler", null));
+			Log.debug("Method " + Bukkit.class.getDeclaredMethod("getAsyncScheduler"));
 			return true;
 		} catch (final Throwable ignored) {
 			return false;

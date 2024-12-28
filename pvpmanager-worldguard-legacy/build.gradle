@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group = 'me.chancesd.pvpmanager'
+
+dependencies {
+    compileOnly project(':pvpmanager')
+    compileOnly 'com.sk89q.worldguard:worldguard-legacy:6.2'
+    compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
+    compileOnly 'me.chancesd.sdutils:sdutils:1.2-SNAPSHOT'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

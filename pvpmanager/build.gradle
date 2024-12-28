@@ -1,0 +1,101 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.0'
+}
+
+group = 'me.NoChance.PvPManager'
+version = '3.18.30'
+description = 'A powerful plugin to manage various PvP combat features'
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
+    compileOnly 'net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.19.2'
+    compileOnly('com.github.EssentialsX.Essentials:EssentialsX:2.20.0') {
+        exclude group: '*', module: '*'
+    }
+    compileOnly 'me.clip:placeholderapi:2.11.6'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7.1'
+    compileOnly('com.sk89q.worldguard:worldguard-bukkit:7.1.0-SNAPSHOT') {
+        exclude group: 'org.antlr', module: 'antlr4'
+        exclude group: 'org.spigotmc', module: 'spigot-api'
+        exclude group: 'org.yaml', module: 'snakeyaml'
+        exclude group: 'com.google.guava', module: 'guava'
+        exclude group: 'com.google.code.gson', module: 'gson'
+    }
+    compileOnly 'com.palmergames.bukkit.towny:towny:0.101.0.0'
+    compileOnly('LibsDisguises:LibsDisguises:10.0.44') {
+        exclude group: '*', module: '*'
+    }
+    compileOnly 'com.github.cryptomorin:kingdoms:1.16.8.1.1'
+    compileOnly 'com.zaxxer:HikariCP:4.0.3'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.23.1'
+
+    implementation project(':pvpmanager-folia')
+    implementation 'me.chancesd.sdutils:sdutils:1.2-SNAPSHOT'
+
+    testImplementation 'org.xerial:sqlite-jdbc:3.46.0.0'
+    testImplementation 'com.zaxxer:HikariCP:4.0.3'
+    testImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+    testImplementation 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
+}
+
+jar {
+    archiveBaseName.set('PvPManager')
+    manifest {
+        attributes(
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version
+        )
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    mergeServiceFiles()
+    minimize()
+    from(project(':pvpmanager-worldguard-legacy').sourceSets.main.output)
+}
+
+ext {
+    resourceTokens = [
+        'project.name'       : 'PvPManager',
+        'project.groupId'    : project.group,
+        'project.version'    : project.version,
+        'project.description': project.description,
+        'config.version'     : '81',
+        'database.version'   : '1'
+    ]
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from(sourceSets.main.resources.srcDirs) {
+        include 'plugin.yml', 'config.yml'
+        filter(new Transformer<String, String>() {
+            @Override
+            String transform(String s) {
+                ReplaceTokens replaceTokens = new ReplaceTokens(new StringReader(s))
+                replaceTokens.setBeginToken('${')
+                replaceTokens.setEndToken('}')
+                resourceTokens.forEach { key, val ->
+                    def token = new ReplaceTokens.Token()
+                    token.setKey(key.toString())
+                    token.setValue(val.toString())
+                    replaceTokens.addConfiguredToken(token)
+                }
+                return replaceTokens.readLines().join('\n')
+            }
+        })
+    }
+}
+
+test {
+    useJUnitPlatform()
+    include '**/*InstanceCreator.class'
+}
+
+tasks.build {
+    dependsOn shadowJar
+}

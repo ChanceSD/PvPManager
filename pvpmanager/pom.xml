@@ -193,21 +193,6 @@
 			</exclusions>
 		</dependency>
 
-		<!-- WorldGuard Legacy-->
-		<dependency>
-			<groupId>com.sk89q.worldguard</groupId>
-			<artifactId>worldguard-legacy</artifactId>
-			<version>6.2</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
 		<!-- Towny -->
 		<dependency>
 			<groupId>com.palmergames.bukkit.towny</groupId>
@@ -282,6 +267,11 @@
 		<dependency>
 			<groupId>me.chancesd.pvpmanager</groupId>
 			<artifactId>pvpmanager-folia</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>me.chancesd.pvpmanager</groupId>
+			<artifactId>pvpmanager-worldguard-legacy</artifactId>
 			<version>${revision}</version>
 		</dependency>
 		<dependency>

@@ -2,6 +2,7 @@
 !PvPManager/**
 bin
 target
+build
 .*
 *.jar
 *.iml
