@@ -208,8 +208,8 @@ PvP Toggle:
   Cooldown: 15
   NameTags:
     Enabled: false
-    Prefix On: '&1'
-    Prefix Off: '&2'
+    Prefix On: '&3On '
+    Prefix Off: '&2Off '
   # This setting runs every hour and applies a money fee to every player with PvP disabled, it's a very simplified system 
   # so it doesn't track how long PvP has been off for that player. Leave as 0 to disable
   PvP Disabled Money Fee: 0
