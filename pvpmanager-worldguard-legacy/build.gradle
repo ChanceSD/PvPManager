@@ -10,7 +10,3 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
     compileOnly 'me.chancesd.sdutils:sdutils:1.2-SNAPSHOT'
 }
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}

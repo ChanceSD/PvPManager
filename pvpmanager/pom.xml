@@ -270,11 +270,6 @@
 			<version>${revision}</version>
 		</dependency>
 		<dependency>
-			<groupId>me.chancesd.pvpmanager</groupId>
-			<artifactId>pvpmanager-worldguard-legacy</artifactId>
-			<version>${revision}</version>
-		</dependency>
-		<dependency>
 			<groupId>me.chancesd.sdutils</groupId>
 			<artifactId>sdutils</artifactId>
 			<version>1.2-SNAPSHOT</version>

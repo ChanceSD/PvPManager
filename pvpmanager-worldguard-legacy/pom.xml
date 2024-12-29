@@ -52,10 +52,9 @@
 		</dependency>
 		<dependency>
 			<groupId>me.NoChance.PvPManager</groupId>
-			<artifactId>PvPManager</artifactId>
+			<artifactId>pvpmanager</artifactId>
 			<version>${revision}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
 </project>

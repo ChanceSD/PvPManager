@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>me.chancesd.pvpmanager</groupId>
+		<artifactId>pvpmanager-parent</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+	<artifactId>pvpmanager-plugin</artifactId>
+	<packaging>jar</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<transformers>
+						<!-- Avoid overlapping MANIFEST.MF file -->
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+							<resource>MANIFEST.MF</resource>
+						</transformer>
+					</transformers>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>me.NoChance.PvPManager</groupId>
+			<artifactId>pvpmanager</artifactId>
+			<version>${revision}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.chancesd.pvpmanager</groupId>
+			<artifactId>pvpmanager-worldguard-legacy</artifactId>
+			<version>${revision}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
