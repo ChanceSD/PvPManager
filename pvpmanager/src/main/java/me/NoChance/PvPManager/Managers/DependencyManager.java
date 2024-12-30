@@ -75,6 +75,11 @@ public class DependencyManager {
 					.toArray(Hook[]::new);
 			if (hooks.length == 0)
 				return;
+			final List<String> softDepend = PvPManager.getInstance().getDescription().getSoftDepend();
+			if (Arrays.stream(hooks).map(hook -> hook.toString()).anyMatch(h -> softDepend.contains(h))) {
+				Log.severe("Found plugins that PvPManager declared as soft dependencies but were still loaded out of order.");
+				Log.severe("If you're not using any server flags that cause this, please report it to your server software developers.");
+			}
 			Log.infoColor(ChatColor.LIGHT_PURPLE + "Delayed checking for any missing hooks...");
 			setupHooks(hooks);
 		});
@@ -126,11 +131,11 @@ public class DependencyManager {
 			} else {
 				// Use reflection to instantiate WorldGuardLegacyHook from the pvpmanager-worldguard-legacy module
 				try {
-					Class<?> clazz = Class.forName("me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook");
-					Constructor<?> constructor = clazz.getConstructor(Hook.class);
-					WorldGuardHook legacyHook = (WorldGuardHook) constructor.newInstance(hook);
+					final Class<?> clazz = Class.forName("me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook");
+					final Constructor<?> constructor = clazz.getConstructor(Hook.class);
+					final WorldGuardHook legacyHook = (WorldGuardHook) constructor.newInstance(hook);
 					registerDependency(legacyHook);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					throw new DependencyException("Failed to load WorldGuardLegacyHook", e, hook);
 				}
 			}

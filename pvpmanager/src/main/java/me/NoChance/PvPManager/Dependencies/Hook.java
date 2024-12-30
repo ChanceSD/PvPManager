@@ -38,7 +38,7 @@ public enum Hook {
 	}
 
 	public boolean isEnabled() {
-		return getPlugin() != null;
+		return Bukkit.getPluginManager().isPluginEnabled(pluginName);
 	}
 
 	public String getVersion() {
