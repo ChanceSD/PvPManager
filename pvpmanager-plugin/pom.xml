@@ -10,8 +10,10 @@
 
 	<artifactId>pvpmanager-plugin</artifactId>
 	<packaging>jar</packaging>
+	<name>PvPManager</name>
 
 	<build>
+		<finalName>${project.name}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -45,6 +47,12 @@
 			<artifactId>pvpmanager</artifactId>
 			<version>${revision}</version>
 			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>me.chancesd.pvpmanager</groupId>

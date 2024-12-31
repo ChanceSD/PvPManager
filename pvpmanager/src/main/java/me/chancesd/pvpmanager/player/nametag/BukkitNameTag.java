@@ -162,14 +162,20 @@ public class BukkitNameTag extends NameTag {
 			return;
 
 		try {
-			Log.debug("Unregistering team: " + inCombat.getName());
 			synchronized (scoreboard) {
-				inCombat.unregister();
-				inCombat = null;
+				if (teamExists(combatTeamID)) {
+					Log.debug("Unregistering team: " + inCombat.getName());
+					inCombat.unregister();
+					inCombat = null;
+				}
 			}
 		} catch (final IllegalStateException e) {
 			Log.severe("Team was already unregistered for player: " + pvPlayer.getName(), e);
 		}
+	}
+
+	private boolean teamExists(final String teamID) {
+		return scoreboard.getTeam(teamID) != null;
 	}
 
 }
