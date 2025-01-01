@@ -174,6 +174,8 @@ public class PlayerHandler {
 	}
 
 	public void handlePlayerDrops(final PlayerDeathEvent event, final Player player, final Player killer) {
+		if (player.equals(killer))
+			return;
 		switch (Settings.getDropMode()) {
 		case DROP:
 			if (killer == null) {
