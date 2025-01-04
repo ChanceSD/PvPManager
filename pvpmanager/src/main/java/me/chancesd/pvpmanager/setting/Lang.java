@@ -119,7 +119,7 @@ public enum Lang implements TimeLangProvider {
 	private static PvPManager plugin;
 	private static final Properties LANG_PROPERTIES = new Properties();
 	private static final Queue<String> messageQueue = new LinkedList<>();
-	public static final String PREFIXMSG = "§c[§8PvPManager§c]";
+	public static final String PREFIXMSG = "§4§lPvP§8§lManager§c >>";
 	private static File messagesFile;
 	private static Locale locale;
 	private final String messageKey;

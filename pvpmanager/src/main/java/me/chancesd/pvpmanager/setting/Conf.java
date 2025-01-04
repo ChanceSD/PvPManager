@@ -303,7 +303,13 @@ public enum Conf {
 	public static void initialize(final PvPManager pl, final YamlConfiguration yamlConfig) {
 		Conf.plugin = pl;
 		Conf.config = yamlConfig;
-		Stream.of(Conf.values()).forEach(Conf::loadSetting);
+		Stream.of(Conf.values()).forEach(setting -> {
+			try {
+				setting.loadSetting();
+			} catch (final Exception ex) {
+				Log.severe("Error loading the seetings for " + setting.section + "." + setting.configKey, ex);
+			}
+		});
 		Log.infoColor(ChatColor.GREEN + "Using player nametags: " + ChatColor.AQUA + (NAMETAG_COMBAT_ENABLED.asBool() || TOGGLE_NAMETAG_ENABLED.asBool()));
 	}
 

@@ -2,6 +2,8 @@ package me.chancesd.pvpmanager.player.display;
 
 import com.google.common.base.Strings;
 
+import me.chancesd.sdutils.utils.Utils;
+
 public class ProgressBar {
 
 	private final int totalBars;
@@ -48,7 +50,7 @@ public class ProgressBar {
 		final int progressBars = (int) (totalBars * percent);
 		message = originalMessage.replace("<barsLeft>", Strings.repeat(symbol, totalBars - progressBars))
 				.replace("<barsPassed>", Strings.repeat(symbol, progressBars))
-				.replace("<time>", Double.toString(goal - progress));
+				.replace("<time>", Double.toString(Utils.roundTo1Decimal(goal - progress)));
 		this.dirty = false;
 		return this;
 	}

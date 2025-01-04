@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.stream.Collectors;
-
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -53,7 +51,7 @@ public class LogFile {
 	public final void logCombatLog(final CombatPlayer player) {
 		final Location loc = player.getPlayer().getLocation();
 		final String data = player.getName() + " tried to escape combat! (" + player.getTagTimeLeft() / 1000 + "s left)"
-				+ " | In combat with: " + player.getEnemies().stream().map(CombatPlayer::getName).collect(Collectors.toList())
+				+ " | In combat with: " + player.getEnemies().stream().map(CombatPlayer::getName).toList()
 				+ String.format(" | World:%s, X:%.2f, Y:%.2f, Z:%.2f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ());
 		write(format.format(new Date()) + data);
 	}

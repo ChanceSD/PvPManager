@@ -4,7 +4,6 @@ import me.chancesd.sdutils.utils.Log;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -15,8 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;

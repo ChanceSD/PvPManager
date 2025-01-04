@@ -55,7 +55,7 @@ public abstract class EcoPlayer extends BasePlayer {
 		if (Conf.MONEY_STEAL.asBool()) {
 			final double vbalance = economy.getBalance(victim.getPlayer());
 			if (Conf.MONEY_REWARD.asDouble() <= 1) {
-				moneyWon = Utils.roundTo1Decimal(Conf.MONEY_REWARD.asDouble() * vbalance);
+				moneyWon = Utils.roundTo2Decimal(Conf.MONEY_REWARD.asDouble() * vbalance);
 			} else if (Conf.MONEY_REWARD.asDouble() > vbalance) {
 				moneyWon = vbalance;
 			}
@@ -88,7 +88,7 @@ public abstract class EcoPlayer extends BasePlayer {
 	private double getMoneyPercentage(final double percentage) {
 		if (percentage > 1)
 			return percentage;
-		return Utils.roundTo1Decimal(percentage * economy.getBalance(getPlayer()));
+		return Utils.roundTo2Decimal(percentage * economy.getBalance(getPlayer()));
 	}
 
 	@Override

@@ -139,7 +139,7 @@ public class ConfigManager {
 	}
 
 	public boolean isMajorVersionUpgrade() {
-		return oldVersion <= 79;
+		return oldVersion <= 81;
 	}
 
 	public YamlConfiguration getHooksConfig() {

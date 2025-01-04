@@ -76,7 +76,7 @@ public class CustomMetrics {
 				valueMap.put(entry.getName(), 1);
 			}
 			final List<String> extra = Arrays.asList("GSit", "NametagEdit", "RedProtect", "GriefDefender", "Citizens",
-					"CMI", "TAB", "ProtectionStones");
+					"CMI", "ProtectionStones");
 			for (final String extraPlugin : extra) {
 				if (Bukkit.getPluginManager().isPluginEnabled(extraPlugin)) {
 					valueMap.put(extraPlugin, 1);

@@ -14,6 +14,9 @@ Plugin Hooks:
     No Protection In War: true
     # Essentially only pushes back if a town is peaceful, it ignores if the town PvP is on or off, can be useful to prevent traps
     Pushback on Peaceful: false
+  HuskTowns:
+    # Disable PvP and newbie protection if the players are in a siege war
+    No Protection In War: true
   # This only works if you have the TAB plugin, disabling both options will make PvPManager use normal scoreboard teams
   TAB:
     # Show combat prefix/suffix in the playerlist (tab)

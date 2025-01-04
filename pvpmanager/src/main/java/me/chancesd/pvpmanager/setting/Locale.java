@@ -1,8 +1,8 @@
 package me.chancesd.pvpmanager.setting;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public enum Locale {
 	BG("messages_bg.properties", "Bulgarian"),
@@ -33,7 +33,7 @@ public enum Locale {
 
 	public static List<String> asStringList() {
 		final List<Locale> list = Arrays.asList(values());
-		return list.stream().map(Locale::name).collect(Collectors.toList());
+		return new ArrayList<>(list.stream().map(Locale::name).toList());
 	}
 
 	public String language() {

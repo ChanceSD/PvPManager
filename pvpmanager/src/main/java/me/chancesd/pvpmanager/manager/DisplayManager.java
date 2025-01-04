@@ -21,7 +21,7 @@ public class DisplayManager {
 
 	public void updateBossbar(final CombatPlayer player, final double timePassed, final int totalTime) {
 		final BossBar bossBar = bossBars.computeIfAbsent(player, this::setupBossbar);
-		final String message = Conf.BOSS_BAR_MESSAGE.asString().replace("<time>", Long.toString(totalTime - Math.round(timePassed)));
+		final String message = Conf.BOSS_BAR_MESSAGE.asString().replace("<time>", Double.toString(Utils.roundTo1Decimal(totalTime - timePassed)));
 		final String placeHolderMessage = ChatUtils.setPlaceholders(player.getPlayer(), message);
 		if (!bossBar.getTitle().equals(placeHolderMessage))
 			bossBar.setTitle(placeHolderMessage);
@@ -51,9 +51,8 @@ public class DisplayManager {
 	}
 
 	public void showProgress(final CombatPlayer p, final double timePassed, final int goal) {
-		final double timePassedRounded = Utils.roundTo1Decimal(timePassed);
-		final ProgressBar progressBar = actionBars.computeIfAbsent(p, x -> setupProgressBar(timePassedRounded, goal));
-		progressBar.setProgress(timePassedRounded).setGoal(goal).calculate();
+		final ProgressBar progressBar = actionBars.computeIfAbsent(p, x -> setupProgressBar(timePassed, goal));
+		progressBar.setProgress(timePassed).setGoal(goal).calculate();
 		p.sendActionBar(ChatUtils.setPlaceholders(p.getPlayer(), progressBar.getMessage()));
 	}
 
