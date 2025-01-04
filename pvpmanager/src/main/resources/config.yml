@@ -38,13 +38,13 @@ Combat Tag:
     Nametags:
       Enabled: true
       # Choose the player's nametag prefix while tagged, '&c' would just color their name red
-      Prefix: '&4&lCombat &c'
-      Suffix: ''
+      Prefix: '&4⚔ &8(&7%pvpmanager_combat_timeleft%s&8) &c'
+      Suffix: ' &f%pvpmanager_player_health%&c❤'
     Action Bar:
       Enabled: true
       # You can use any PlaceholderAPI placeholders here
-      Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec]'
-      # Symbol to use for the bar and how many times to repeat it. Other symbols ▊,▮,▯,|
+      Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec] &4%pvpmanager_current_enemy% &8(%pvpmanager_current_enemy_health%&8&c❤)'
+      # Symbol to use for the progress bar and how many times to repeat it. Other symbols ▊,▮,▯,|
       Symbol: '▊'
       Total Bars: 20
     Boss Bar:
@@ -93,6 +93,7 @@ Combat Tag:
       Whitelist: true
       Command List:
         - 'tell'
+        - 'msg'
         - 'combattag'
 
 ##################################
@@ -134,8 +135,8 @@ PvP Toggle:
   # You can leave one of them empty '' to disable one of the nametags, or set 'Enabled' to false to disable both
   NameTags:
     Enabled: false
-    Prefix On: '&3On '
-    Prefix Off: '&2Off '
+    Prefix On: '&4PvP On ⚔ '
+    Prefix Off: '&2PvP Off ⚔ '
   # This setting runs every hour and applies a money fee to every player with PvP disabled, it's a very simplified system 
   # so it doesn't track how long PvP has been off for that player. Leave as 0 to disable
   PvP Disabled Money Fee: 0
@@ -155,8 +156,8 @@ PvP Toggle:
 ####  Anti Border Hopping  ####
 ###############################
 # Here you can choose which methods to use to stop 'border hopping' while players are tagged
-# Block barriers, like red glass blocks around a region, is a feature only on the premium version for MC 1.13+
 # Border hopping is when a player enters combat and tries to run into a safe zone to escape
+# Block barriers, like red glass blocks around a region, is a feature only on the premium version for MC 1.13+
 Anti Border Hopping:
   # Makes players still vulnerable to PvP inside safe zones
   Vulnerable:
@@ -231,7 +232,7 @@ Player Kills:
     - 'exampleregion'
     
   # Prevent player abuse by killing the same player several times to rise in rank or even just grief
-  # Example - If a player X kills player Y more than 5 times, it executes the commands defined (kick, jail, etc)
+  # Example - If a player X kills player Y more than 5 times under the time limit, it executes the commands defined (kick, jail, etc)
   Anti Kill Abuse:
     Enabled: true
     Max Kills: 5

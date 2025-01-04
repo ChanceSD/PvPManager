@@ -33,6 +33,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		registerPlaceholder("newbie_timeleft");
 		registerPlaceholder("has_override");
 		registerPlaceholder("has_respawn_prot");
+		registerPlaceholder("player_health");
 		registerPlaceholder("current_enemy");
 		registerPlaceholder("current_enemy_health");
 		registerPlaceholder("combat_prefix");
@@ -67,6 +68,8 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		case "pvp_command_timeleft":
 			final int timeLeft = CombatUtils.getTimeLeft(p.getToggleTime(), Conf.TOGGLE_COOLDOWN.asInt());
 			return String.valueOf(Math.max(timeLeft, 0));
+		case "player_health":
+			return df.format(p.getPlayer().getHealth());
 		case "current_enemy":
 			final CombatPlayer pPlayer = p.getEnemy();
 			return pPlayer != null ? pPlayer.getName() : "None";

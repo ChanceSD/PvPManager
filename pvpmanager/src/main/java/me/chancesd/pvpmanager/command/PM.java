@@ -30,7 +30,6 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.listener.DebugEntityListener;
 import me.chancesd.pvpmanager.manager.UpdateManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Locale;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
@@ -170,73 +169,91 @@ public class PM implements TabExecutor {
 			sender.sendMessage(Lang.PREFIXMSG + " §aYou are now running on " + plugin.getStorageManager().getStorage().getDatabaseType());
 		});
 	}
-
 	private void debug(final CommandSender sender, final String[] args) {
 		// Check if we have enough arguments before proceeding
 		if (args.length < 2) {
 			sender.sendMessage("§4§lUsage: §f/pmr debug <subcommand>");
-			sender.sendMessage("§cAvailable subcommands: toggle, damagedebug, tag, tagall, untagall, attack, players");
+			sender.sendMessage("§cAvailable subcommands: toggle, damagedebug, attack, players");
 			return;
 		}
 
-		CombatPlayer p = null;
-		if (args.length == 2 && sender instanceof final Player player) {
-			p = plugin.getPlayerManager().get(player);
-		}
-		if (args.length == 2 && args[1].equalsIgnoreCase("toggle")) {
-			Conf.setDebug(!Conf.DEBUG_MODE.asBool());
-			Log.info("Debug mode: " + Conf.DEBUG_MODE.asBool());
-			sender.sendMessage("Debug mode: " + Conf.DEBUG_MODE.asBool());
-		} else if (args.length == 2 && args[1].equalsIgnoreCase("damagedebug")) {
-			if (damageListener == null) {
-				sender.sendMessage("§4Warning §f- Some plugin features are disabled while in this mode");
-				sender.sendMessage("Enabling a damage listener for debugging, check the console for details on every entity hit");
-				sender.sendMessage("§cRun this command again §fafter you are done to disable debugging or reload the plugin");
-				Conf.setDebug(true);
-				damageListener = new DebugEntityListener(plugin.getPlayerManager());
-				HandlerList.unregisterAll(plugin.getEntityListener());
-				Bukkit.getServer().getPluginManager().registerEvents(damageListener, plugin);
+		final String subcommand = args[1].toLowerCase();
+		final CombatPlayer targetPlayer = getTargetPlayer(sender, args);
+
+		switch (subcommand) {
+		case "toggle":
+			toggleDebugMode(sender);
+			break;
+		case "damagedebug":
+			toggleDamageDebug(sender);
+			break;
+		case "players":
+			listPlayers(sender);
+			break;
+		case "attack":
+			if (targetPlayer != null) {
+				attackPlayer(sender, targetPlayer);
 			} else {
-				HandlerList.unregisterAll(damageListener);
-				Bukkit.getServer().getPluginManager().registerEvents(plugin.getEntityListener(), plugin);
-				damageListener = null;
-				Conf.setDebug(false);
-				sender.sendMessage("Debug damage listener disabled");
+				sender.sendMessage("§cPlayer not specified or not online.");
 			}
-		} else if (args.length == 2 && args[1].equalsIgnoreCase("tagall")) {
-			for (final CombatPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
-				player.tag(true, player);
-			}
-			sender.sendMessage("Tagged all players");
-		} else if (args.length == 2 && args[1].equalsIgnoreCase("untagall")) {
-			for (final CombatPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
-				player.untag(UntagReason.COMMAND);
-			}
-			sender.sendMessage("Untagged all players");
-		} else if (args.length == 2 && args[1].equalsIgnoreCase("players")) {
-			for (final CombatPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
-				if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
-					Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
-				}
-			}
-			Log.info("Players: " + plugin.getPlayerManager().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
-		} else if (args.length == 3) {
+			break;
+		default:
+			sender.sendMessage("§cInvalid subcommand. Use /pmr debug <toggle|damagedebug|players|attack> [player]");
+			break;
+		}
+	}
+
+	private CombatPlayer getTargetPlayer(final CommandSender sender, final String[] args) {
+		if (args.length == 3) {
 			if (!CombatUtils.isOnline(args[2])) {
 				sender.sendMessage("§4Player not online!");
-				return;
+				return null;
 			}
-			p = plugin.getPlayerManager().get(Bukkit.getPlayer(args[2]));
+			return plugin.getPlayerManager().get(Bukkit.getPlayer(args[2]));
+		} else if (sender instanceof final Player player) {
+			return plugin.getPlayerManager().get(player);
 		}
-		if (p == null)
-			return;
-		if (args[1].equalsIgnoreCase("tag")) {
-			p.tag(true, p);
-		} else if (args[1].equalsIgnoreCase("attack")) {
-			plugin.getServer().getPluginManager()
-					.callEvent(new EntityDamageByEntityEvent(p.getPlayer(), p.getPlayer(), DamageCause.ENTITY_ATTACK,
-							DamageSource.builder(DamageType.PLAYER_ATTACK).build(), 5.0));
-			sender.sendMessage("Attacked player with 5 damage");
+		return null;
+	}
+
+	private void toggleDebugMode(final CommandSender sender) {
+		Conf.setDebug(!Conf.DEBUG_MODE.asBool());
+		Log.info("Debug mode: " + Conf.DEBUG_MODE.asBool());
+		sender.sendMessage("Debug mode: " + Conf.DEBUG_MODE.asBool());
+	}
+
+	private void toggleDamageDebug(final CommandSender sender) {
+		if (damageListener == null) {
+			sender.sendMessage("§4Warning §f- Some plugin features are disabled while in this mode");
+			sender.sendMessage("Enabling a damage listener for debugging, check the console for details on every entity hit");
+			sender.sendMessage("§cRun this command again §fafter you are done to disable debugging or reload the plugin");
+			Conf.setDebug(true);
+			damageListener = new DebugEntityListener(plugin.getPlayerManager());
+			HandlerList.unregisterAll(plugin.getEntityListener());
+			Bukkit.getServer().getPluginManager().registerEvents(damageListener, plugin);
+		} else {
+			HandlerList.unregisterAll(damageListener);
+			Bukkit.getServer().getPluginManager().registerEvents(plugin.getEntityListener(), plugin);
+			damageListener = null;
+			Conf.setDebug(false);
+			sender.sendMessage("Debug damage listener disabled");
 		}
+	}
+
+	private void listPlayers(final CommandSender sender) {
+		for (final CombatPlayer player : plugin.getPlayerManager().getPlayers().values()) {
+			if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
+				Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
+			}
+		}
+		Log.info("Players: " + plugin.getPlayerManager().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
+	}
+
+	private void attackPlayer(final CommandSender sender, final CombatPlayer targetPlayer) {
+		plugin.getServer().getPluginManager().callEvent(new EntityDamageByEntityEvent(
+				targetPlayer.getPlayer(), targetPlayer.getPlayer(), DamageCause.ENTITY_ATTACK,
+				DamageSource.builder(DamageType.PLAYER_ATTACK).build(), 5.0));
+		sender.sendMessage("Attacked player with 5 damage");
 	}
 
 	private void locale(final CommandSender sender, final String[] args) {
@@ -317,7 +334,7 @@ public class PM implements TabExecutor {
 		if (args.length == 2 && args[0].equalsIgnoreCase(CONVERT))
 			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("SQLITE", "MYSQL"));
 		if (args.length == 2 && args[0].equalsIgnoreCase(DEBUG))
-			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "tag", "tagall", "attack", "players"));
+			return ChatUtils.getMatchingEntries(args[1], Lists.newArrayList("toggle", "damagedebug", "attack", "players"));
 		if (args.length == 2 && args[0].equalsIgnoreCase(LOCALE))
 			return ChatUtils.getMatchingEntries(args[1], Locale.asStringList());
 

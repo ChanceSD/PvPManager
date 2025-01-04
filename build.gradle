@@ -10,6 +10,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         maven { url = 'https://hub.spigotmc.org/nexus/content/groups/public/' }
         maven { url = 'https://jitpack.io' }
         maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
@@ -31,6 +32,12 @@ subprojects {
     test {
         useJUnitPlatform()
     }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        sourceCompatibility = '16'
+        targetCompatibility = '16'
+    }
 }
 
 publishing {
@@ -42,8 +49,4 @@ publishing {
             url = uri('https://repo.codemc.io/repository/maven-snapshots/')
         }
     }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
 }
