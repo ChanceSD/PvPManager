@@ -27,7 +27,6 @@
 
 	<modules>
 		<module>pvpmanager</module>
-		<module>pvpmanager-folia</module>
 		<module>pvpmanager-worldguard-legacy</module>
 		<module>pvpmanager-plugin</module>
 	</modules>

@@ -15,6 +15,7 @@ import me.chancesd.pvpmanager.manager.DependencyManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class RegionCheckTask extends BukkitRunnable implements Listener {
 
@@ -39,7 +40,7 @@ public class RegionCheckTask extends BukkitRunnable implements Listener {
 					continue;
 				lastLocation.setPitch(playerLocation.getPitch());
 				lastLocation.setYaw(playerLocation.getYaw());
-				player.teleport(lastLocation);
+				ScheduleUtils.teleport(player, lastLocation);
 				pvPlayer.message(Lang.PUSHBACK_WARNING);
 			} else {
 				lastLocations.put(pvPlayer, playerLocation);

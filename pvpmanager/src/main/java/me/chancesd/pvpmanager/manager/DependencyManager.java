@@ -27,7 +27,6 @@ import me.chancesd.pvpmanager.integration.hook.SimpleClansHook;
 import me.chancesd.pvpmanager.integration.hook.TABHook;
 import me.chancesd.pvpmanager.integration.hook.TownyHook;
 import me.chancesd.pvpmanager.integration.hook.VaultHook;
-import me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardLegacyHook;
 import me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardModernHook;
 import me.chancesd.pvpmanager.integration.type.AFKDependency;
 import me.chancesd.pvpmanager.integration.type.Dependency;
