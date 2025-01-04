@@ -116,12 +116,13 @@ Tagged In Combat:
     Interact:
       Enabled: false
       # List of materials to block interaction, adding DOOR means all materials that end with DOOR like IRON_DOOR and so on
+      # Also blocks physical interactions, having PRESSURE_PLATE also allows blocking the activation of pressure plates
       List:
         - 'DOOR'
+        - 'FENCE_GATE'
         - 'BUTTON'
         - 'BED'
-        - 'SLAB'
-        - 'STAIRS'
+        - 'PRESSURE_PLATE'
         - 'CARPET'
     Elytra: false
     Eat: false

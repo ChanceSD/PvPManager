@@ -230,12 +230,25 @@ public class PlayerListener implements Listener {
 				}
 			}
 		}
-		if (Settings.blockInteract() && pvplayer.isInCombat()) {
+	}
+
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // cancel on low since some plugins check cancels on normal instead of monitor
+	public final void onPlayerBlockInteract(final PlayerInteractEvent e) {
+		final Player player = e.getPlayer();
+		if (!Settings.blockInteract() || e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.PHYSICAL
+				|| CombatUtils.isWorldExcluded(player.getWorld().getName()))
+			return;
+
+		final PvPlayer combatPlayer = ph.get(player);
+		final Block clickedBlock = e.getClickedBlock();
+		if (clickedBlock == null)
+			return;
+		if (combatPlayer.isInCombat()) {
 			final Material type = clickedBlock.getType();
 			for (final String material : Settings.getBlockInteractItemList()) {
 				if (type.name().endsWith(material)) {
 					e.setCancelled(true);
-					pvplayer.sendActionBar(Messages.getInteractBlockedInCombat(), 1000);
+					combatPlayer.sendActionBar(Messages.getInteractBlockedInCombat(), 1000);
 					return;
 				}
 			}
