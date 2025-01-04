@@ -14,6 +14,7 @@ public enum Locale {
 	IT("messages_it.properties", "Italian"),
 	JA("messages_ja.properties", "Japanese"),
 	KO("messages_ko.properties", "Korean"),
+	NL("messages_nl.properties", "Dutch"),
 	PL("messages_pl.properties", "Polish"),
 	PT_BR("messages_pt_BR.properties", "Portuguese Brazilian"),
 	RU("messages_ru.properties", "Russian"),
