@@ -49,7 +49,7 @@ public class MoveListener1_9 implements Listener {
 		}
 		final RegionCheckTask regionCheckTask = new RegionCheckTask(playerManager, depManager);
 		Bukkit.getPluginManager().registerEvents(regionCheckTask, playerManager.getPlugin());
-		ScheduleUtils.runPlatformTaskTimer(regionCheckTask, 20, 20);
+		ScheduleUtils.runPlatformAsyncTimer(regionCheckTask, 20, 20);
 	}
 
 	@EventHandler(ignoreCancelled = true)

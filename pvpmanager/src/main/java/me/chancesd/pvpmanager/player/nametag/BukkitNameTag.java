@@ -38,7 +38,7 @@ public class BukkitNameTag extends NameTag {
 		setup();
 	}
 
-	@SuppressWarnings({ "deprecation", "null" })
+	@SuppressWarnings({ "deprecation" })
 	private void setup() {
 		setupCombatTeam();
 		if (Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
@@ -102,10 +102,11 @@ public class BukkitNameTag extends NameTag {
 	private Team setupToggleTeam(final String teamPrefix, @NotNull final String teamName) {
 		if (teamPrefix.isEmpty())
 			return null;
-		Team toggleTeam = registerTeam(teamName);
+		final Team toggleTeam = registerTeam(teamName);
 		toggleTeam.setCanSeeFriendlyInvisibles(false);
 		toggleTeam.setPrefix(teamPrefix);
 		setTeamColor(toggleTeam, teamPrefix);
+		return toggleTeam;
 	}
 
 	private String processPlayerID(final UUID uuid) {
@@ -167,12 +168,12 @@ public class BukkitNameTag extends NameTag {
 			if (pvpOnTeam == null) {
 				restoreNametag();
 			} else {
-				addToTeam(pvpOn, pvPlayer.getName());
+				addToTeam(pvpOnTeam, pvPlayer.getName());
 			}
 		} else if (pvpOffTeam == null) {
 			restoreNametag();
 		} else {
-			addToTeam(pvpOff, pvPlayer.getName());
+			addToTeam(pvpOffTeam, pvPlayer.getName());
 		}
 	}
 
