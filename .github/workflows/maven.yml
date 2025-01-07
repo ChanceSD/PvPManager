@@ -5,7 +5,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master", "dependabot/**" ]
+    branches: [ "master**", "dependabot/**" ]
   pull_request:
     types: [opened, synchronize, reopened]
 

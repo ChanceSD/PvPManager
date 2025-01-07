@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.organization>chancesd</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<revision>3.18.30</revision>
+		<revision>3.18.36</revision>
 	</properties>
 
 	<distributionManagement>
@@ -111,6 +111,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.11.2</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
