@@ -51,7 +51,7 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>me.NoChance.PvPManager</groupId>
+			<groupId>me.chancesd.pvpmanager</groupId>
 			<artifactId>pvpmanager</artifactId>
 			<version>${revision}</version>
 			<scope>provided</scope>

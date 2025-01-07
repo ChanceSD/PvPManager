@@ -12,15 +12,15 @@ softdepend:
   - WorldGuard
   - LibsDisguises
   - SimpleClans
-  - EZRanksLite
   - Essentials
   - PlaceholderAPI
+  - GriefPrevention
   - Towny
   - Kingdoms
   - TAB
 
 libraries:
-  - com.zaxxer:HikariCP:4.0.3
+  - com.zaxxer:HikariCP:5.1.0
   - org.slf4j:slf4j-api:2.0.13 # for MC 1.8
 
 commands:

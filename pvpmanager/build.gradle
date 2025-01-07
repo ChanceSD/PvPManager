@@ -5,11 +5,12 @@ plugins {
     id 'com.gradleup.shadow' version '8.3.0'
 }
 
-group = 'me.NoChance.PvPManager'
+group = 'me.chancesd.pvpmanager'
 version = '3.18.30'
 description = 'A powerful plugin to manage various PvP combat features'
 
 dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
     compileOnly 'net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.19.2'
     compileOnly('com.github.EssentialsX.Essentials:EssentialsX:2.20.0') {
@@ -23,17 +24,20 @@ dependencies {
         exclude group: 'org.yaml', module: 'snakeyaml'
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.google.code.gson', module: 'gson'
+        exclude group: 'it.unimi.dsi', module: 'fastutil'
     }
     compileOnly 'com.palmergames.bukkit.towny:towny:0.101.0.0'
     compileOnly('LibsDisguises:LibsDisguises:10.0.44') {
         exclude group: '*', module: '*'
     }
     compileOnly 'com.github.cryptomorin:kingdoms:1.16.8.1.1'
+    compileOnly 'com.github.TechFortress:GriefPrevention:17.0.0'
+    compileOnly 'me.neznamy:tab-api:4.0.2'
+    
     compileOnly 'com.zaxxer:HikariCP:4.0.3'
     compileOnly 'org.apache.logging.log4j:log4j-core:2.23.1'
 
-    implementation project(':pvpmanager-folia')
-    implementation 'me.chancesd.sdutils:sdutils:1.2-SNAPSHOT'
+    implementation 'me.chancesd.sdutils:sdutils:1.3-SNAPSHOT'
 
     testImplementation 'org.xerial:sqlite-jdbc:3.46.0.0'
     testImplementation 'com.zaxxer:HikariCP:4.0.3'
@@ -94,6 +98,9 @@ processResources {
 test {
     useJUnitPlatform()
     include '**/*InstanceCreator.class'
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 tasks.build {
