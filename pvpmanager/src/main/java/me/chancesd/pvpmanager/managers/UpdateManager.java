@@ -49,7 +49,7 @@ public class UpdateManager {
 				final String v4message = Messages.PREFIXMSG
 						+ " §aSince §b§lv4.0 is a huge update§a, it changes a lot of the config and messages file. "
 						+ "This makes it unable to be automatically updated. "
-						+ "Please §b§lmanually download the update§a from the link below and copy any settings you need from the old config.";
+						+ "Please §b§lmanually download the update§a from the links below and copy any settings you need from the old config.";
 				Messages.queueAdminMsg(v4message);
 				Bukkit.broadcast(v4message, Permissions.ADMIN.getPermission());
 			} else if (Settings.isAutoUpdate()) {
@@ -63,7 +63,8 @@ public class UpdateManager {
 				Log.info("Could not download latest update. Please update manually from one of the links below.");
 			}
 			Settings.setUpdate(true);
-			final String linkMsg = Messages.PREFIXMSG + " §aFollow the link to download: §7" + updater.getUpdateLink();
+			final String linkMsg = Messages.PREFIXMSG + " §aFollow one of the links to download: \n§7- https://modrinth.com/plugin/pvpmanager"
+					+ "\n§7- https://dev.bukkit.org/projects/pvpmanager";
 			Messages.queueAdminMsg(linkMsg);
 			Bukkit.broadcast(linkMsg, Permissions.ADMIN.getPermission());
 		} else {

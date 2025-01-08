@@ -104,14 +104,14 @@ public final class CombatUtils {
 		final Entity attacker = event.getDamager();
 		final Entity defender = event.getEntity();
 
-		if (defender instanceof Player && !isNPC(defender)) {
-			if (attacker instanceof Player && !isNPC(attacker))
+		if (defender instanceof Player) {
+			if (attacker instanceof Player)
 				return true;
 			if (attacker instanceof Projectile || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && attacker instanceof AreaEffectCloud) {
 				final ProjectileSource projSource = getSource(attacker);
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					if (Settings.isSelfTag() || !shooter.equals(defender) && !isNPC(shooter))
+					if (Settings.isSelfTag() || !shooter.equals(defender))
 						return !Settings.isIgnoreNoDamageHits() || event.getDamage() != 0;
 				}
 			}
@@ -131,14 +131,14 @@ public final class CombatUtils {
 		final Entity attacker = event.getCombuster();
 		final Entity defender = event.getEntity();
 
-		if (defender instanceof Player && !isNPC(defender)) {
-			if (attacker instanceof Player && !isNPC(attacker))
+		if (defender instanceof Player) {
+			if (attacker instanceof Player)
 				return true;
 			if (attacker instanceof Projectile) {
 				final ProjectileSource projSource = ((Projectile) attacker).getShooter();
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					return !shooter.equals(defender) && !isNPC(shooter);
+					return !shooter.equals(defender);
 				}
 			}
 		}
