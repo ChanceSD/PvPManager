@@ -58,7 +58,7 @@ public class PvPlayer extends EcoPlayer {
 
 	public PvPlayer(final Player player, final PvPManager plugin) {
 		super(player, plugin.getDependencyManager().getEconomy());
-		this.pvpState = Settings.isDefaultPvp();
+		this.pvpState = Settings.isDefaultPvp() || CombatUtils.isNPC(player);
 		this.plugin = plugin;
 		setCombatWorld(plugin.getWorldManager().getWorld(getPlayer().getWorld()));
 		if (!CombatUtils.isNPC(player)) {
