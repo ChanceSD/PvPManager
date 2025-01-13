@@ -39,6 +39,7 @@ public enum Conf {
 	UNTAG_ON_KILL(ConfSection.COMBAT_TAG, "Untag On Kill", false, Boolean.class),
 	SELF_TAG(ConfSection.COMBAT_TAG, "Self Tag", false, Boolean.class),
 	PEARL_RENEW_TAG(ConfSection.COMBAT_TAG, "EnderPearl Renews Tag", true, Boolean.class),
+	WIND_CHARGE_RENEW_TAG(ConfSection.COMBAT_TAG, "WindCharge Renews Tag", bool -> MCVersion.isAtLeast(MCVersion.V1_21) && bool, Boolean.class, Boolean.class),
 
 	NAMETAG_COMBAT_ENABLED(ConfSection.NAMETAG, ConfSection.ENABLED, true, Boolean.class),
 	NAMETAG_PREFIX(ConfSection.NAMETAG, "Prefix", "&4&lCombat &c", String.class),
@@ -120,7 +121,9 @@ public enum Conf {
 	MONEY_PENALTY(ConfSection.PLAYER_KILLS, "Money Penalty", 0.0, Double.class),
 	MONEY_STEAL(ConfSection.PLAYER_KILLS, "Money Steal", false, Boolean.class),
 	EXP_STEAL(ConfSection.PLAYER_KILLS, "Exp Steal", 0.0, Double.class),
-	COMMANDS_ON_KILL(ConfSection.PLAYER_KILLS, "Commands On Kill", Conf::getCommandList, List.class, List.class),
+	COMMANDS_ON_KILL(ConfSection.PLAYER_KILLS, "Commands On Kill.Commands", Conf::getCommandList, List.class, List.class),
+	COMMANDS_ON_KILL_COOLDOWN(ConfSection.PLAYER_KILLS, "Commands On Kill.Cooldown", -1, Integer.class),
+	COMMANDS_ON_RESPAWN(ConfSection.PLAYER_KILLS, "Commands On Respawn", Conf::getCommandList, List.class, List.class),
 	KILLS_WG_EXCLUSIONS(ConfSection.PLAYER_KILLS, "WorldGuard Exclusions", Conf::getSet, List.class, Set.class),
 
 	KILL_ABUSE_ENABLED(ConfSection.ANTI_KILL_ABUSE, ConfSection.ENABLED, true, Boolean.class),
@@ -167,6 +170,7 @@ public enum Conf {
 	private static PvPManager plugin;
 
 	// This isn't pretty but not sure how else to do it without extra casting overhead/complications
+	// I guess I'm just micro-optimizing here but so be it
 	private boolean boolValue;
 	private String stringValue;
 	private int intValue;

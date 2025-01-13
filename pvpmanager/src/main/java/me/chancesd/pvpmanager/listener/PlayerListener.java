@@ -15,7 +15,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -287,30 +286,19 @@ public class PlayerListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public final void onBucketEmpty(final PlayerBucketEmptyEvent event) {
 		final Player player = event.getPlayer();
-		final PvPlayer combatPlayer = ph.get(player);
+		final CombatPlayer combatPlayer = playerHandler.get(player);
 		final Block clickedBlock = event.getBlockClicked();
 		if (event.getBucket() == Material.LAVA_BUCKET) {
 			for (final Player p : clickedBlock.getWorld().getPlayers()) {
 				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
 					continue;
 				}
-				final PvPlayer target = ph.get(p);
+				final CombatPlayer target = playerHandler.get(p);
 				if ((!target.hasPvPEnabled() || !combatPlayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 25) {
-					combatPlayer.message(Messages.pvpDisabledOther(target.getName()));
+					combatPlayer.message(Lang.ATTACK_DENIED_OTHER.msg(target.getName()));
 					event.setCancelled(true);
 					return;
 				}
-			}
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public final void onPlayerPickup(final PlayerPickupItemEvent e) {
-		if (Settings.isNewbieProtectionEnabled() && Settings.isBlockPickNewbies()) {
-			final CombatPlayer player = playerHandler.get(e.getPlayer());
-			if (player.isNewbie()) {
-				e.setCancelled(true);
-				player.sendActionBar(Lang.NEWBIE_PICKUP_ITEM_BLOCKED.msg(), 1000);
 			}
 		}
 	}
@@ -348,12 +336,12 @@ public class PlayerListener implements Listener {
 	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getPlayer().getWorld().getName()))
 			return;
-		final CombatPlayer combatPlayer = ph.get(event.getPlayer());
+		final CombatPlayer combatPlayer = playerHandler.get(event.getPlayer());
 		if (Conf.KILL_ABUSE_ENABLED.asBool() && Conf.RESPAWN_PROTECTION.asInt() != 0) {
 			combatPlayer.setRespawnTime(System.currentTimeMillis());
 		}
 		if (combatPlayer.wasLastDeathPvP()) {
-			CombatUtils.executeCommands(Settings.getCommandsOnRespawn(), event.getPlayer(), event.getPlayer().getName());
+			CombatUtils.executeCommands(Conf.COMMANDS_ON_RESPAWN.asList(), event.getPlayer(), event.getPlayer().getName());
 			combatPlayer.setLastDeathWasPvP(false);
 		}
 	}

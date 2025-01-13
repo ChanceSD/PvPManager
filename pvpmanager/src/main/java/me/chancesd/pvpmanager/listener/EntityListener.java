@@ -155,7 +155,6 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	@SuppressWarnings("null") // PotionEffectType.INVISIBILITY is not null
 	private void disableActions(final Player attacker, final Player defender, final CombatPlayer pvpAttacker, final CombatPlayer pvpDefender) {
 		final boolean hasExemptPerm = pvpAttacker.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS);
 		if (Conf.DISABLE_FLY.asBool()) {
@@ -286,7 +285,7 @@ public class EntityListener implements Listener {
 		final CombatPlayer pvPlayer = playerHandler.get(player);
 
 		if (Conf.PEARL_RENEW_TAG.asBool() && entity.getType() == EntityType.ENDER_PEARL
-				|| Settings.isWindChargeRenewTag() && entity.getType() == EntityType.WIND_CHARGE) {
+				|| Conf.WIND_CHARGE_RENEW_TAG.asBool() && entity.getType() == EntityType.WIND_CHARGE) {
 			if (pvPlayer.isInCombat()) {
 				final CombatPlayer enemy = pvPlayer.getEnemy();
 				pvPlayer.tag(true, enemy != null ? enemy : pvPlayer);

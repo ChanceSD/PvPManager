@@ -32,7 +32,6 @@ public class TownyHook extends BaseDependency implements ForceToggleDependency, 
 		pushbackPeaceful = getConfigBoolean("Pushback on Peaceful", false);
 	}
 
-	@SuppressWarnings("null") // already check if resident has town
 	@Override
 	public boolean shouldDisable(final Player player) {
 		final Resident resident = townyAPI.getResident(player);

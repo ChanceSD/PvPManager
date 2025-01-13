@@ -4,8 +4,10 @@ import org.bukkit.ChatColor;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
+import me.chancesd.sdutils.utils.Log;
 
 public class PvPToggleFeeTask implements Runnable {
 
@@ -25,7 +27,7 @@ public class PvPToggleFeeTask implements Runnable {
 				i++;
 			}
 		}
-		Log.infoColor(ChatColor.GREEN + "Applied the PvP disabled fee of " + Settings.getPvPDisabledFee() + " to " + i + " players.");
+		Log.infoColor(ChatColor.GREEN + "Applied the PvP disabled fee of " + Conf.PVP_DISABLED_FEE.asInt() + " to " + i + " players.");
 	}
 
 }

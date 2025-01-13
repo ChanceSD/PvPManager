@@ -22,6 +22,7 @@ import me.chancesd.pvpmanager.PluginSetup;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Conf;
 
 @ExtendWith(InstanceCreator.class)
@@ -97,7 +98,7 @@ public class PlayerListenerTest {
 		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "Kicked for spamming", ""));
 		assertTrue(pvPlayer.isInCombat());
 
-		pvPlayer.unTag();
+		pvPlayer.untag(UntagReason.PLUGIN_API);
 		assertFalse(pvPlayer.isInCombat());
 		tagPlayer(pvPlayer);
 		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "Random text - Kicked for spamming", ""));

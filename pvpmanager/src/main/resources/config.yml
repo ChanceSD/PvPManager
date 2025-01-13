@@ -43,7 +43,7 @@ Combat Tag:
     Action Bar:
       Enabled: true
       # You can use any PlaceholderAPI placeholders here
-      Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec] &4%pvpmanager_current_enemy% &8(%pvpmanager_current_enemy_health%&8&c❤)'
+      Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec] &4%pvpmanager_current_enemy% &8(%pvpmanager_current_enemy_health%&8&c❤&8)'
       # Symbol to use for the progress bar and how many times to repeat it. Other symbols ▊,▮,▯,|
       Symbol: '▊'
       Total Bars: 20
@@ -219,14 +219,15 @@ Player Kills:
   Money Steal: false
   # Similar to how money steal works, get a percentage of XP from the player you killed, 1 for 100% (0 to disable)
   Exp Steal: 0.0
-  # Commands to execute on kill ({player} is the killer, {victim} is the victim, {item} is the item material in hand)
   Commands On Kill:
-    - 'examplecommand {player} killed {victim} with {item}'
-  # Time in seconds between kill commands, -1 to disable cooldown
-  Commands On Kill Cooldown: -1
+    # Time in seconds between kill commands, -1 to disable cooldown
+    Cooldown: -1
+    # Commands to execute on kill ({player} is the killer, {victim} is the victim, {item} is the item material in hand)
+    Commands:
+      - 'examplecommand {player} killed {victim} with {item}'
   # Commands to execute on respawn (<player> is the respawning player)
   Commands On Respawn:
-    - 'examplecommand <player> respawned after dying in PvP combat'
+    - 'examplecommand {player} respawned after dying in PvP combat'
   # WorldGuard regions where rewards, penalties and commands will not be executed
   WorldGuard Exclusions:
     - 'exampleregion'

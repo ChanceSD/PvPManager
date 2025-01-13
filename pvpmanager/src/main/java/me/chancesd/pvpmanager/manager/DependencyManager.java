@@ -21,6 +21,8 @@ import me.chancesd.pvpmanager.integration.DependencyException;
 import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.hook.EssentialsHook;
 import me.chancesd.pvpmanager.integration.hook.GriefPreventionHook;
+import me.chancesd.pvpmanager.integration.hook.HuskClaimsHook;
+import me.chancesd.pvpmanager.integration.hook.HuskTownsHook;
 import me.chancesd.pvpmanager.integration.hook.LibsDisguisesHook;
 import me.chancesd.pvpmanager.integration.hook.PlaceHolderAPIHook;
 import me.chancesd.pvpmanager.integration.hook.SimpleClansHook;

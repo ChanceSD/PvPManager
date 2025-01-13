@@ -23,7 +23,7 @@ public class StorageSaveTask implements Runnable {
 	@Override
 	public void run() {
 		final long start = System.nanoTime();
-		final Map<UUID, CombatPlayer> players = new HashMap<>(plugin.getPlayerHandler().getPlayers());
+		final Map<UUID, CombatPlayer> players = new HashMap<>(plugin.getPlayerManager().getPlayers());
 
 		storage.saveUserDataBatch(players.values().stream().filter(p -> p.isLoaded()).collect(Collectors.toList()));
 		Log.debug("Finished saving data for " + players.size() + " players - " + (System.nanoTime() - start) / 1_000_000D + " ms");

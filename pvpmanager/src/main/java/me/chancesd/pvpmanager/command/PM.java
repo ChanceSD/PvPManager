@@ -243,9 +243,11 @@ public class PM implements TabExecutor {
 	private void listPlayers(final CommandSender sender) {
 		for (final CombatPlayer player : plugin.getPlayerManager().getPlayers().values()) {
 			if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
+				sender.sendMessage("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
 				Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
 			}
 		}
+		sender.sendMessage("§aPlayers: §c" + plugin.getPlayerManager().getPlayers().size() + "§a/" + Bukkit.getOnlinePlayers().size());
 		Log.info("Players: " + plugin.getPlayerManager().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
 	}
 

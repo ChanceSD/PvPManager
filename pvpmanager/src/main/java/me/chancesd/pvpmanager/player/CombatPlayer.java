@@ -245,7 +245,7 @@ public class CombatPlayer extends EcoPlayer {
 
 		this.lastHitters.clear();
 		this.tagged = false;
-		tagTask.stopTracking(this);
+		tagTask.stopTracking(this, reason);
 	}
 
 	/**
@@ -386,7 +386,7 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public boolean canExecuteKillCommand() {
-		final int cooldown = Settings.getCommandsOnKillCooldown();
+		final int cooldown = Conf.COMMANDS_ON_KILL_COOLDOWN.asInt();
 		if (cooldown == -1)
 			return true;
 		if (!CombatUtils.hasTimePassed(lastKillCommandTime, cooldown)) {

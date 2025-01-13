@@ -27,7 +27,7 @@
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 
-		<!-- Vault / Essentials -->
+		<!-- Vault / Essentials / TAB -->
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
@@ -56,12 +56,6 @@
 		<repository>
 			<id>md_5-public</id>
 			<url>https://repo.md-5.net/content/groups/public/</url>
-		</repository>
-
-		<!-- TAB -->
-		<repository>
-			<id>krypton</id>
-			<url>https://repo.kryptonmc.org/releases</url>
 		</repository>
 
 		<repository>
@@ -225,10 +219,10 @@
 
 		<!-- TAB -->
 		<dependency>
-			<groupId>me.neznamy</groupId>
-			<artifactId>tab-api</artifactId>
-			<version>4.0.2</version>
-			<scope>provided</scope>
+  		  	<groupId>com.github.NEZNAMY</groupId>
+  			<artifactId>TAB-API</artifactId>
+  		  	<version>5.0.7</version>
+   		 	<scope>provided</scope>
 		</dependency>
 
 		<!-- Towny -->
