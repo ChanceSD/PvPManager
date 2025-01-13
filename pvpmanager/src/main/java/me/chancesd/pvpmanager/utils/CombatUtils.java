@@ -74,8 +74,8 @@ public final class CombatUtils {
 		for (final String command : commands) {
 			try {
 				@SuppressWarnings("deprecation")
-				final String preparedCommand = command.replace("<player>", playerName).replace("<victim>", victim).replace("%p", playerName)
-						.replace("<item>", getItemDisplay(player.getItemInHand()));
+				final String preparedCommand = command.replace("{player}", playerName).replace("{victim}", victim)
+						.replace("{item}", getItemDisplay(player.getItemInHand()));
 				if (preparedCommand.toLowerCase().startsWith("!console")) {
 					ScheduleUtils.executeConsoleCommand(preparedCommand.substring(9));
 				} else if (preparedCommand.toLowerCase().startsWith("!player")) {
@@ -114,7 +114,7 @@ public final class CombatUtils {
 		if (!(defender instanceof Player))
 			return false;
 		if (attacker instanceof Player)
-			return Settings.isSelfTag() || !attacker.equals(defender);
+			return Conf.SELF_TAG.asBool() || !attacker.equals(defender);
 
 		if (attacker instanceof Projectile || MCVersion.isAtLeast(MCVersion.V1_9) && attacker instanceof AreaEffectCloud) {
 			final ProjectileSource projSource = getSource(attacker);

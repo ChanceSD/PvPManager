@@ -1,81 +1,94 @@
 package me.chancesd.pvpmanager.tasks;
 
-import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-import me.chancesd.pvpmanager.manager.DisplayManager;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.sdutils.utils.Log;
+import me.chancesd.pvpmanager.utils.ChatUtils;
+import me.chancesd.sdutils.display.BossBarBuilder;
+import me.chancesd.sdutils.display.CountdownData;
+import me.chancesd.sdutils.display.DisplayManager;
+import me.chancesd.sdutils.display.ProgressBar;
+import me.chancesd.sdutils.display.DisplayManager.TimeProgressSource;
+import me.chancesd.sdutils.utils.Utils;
 
-public class TagTask extends TimerTask {
+public class TagTask {
 
-	private final Timer timer;
-	private final Set<CombatPlayer> tagged = ConcurrentHashMap.newKeySet();
+	private final Map<CombatPlayer, CountdownData> taggedCountdowns = new ConcurrentHashMap<>();
 	private final DisplayManager display;
+	private final BossBarBuilder bossBar;
 
 	public TagTask(final DisplayManager display) {
 		this.display = display;
-		this.timer = new Timer("PvPManager Display Thread");
-		timer.scheduleAtFixedRate(this, 1000, 100);
+		this.bossBar = BossBarBuilder.create().barColor(Conf.BOSS_BAR_COLOR.asEnum(BarColor.class))
+				.barStyle(Conf.BOSS_BAR_STYLE.asEnum(BarStyle.class));
 	}
 
-	@Override
-	public final void run() {
-		try {
-			final Iterator<CombatPlayer> iterator = tagged.iterator();
-			while (iterator.hasNext()) {
-				final CombatPlayer combatPlayer = iterator.next();
-				final long currentTime = System.currentTimeMillis();
-				if (currentTime >= combatPlayer.getUntagTime()) {
-					combatPlayer.untag(UntagReason.TIME_EXPIRED);
-					iterator.remove();
-					continue;
-				}
-				final double timePassed = (currentTime - combatPlayer.getTaggedTime()) / 1000D;
-				final int totalTagTimeInSeconds = (int) (combatPlayer.getTotalTagTime() / 1000);
-				if (Conf.ACTION_BAR_ENABLED.asBool()) {
-					display.showProgress(combatPlayer, timePassed, totalTagTimeInSeconds);
-				}
-				if (Conf.BOSS_BAR_ENABLED.asBool()) {
-					display.updateBossbar(combatPlayer, timePassed, totalTagTimeInSeconds);
-				}
-			}
-		} catch (final Exception e) {
-			Log.severe("Error in tag task", e);
-			throw e;
-		}
-	}
-
-	@Override
 	public final boolean cancel() {
-		for (final CombatPlayer combatPlayer : tagged) {
+		for (final Entry<CombatPlayer, CountdownData> entry : taggedCountdowns.entrySet()) {
+			final CombatPlayer combatPlayer = entry.getKey();
 			if (combatPlayer.isInCombat()) {
-				display.discardPlayer(combatPlayer);
+				display.cancelCountdown(combatPlayer.getPlayer(), entry.getValue());
 				combatPlayer.untag(UntagReason.PLUGIN_DISABLE);
 			}
 		}
-		tagged.clear();
-		super.cancel();
-		timer.cancel();
 		return false;
 	}
 
 	public final void startTracking(final CombatPlayer combatPlayer) {
-		tagged.add(combatPlayer);
+		final ProgressBar progressBar = new ProgressBar(Conf.ACTION_BAR_MESSAGE.asString(), Conf.ACTION_BAR_BARS.asInt(), combatPlayer.getTotalTagTime(),
+				Conf.ACTION_BAR_SYMBOL.asString());
+
+		final TimeProgressSource timeProgressSource = new TimeProgressSource() {
+			@Override
+			public long getGoal() {
+				return combatPlayer.getTotalTagTime() / 1000;
+			}
+
+			@Override
+			public double getProgress() {
+				return (System.currentTimeMillis() - combatPlayer.getTaggedTime()) / 1000D;
+			}
+		};
+
+		final CountdownData.Builder builder = new CountdownData.Builder();
+		if (Conf.ACTION_BAR_ENABLED.asBool()) {
+			builder.withActionBar(progressBar, timeSource -> {
+				final String message = ChatUtils.setPlaceholders(combatPlayer.getPlayer(), progressBar.getMessage());
+				combatPlayer.sendActionBar(message);
+				return message;
+			});
+		}
+		if (Conf.BOSS_BAR_ENABLED.asBool()) {
+			builder.withBossBar(bossBar.build(), timeSource -> {
+				final String message = Conf.BOSS_BAR_MESSAGE.asString().replace("<time>",
+						Double.toString(Utils.roundTo1Decimal(timeSource.getGoal() - timeSource.getProgress())));
+				return ChatUtils.setPlaceholders(combatPlayer.getPlayer(), message);
+			});
+		}
+		final CountdownData countdownData = builder.withTimeSource(timeProgressSource)
+				.onFinish(() -> combatPlayer.untag(UntagReason.TIME_EXPIRED))
+				.build(combatPlayer.getPlayer());
+
+		display.createCountdown(combatPlayer.getPlayer(), countdownData);
+		taggedCountdowns.put(combatPlayer, countdownData);
 	}
 
-	public final void stopTracking(final CombatPlayer combatPlayer) {
-		display.discardPlayer(combatPlayer);
-		tagged.remove(combatPlayer);
+	public final void stopTracking(final CombatPlayer combatPlayer, final UntagReason reason) {
+		final CountdownData countdownData = taggedCountdowns.remove(combatPlayer);
+		if (reason != UntagReason.TIME_EXPIRED) {
+			display.cancelCountdown(combatPlayer.getPlayer(), countdownData);
+		}
 	}
 
 	public Set<CombatPlayer> getTaggedPlayers() {
-		return tagged;
+		return taggedCountdowns.keySet();
 	}
 
 }

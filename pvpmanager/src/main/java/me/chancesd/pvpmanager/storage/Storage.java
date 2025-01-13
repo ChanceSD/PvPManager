@@ -39,7 +39,7 @@ public interface Storage {
 
 	public List<Map<String, Object>> getAllUserData();
 
-	public void saveUserDataBatch(final Collection<PvPlayer> players);
+	public void saveUserDataBatch(final Collection<CombatPlayer> players);
 
 	public void increment(final String field, final UUID uuid);
 

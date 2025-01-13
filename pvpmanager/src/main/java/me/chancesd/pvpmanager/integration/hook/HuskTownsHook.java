@@ -1,22 +1,22 @@
-package me.NoChance.PvPManager.Dependencies.Hooks;
+package me.chancesd.pvpmanager.integration.hook;
 
+import java.util.Optional;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import me.chancesd.pvpmanager.integration.BaseDependency;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.ForceToggleDependency;
+import me.chancesd.pvpmanager.integration.type.RegionDependency;
+import me.chancesd.pvpmanager.player.ProtectionType;
 import net.william278.husktowns.api.BukkitHuskTownsAPI;
 import net.william278.husktowns.libraries.cloplib.operation.Operation;
+import net.william278.husktowns.libraries.cloplib.operation.OperationType;
 import net.william278.husktowns.libraries.cloplib.operation.OperationTypeRegistry;
 import net.william278.husktowns.town.Member;
 import net.william278.husktowns.town.Town;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import net.william278.husktowns.user.OnlineUser;
-import net.william278.husktowns.libraries.cloplib.operation.OperationType;
-
-import me.NoChance.PvPManager.Dependencies.BaseDependency;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.RegionDependency;
-import me.NoChance.PvPManager.Player.CancelResult;
-import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
-
-import java.util.Optional;
 
 public class HuskTownsHook extends BaseDependency implements ForceToggleDependency, RegionDependency {
 
@@ -29,19 +29,19 @@ public class HuskTownsHook extends BaseDependency implements ForceToggleDependen
 
 	@Override
 	public boolean shouldDisable(final Player player) {
-		OnlineUser user = huskTownsAPI.getOnlineUser(player);
-		Optional<Member> member = huskTownsAPI.getUserTown(user);
+		final OnlineUser user = huskTownsAPI.getOnlineUser(player);
+		final Optional<Member> member = huskTownsAPI.getUserTown(user);
 
 		if (!member.isPresent()) {
 			return false;
 		}
 
-		Town town = member.get().town();
+		final Town town = member.get().town();
 		return town.getCurrentWar().isPresent();
 	}
 
 	@Override
-	public boolean shouldDisable(final Player attacker, final Player defender, final CancelResult reason) {
+	public boolean shouldDisable(final Player attacker, final Player defender, final ProtectionType reason) {
 		return shouldDisable(attacker) && shouldDisable(defender);
 	}
 

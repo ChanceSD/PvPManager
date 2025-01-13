@@ -1,16 +1,15 @@
-package me.NoChance.PvPManager.Dependencies.Hooks;
+package me.chancesd.pvpmanager.integration.hook;
 
-import me.NoChance.PvPManager.Dependencies.BaseDependency;
-import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
-import me.NoChance.PvPManager.Dependencies.Hook;
-import me.NoChance.PvPManager.Dependencies.RegionDependency;
-import me.NoChance.PvPManager.Player.CancelResult;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import me.chancesd.pvpmanager.integration.BaseDependency;
+import me.chancesd.pvpmanager.integration.Hook;
+import me.chancesd.pvpmanager.integration.type.RegionDependency;
 import net.william278.huskclaims.api.BukkitHuskClaimsAPI;
 import net.william278.huskclaims.libraries.cloplib.operation.Operation;
 import net.william278.huskclaims.libraries.cloplib.operation.OperationType;
 import net.william278.huskclaims.libraries.cloplib.operation.OperationTypeRegistry;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 public class HuskClaimsHook extends BaseDependency implements RegionDependency {
 

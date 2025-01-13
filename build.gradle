@@ -24,9 +24,9 @@ subprojects {
     }
 
     dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
-        testImplementation 'org.junit.platform:junit-platform-suite:1.12.1'
-        testImplementation 'org.mockito:mockito-core:5.16.1'
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.13.0'
+        testImplementation 'org.junit.platform:junit-platform-suite:1.13.0'
+        testImplementation 'org.mockito:mockito-core:5.18.0'
     }
 
     test {
@@ -35,8 +35,8 @@ subprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
-        sourceCompatibility = '16'
-        targetCompatibility = '16'
+        sourceCompatibility = '17'
+        targetCompatibility = '17'
     }
 }
 

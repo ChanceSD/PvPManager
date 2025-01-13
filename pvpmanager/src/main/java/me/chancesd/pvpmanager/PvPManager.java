@@ -23,13 +23,11 @@ import me.chancesd.pvpmanager.listener.PlayerListener;
 import me.chancesd.pvpmanager.listener.PlayerListener1_11;
 import me.chancesd.pvpmanager.manager.ConfigManager;
 import me.chancesd.pvpmanager.manager.DependencyManager;
-import me.chancesd.pvpmanager.manager.DisplayManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.manager.StorageManager;
 import me.chancesd.pvpmanager.manager.UpdateManager;
 import me.chancesd.pvpmanager.manager.WorldManager;
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.sdutils.library.PluginLibraries;
 import me.chancesd.sdutils.plugin.SDPlugin;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -42,15 +40,14 @@ public class PvPManager extends SDPlugin {
 	private UpdateManager updateManager;
 	private StorageManager storageManager;
 	private DependencyManager dependencyManager;
-	private DisplayManager displayManager;
 	private WorldManager worldManager;
 	private EntityListener entityListener;
 	private static PvPManager instance;
 
 	@Override
 	public void onLoad() {
-		Log.setup(getLogger(), Lang.PREFIXMSG);
-		PluginLibraries.checkDependencies(this);
+		Log.setup(getLogger(), "§7[§4§lPvP§8§lManager§7]");
+		super.onLoad();
 	}
 
 	@Override
@@ -66,7 +63,6 @@ public class PvPManager extends SDPlugin {
 		updateManager = new UpdateManager(this);
 		storageManager = new StorageManager(this);
 		dependencyManager = new DependencyManager();
-		displayManager = new DisplayManager();
 		worldManager = new WorldManager(this);
 		playerHandler = new PlayerManager(this);
 		startListeners();
@@ -152,10 +148,6 @@ public class PvPManager extends SDPlugin {
 
 	public DependencyManager getDependencyManager() {
 		return dependencyManager;
-	}
-
-	public DisplayManager getDisplayManager() {
-		return displayManager;
 	}
 
 	public WorldManager getWorldManager() {

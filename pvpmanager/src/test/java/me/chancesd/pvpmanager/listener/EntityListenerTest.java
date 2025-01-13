@@ -58,11 +58,15 @@ public class EntityListenerTest {
 	}
 
 	private void createAttack(final boolean cancelled, final Player attackerPlayer) {
-		mockEvent = createDamageEvent(attackerPlayer, defender, cancelled);
+		createAttack(cancelled, attackerPlayer, defender);
+	}
+
+	private void createAttack(final boolean cancelled, final Player attackerPlayer, final Player defenderPlayer) {
+		mockEvent = createDamageEvent(attackerPlayer, defenderPlayer, cancelled);
 
 		final Projectile proj = mock(Projectile.class);
 		when(proj.getShooter()).thenReturn(attackerPlayer);
-		projMockEvent = createDamageEvent(proj, defender, cancelled);
+		projMockEvent = createDamageEvent(proj, defenderPlayer, cancelled);
 
 		callEvent(mockEvent);
 		callEvent(projMockEvent);
@@ -218,7 +222,7 @@ public class EntityListenerTest {
 		when(playerAttacker.isFlying()).thenReturn(true);
 		when(playerDefender.isFlying()).thenReturn(true);
 		assertEquals(ProtectionType.FAIL, ph.checkProtection(playerAttacker, playerDefender).type());
-		createAttack(playerAttacker, playerDefender, false);
+		createAttack(false, playerAttacker, playerDefender);
 		assertTrue(ph.get(playerAttacker).isInCombat());
 		assertTrue(ph.get(playerDefender).isInCombat());
 		verify(playerAttacker, times(2)).setFlying(false);
