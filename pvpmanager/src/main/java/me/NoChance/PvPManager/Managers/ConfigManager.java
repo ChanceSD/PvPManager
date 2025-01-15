@@ -79,8 +79,8 @@ public class ConfigManager {
 		}
 		try (InputStreamReader inputStream = new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8)) {
 			this.config = YamlConfiguration.loadConfiguration(inputStream);
-		} catch (final IOException e) {
-			Log.severe("Config file not found", e);
+		} catch (final Exception e) {
+			Log.severe("Error reading the config, did you type something wrong?", e);
 		}
 		Settings.initizalizeVariables(config);
 	}
