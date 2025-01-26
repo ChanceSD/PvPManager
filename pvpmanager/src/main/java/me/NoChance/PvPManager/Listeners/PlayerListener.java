@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -217,7 +218,7 @@ public class PlayerListener implements Listener {
 		if (clickedBlock == null)
 			return;
 
-		if (i.getType() == Material.FLINT_AND_STEEL || i.getType() == Material.LAVA_BUCKET) {
+		if (i.getType() == Material.FLINT_AND_STEEL) {
 			for (final Player p : clickedBlock.getWorld().getPlayers()) {
 				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
 					continue;
@@ -249,6 +250,26 @@ public class PlayerListener implements Listener {
 				if (type.name().endsWith(material)) {
 					e.setCancelled(true);
 					combatPlayer.sendActionBar(Messages.getInteractBlockedInCombat(), 1000);
+					return;
+				}
+			}
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public final void onBucketEmpty(final PlayerBucketEmptyEvent event) {
+		final Player player = event.getPlayer();
+		final PvPlayer combatPlayer = ph.get(player);
+		final Block clickedBlock = event.getBlockClicked();
+		if (event.getBucket() == Material.LAVA_BUCKET) {
+			for (final Player p : clickedBlock.getWorld().getPlayers()) {
+				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
+					continue;
+				}
+				final PvPlayer target = ph.get(p);
+				if ((!target.hasPvPEnabled() || !combatPlayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 25) {
+					combatPlayer.message(Messages.pvpDisabledOther(target.getName()));
+					event.setCancelled(true);
 					return;
 				}
 			}
