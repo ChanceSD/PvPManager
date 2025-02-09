@@ -131,6 +131,10 @@ public class EntityListener implements Listener {
 		if (Settings.isPvpBlood()) {
 			defender.getWorld().playEffect(defender.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
 		}
+
+		updateFlightAllowedState(pvpDefender);
+		updateFlightAllowedState(pvpAttacker);
+
 		disableActions(attacker, defender, pvpAttacker, pvpDefender);
 		if (Settings.isInCombatEnabled()) {
 			if (Settings.borderHoppingVulnerable() && wg != null && !Settings.borderHoppingResetCombatTag() && wg.hasDenyPvPFlag(attacker)
@@ -140,6 +144,11 @@ public class EntityListener implements Listener {
 			pvpAttacker.setTagged(true, pvpDefender);
 			pvpDefender.setTagged(false, pvpAttacker);
 		}
+	}
+
+	private void updateFlightAllowedState(PvPlayer player) {
+		if (player.isInCombat()) return;
+		player.setWasAllowedFlight(player.getPlayer().getAllowFlight());
 	}
 
 	private void disableActions(final Player attacker, final Player defender, final PvPlayer pvpAttacker, final PvPlayer pvpDefender) {
