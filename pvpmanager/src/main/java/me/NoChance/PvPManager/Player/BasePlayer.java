@@ -19,6 +19,7 @@ public abstract class BasePlayer {
 	private CombatWorld combatWorld;
 	private long actionBarCooldown;
 	private String lastActionBarMessage;
+	private boolean wasAllowedFlight;
 
 	protected BasePlayer(final Player player) {
 		this.player = player;
@@ -99,4 +100,11 @@ public abstract class BasePlayer {
 		return "PvPlayer[" + getName() + ", " + uuid + "]";
 	}
 
+	public boolean getWasAllowedFlight() {
+		return wasAllowedFlight;
+	}
+
+	public void setWasAllowedFlight(final boolean wasAllowedFlight) {
+		this.wasAllowedFlight = wasAllowedFlight;
+	}
 }

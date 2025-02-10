@@ -209,6 +209,7 @@ public class PvPlayer extends EcoPlayer {
 
 		this.lastHitters.clear();
 		this.tagged = false;
+		getPlayer().setAllowFlight(getWasAllowedFlight());
 	}
 
 	public final void setPvP(final boolean pvpState) {
