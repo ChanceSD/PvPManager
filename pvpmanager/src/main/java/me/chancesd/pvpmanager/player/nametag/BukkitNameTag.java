@@ -147,12 +147,12 @@ public class BukkitNameTag extends NameTag {
 			if (pvpOn == null) {
 				restoreNametag();
 			} else {
-				pvpOn.addEntry(pvPlayer.getName());
+				addToTeam(pvpOn, pvPlayer.getName());
 			}
 		} else if (pvpOff == null) {
 			restoreNametag();
 		} else {
-			pvpOff.addEntry(pvPlayer.getName());
+			addToTeam(pvpOff, pvPlayer.getName());
 		}
 	}
 
