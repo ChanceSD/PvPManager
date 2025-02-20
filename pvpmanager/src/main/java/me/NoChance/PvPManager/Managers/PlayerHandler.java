@@ -150,6 +150,9 @@ public class PlayerHandler {
 			} else {
 				p.setHealth(0);
 			}
+			if (p.getHealth() > 0) {
+				Log.warning("Failed to kill player on logout. It's possible the damage to the player was blocked by another plugin.");
+			}
 			player.setPvpLogged(false);
 		}
 		if (Settings.getFineAmount() != 0) {
