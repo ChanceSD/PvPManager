@@ -193,7 +193,10 @@ public class PvPlayer extends EcoPlayer {
 
 	public final void unTag() {
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this);
-		ScheduleUtils.ensureMainThread(() -> Bukkit.getPluginManager().callEvent(event), getPlayer());
+		ScheduleUtils.ensureMainThread(() -> {
+			Bukkit.getPluginManager().callEvent(event);
+			getPlayer().setAllowFlight(getWasAllowedFlight()); // Sync because there's an async catcher on MC 1.8
+		}, getPlayer());
 
 		if (isOnline()) {
 			if (nametag != null && Settings.useNameTag()) {
@@ -209,7 +212,6 @@ public class PvPlayer extends EcoPlayer {
 
 		this.lastHitters.clear();
 		this.tagged = false;
-		getPlayer().setAllowFlight(getWasAllowedFlight());
 	}
 
 	public final void setPvP(final boolean pvpState) {
