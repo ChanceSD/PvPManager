@@ -146,12 +146,13 @@ public class PlayerHandler {
 		if (Settings.isKillOnLogout()) {
 			player.setPvpLogged(true);
 			if (MCVersion.isAtLeast(MCVersion.V1_20_5)) {
-				p.damage(Float.MAX_VALUE, DamageSource.builder(DamageType.GENERIC_KILL).build());
+				p.damage(Float.MAX_VALUE, DamageSource.builder(DamageType.GENERIC_KILL).build()); // datapack compatibility
 			} else {
 				p.setHealth(0);
 			}
 			if (p.getHealth() > 0) {
 				Log.warning("Failed to kill player on logout. It's possible the damage to the player was blocked by another plugin.");
+				p.setHealth(0); // Retry with setHealth
 			}
 			player.setPvpLogged(false);
 		}
