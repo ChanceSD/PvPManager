@@ -243,8 +243,8 @@ public final class Settings {
 		killAbuseCommands = getCommandList(KILLABUSE.getStringList("Commands on Abuse"));
 		respawnProtection = KILLABUSE.getInt("Respawn Protection", 5);
 
-		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 10));
-		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 10));
+		setMoneyReward(PLAYERKILLS.getDouble("Money Reward", 0));
+		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 0));
 		moneySteal = PLAYERKILLS.getBoolean("Money Steal", false);
 		commandsOnKill = getCommandList(PLAYERKILLS.getStringList("Commands On Kill"));
 		playerKillsWGExclusions = new HashSet<>(getList(PLAYERKILLS.getStringList("WorldGuard Exclusions")));
