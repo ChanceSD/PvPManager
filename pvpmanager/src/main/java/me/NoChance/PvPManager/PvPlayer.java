@@ -306,6 +306,10 @@ public class PvPlayer extends EcoPlayer {
 		return totalTagTime;
 	}
 
+	public NewbieTask getNewbieTask() {
+		return newbieTask;
+	}
+
 	public final long getNewbieTimeLeft() {
 		return newbieTask != null ? newbieTask.getTimeleft() : 0;
 	}

@@ -7,13 +7,16 @@ import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Settings.Messages;
 import me.NoChance.PvPManager.Settings.Settings;
 import me.chancesd.pvpmanager.utils.ScheduleUtils;
+import me.chancesd.sdutils.utils.Log;
 
 public class NewbieTask implements Runnable {
 
 	private final PvPlayer player;
-	private final long finishTime;
-	private final ScheduledFuture<?> task;
+	private long finishTime;
+	private ScheduledFuture<?> task;
 	private boolean expired;
+	private boolean paused;
+	private long pausedAt;
 
 	public NewbieTask(final PvPlayer player, final long time) {
 		this.player = player;
@@ -32,7 +35,26 @@ public class NewbieTask implements Runnable {
 	}
 
 	public synchronized void cancel() {
-		task.cancel(true);
+		task.cancel(false);
+	}
+
+	// TODO transfer to utils
+	public synchronized void pause() {
+		if (!paused) {
+			cancel();
+			pausedAt = System.currentTimeMillis();
+			paused = true;
+			Log.info("Paused new player protection for " + player.getName() + " because they entered an excluded world.");
+		}
+	}
+
+	public synchronized void resume() {
+		if (paused) {
+			final long timeLeft = getTimeleft();
+			task = ScheduleUtils.runAsyncLater(this, timeLeft / 1000, TimeUnit.SECONDS);
+			finishTime = System.currentTimeMillis() + timeLeft;
+			paused = false;
+		}
 	}
 
 	public boolean isExpired() {
@@ -40,7 +62,10 @@ public class NewbieTask implements Runnable {
 	}
 
 	public long getTimeleft() {
+		if (paused) {
+			final long pauseDuration = System.currentTimeMillis() - pausedAt;
+			return Math.max(0, finishTime + pauseDuration - System.currentTimeMillis());
+		}
 		return Math.max(0, finishTime - System.currentTimeMillis());
 	}
-
 }

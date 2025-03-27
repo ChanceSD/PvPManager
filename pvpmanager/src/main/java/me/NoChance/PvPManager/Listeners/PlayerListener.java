@@ -388,6 +388,15 @@ public class PlayerListener implements Listener {
 		final CombatWorld combatWorld = ph.getPlugin().getWorldManager().getWorld(player.getWorld());
 		pvPlayer.setCombatWorld(combatWorld);
 
+		// Handle newbie protection pause in excluded worlds
+		if (pvPlayer.isNewbie() && pvPlayer.getNewbieTask() != null) {
+			if (CombatUtils.isWorldExcluded(player.getWorld().getName())) {
+				pvPlayer.getNewbieTask().pause();
+			} else {
+				pvPlayer.getNewbieTask().resume();
+			}
+		}
+
 		final CombatWorld.WorldOptionState optionState = pvPlayer.getCombatWorld().isPvPForced();
 		if (optionState == CombatWorld.WorldOptionState.NONE)
 			return;
