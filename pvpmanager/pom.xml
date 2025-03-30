@@ -98,6 +98,12 @@
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 					<minimizeJar>true</minimizeJar>
+					<relocations>
+						<relocation>
+							<pattern>me.chancesd.sdutils</pattern>
+							<shadedPattern>me.chancesd.pvpmanager.sdutils</shadedPattern>
+						</relocation>
+					</relocations>
 					<transformers>
 						<!-- Avoid overlapping MANIFEST.MF file -->
 						<transformer
