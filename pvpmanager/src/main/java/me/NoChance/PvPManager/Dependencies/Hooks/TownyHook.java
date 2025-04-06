@@ -18,7 +18,8 @@ public class TownyHook extends BaseDependency implements ForceToggleDependency, 
 
 	private final TownyAPI townyAPI;
 	private final boolean pushbackPeaceful;
-	private final BooleanDataField bdf = new BooleanDataField("siegewar_peaceSetting", false);
+	private final BooleanDataField peaceSetting = new BooleanDataField("siegewar_peaceSetting", false);
+	private static BooleanDataField hasSiege = new BooleanDataField("siegewar_hasSiege", false);
 
 	public TownyHook(final Hook hook) {
 		super(hook);
@@ -29,7 +30,11 @@ public class TownyHook extends BaseDependency implements ForceToggleDependency, 
 	@Override
 	public boolean shouldDisable(final Player player) {
 		final Resident resident = townyAPI.getResident(player);
-		return resident != null && resident.hasTown() && resident.getTownOrNull().hasActiveWar();
+		if (resident == null || !resident.hasTown()) {
+			return false;
+		}
+		final Town town = resident.getTownOrNull();
+		return town.hasActiveWar() || hasSiege(town);
 	}
 
 	@Override
@@ -47,9 +52,16 @@ public class TownyHook extends BaseDependency implements ForceToggleDependency, 
 	}
 
 	private boolean isNeutral(final Town town) {
-		if (town.hasMeta(bdf.getKey()))
-			return MetaDataUtil.getBoolean(town, bdf);
+		if (town.hasMeta(peaceSetting.getKey()))
+			return MetaDataUtil.getBoolean(town, peaceSetting);
 		return town.isNeutral();
+	}
+
+	public boolean hasSiege(final Town town) {
+		if (town.hasMeta(hasSiege.getKey())) {
+			return MetaDataUtil.getBoolean(town, hasSiege);
+		}
+		return false;
 	}
 
 }
