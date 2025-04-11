@@ -106,7 +106,7 @@ public final class CombatUtils {
 
 		if (defender instanceof Player) {
 			if (attacker instanceof Player)
-				return true;
+				return Settings.isSelfTag() || !attacker.equals(defender);
 			if (attacker instanceof Projectile || CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && attacker instanceof AreaEffectCloud) {
 				final ProjectileSource projSource = getSource(attacker);
 				if (projSource instanceof Player) {

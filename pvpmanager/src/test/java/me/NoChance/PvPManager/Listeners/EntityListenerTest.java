@@ -57,15 +57,19 @@ public class EntityListenerTest {
 		ph.getPlayers().clear();
 	}
 
-	private void createAttack(final boolean cancelled) {
-		mockEvent = createDamageEvent(attacker, defender, cancelled);
+	private void createAttack(final boolean cancelled, final Player attackerPlayer) {
+		mockEvent = createDamageEvent(attackerPlayer, defender, cancelled);
 
 		final Projectile proj = mock(Projectile.class);
-		when(proj.getShooter()).thenReturn(attacker);
+		when(proj.getShooter()).thenReturn(attackerPlayer);
 		projMockEvent = createDamageEvent(proj, defender, cancelled);
 
 		callEvent(mockEvent);
 		callEvent(projMockEvent);
+	}
+
+	private void createAttack(final boolean cancelled) {
+		createAttack(cancelled, attacker);
 	}
 
 	private EntityDamageByEntityEvent createDamageEvent(final Entity attackerEntity, final Entity defenderEntity, final boolean cancelled) {
@@ -122,31 +126,30 @@ public class EntityListenerTest {
 
 	@Test
 	final void testSelfTag() {
-		final Projectile proj = mock(Projectile.class);
-		projMockEvent = createDamageEvent(proj, defender, false);
-
 		assertFalse(Settings.isSelfTag());
+
 		// attacker different from defender
-		when(proj.getShooter()).thenReturn(attacker);
-		assertEquals(proj.getShooter(), attacker);
+		createAttack(false, attacker);
+		assertTrue(CombatUtils.isPvP(mockEvent));
 		assertTrue(CombatUtils.isPvP(projMockEvent));
 
 		// attacker equals defender
-		when(proj.getShooter()).thenReturn(defender);
-		assertEquals(proj.getShooter(), projMockEvent.getEntity());
+		createAttack(false, defender);
+		assertFalse(CombatUtils.isPvP(mockEvent));
 		assertFalse(CombatUtils.isPvP(projMockEvent));
 
 		// now allow self tagging
 		Settings.setSelfTag(true);
 		assertTrue(Settings.isSelfTag());
+
 		// attacker different from defender
-		when(proj.getShooter()).thenReturn(attacker);
-		assertEquals(proj.getShooter(), attacker);
+		createAttack(false, attacker);
+		assertTrue(CombatUtils.isPvP(mockEvent));
 		assertTrue(CombatUtils.isPvP(projMockEvent));
 
 		// attacker equals defender
-		when(proj.getShooter()).thenReturn(defender);
-		assertEquals(proj.getShooter(), projMockEvent.getEntity());
+		createAttack(false, defender);
+		assertTrue(CombatUtils.isPvP(mockEvent));
 		assertTrue(CombatUtils.isPvP(projMockEvent));
 	}
 
