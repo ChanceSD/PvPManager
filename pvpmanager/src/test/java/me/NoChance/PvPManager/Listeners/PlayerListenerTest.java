@@ -101,6 +101,12 @@ public class PlayerListenerTest {
 		tagPlayer(pvPlayer);
 		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "Kicked for spamming", ""));
 		assertTrue(pvPlayer.isInCombat());
+
+		pvPlayer.unTag();
+		assertFalse(pvPlayer.isInCombat());
+		tagPlayer(pvPlayer);
+		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "Random text - Kicked for spamming", ""));
+		assertTrue(pvPlayer.isInCombat());
 	}
 
 	private PlayerDeathEvent createDeathEvent(final Player player) {

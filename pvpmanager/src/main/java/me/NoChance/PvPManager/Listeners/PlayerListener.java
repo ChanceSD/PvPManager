@@ -105,7 +105,8 @@ public class PlayerListener implements Listener {
 		final Player player = event.getPlayer();
 		Log.debugLazy(() -> player.getName() + " was kicked with reason: " + event.getReason() + " | Leave message: " + event.getLeaveMessage()
 				+ " - In combat: " + ph.get(player).isInCombat());
-		if (Settings.punishOnKick() && (!Settings.matchKickReason() || Settings.getPunishKickReasons().contains(event.getReason())))
+		if (Settings.punishOnKick() && (!Settings.matchKickReason() || Settings.getPunishKickReasons().stream()
+				.anyMatch(reason -> event.getReason().toLowerCase().contains(reason.toLowerCase()))))
 			return;
 
 		final PvPlayer pvPlayer = ph.get(player);
