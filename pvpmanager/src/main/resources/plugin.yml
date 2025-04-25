@@ -16,6 +16,8 @@ softdepend:
   - Essentials
   - PlaceholderAPI
   - Towny
+  - HuskTowns
+  - HuskClaims
   - Kingdoms
   - TAB
 

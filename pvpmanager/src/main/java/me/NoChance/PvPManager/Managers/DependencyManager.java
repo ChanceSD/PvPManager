@@ -21,18 +21,11 @@ import me.NoChance.PvPManager.Dependencies.DependencyException;
 import me.NoChance.PvPManager.Dependencies.DisguiseDependency;
 import me.NoChance.PvPManager.Dependencies.GodDependency;
 import me.NoChance.PvPManager.Dependencies.Hook;
+import me.NoChance.PvPManager.Dependencies.Hooks.*;
 import me.NoChance.PvPManager.Dependencies.GroupDependency;
 import me.NoChance.PvPManager.Dependencies.RegionDependency;
 import me.NoChance.PvPManager.Dependencies.ForceToggleDependency;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.EssentialsHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.KingdomsXHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.LibsDisguisesHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.PlaceHolderAPIHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.SimpleClansHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.TownyHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.VaultHook;
-import me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardModernHook;
 import me.NoChance.PvPManager.Listeners.MoveListener;
 import me.NoChance.PvPManager.Listeners.MoveListener1_9;
 import me.NoChance.PvPManager.Player.CancelResult;
@@ -151,6 +144,12 @@ public class DependencyManager {
 			break;
 		case TOWNY:
 			registerDependency(new TownyHook(hook));
+			break;
+		case HUSKTOWNS:
+			registerDependency(new HuskTownsHook(hook));
+			break;
+		case HUSKCLAIMS:
+			registerDependency(new HuskClaimsHook(hook));
 			break;
 		case KINGDOMSX:
 			registerDependency(new KingdomsXHook(hook));

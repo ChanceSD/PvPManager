@@ -70,6 +70,12 @@
 			<url>https://repo.glaremasters.me/repository/towny/</url>
 		</repository>
 
+		<!-- william278 (Husk) -->
+		<repository>
+			<id>william278.net</id>
+			<url>https://repo.william278.net/releases</url>
+		</repository>
+
 	</repositories>
 
 	<build>
@@ -204,6 +210,23 @@
 			<groupId>com.palmergames.bukkit.towny</groupId>
 			<artifactId>towny</artifactId>
 			<version>0.101.1.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- HuskClaims -->
+		<dependency>
+			<groupId>net.william278.huskclaims</groupId>
+			<artifactId>huskclaims-bukkit</artifactId>
+			<version>1.5.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<!-- HuskTowns -->
+		<dependency>
+			<groupId>net.william278.husktowns</groupId>
+			<artifactId>husktowns-bukkit</artifactId>
+			<version>3.1.2</version>
 			<scope>provided</scope>
 		</dependency>
 
