@@ -12,23 +12,13 @@ import net.william278.huskclaims.libraries.cloplib.operation.OperationTypeRegist
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class HuskClaimsHook extends BaseDependency implements ForceToggleDependency, RegionDependency {
+public class HuskClaimsHook extends BaseDependency implements RegionDependency {
 
 	private final BukkitHuskClaimsAPI huskClaimsAPI;
 
 	public HuskClaimsHook(final Hook hook) {
 		super(hook);
 		huskClaimsAPI = BukkitHuskClaimsAPI.getInstance();
-	}
-
-	@Override
-	public boolean shouldDisable(final Player player) {
-		return false;
-	}
-
-	@Override
-	public boolean shouldDisable(final Player attacker, final Player defender, final CancelResult reason) {
-		return shouldDisable(attacker) && shouldDisable(defender);
 	}
 
 	@Override
