@@ -19,6 +19,8 @@ public enum Hook {
 	PLACEHOLDERAPI("PlaceholderAPI"),
 	LIBSDISGUISES("LibsDisguises"),
 	TOWNY("Towny"),
+	HUSKTOWNS("HuskTowns"),
+	HUSKCLAIMS("HuskClaims"),
 	KINGDOMSX("Kingdoms");
 
 	@NotNull
