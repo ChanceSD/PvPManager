@@ -44,6 +44,7 @@ public class PvPlayer extends EcoPlayer {
 	private boolean pvpLogged;
 	private boolean override;
 	private boolean loaded;
+	private boolean lastDeathWasPvP;
 	private long toggleTime;
 	private long respawnTime;
 	private long taggedTime;
@@ -316,6 +317,14 @@ public class PvPlayer extends EcoPlayer {
 
 	public long getTagTimeLeft() {
 		return Math.max(getUntagTime() - System.currentTimeMillis(), 0);
+	}
+
+	public boolean wasLastDeathPvP() {
+		return lastDeathWasPvP;
+	}
+
+	public void setLastDeathWasPvP(final boolean lastDeathWasPvP) {
+		this.lastDeathWasPvP = lastDeathWasPvP;
 	}
 
 	private synchronized void loadData() {

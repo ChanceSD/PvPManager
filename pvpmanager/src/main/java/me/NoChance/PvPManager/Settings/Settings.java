@@ -45,6 +45,7 @@ public final class Settings {
 	private static boolean blockInventoryOpen;
 	private static List<String> commandsAllowed;
 	private static List<String> commandsOnKill;
+	private static List<String> commandsOnRespawn;
 	private static List<String> commandsOnPvPLog;
 	private static List<String> commandsPvPOff;
 	private static List<String> commandsPvPOn;
@@ -247,6 +248,7 @@ public final class Settings {
 		setMoneyPenalty(PLAYERKILLS.getDouble("Money Penalty", 0));
 		moneySteal = PLAYERKILLS.getBoolean("Money Steal", false);
 		commandsOnKill = getCommandList(PLAYERKILLS.getStringList("Commands On Kill"));
+		commandsOnRespawn = getCommandList(PLAYERKILLS.getStringList("Commands On Respawn"));
 		playerKillsWGExclusions = new HashSet<>(getList(PLAYERKILLS.getStringList("WorldGuard Exclusions")));
 
 		toggleCooldown = PVPTOGGLE.getInt("Cooldown", 15);
@@ -333,6 +335,10 @@ public final class Settings {
 
 	public static List<String> getCommandsOnKill() {
 		return commandsOnKill;
+	}
+
+	public static List<String> getCommandsOnRespawn() {
+		return commandsOnRespawn;
 	}
 
 	public static List<String> getCommandsOnPvPLog() {

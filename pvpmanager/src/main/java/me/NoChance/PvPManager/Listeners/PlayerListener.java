@@ -178,6 +178,7 @@ public class PlayerListener implements Listener {
 				pvPlayer.applyPenalty();
 			}
 			CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
+			pvPlayer.setLastDeathWasPvP(true);
 		}
 	}
 
@@ -365,9 +366,13 @@ public class PlayerListener implements Listener {
 	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getPlayer().getWorld().getName()))
 			return;
+		final PvPlayer combatPlayer = ph.get(event.getPlayer());
 		if (Settings.isKillAbuseEnabled() && Settings.getRespawnProtection() != 0) {
-			final PvPlayer player = ph.get(event.getPlayer());
-			player.setRespawnTime(System.currentTimeMillis());
+			combatPlayer.setRespawnTime(System.currentTimeMillis());
+		}
+		if (combatPlayer.wasLastDeathPvP()) {
+			CombatUtils.executeCommands(Settings.getCommandsOnRespawn(), event.getPlayer(), event.getPlayer().getName());
+			combatPlayer.setLastDeathWasPvP(false);
 		}
 	}
 

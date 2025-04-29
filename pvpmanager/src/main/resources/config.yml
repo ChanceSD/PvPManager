@@ -194,6 +194,9 @@ Player Kills:
   # Commands to execute on kill (<player> is the killer, <victim> is the victim, <item> is the item material in hand)
   Commands On Kill:
     - 'examplecommand <player> killed <victim> with <item>'
+  # Commands to execute on respawn (<player> is the respawning player)
+  Commands On Respawn:
+    - 'examplecommand <player> respawned after dying in PvP combat'
   WorldGuard Exclusions:
     - 'exampleregion'
 
