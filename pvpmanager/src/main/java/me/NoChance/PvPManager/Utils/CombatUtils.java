@@ -65,6 +65,9 @@ public final class CombatUtils {
 	}
 
 	public static void executeCommands(final List<String> commands, final Player player, final String playerName, final String victim) {
+		if (commands.isEmpty())
+			return;
+
 		for (final String command : commands) {
 			try {
 				final String preparedCommand = command.replace("<player>", playerName).replace("<victim>", victim).replace("%p", playerName)

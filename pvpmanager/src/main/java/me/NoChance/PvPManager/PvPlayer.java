@@ -49,6 +49,7 @@ public class PvPlayer extends EcoPlayer {
 	private long respawnTime;
 	private long taggedTime;
 	private long totalTagTime;
+	private long lastKillCommandTime;
 	private NewbieTask newbieTask;
 	private PvPlayer enemy;
 	private final Set<PvPlayer> lastHitters = new HashSet<>();
@@ -317,6 +318,17 @@ public class PvPlayer extends EcoPlayer {
 
 	public long getTagTimeLeft() {
 		return Math.max(getUntagTime() - System.currentTimeMillis(), 0);
+	}
+
+	public boolean canExecuteKillCommand() {
+		final int cooldown = Settings.getCommandsOnKillCooldown();
+		if (cooldown == -1)
+			return true;
+		if (!CombatUtils.hasTimePassed(lastKillCommandTime, cooldown)) {
+			return false;
+		}
+		lastKillCommandTime = System.currentTimeMillis();
+		return true;
 	}
 
 	public boolean wasLastDeathPvP() {

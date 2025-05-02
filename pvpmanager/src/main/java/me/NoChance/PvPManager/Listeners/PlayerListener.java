@@ -177,7 +177,9 @@ public class PlayerListener implements Listener {
 			if (Settings.getMoneyPenalty() > 0) {
 				pvPlayer.applyPenalty();
 			}
-			CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
+			if (pKiller.canExecuteKillCommand()) {
+				CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
+			}
 			pvPlayer.setLastDeathWasPvP(true);
 		}
 	}
