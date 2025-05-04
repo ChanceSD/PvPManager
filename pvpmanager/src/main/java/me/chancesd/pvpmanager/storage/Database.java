@@ -281,6 +281,49 @@ public class Database {
 	}
 
 	/**
+	 * Update multiple values in the database in batch
+	 *
+	 * @param table         Table to update
+	 * @param index         Index to search with
+	 * @param columns       Columns to update
+	 * @param indexToValues Map of index values to their corresponding column values
+	 */
+	public void updateValuesBatch(final Table table, final String index, final Collection<String> columns,
+			final Map<Object, Collection<Object>> indexToValues) {
+		try (Connection connection = getConnection()) {
+			final StringBuilder updateString = new StringBuilder();
+			int i = 0;
+			for (final String col : columns) {
+				updateString.append(col + "=?");
+				i++;
+				if (i < columns.size()) {
+					updateString.append(",");
+				}
+			}
+
+			try (PreparedStatement ps = connection.prepareStatement(
+					"UPDATE " + table.getName() + " SET " + updateString + " WHERE " + index + "=?")) {
+				int updates = 0;
+
+				for (final Map.Entry<Object, Collection<Object>> entry : indexToValues.entrySet()) {
+					int paramIndex = 1;
+					for (final Object value : entry.getValue()) {
+						ps.setObject(paramIndex++, value);
+					}
+					ps.setObject(paramIndex, entry.getKey());
+					ps.addBatch();
+
+					if (++updates % 1000 == 0 || updates == indexToValues.size()) {
+						ps.executeBatch();
+					}
+				}
+			}
+		} catch (final SQLException e) {
+			log("Failed to batch update database", e);
+		}
+	}
+
+	/**
 	 * Get a value from a table.
 	 *
 	 * @param table Table to get value from

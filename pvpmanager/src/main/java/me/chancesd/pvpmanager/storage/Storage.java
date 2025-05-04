@@ -1,5 +1,6 @@
 package me.chancesd.pvpmanager.storage;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -37,6 +38,8 @@ public interface Storage {
 	}
 
 	public List<Map<String, Object>> getAllUserData();
+
+	public void saveUserDataBatch(final Collection<PvPlayer> players);
 
 	public void increment(final String field, final UUID uuid);
 

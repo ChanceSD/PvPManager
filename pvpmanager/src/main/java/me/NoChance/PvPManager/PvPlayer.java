@@ -340,9 +340,8 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	private synchronized void loadData() {
-		if (plugin.getStorageManager().getStorage().userExists(this)) {
-			loadUserData(plugin.getStorageManager().getStorage().getUserData(this));
-		} else if (Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
+		loadUserData(plugin.getStorageManager().getStorage().getUserData(this));
+		if (Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
 		if (getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON) {
@@ -364,12 +363,17 @@ public class PvPlayer extends EcoPlayer {
 						+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
 			}
 		}
+		plugin.getStorageManager().getStorage().saveUserData(this);
 		this.loaded = true;
 		notifyAll();
 		Log.debug("Finished loading data for " + this + (nametag != null ? " with " + nametag.getClass().getSimpleName() : ""));
 	}
 
 	private void loadUserData(final Map<String, Object> userData) {
+		if (userData.isEmpty()) {
+			return;
+		}
+
 		final Object pvpstate = userData.get(UserDataFields.PVPSTATUS);
 		if (pvpstate instanceof Integer) {
 			this.pvpState = (int) pvpstate != 0;

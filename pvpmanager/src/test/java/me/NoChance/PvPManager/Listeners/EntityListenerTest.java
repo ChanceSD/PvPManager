@@ -184,11 +184,12 @@ public class EntityListenerTest {
 
 	@Test
 	final void cancelNewbie() {
-		ph.get(attacker).setNewbie(true);
-		createAttack(false);
+		final Player newbieAttacker = PT.createPlayer("attacker");
+		ph.get(newbieAttacker).setNewbie(true);
+		createAttack(false, newbieAttacker);
 
-		assertEquals(CancelResult.NEWBIE, ph.tryCancel(attacker, defender));
-		verify(attacker, times(2)).sendMessage(Messages.newbieBlocked());
+		assertEquals(CancelResult.NEWBIE, ph.tryCancel(newbieAttacker, defender));
+		verify(newbieAttacker, times(2)).sendMessage(Messages.newbieBlocked());
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);
