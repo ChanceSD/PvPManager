@@ -109,6 +109,7 @@ public final class Settings {
 	private static Set<String> worldguardOverridesList;
 	private static int enderPearlCooldown;
 	private static boolean enderPearlRenewTag;
+	private static boolean windChargeRenewTag;
 	private static boolean glowingInCombat;
 	private static boolean selfTag;
 	private static boolean blockInteractInCombat;
@@ -204,6 +205,7 @@ public final class Settings {
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
 		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl.Cooldown", 15);
 		enderPearlRenewTag = TAGGEDCOMBAT.getBoolean("EnderPearl.Renew Tag", true);
+		windChargeRenewTag = TAGGEDCOMBAT.getBoolean("WindCharge.Renew Tag", true);
 
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
@@ -709,6 +711,10 @@ public final class Settings {
 
 	public static boolean isEnderPearlRenewTag() {
 		return enderPearlRenewTag;
+	}
+
+	public static boolean isWindChargeRenewTag() {
+		return windChargeRenewTag;
 	}
 
 	public static boolean isGlowingInCombat() {

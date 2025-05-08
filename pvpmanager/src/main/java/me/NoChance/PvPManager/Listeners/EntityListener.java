@@ -146,8 +146,9 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	private void updateFlightAllowedState(PvPlayer player) {
-		if (player.isInCombat()) return;
+	private void updateFlightAllowedState(final PvPlayer player) {
+		if (player.isInCombat())
+			return;
 		player.setWasAllowedFlight(player.getPlayer().getAllowFlight());
 	}
 
@@ -274,15 +275,18 @@ public class EntityListener implements Listener {
 	public void onProjectileHitEvent(final ProjectileHitEvent event) {
 		final Projectile entity = event.getEntity();
 		final ProjectileSource shooter = entity.getShooter();
-		if (!Settings.isEnderPearlRenewTag() || entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof Player))
+		if (!(shooter instanceof Player))
 			return;
 
 		final Player player = (Player) shooter;
 		final PvPlayer pvPlayer = ph.get(player);
 
-		if (pvPlayer.isInCombat()) {
-			final PvPlayer enemy = pvPlayer.getEnemy();
-			pvPlayer.setTagged(true, enemy != null ? enemy : pvPlayer);
+		if (Settings.isEnderPearlRenewTag() && entity.getType() == EntityType.ENDER_PEARL
+				|| Settings.isWindChargeRenewTag() && entity.getType() == EntityType.WIND_CHARGE) {
+			if (pvPlayer.isInCombat()) {
+				final PvPlayer enemy = pvPlayer.getEnemy();
+				pvPlayer.setTagged(true, enemy != null ? enemy : pvPlayer);
+			}
 		}
 	}
 

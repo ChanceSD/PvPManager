@@ -107,6 +107,9 @@ Tagged In Combat:
     Cooldown: 10
     # If enabled, will retag the player when they throw an enderpearl
     Renew Tag: true
+  WindCharge:
+    # If enabled, will retag the player when they use a wind charge
+    Renew Tag: true
   Block:
     EnderPearls: false
     ChorusFruits: false
