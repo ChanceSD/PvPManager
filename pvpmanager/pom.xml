@@ -217,7 +217,7 @@
 		<dependency>
 			<groupId>net.william278.huskclaims</groupId>
 			<artifactId>huskclaims-bukkit</artifactId>
-			<version>1.5.2</version>
+			<version>1.5.5</version>
 			<scope>provided</scope>
 		</dependency>
 
