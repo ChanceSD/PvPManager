@@ -161,6 +161,13 @@ public class PM implements TabExecutor {
 	}
 
 	private void debug(final CommandSender sender, final String[] args) {
+		// Check if we have enough arguments before proceeding
+		if (args.length < 2) {
+			sender.sendMessage("§4§lUsage: §f/pmr debug <subcommand>");
+			sender.sendMessage("§cAvailable subcommands: toggle, damagedebug, tag, tagall, untagall, attack, players");
+			return;
+		}
+
 		PvPlayer p = null;
 		if (args.length == 2 && sender instanceof Player) {
 			p = plugin.getPlayerHandler().get((Player) sender);
@@ -185,17 +192,17 @@ public class PM implements TabExecutor {
 				Settings.setDEBUG(false);
 				sender.sendMessage("Debug damage listener disabled");
 			}
-		} else if (args[1].equalsIgnoreCase("tagall")) {
+		} else if (args.length == 2 && args[1].equalsIgnoreCase("tagall")) {
 			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
 				player.setTagged(true, player);
 			}
 			sender.sendMessage("Tagged all players");
-		} else if (args[1].equalsIgnoreCase("untagall")) {
+		} else if (args.length == 2 && args[1].equalsIgnoreCase("untagall")) {
 			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
 				plugin.getPlayerHandler().untag(player);
 			}
 			sender.sendMessage("Untagged all players");
-		} else if (args[1].equalsIgnoreCase("players")) {
+		} else if (args.length == 2 && args[1].equalsIgnoreCase("players")) {
 			for (final PvPlayer player : plugin.getPlayerHandler().getPlayers().values()) {
 				if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
 					Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
