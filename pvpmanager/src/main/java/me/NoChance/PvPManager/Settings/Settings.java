@@ -205,7 +205,7 @@ public final class Settings {
 		untagEnemy = TAGGEDCOMBAT.getBoolean("Untag Enemy", false);
 		enderPearlCooldown = TAGGEDCOMBAT.getInt("EnderPearl.Cooldown", 15);
 		enderPearlRenewTag = TAGGEDCOMBAT.getBoolean("EnderPearl.Renew Tag", true);
-		windChargeRenewTag = TAGGEDCOMBAT.getBoolean("WindCharge.Renew Tag", true);
+		windChargeRenewTag = MCVersion.isHigherThan(MCVersion.V1_20_5) && TAGGEDCOMBAT.getBoolean("WindCharge.Renew Tag", true);
 
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
