@@ -341,8 +341,9 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	private synchronized void loadData() {
-		loadUserData(plugin.getStorageManager().getStorage().getUserData(this));
-		if (Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
+		final Map<String, Object> userData = plugin.getStorageManager().getStorage().getUserData(this);
+		loadUserData(userData);
+		if (Settings.isNewbieProtectionEnabled() && userData.isEmpty() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
 		if (getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON) {
