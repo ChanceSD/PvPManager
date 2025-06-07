@@ -144,6 +144,7 @@ public class PvPlayer extends EcoPlayer {
 				message(Messages.getNewbieProtectionRemoved());
 				newbieTask.cancel();
 			}
+			this.newbieTask = null;
 		} else {
 			message(Messages.getErrorNotNewbie());
 		}
