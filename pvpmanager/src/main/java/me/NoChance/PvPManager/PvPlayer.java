@@ -173,6 +173,8 @@ public class PvPlayer extends EcoPlayer {
 			getPlayer().setGlowing(true);
 		}
 
+		getPlayer().closeInventory();
+
 		if (nametag != null && Settings.useNameTag()) {
 			executor.execute(nametag::setInCombat);
 		}
