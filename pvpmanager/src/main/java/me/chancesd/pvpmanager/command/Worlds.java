@@ -7,6 +7,10 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.player.world.CombatWorld.WorldOptionState;
 import me.chancesd.pvpmanager.setting.Lang;
+import me.chancesd.pvpmanager.setting.Permissions;
+import me.chancesd.sdutils.command.ArgumentType;
+import me.chancesd.sdutils.command.BaseCommand;
+import me.chancesd.sdutils.command.CommandArgument;
 import me.chancesd.sdutils.utils.Log;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
@@ -19,12 +23,37 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class Worlds {
+public class Worlds extends BaseCommand {
 
 	private final PvPManager plugin;
 
 	public Worlds(final PvPManager plugin) {
 		this.plugin = plugin;
+
+		// Configure command
+		this.description("Control panel to manage world PvP")
+				.usage("/pmr worlds [list|set] [world] [option] [value]")
+				.permission(Permissions.COMMAND_MENU.getPermission());
+
+		// Add subcommands
+		subCommand("list", new WorldsListCommand());
+		subCommand("set", new WorldsSetCommand());
+	}
+
+	@Override
+	public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
+		// If no arguments provided, show world list/menu
+		if (args.isEmpty()) {
+			if (sender instanceof final Player player) {
+				createWorldMenu(player);
+			} else {
+				sender.sendMessage("§cConsole must use '/pmr worlds list' to see world information.");
+			}
+			return;
+		}
+
+		// This should never be reached since subcommands handle everything
+		sender.sendMessage(Lang.ERROR_COMMAND.msg());
 	}
 
 	public void createWorldMenu(final Player player) {
@@ -78,8 +107,8 @@ public class Worlds {
 		builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hoverText)));
 		builder.append(ChatColor.DARK_GRAY + Strings.repeat(".", (int) (75 - displayName.length() * 2.86)) + " ");
 
-		final BaseComponent[] onButton = createToggleButton(command, "On", ChatColor.GREEN, state,WorldOptionState.ON);
-		final BaseComponent[] offButton = createToggleButton(command, "Off", ChatColor.RED, state,WorldOptionState.OFF);
+		final BaseComponent[] onButton = createToggleButton(command, "On", ChatColor.GREEN, state, WorldOptionState.ON);
+		final BaseComponent[] offButton = createToggleButton(command, "Off", ChatColor.RED, state, WorldOptionState.OFF);
 
 		builder.append(onButton);
 		builder.append(" ", ComponentBuilder.FormatRetention.NONE);
@@ -93,18 +122,19 @@ public class Worlds {
 		return builder.create();
 	}
 
-	private BaseComponent[] createToggleButton(final String command, final String text, final ChatColor color, final WorldOptionState state, final WorldOptionState selectedState) {
+	private BaseComponent[] createToggleButton(final String command, final String text, final ChatColor color, final WorldOptionState state,
+			final WorldOptionState selectedState) {
 		BaseComponent[] stateComp;
 		String hoverText = "";
 		String finalCommand = "";
 		if (state == selectedState) {
 			stateComp = new ComponentBuilder(text).color(color).create();
 			hoverText = ChatColor.DARK_RED + "Click to unselect this option";
-			finalCommand = command  + " " + WorldOptionState.getOpposite(selectedState);
+			finalCommand = command + " " + WorldOptionState.getOpposite(selectedState) + " --menu";
 		} else {
 			stateComp = new ComponentBuilder(text).color(ChatColor.DARK_GRAY).create();
 			hoverText = ChatColor.DARK_GREEN + "Click to select this option";
-			finalCommand = command  + " " + selectedState;
+			finalCommand = command + " " + selectedState + " --menu";
 		}
 
 		final ComponentBuilder builder = new ComponentBuilder();
@@ -123,30 +153,86 @@ public class Worlds {
 		return new TextComponent(ChatColor.DARK_GRAY + " | ");
 	}
 
-	public final void onCommand(final CommandSender sender, final String[] args) {
-		if (args.length == 5) {
-			final String subcommand = args[1];
-			if (subcommand.equalsIgnoreCase("set")) {
-				final String world = args[2];
-				final CombatWorld combatWorld = plugin.getWorldManager().getWorld(world);
-				if (combatWorld == null) {
-					sender.sendMessage(Lang.PREFIXMSG + ChatColor.RED + "There is no world with that name");
-					return;
-				}
-				final String option = args[3];
-				if (option.equalsIgnoreCase("PvP")) {
-					final boolean pvp = args[4].equalsIgnoreCase("ON");
-					combatWorld.setCombatAllowed(pvp);
-					plugin.getWorldManager().saveWorldData(combatWorld);
-				} else if (option.equalsIgnoreCase("ForcePvP")) {
-					final WorldOptionState state = WorldOptionState.valueOf(args[4]);
-					combatWorld.setForcePVP(state);
-					plugin.getWorldManager().saveWorldData(combatWorld);
-				}
+	// Subcommand for listing worlds
+	private class WorldsListCommand extends BaseCommand {
+
+		public WorldsListCommand() {
+			this.description("List all worlds and their PvP settings")
+					.usage("/pmr worlds list")
+					.permission(Permissions.COMMAND_MENU.getPermission());
+		}
+
+		@Override
+		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
+			sender.sendMessage("§6§l--- World PvP Settings ---");
+			for (final CombatWorld combatWorld : plugin.getWorldManager().getWorlds()) {
+				final String pvpStatus = combatWorld.isCombatAllowed() ? "§a✓ Enabled" : "§c✗ Disabled";
+				final String forceStatus = switch (combatWorld.isPvPForced()) {
+				case ON -> "§a[Force ON]";
+				case OFF -> "§c[Force OFF]";
+				case NONE -> "§7[Normal]";
+				};
+				sender.sendMessage(String.format("§e%s: §fPvP %s %s",
+						combatWorld.getName(), pvpStatus, forceStatus));
 			}
 		}
-		if (sender instanceof final Player player) {
-			createWorldMenu(player);
+	}
+
+	// Subcommand for setting world options
+	private class WorldsSetCommand extends BaseCommand {
+		public WorldsSetCommand() {
+			this.description("Set world PvP options")
+					.usage("/pmr worlds set <world> <option> <value> [--menu]")
+					.permission(Permissions.COMMAND_MENU.getPermission())
+					.argument("world", ArgumentType.WORLD).required().endArgument()
+					.argument("option", ArgumentType.STRING).required().tabComplete("PvP", "ForcePvP").endArgument()
+					.argument("value", ArgumentType.STRING).required().tabComplete("ON", "OFF", "NONE").endArgument()
+					.argument("refreshMenu", ArgumentType.STRING).tabComplete("--menu").endArgument();
+		}
+
+		@Override
+		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
+			if (args.size() < 3) {
+				sender.sendMessage("§cUsage: /pmr worlds set <world> <option> <value>");
+				sender.sendMessage("§cOptions: PvP, ForcePvP");
+				sender.sendMessage("§cValues: ON, OFF (and NONE for ForcePvP)");
+				return;
+			}
+
+			final String worldName = getArgument(args, "world").getAsWorld().getName();
+			final String option = getArgument(args, "option").getValue();
+			final String value = getArgument(args, "value").getValue();
+
+			final CombatWorld combatWorld = plugin.getWorldManager().getWorld(worldName);
+			if (combatWorld == null) {
+				sender.sendMessage(Lang.PREFIX + " §cThere is no world with that name: " + worldName);
+				return;
+			}
+
+			if (option.equalsIgnoreCase("PvP")) {
+				final boolean pvp = value.equalsIgnoreCase("ON");
+				combatWorld.setCombatAllowed(pvp);
+				plugin.getWorldManager().saveWorldData(combatWorld);
+				sender.sendMessage(String.format("%s §aPvP in world '%s' set to: §e%s",
+						Lang.PREFIX, worldName, pvp ? "ENABLED" : "DISABLED"));
+
+			} else if (option.equalsIgnoreCase("ForcePvP")) {
+				try {
+					final WorldOptionState state = WorldOptionState.valueOf(value.toUpperCase());
+					combatWorld.setForcePVP(state);
+					plugin.getWorldManager().saveWorldData(combatWorld);
+					sender.sendMessage(String.format("%s §aForce PvP in world '%s' set to: §e%s",
+							Lang.PREFIX, worldName, state.name()));
+				} catch (final IllegalArgumentException e) {
+					sender.sendMessage("§cInvalid ForcePvP value. Use: ON, OFF, or NONE");
+				}
+			} else {
+				sender.sendMessage("§cInvalid option. Use 'PvP' or 'ForcePvP'");
+			}
+			// Only refresh the worlds menu if --menu flag is provided (indicates it was called from menu)
+			if (sender instanceof final Player player && hasArgument(args, "refreshMenu")) {
+				createWorldMenu(player);
+			}
 		}
 	}
 }

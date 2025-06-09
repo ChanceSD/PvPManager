@@ -10,7 +10,7 @@ import org.bukkit.boss.BarStyle;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.pvpmanager.utils.ChatUtils;
+import me.chancesd.sdutils.utils.ChatUtils;
 import me.chancesd.sdutils.display.BossBarBuilder;
 import me.chancesd.sdutils.display.CountdownData;
 import me.chancesd.sdutils.display.DisplayManager;

@@ -45,13 +45,13 @@ public class UpdateManager {
 		}
 		if (updater.getResult() == UpdateResult.UPDATE_AVAILABLE) {
 			setNewVersion(updater.getLatestName());
-			final String updateMsg = Lang.PREFIXMSG + " §aUpdate available: §c" + getNewVersion() + " §aCurrent version: §c"
+			final String updateMsg = Lang.PREFIX + " §aUpdate available: §c" + getNewVersion() + " §aCurrent version: §c"
 					+ getCurrentversion();
 			Lang.queueAdminMsg(updateMsg);
 			Bukkit.broadcast(updateMsg, Permissions.ADMIN.getPermission());
 			if (Conf.AUTO_UPDATE.asBool() && Utils.isVersionAtLeast(getNewVersion(), "4.0")
 					&& !Utils.isVersionAtLeast(getNewVersion(), "4.1")) {
-				final String v4message = Lang.PREFIXMSG
+				final String v4message = Lang.PREFIX
 						+ " §aSince §b§lv4.0 is a huge update§a, it changes a lot of the config and messages file. "
 						+ "This makes it unable to be automatically updated. "
 						+ "Please §b§lmanually download the update§a from the links below and copy any settings you need from the old config.";
@@ -59,16 +59,16 @@ public class UpdateManager {
 				Bukkit.broadcast(v4message, Permissions.ADMIN.getPermission());
 			} else if (Conf.AUTO_UPDATE.asBool()) {
 				if (updater.downloadFile()) {
-					Lang.queueAdminMsg(Lang.PREFIXMSG + " §aUpdate downloaded, it will be applied automatically on the next server restart");
+					Lang.queueAdminMsg(Lang.PREFIX + " §aUpdate downloaded, it will be applied automatically on the next server restart");
 					Bukkit.broadcast(
-							Lang.PREFIXMSG + " §aUpdate downloaded to update folder, it will be applied automatically on the next restart",
+							Lang.PREFIX + " §aUpdate downloaded to update folder, it will be applied automatically on the next restart",
 							Permissions.ADMIN.getPermission());
 					return;
 				}
 				Log.info("Could not download latest update. Please update manually from one of the links below.");
 			}
 			updateAvailable = true;
-			final String linkMsg = Lang.PREFIXMSG + " §aFollow one of the links to download: \n§7- https://modrinth.com/plugin/pvpmanager"
+			final String linkMsg = Lang.PREFIX + " §aFollow one of the links to download: \n§7- https://modrinth.com/plugin/pvpmanager"
 					+ "\n§7- https://dev.bukkit.org/projects/pvpmanager";
 					Lang.queueAdminMsg(linkMsg);
 			Bukkit.broadcast(linkMsg, Permissions.ADMIN.getPermission());

@@ -7,14 +7,21 @@ import org.jetbrains.annotations.NotNull;
 import com.google.common.base.Preconditions;
 
 public enum Permissions {
-
 	ADMIN("pvpmanager.admin"),
+	COMMAND_ANNOUNCE("pvpmanager.admin"),
 	COMMAND_DEBUG("pvpmanager.debug"),
+	COMMAND_LIST("pvpmanager.list"),
 	COMMAND_MENU("pvpmanager.menu"),
+	COMMAND_NEWBIE("pvpmanager.admin"),
+	COMMAND_OVERRIDE("pvpmanager.override"),
+	COMMAND_PVP_GLOBAL("pvpmanager.admin"),
+	COMMAND_PVP_INFO("pvpmanager.info"),
 	COMMAND_PVP_INFO_OTHERS("pvpmanager.info.others"),
 	COMMAND_PVP_TOGGLE("pvpmanager.pvpstatus.change"),
 	COMMAND_PVP_TOGGLE_OTHERS("pvpmanager.pvpstatus.others"),
+	COMMAND_PVP_ADMIN("pvpmanager.admin"),
 	COMMAND_RELOAD("pvpmanager.reload"),
+	COMMAND_TAG("pvpmanager.admin"),
 	EXEMPT_BLOCK_COMMANDS("pvpmanager.exempt.block.commands"),
 	EXEMPT_COMBAT_LOG("pvpmanager.nocombatlog"),
 	EXEMPT_COMBAT_TAG("pvpmanager.nocombattag"),

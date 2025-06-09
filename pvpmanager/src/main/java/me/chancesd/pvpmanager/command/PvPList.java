@@ -1,50 +1,60 @@
 package me.chancesd.pvpmanager.command;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
-
-import com.google.common.collect.Lists;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.storage.Storage;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
-import me.chancesd.pvpmanager.utils.ChatUtils;
+import me.chancesd.sdutils.command.ArgumentType;
+import me.chancesd.sdutils.command.BaseCommand;
+import me.chancesd.sdutils.command.CommandArgument;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
-public class PvPList implements TabExecutor {
+public class PvPList extends BaseCommand {
 
 	private final PlayerManager ph;
 
-	public PvPList(final PlayerManager ph) {
+	public PvPList(final PluginCommand pluginCommand, final PlayerManager ph) {
+		super(pluginCommand);
 		this.ph = ph;
+		this.description("List the PvP state of all players")
+				.usage("/pvplist [alloffline]").permission(Permissions.COMMAND_LIST.getPermission())
+				.argument("alloffline", ArgumentType.STRING).endArgument();
 	}
 
 	@Override
-	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
+	public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 		final boolean isPlayer = sender instanceof Player;
-		if (args.length == 0) {
+
+		if (args.isEmpty()) {
 			sendList(sender, isPlayer);
-		} else if (args.length == 1 && args[0].equalsIgnoreCase("offline")) {
-			ScheduleUtils.runAsync(() -> {
-				sender.sendMessage(Lang.PVP_LIST_TITLE.msg());
-				sender.sendMessage(ChatColor.DARK_GRAY + "Gathering all offline players with PvP disabled, please wait...");
-				sender.sendMessage(Lang.PVP_LIST_DISABLED.msg());
-				sender.sendMessage(ChatColor.GRAY + "  " + pvpListOffline());
-			});
+		} else {
+			final CommandArgument modeArg = args.get(0);
+			if (modeArg.getValue().equalsIgnoreCase("alloffline")) {
+				ScheduleUtils.runAsync(() -> {
+					sender.sendMessage(Lang.PVP_LIST_TITLE.msg());
+					sender.sendMessage(ChatColor.DARK_GRAY + "Gathering all offline players with PvP disabled, please wait...");
+					sender.sendMessage(Lang.PVP_LIST_DISABLED.msg());
+					sender.sendMessage(ChatColor.GRAY + "  " + pvpListOffline());
+				});
+			} else {
+				sendList(sender, isPlayer);
+			}
 		}
-		return true;
 	}
 
 	private void sendList(final CommandSender sender, final boolean isPlayer) {
 		sender.sendMessage(Lang.PVP_LIST_TITLE.msg());
+		sender.sendMessage(ChatColor.DARK_GRAY + "You can use " + ChatColor.YELLOW + "/pvplist alloffline" + ChatColor.DARK_GRAY
+				+ " to see the PvP status of all offline players.");
 
 		sender.sendMessage(Lang.PVP_LIST_ENABLED.msg());
 		sender.sendMessage(ChatColor.GRAY + "  " + pvpList(sender, true, !isPlayer));
@@ -87,13 +97,4 @@ public class PvPList implements TabExecutor {
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
 	}
-
-	@Override
-	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (args.length == 1) {
-			return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("offline"));
-		}
-		return Collections.emptyList();
-	}
-
 }

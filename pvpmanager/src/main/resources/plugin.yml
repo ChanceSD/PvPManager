@@ -32,10 +32,10 @@ commands:
    pvp:
       description: Toggles PvP status
       aliases: [togglepvp, pvptoggle]
-      usage: "Usage: /<command> [on|off] or /<command> [player] [on|off]"
+      usage: "Usage: /<command> or /<command> [player] [on|off]"
    newbie:
       description: Check time left as a newbie or force disable newbie
-      aliases: [newbietime]
+      aliases: [grace]
       usage: "Usage: /<command> add/checktime/remove [name] or /<command> disable"
    pvpoverride:
       description: Allows the player to attack everyone everywhere
@@ -43,28 +43,27 @@ commands:
       permission: pvpmanager.override
    pvpinfo:
       description: Allows the player to see his or others information
-      aliases: [pvpi]
       permission: pvpmanager.info
       usage: "Usage: /<command> [player]"
    pvpstatus:
-      description: Allows the player to see his or others pvp status
-      aliases: [pvps, pstatus]
+      description: Check PvP status of yourself or another player
+      aliases: [pstatus]
       permission: pvpmanager.pvpstatus.self
       usage: "Usage: /<command> [player]"
    pvplist:
       description: List the PvP state of all online or offline players
-      aliases: [plist, pvpl]
+      aliases: [listpvp]
       permission: pvpmanager.list
    pvptag:
       description: Shows time left until out of combat or tag player
-      aliases: [ct, ctag, combattag]
+      aliases: [combattag]
    untag:
-      description: Untags a player  
+      description: Remove combat tag from a player or all players 
       permission: pvpmanager.admin
       usage: "Usage: /<command> <player>"
    announce:
       description: Broadcasts a message to all players with color support
-      permission: pvpmanager.admin
+      permission: pvpmanager.admin   
    pvpglobal:
       description: Toggle PvP for the whole server
       permission: pvpmanager.admin

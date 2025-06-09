@@ -138,15 +138,8 @@ public class CombatPlayer extends EcoPlayer {
 			this.newbieTask = new NewbieTask(this, 0);
 			message(Lang.NEWBIE_PROTECTION.msgTimeUntil(newbieTask.getFinishTime()));
 		} else if (this.newbie && newbieTask != null) {
-			if (newbieTask.isExpired()) {
-				message(Lang.NEWBIE_PROTECTION_END);
-			} else {
-				message(Lang.NEWBIE_PROTECTION_REMOVED);
-				newbieTask.cancel();
-			}
+			newbieTask.cancel();
 			this.newbieTask = null;
-		} else {
-			message(Lang.ERROR_NOT_NEWBIE);
 		}
 
 		// Fire event if the newbie state actually changed
@@ -227,7 +220,7 @@ public class CombatPlayer extends EcoPlayer {
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this, reason);
 		ScheduleUtils.ensureMainThread(() -> {
 			Bukkit.getPluginManager().callEvent(event);
-			if (Settings.isDisableFly() && getWasAllowedFlight()) {
+			if (Conf.DISABLE_FLY.asBool() && getWasAllowedFlight()) {
 				getPlayer().setAllowFlight(getWasAllowedFlight()); // Sync because there's an async catcher on MC 1.8
 			}
 		}, getPlayer());

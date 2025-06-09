@@ -89,7 +89,7 @@ public abstract class BasePlayer {
 	 * @param message  The message to be sent
 	 * @param duration The duration in milliseconds
 	 */
-	@SuppressWarnings({ "null", "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	public void sendActionBar(final String message, final long duration) {
 		if (System.currentTimeMillis() < actionBarCooldown || message.isEmpty()
 				|| System.currentTimeMillis() - actionBarCooldown < 1000 && message.equals(lastActionBarMessage))
@@ -128,7 +128,7 @@ public abstract class BasePlayer {
 	public void setWasAllowedFlight(final boolean wasAllowedFlight) {
 		this.wasAllowedFlight = wasAllowedFlight;
 	}
-	
+
 	@Override
 	public boolean equals(final Object obj) {
 		if (!(obj instanceof BasePlayer))

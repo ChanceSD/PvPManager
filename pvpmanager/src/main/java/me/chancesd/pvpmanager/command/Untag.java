@@ -1,73 +1,62 @@
 package me.chancesd.pvpmanager.command;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Lang;
-import me.chancesd.pvpmanager.utils.ChatUtils;
-import me.chancesd.pvpmanager.utils.CombatUtils;
+import me.chancesd.sdutils.command.ArgumentType;
+import me.chancesd.sdutils.command.BaseCommand;
+import me.chancesd.sdutils.command.CommandArgument;
 
-public class Untag implements TabExecutor {
+public class Untag extends BaseCommand {
 
-	private final PlayerManager ph;
+	private final PlayerManager playerManager;
 
-	public Untag(final PlayerManager ph) {
-		this.ph = ph;
+	public Untag(final PluginCommand pluginCommand, final PlayerManager playerManager) {
+		super(pluginCommand);
+		this.playerManager = playerManager;
+		this.permission("pvpmanager.admin")
+				.description("Untags a player")
+				.usage("/untag <player|*>").argument("target", ArgumentType.PLAYER_OR_ALL).required().endArgument();
 	}
 
 	@Override
-	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (args.length != 1) {
-			return false;
-		}
+	public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
+		final CommandArgument targetArg = getArgument(args, "target");
 
-		final String target = args[0];
-		if (target.equals("*")) {
+		if (targetArg.isAllPlayers()) {
 			untagAll(sender);
-			return true;
+			return;
 		}
-
-		if (!CombatUtils.isOnlineWithFeedback(sender, target)) {
-			return true;
+		final Player targetPlayer = targetArg.getAsPlayerOrNull();
+		final CombatPlayer combatPlayer = playerManager.get(targetPlayer);
+		if (!combatPlayer.isInCombat()) {
+			sender.sendMessage(Lang.PREFIX + " §cThat player is not in combat");
+			return;
 		}
-
-		final CombatPlayer targetPlayer = ph.get(Bukkit.getPlayer(target));
-		if (!targetPlayer.isInCombat()) {
-			sender.sendMessage(Lang.PREFIXMSG + " §cThat player is not in combat");
-			return true;
-		}
-
-		targetPlayer.untag(UntagReason.COMMAND);
-		sender.sendMessage(Lang.PREFIXMSG + " " + targetPlayer.getName() + " §2has been untagged");
-		return true;
+		combatPlayer.untag(UntagReason.COMMAND);
+		sender.sendMessage(Lang.PREFIX + " " + combatPlayer.getName() + " §2has been untagged");
 	}
 
 	private void untagAll(final CommandSender sender) {
-		for (final CombatPlayer player : ph.getPlayers().values()) {
-			player.untag(UntagReason.COMMAND);
-		}
-		sender.sendMessage(Lang.PREFIXMSG + " §aAll players have been untagged");
-	}
-
-	@Override
-	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (args.length == 1) {
-			final List<String> list = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
-			list.add("*");
-			return ChatUtils.getMatchingEntries(args[0], list);
+		int untaggedCount = 0;
+		for (final CombatPlayer player : playerManager.getPlayers().values()) {
+			if (player.isInCombat()) {
+				player.untag(UntagReason.COMMAND);
+				untaggedCount++;
+			}
 		}
 
-		return Collections.emptyList();
+		if (untaggedCount == 0) {
+			sender.sendMessage(Lang.PREFIX + " §eNo players were in combat");
+		} else {
+			sender.sendMessage(Lang.PREFIX + " §aAll players have been untagged");
+		}
 	}
-
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.chancesd.pvpmanager.player.CombatPlayer;
@@ -50,9 +51,20 @@ public class LogFile {
 
 	public final void logCombatLog(final CombatPlayer player) {
 		final Location loc = player.getPlayer().getLocation();
+		String locationInfo = "";
+		if (loc != null) {
+			final World world = loc.getWorld();
+			if (world != null) {
+				locationInfo = String.format(" | World:%s, X:%.2f, Y:%.2f, Z:%.2f", world.getName(), loc.getX(), loc.getY(), loc.getZ());
+			} else {
+				locationInfo = String.format(" | World:Unknown, X:%.2f, Y:%.2f, Z:%.2f", loc.getX(), loc.getY(), loc.getZ());
+			}
+		} else {
+			locationInfo = " | Location:Unknown";
+		}
+
 		final String data = player.getName() + " tried to escape combat! (" + player.getTagTimeLeft() / 1000 + "s left)"
-				+ " | In combat with: " + player.getEnemies().stream().map(CombatPlayer::getName).toList()
-				+ String.format(" | World:%s, X:%.2f, Y:%.2f, Z:%.2f", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ());
+				+ " | In combat with: " + player.getEnemies().stream().map(CombatPlayer::getName).toList() + locationInfo;
 		write(format.format(new Date()) + data);
 	}
 

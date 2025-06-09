@@ -2,46 +2,45 @@ package me.chancesd.pvpmanager.command;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import com.google.common.base.Preconditions;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.utils.ChatUtils;
-import me.chancesd.pvpmanager.utils.CombatUtils;
+import me.chancesd.sdutils.command.ArgumentType;
+import me.chancesd.sdutils.command.BaseCommand;
+import me.chancesd.sdutils.command.CommandArgument;
+import me.chancesd.sdutils.utils.ChatUtils;
 
-public class PvPInfo implements CommandExecutor {
+public class PvPInfo extends BaseCommand {
+
+	private static final String ARG_PLAYER = "player";
 
 	private final PlayerManager ph;
 
-	public PvPInfo(final PlayerManager ph) {
+	public PvPInfo(final PluginCommand pluginCommand, final PlayerManager ph) {
+		super(pluginCommand);
 		this.ph = ph;
+		this.description("Check your or other player info")
+				.usage("/pvpinfo [player]").permission(Permissions.COMMAND_PVP_INFO.getPermission())
+				.argument(ARG_PLAYER, ArgumentType.PLAYER).requirePermission(Permissions.COMMAND_PVP_INFO_OTHERS.getPermission()).endArgument();
 	}
 
 	@Override
-	public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-		if (args.length == 0 && sender instanceof final Player player) {
+	public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
+		if (args.isEmpty() && sender instanceof final Player player) {
 			sendInfo(sender, ph.get(player));
-			return true;
-		} else if (args.length == 1 && Permissions.COMMAND_PVP_INFO_OTHERS.hasPerm(sender)) {
-			final String name = args[0];
-			Preconditions.checkNotNull(name);
-			if (CombatUtils.isOnline(name)) {
-				sendInfo(sender, ph.get(Bukkit.getPlayer(name)));
-				return true;
-			}
-			sender.sendMessage(Lang.ERROR_PLAYER_NOT_FOUND.msg(name));
-			return true;
+		} else if (hasArgument(args, ARG_PLAYER)) {
+			final CommandArgument targetArg = getArgument(args, ARG_PLAYER);
+			final Player targetPlayer = targetArg.getAsPlayerOrNull();
+			sendInfo(sender, ph.get(targetPlayer));
+		} else {
+			sender.sendMessage("§cThis command requires a target player when used from console.");
 		}
-		return false;
 	}
 
 	private void sendInfo(final CommandSender sender, final CombatPlayer target) {

@@ -1,12 +1,14 @@
 package me.chancesd.pvpmanager.listener;
 
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -83,13 +85,13 @@ public class PlayerListener implements Listener {
 		if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)
 			return;
 
-		final PvPlayer pvPlayer = ph.get(player);
+		final CombatPlayer pvPlayer = playerHandler.get(player);
 		if (!pvPlayer.isInCombat())
 			return;
 
 		final ItemStack item = player.getInventory().getItemInHand();
 		Material fireworkMaterial = null;
-		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+		if (MCVersion.isAtLeast(MCVersion.V1_13)) {
 			fireworkMaterial = Material.FIREWORK_ROCKET;
 		} else {
 			// For versions before 1.13, try to get the legacy material
@@ -104,20 +106,19 @@ public class PlayerListener implements Listener {
 			return;
 
 		// Check if fireworks are completely blocked
-		if (Settings.isBlockFireworks()) {
+		if (Conf.BLOCK_FIREWORKS_IN_COMBAT.asBool()) {
 			event.setCancelled(true);
-			pvPlayer.sendActionBar(Messages.getFireworkBlockedInCombat(), 1000);
+			pvPlayer.sendActionBar(Lang.FIREWORK_BLOCKED_IN_COMBAT.msg(), 1000);
 			return;
 		}
 
 		// Check power limit
-		final int powerLimit = Settings.getFireworkPowerLimit();
+		final int powerLimit = Conf.FIREWORK_POWER_LIMIT.asInt();
 		if (powerLimit >= 0 && item.hasItemMeta()) {
 			final FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 			if (meta != null && meta.getPower() > powerLimit) {
 				event.setCancelled(true);
-				final String message = Messages.getFireworkPowerLimitedInCombat().replace("%power", String.valueOf(meta.getPower()));
-				pvPlayer.sendActionBar(message, 1000);
+				pvPlayer.sendActionBar(Lang.FIREWORK_POWER_LIMITED_IN_COMBAT.msg(meta.getPower()), 1000);
 			}
 		}
 	}
@@ -205,7 +206,7 @@ public class PlayerListener implements Listener {
 				final int expWon = pKiller.giveExp(pvPlayer);
 				event.setDroppedExp(0);
 				event.setNewExp(player.getTotalExperience() - expWon);
-				pvPlayer.message(Lang.EXP_STOLEN.msg(pKiller.getName(), String.valueOf(expWon)));
+				pvPlayer.message(Lang.EXP_STOLEN.msg(pKiller.getName(), expWon));
 			}
 		}
 	}
@@ -294,7 +295,9 @@ public class PlayerListener implements Listener {
 					continue;
 				}
 				final CombatPlayer target = playerHandler.get(p);
-				if ((!target.hasPvPEnabled() || !combatPlayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 25) {
+				final Location playerLocation = p.getLocation();
+				if ((!target.hasPvPEnabled() || !combatPlayer.hasPvPEnabled())
+						&& playerLocation != null && clickedBlock.getLocation().distanceSquared(playerLocation) < 25) {
 					combatPlayer.message(Lang.ATTACK_DENIED_OTHER.msg(target.getName()));
 					event.setCancelled(true);
 					return;

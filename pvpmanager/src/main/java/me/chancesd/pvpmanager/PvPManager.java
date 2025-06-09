@@ -1,8 +1,6 @@
 package me.chancesd.pvpmanager;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.PluginCommand;
 import me.chancesd.pvpmanager.command.Announce;
 import me.chancesd.pvpmanager.command.Newbie;
 import me.chancesd.pvpmanager.command.PM;
@@ -28,6 +26,7 @@ import me.chancesd.pvpmanager.manager.StorageManager;
 import me.chancesd.pvpmanager.manager.UpdateManager;
 import me.chancesd.pvpmanager.manager.WorldManager;
 import me.chancesd.pvpmanager.setting.Lang;
+import me.chancesd.sdutils.command.BaseCommand;
 import me.chancesd.sdutils.plugin.SDPlugin;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -103,27 +102,26 @@ public class PvPManager extends SDPlugin {
 	}
 
 	private void registerCommands() {
-		registerCommand(getCommand("pvp"), new PvP(playerHandler));
-		registerCommand(getCommand("newbie"), new Newbie(playerHandler));
-		registerCommand(getCommand("pvpmanager"), new PM(this));
-		registerCommand(getCommand("pvpoverride"), new PvPOverride(playerHandler));
-		registerCommand(getCommand("pvpinfo"), new PvPInfo(playerHandler));
-		registerCommand(getCommand("pvplist"), new PvPList(playerHandler));
-		registerCommand(getCommand("pvpstatus"), new PvPStatus(playerHandler));
-		registerCommand(getCommand("pvptag"), new Tag(playerHandler));
-		registerCommand(getCommand("untag"), new Untag(playerHandler));
-		registerCommand(getCommand("announce"), new Announce());
-		registerCommand(getCommand("pvpglobal"), new PvPGlobal(playerHandler));
+		BaseCommand.setGlobalDefaults(
+				sender -> Lang.ERROR_PERMISSION.msg(),
+				sender -> Lang.ERROR_NOT_PLAYER.msg(),
+				Lang.ERROR_PLAYER_NOT_FOUND::msg);
+
+		registerCommand("pvp", cmd -> new PvP(cmd, playerHandler));
+		registerCommand("newbie", cmd -> new Newbie(cmd, playerHandler));
+		registerCommand("pvpmanager", cmd -> new PM(cmd, this));
+		registerCommand("pvpoverride", cmd -> new PvPOverride(cmd, playerHandler));
+		registerCommand("pvpinfo", cmd -> new PvPInfo(cmd, playerHandler));
+		registerCommand("pvplist", cmd -> new PvPList(cmd, playerHandler));
+		registerCommand("pvpstatus", cmd -> new PvPStatus(cmd, playerHandler));
+		registerCommand("pvptag", cmd -> new Tag(cmd, playerHandler));
+		registerCommand("untag", cmd -> new Untag(cmd, playerHandler));
+		registerCommand("announce", Announce::new);
+		registerCommand("pvpglobal", cmd -> new PvPGlobal(cmd, playerHandler));
 	}
 
 	private void startMetrics() {
 		new CustomMetrics(this);
-	}
-
-	private void registerCommand(final PluginCommand command, final CommandExecutor executor) {
-		if (command == null)
-			return;
-		command.setExecutor(executor);
 	}
 
 	public EntityListener getEntityListener() {

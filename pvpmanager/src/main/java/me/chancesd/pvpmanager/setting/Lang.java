@@ -25,7 +25,7 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.setting.lang.Replacement;
-import me.chancesd.pvpmanager.utils.ChatUtils;
+import me.chancesd.sdutils.utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.TimeUtil;
 import me.chancesd.sdutils.utils.TimeUtil.TimeLangProvider;
@@ -38,7 +38,7 @@ import me.chancesd.sdutils.utils.Utils;
  */
 public enum Lang implements TimeLangProvider {
 
-	PREFIX("Prefix", Lang.PREFIXMSG),
+	PREFIX("Prefix", "&#992222&lPvP &#FF5555➤"),
 	OTHER_STATUS_ENABLED("Other_Status_Enabled", Replacement.PLAYER),
 	OTHERS_STATUS_DISABLED("Others_Status_Disabled", Replacement.PLAYER),
 	PVPDISABLED("PvP_Disabled"),
@@ -76,6 +76,8 @@ public enum Lang implements TimeLangProvider {
 	TELEPORT_BLOCKED_IN_COMBAT("Teleport_Blocked_InCombat"),
 	TOTEM_BLOCKED_IN_COMBAT("Totem_Blocked_InCombat"),
 	INVENTORY_BLOCKED_IN_COMBAT("Inventory_Blocked_InCombat"),
+	FIREWORK_BLOCKED_IN_COMBAT("Firework_Blocked_InCombat"),
+	FIREWORK_POWER_LIMITED_IN_COMBAT("Firework_Power_Limited_InCombat", Replacement.POWER),
 	PUSHBACK_WARNING("Pushback_Warning"),
 	ERROR_COMMAND("Error_Command"),
 	ERROR_NOT_NEWBIE("Error_Not_Newbie"),
@@ -119,7 +121,6 @@ public enum Lang implements TimeLangProvider {
 	private static PvPManager plugin;
 	private static final Properties LANG_PROPERTIES = new Properties();
 	private static final Queue<String> messageQueue = new LinkedList<>();
-	public static final String PREFIXMSG = "§4§lPvP§8§lManager§c >>";
 	private static File messagesFile;
 	private static Locale locale;
 	private final String messageKey;
@@ -133,7 +134,7 @@ public enum Lang implements TimeLangProvider {
 
 	Lang(final String messageKey, final String defaultMessage) {
 		this(messageKey);
-		this.message = defaultMessage;
+		this.message = ChatUtils.colorize(defaultMessage);
 	}
 
 	Lang(final String messageKey) {
@@ -163,6 +164,17 @@ public enum Lang implements TimeLangProvider {
 		for (int i = 0; i < replacements.length; i++) {
 			final String placeholder = replacements[i].getPlaceholder();
 			finalMessage = finalMessage.replace(placeholder, arguments[i]);
+		}
+		return finalMessage;
+	}
+
+	@NotNull
+	public String msg(final Object... arguments) {
+		String finalMessage = message;
+		for (int i = 0; i < replacements.length && i < arguments.length; i++) {
+			final String placeholder = replacements[i].getPlaceholder();
+			final String replacement = arguments[i] == null ? "null" : arguments[i].toString();
+			finalMessage = finalMessage.replace(placeholder, replacement);
 		}
 		return finalMessage;
 	}
@@ -331,6 +343,11 @@ public enum Lang implements TimeLangProvider {
 		if (messageQueue.contains(message))
 			return;
 		messageQueue.add(message);
+	}
+
+	@Override
+	public String toString() {
+		return message;
 	}
 
 }

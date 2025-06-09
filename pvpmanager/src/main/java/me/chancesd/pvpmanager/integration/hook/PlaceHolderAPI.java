@@ -104,7 +104,6 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public String getAuthor() {
 		return plugin.getDescription().getAuthors().toString();

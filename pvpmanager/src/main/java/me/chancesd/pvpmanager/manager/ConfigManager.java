@@ -65,17 +65,17 @@ public class ConfigManager {
 			Log.warning("Due to an error reading the config, it was reset to default settings");
 			Log.warning("This was likely caused by a mistake while you changed settings, like an extra space or missing quotes");
 			Log.warning("The broken config was renamed to config_with_errors.yml, you can copy your old settings manually if you need them");
-			Lang.queueAdminMsg(Lang.PREFIXMSG + " §cDue to an error reading the config, it was reset to default settings"
+			Lang.queueAdminMsg(Lang.PREFIX + " §cDue to an error reading the config, it was reset to default settings"
 					+ "\n§cThis was likely caused by a mistake while you changed settings, like an extra space or missing quotes");
 			Lang.queueAdminMsg(
-					Lang.PREFIXMSG + " §cThe broken config was renamed to config_with_errors.yml, you can copy your old settings manually if needed");
+					Lang.PREFIX + " §cThe broken config was renamed to config_with_errors.yml, you can copy your old settings manually if needed");
 			return;
 		}
 		if (isMajorVersionUpgrade()) {
 			Utils.renameFile(configFile, "config_v3_old.yml");
 			Log.warning("The config and messages file were restored to default since v4.0 is a major version update");
 			Log.warning("You can find your old files in the plugin folder with _v3_old at the end, like config_v3_old.yml");
-			Lang.queueAdminMsg(Lang.PREFIXMSG + " §aThe config and messages were upgraded and set to default since §6v4.0 is a major version update");
+			Lang.queueAdminMsg(Lang.PREFIX + " §aThe config and messages were upgraded and set to default since §6v4.0 is a major version update");
 			Lang.queueAdminMsg("");
 			Lang.queueAdminMsg("§aYou can find your old files in the plugin folder with §e_v3_old§a at the end, like §econfig_v3_old.yml");
 			return;
@@ -87,8 +87,8 @@ public class ConfigManager {
 				ConfigUpdater.update(plugin, HOOKS_CONFIG_NAME, pluginHooksFile, Lists.newArrayList(), Lists.newArrayList());
 				Log.infoColor("§aConfig file updated from version §c" + oldVersion + " §ato version §c" + currentVersion);
 				Log.warning("Checking the config file and adjusting the new settings is highly recommended");
-				Lang.queueAdminMsg(Lang.PREFIXMSG + " §aConfiguration updated from version §c" + oldVersion + " §ato §c" + currentVersion);
-				Lang.queueAdminMsg(Lang.PREFIXMSG + " §aChecking the config file and adjusting the new settings is highly recommended");
+				Lang.queueAdminMsg(Lang.PREFIX + " §aConfiguration updated from version §c" + oldVersion + " §ato §c" + currentVersion);
+				Lang.queueAdminMsg(Lang.PREFIX + " §aChecking the config file and adjusting the new settings is highly recommended");
 			} catch (final IOException e) {
 				Log.severe("Error reading the config file!", e);
 				Utils.renameFile(configFile, "config_with_errors.yml");

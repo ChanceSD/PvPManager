@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.setting.conf.ConfSection;
-import me.chancesd.pvpmanager.utils.ChatUtils;
+import me.chancesd.sdutils.utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -60,12 +60,14 @@ public enum Conf {
 	BLOCK_CHORUSFRUIT(ConfSection.ACTIONS_BLOCKED, "ChorusFruits", false, Boolean.class),
 	BLOCK_TELEPORT(ConfSection.ACTIONS_BLOCKED, "Teleport", true, Boolean.class),
 	BLOCK_UNSAFE_TELEPORTS(ConfSection.ACTIONS_BLOCKED, "Unsafe Teleports", false, Boolean.class),
-	BLOCK_GLIDE_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Elytra", false, Boolean.class),
 	BLOCK_EAT(ConfSection.ACTIONS_BLOCKED, "Eat", false, Boolean.class),
 	BLOCK_TOTEM_UNDYING(ConfSection.ACTIONS_BLOCKED, "Totem of Undying", false, Boolean.class),
 	BLOCK_PLACE_BLOCKS(ConfSection.ACTIONS_BLOCKED, "Place Blocks", false, Boolean.class),
 	BLOCK_BREAK_BLOCKS(ConfSection.ACTIONS_BLOCKED, "Break Blocks", false, Boolean.class),
 	BLOCK_INVENTORY_OPEN(ConfSection.ACTIONS_BLOCKED, "Open Inventory", false, Boolean.class),
+	BLOCK_GLIDE_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Elytra.Block Gliding", false, Boolean.class),
+	BLOCK_FIREWORKS_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Elytra.Block Fireworks", false, Boolean.class),
+	FIREWORK_POWER_LIMIT(ConfSection.ACTIONS_BLOCKED, "Elytra.Firework Power Limit", -1, Integer.class),
 	BLOCK_INTERACT_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Interact.Enabled", false, Boolean.class),
 	BLOCK_INTERACT_ITEM_LIST(ConfSection.ACTIONS_BLOCKED, "Interact.List", new ArrayList<>(), List.class),
 	BLOCK_COMMANDS(ConfSection.ACTIONS_BLOCKED, "Commands.Enabled", true, Boolean.class),
@@ -169,8 +171,6 @@ public enum Conf {
 	private static YamlConfiguration config;
 	private static PvPManager plugin;
 
-	// This isn't pretty but not sure how else to do it without extra casting overhead/complications
-	// I guess I'm just micro-optimizing here but so be it
 	private boolean boolValue;
 	private String stringValue;
 	private int intValue;

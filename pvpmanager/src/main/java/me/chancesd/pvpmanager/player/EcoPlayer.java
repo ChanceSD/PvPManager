@@ -75,7 +75,7 @@ public abstract class EcoPlayer extends BasePlayer {
 			expWon = exp;
 		}
 		setExp(getPlayer().getTotalExperience() + expWon);
-		message(Lang.EXP_WON.msg(victim.getPlayer().getName(), String.valueOf(expWon)));
+		message(Lang.EXP_WON.msg(victim.getPlayer().getName(), expWon));
 		return expWon;
 	}
 

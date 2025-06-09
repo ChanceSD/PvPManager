@@ -16,7 +16,7 @@
 	<url>https://github.com/ChanceSD/PvPManager</url>
 
 	<properties>
-		<config.version>85</config.version>
+		<config.version>117</config.version>
 		<database.version>1</database.version>
 	</properties>
 

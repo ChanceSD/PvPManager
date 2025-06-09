@@ -219,8 +219,6 @@ public class EntityListenerTest {
 		final Player playerDefender = PT.createPlayer("FailCancelDefender");
 		final CombatPlayer combatDefender = ph.get(defender);
 		final CombatPlayer combatAttacker = ph.get(attacker);
-		combatDefender.setPvP(true);
-		combatAttacker.setPvP(true);
 
 		when(attacker.getAllowFlight()).thenReturn(true);
 		when(defender.getAllowFlight()).thenReturn(true);
@@ -228,7 +226,7 @@ public class EntityListenerTest {
 		when(playerDefender.isFlying()).thenReturn(true);
 		assertEquals(ProtectionType.FAIL, ph.checkProtection(playerAttacker, playerDefender).type());
 		createAttack(false, playerAttacker, playerDefender);
-		assertTrue(combatAttacker).isInCombat());
+		assertTrue(combatAttacker.isInCombat());
 		assertTrue(combatDefender.isInCombat());
 		verify(playerAttacker, times(2)).setFlying(false);
 		verify(playerDefender, times(2)).setFlying(false);

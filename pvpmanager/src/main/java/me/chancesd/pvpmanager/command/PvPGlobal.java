@@ -1,43 +1,37 @@
 package me.chancesd.pvpmanager.command;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
-
-import com.google.common.collect.Lists;
+import org.bukkit.command.PluginCommand;
 
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.manager.PlayerManager;
-import me.chancesd.pvpmanager.utils.ChatUtils;
+import me.chancesd.pvpmanager.setting.Permissions;
+import me.chancesd.sdutils.command.ArgumentType;
+import me.chancesd.sdutils.command.BaseCommand;
+import me.chancesd.sdutils.command.CommandArgument;
 
-public class PvPGlobal implements TabExecutor {
+public class PvPGlobal extends BaseCommand {
 
 	private final PlayerManager playerManager;
 
-	public PvPGlobal(final PlayerManager playerManager) {
+	public PvPGlobal(final PluginCommand pluginCommand, final PlayerManager playerManager) {
+		super(pluginCommand);
 		this.playerManager = playerManager;
+		description("Toggle PvP for the whole server")
+				.usage("/pvpglobal <on|off>")
+				.permission(Permissions.COMMAND_PVP_GLOBAL.getPermission())
+				.argument("status", ArgumentType.STRING).required().tabComplete("ON", "OFF").endArgument();
 	}
 
 	@Override
-	public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (args.length == 1) {
-			final boolean status = args[0].equalsIgnoreCase("on");
-			playerManager.setGlobalStatus(status);
-			sender.sendMessage(Lang.PREFIXMSG + ChatColor.DARK_GREEN + " Server PvP was set to " + status);
-			return true;
-		}
-		return false;
-	}
+	public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
+		final String statusArg = getArgument(args, "status").getValue().toLowerCase();
+		final boolean status = statusArg.equals("on");
 
-	@Override
-	public List<String> onTabComplete(final CommandSender sender, final Command command, final String label, final String[] args) {
-		if (args.length != 1)
-			return Collections.emptyList();
-		return ChatUtils.getMatchingEntries(args[0], Lists.newArrayList("ON", "OFF"));
+		playerManager.setGlobalStatus(status);
+		sender.sendMessage(Lang.PREFIX.msg() + ChatColor.DARK_GREEN + " Server PvP was set to " + status);
 	}
-
 }

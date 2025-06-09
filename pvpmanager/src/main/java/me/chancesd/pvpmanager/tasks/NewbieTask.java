@@ -32,6 +32,7 @@ public class NewbieTask implements Runnable {
 	public final void run() {
 		this.expired = true;
 		player.setNewbie(false);
+		player.message(Lang.NEWBIE_PROTECTION_END);
 	}
 
 	public synchronized void cancel() {

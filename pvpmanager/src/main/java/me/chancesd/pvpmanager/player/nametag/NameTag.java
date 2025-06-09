@@ -2,7 +2,7 @@ package me.chancesd.pvpmanager.player.nametag;
 
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.pvpmanager.utils.ChatUtils;
+import me.chancesd.sdutils.utils.ChatUtils;
 
 public abstract class NameTag {
 
