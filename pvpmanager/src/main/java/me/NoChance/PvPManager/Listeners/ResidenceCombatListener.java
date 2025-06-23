@@ -1,4 +1,4 @@
-package me.noobiedoobie.pvpmanager.listener;
+package me.NoChance.PvPManager.Listeners;
 
 import com.bekvon.bukkit.residence.api.ResidenceEnterLeaveEvent;
 import com.bekvon.bukkit.residence.api.ResidenceEventType;
