@@ -91,17 +91,22 @@ public class PvPManager extends JavaPlugin {
 	}
 
 	private void startListeners() {
-		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
-			registerListener(new EntityListener1_9(playerHandler));
-		}
-		entityListener = new EntityListener(playerHandler);
-		registerListener(entityListener);
-		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.11.2")) {
-			registerListener(new PlayerListener1_11(playerHandler));
-		}
-		registerListener(new PlayerListener(playerHandler));
-		dependencyManager.startListeners(this);
-	}
+    if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
+        registerListener(new EntityListener1_9(playerHandler));
+    }
+    entityListener = new EntityListener(playerHandler);
+    registerListener(entityListener);
+    if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.11.2")) {
+        registerListener(new PlayerListener1_11(playerHandler));
+    }
+    registerListener(new PlayerListener(playerHandler));
+    dependencyManager.startListeners(this);
+
+    // Register Residence listener if Residence plugin is present
+    if (getServer().getPluginManager().isPluginEnabled("Residence")) {
+        registerListener(new me.NoChance.PvPManager.Listeners.ResidenceCombatListener(playerHandler));
+    }
+}
 
 	private void registerCommands() {
 		registerCommand(getCommand("pvp"), new PvP(playerHandler));
