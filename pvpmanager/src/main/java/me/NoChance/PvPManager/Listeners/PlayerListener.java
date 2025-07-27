@@ -33,6 +33,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Dependencies.Hook;
 import me.NoChance.PvPManager.Dependencies.WorldGuardHook;
@@ -97,6 +98,55 @@ public class PlayerListener implements Listener {
 		if (Settings.isBlockEat() && ph.get(event.getPlayer()).isInCombat() && event.getItem().getType().isEdible()) {
 			event.setCancelled(true);
 			ph.get(event.getPlayer()).sendActionBar(Messages.getEatBlockedInCombat(), 1000);
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public final void onFireworkUseWhileGliding(final PlayerInteractEvent event) {
+		final Player player = event.getPlayer();
+		if (!player.isGliding())
+			return;
+
+		final Action action = event.getAction();
+		if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)
+			return;
+
+		final PvPlayer pvPlayer = ph.get(player);
+		if (!pvPlayer.isInCombat())
+			return;
+
+		final ItemStack item = player.getInventory().getItemInHand();
+		Material fireworkMaterial = null;
+		if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.13")) {
+			fireworkMaterial = Material.FIREWORK_ROCKET;
+		} else {
+			// For versions before 1.13, try to get the legacy material
+			try {
+				fireworkMaterial = Material.getMaterial("FIREWORK");
+			} catch (Exception e) {
+				return;
+			}
+		}
+		
+		if (item.getType() != fireworkMaterial)
+			return;
+			
+		// Check if fireworks are completely blocked
+		if (Settings.isBlockFireworks()) {
+			event.setCancelled(true);
+			pvPlayer.sendActionBar(Messages.getFireworkBlockedInCombat(), 1000);
+			return;
+		}
+		
+		// Check power limit
+		final int powerLimit = Settings.getFireworkPowerLimit();
+		if (powerLimit >= 0 && item.hasItemMeta()) {
+			final FireworkMeta meta = (FireworkMeta) item.getItemMeta();
+			if (meta != null && meta.getPower() > powerLimit) {
+				event.setCancelled(true);
+				final String message = Messages.getFireworkPowerLimitedInCombat().replace("%power", String.valueOf(meta.getPower()));
+				pvPlayer.sendActionBar(message, 1000);
+			}
 		}
 	}
 

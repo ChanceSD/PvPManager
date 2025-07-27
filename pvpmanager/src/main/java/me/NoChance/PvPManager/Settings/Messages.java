@@ -94,6 +94,8 @@ public class Messages {
 	private static String blockBreakBlockedInCombat;
 	private static String eatBlockedInCombat;
 	private static String interactBlockedInCombat;
+	private static String fireworkBlockedInCombat;
+	private static String fireworkPowerLimitedInCombat;
 	private static String newbiePickupItemBlocked;
 	private static String enabled;
 	private static String disabled;
@@ -195,6 +197,8 @@ public class Messages {
 		enderpearlBlockedIncombat = getString("EnderPearl_Blocked_InCombat");
 		chorusBlockedInCombat = getString("ChorusFruit_Blocked_InCombat");
 		interactBlockedInCombat = getString("Interact_Blocked_InCombat");
+		fireworkBlockedInCombat = getString("Firework_Blocked_InCombat");
+		fireworkPowerLimitedInCombat = getString("Firework_Power_Limited_InCombat");
 		teleportBlockedInCombat = getString("Teleport_Blocked_InCombat");
 		totemBlockedInCombat = getString("Totem_Blocked_InCombat");
 		inventoryBlockedInCombat = getString("Inventory_Blocked_InCombat");
@@ -540,6 +544,14 @@ public class Messages {
 
 	public static String getInteractBlockedInCombat() {
 		return interactBlockedInCombat;
+	}
+
+	public static String getFireworkBlockedInCombat() {
+		return fireworkBlockedInCombat;
+	}
+
+	public static String getFireworkPowerLimitedInCombat() {
+		return fireworkPowerLimitedInCombat;
 	}
 
 	public static String getTotemBlockedInCombat() {

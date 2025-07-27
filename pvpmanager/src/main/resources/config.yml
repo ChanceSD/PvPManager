@@ -127,7 +127,14 @@ Tagged In Combat:
         - 'BED'
         - 'PRESSURE_PLATE'
         - 'CARPET'
-    Elytra: false
+    Elytra:
+      # Prevents players from gliding with elytra while in combat
+      Block Gliding: false
+      # Prevents players from using firework rockets while gliding in combat
+      Block Fireworks: false
+      # Maximum firework power level allowed while in combat (-1 = no limit, 1-3 = max power)
+      # This setting is ignored if Block Fireworks is true
+      Firework Power Limit: -1
     Eat: false
     Totem of Undying: false
     Open Inventory: false

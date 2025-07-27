@@ -39,6 +39,8 @@ public final class Settings {
 	private static boolean blockBreakBlocksNewbie;
 	private static boolean blockBreakBlocks;
 	private static boolean blockGlideInCombat;
+	private static boolean blockFireworksInCombat;
+	private static int fireworkPowerLimit;
 	private static boolean blockEat;
 	private static boolean blockTotemUndying;
 	private static boolean blockInventoryOpen;
@@ -214,7 +216,9 @@ public final class Settings {
 		blockBreakBlocks = TAGGEDCOMBAT.getBoolean("Block.Break Blocks", false);
 		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact.Enabled", false);
 		blockInteractItemList = TAGGEDCOMBAT.getStringList("Block.Interact.List");
-		blockGlideInCombat = TAGGEDCOMBAT.getBoolean("Block.Elytra", false);
+		blockGlideInCombat = TAGGEDCOMBAT.getBoolean("Block.Elytra.Block Gliding", false);
+		blockFireworksInCombat = TAGGEDCOMBAT.getBoolean("Block.Elytra.Block Fireworks", false);
+		fireworkPowerLimit = TAGGEDCOMBAT.getInt("Block.Elytra.Firework Power Limit", -1);
 		blockEat = TAGGEDCOMBAT.getBoolean("Block.Eat", false);
 		blockTotemUndying = TAGGEDCOMBAT.getBoolean("Block.Totem of Undying", false);
 		blockInventoryOpen = TAGGEDCOMBAT.getBoolean("Block.Open Inventory", true);
@@ -479,6 +483,14 @@ public final class Settings {
 
 	public static boolean isBlockGlide() {
 		return blockGlideInCombat;
+	}
+
+	public static boolean isBlockFireworks() {
+		return blockFireworksInCombat;
+	}
+
+	public static int getFireworkPowerLimit() {
+		return fireworkPowerLimit;
 	}
 
 	public static boolean isBlockEat() {
