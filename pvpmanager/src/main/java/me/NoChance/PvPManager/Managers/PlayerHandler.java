@@ -62,7 +62,7 @@ public class PlayerHandler {
 		final PvPlayer attacker = get(damager);
 		final PvPlayer attacked = get(defender);
 
-		if (attacker.hasOverride() || Settings.borderHoppingVulnerable() && canAttackHooks(attacker, attacked))
+		if (attacker.hasOverride() || Settings.borderHoppingVulnerable() && canAttackVulnerable(attacker, attacked))
 			return CancelResult.FAIL_OVERRIDE;
 		if (!Settings.isGlobalStatus())
 			return CancelResult.GLOBAL_PROTECTION;
@@ -102,10 +102,9 @@ public class PlayerHandler {
 		return cr.canAttack();
 	}
 
-	private boolean canAttackHooks(final PvPlayer attacker, final PvPlayer defender) {
-		if (attacker.isInCombat() && defender.isInCombat())
-			return defender.isEnemyOf(attacker);
-		return false;
+	private final boolean canAttackVulnerable(final PvPlayer attacker, final PvPlayer defender) {
+		return attacker.isInCombat() && defender.isInCombat()
+			&& attacker.isEnemyOf(defender) && defender.isEnemyOf(attacker);
 	}
 
 	/**
