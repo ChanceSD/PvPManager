@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
@@ -37,7 +38,7 @@ import me.chancesd.sdutils.utils.MCVersion;
 @Deprecated
 public class PlayerHandler {
 
-	private final HashMap<UUID, PvPlayer> players = new HashMap<>();
+	private final Map<UUID, PvPlayer> players = new ConcurrentHashMap<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
 	private final PvPManager plugin;
