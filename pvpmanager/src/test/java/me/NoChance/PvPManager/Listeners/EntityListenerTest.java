@@ -25,6 +25,7 @@ import org.mockito.Mockito;
 import me.NoChance.PvPManager.InstanceCreator;
 import me.NoChance.PvPManager.PluginTest;
 import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Managers.PlayerHandler;
 import me.NoChance.PvPManager.Player.CancelResult;
 import me.NoChance.PvPManager.Settings.Messages;
@@ -209,15 +210,19 @@ public class EntityListenerTest {
 
 	@Test
 	final void failCancel() {
-		ph.get(defender).setPvP(true);
-		ph.get(attacker).setPvP(true);
+		final PvPlayer combatDefender = ph.get(defender);
+		final PvPlayer combatAttacker = ph.get(attacker);
+		combatDefender.setPvP(true);
+		combatAttacker.setPvP(true);
 
+		when(attacker.getAllowFlight()).thenReturn(true);
+		when(defender.getAllowFlight()).thenReturn(true);
 		when(attacker.isFlying()).thenReturn(true);
 		when(defender.isFlying()).thenReturn(true);
 		assertEquals(CancelResult.FAIL, ph.tryCancel(attacker, defender));
 		createAttack(false);
-		assertTrue(ph.get(attacker).isInCombat());
-		assertTrue(ph.get(defender).isInCombat());
+		assertTrue(combatAttacker.isInCombat());
+		assertTrue(combatDefender.isInCombat());
 		verify(attacker, times(2)).setFlying(false);
 		verify(defender, times(2)).setFlying(false);
 

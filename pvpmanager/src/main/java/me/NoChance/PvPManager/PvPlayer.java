@@ -129,6 +129,9 @@ public class PvPlayer extends EcoPlayer {
 	}
 
 	public final void disableFly() {
+		if (!isInCombat()) {
+			setWasAllowedFlight(getPlayer().getAllowFlight());
+		}
 		getPlayer().setFlying(false);
 		getPlayer().setAllowFlight(false);
 	}
@@ -200,7 +203,9 @@ public class PvPlayer extends EcoPlayer {
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this);
 		ScheduleUtils.ensureMainThread(() -> {
 			Bukkit.getPluginManager().callEvent(event);
-			getPlayer().setAllowFlight(getWasAllowedFlight()); // Sync because there's an async catcher on MC 1.8
+			if (Settings.isDisableFly() && getWasAllowedFlight()) {
+				getPlayer().setAllowFlight(getWasAllowedFlight()); // Sync because there's an async catcher on MC 1.8
+			}
 		}, getPlayer());
 
 		if (isOnline()) {
