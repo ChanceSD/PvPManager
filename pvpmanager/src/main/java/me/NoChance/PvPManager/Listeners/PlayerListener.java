@@ -373,6 +373,9 @@ public class PlayerListener implements Listener {
 		} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
 			event.setCancelled(true);
 			pvplayer.message(Messages.getTeleportBlockedInCombat());
+		} else if (Settings.isBlockTeleportAlways()) { // Block all teleportations in combat, no matter the cause. Some plugins use PLUGIN or UNKNOWN as the cause.
+			event.setCancelled(true);
+			pvplayer.message(Messages.getTeleportBlockedInCombat());
 		}
 	}
 
