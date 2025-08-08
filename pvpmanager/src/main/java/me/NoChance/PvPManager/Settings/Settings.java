@@ -33,6 +33,7 @@ public final class Settings {
 	private static boolean blockEnderPearl;
 	private static boolean blockChorusFruit;
 	private static boolean blockTeleport;
+	private static boolean blockTeleportAlways;
 	private static boolean blockPickNewbies;
 	private static boolean blockPlaceBlocksNewbie;
 	private static boolean blockPlaceBlocks;
@@ -212,6 +213,7 @@ public final class Settings {
 		blockEnderPearl = TAGGEDCOMBAT.getBoolean("Block.EnderPearls", true);
 		blockChorusFruit = TAGGEDCOMBAT.getBoolean("Block.ChorusFruits", true);
 		blockTeleport = TAGGEDCOMBAT.getBoolean("Block.Teleport", true);
+		blockTeleportAlways = TAGGEDCOMBAT.getBoolean("Block.Teleport Always", false);
 		blockPlaceBlocks = TAGGEDCOMBAT.getBoolean("Block.Place Blocks", false);
 		blockBreakBlocks = TAGGEDCOMBAT.getBoolean("Block.Break Blocks", false);
 		blockInteractInCombat = TAGGEDCOMBAT.getBoolean("Block.Interact.Enabled", false);
@@ -711,6 +713,10 @@ public final class Settings {
 
 	public static boolean isBlockTeleport() {
 		return blockTeleport;
+	}
+
+	public static boolean isBlockTeleportAlways() {
+		return blockTeleportAlways;
 	}
 
 	public static boolean isWorldguardOverrides() {
