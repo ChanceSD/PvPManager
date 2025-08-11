@@ -123,21 +123,21 @@ public class PlayerListener implements Listener {
 			// For versions before 1.13, try to get the legacy material
 			try {
 				fireworkMaterial = Material.getMaterial("FIREWORK");
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				return;
 			}
 		}
-		
+
 		if (item.getType() != fireworkMaterial)
 			return;
-			
+
 		// Check if fireworks are completely blocked
 		if (Settings.isBlockFireworks()) {
 			event.setCancelled(true);
 			pvPlayer.sendActionBar(Messages.getFireworkBlockedInCombat(), 1000);
 			return;
 		}
-		
+
 		// Check power limit
 		final int powerLimit = Settings.getFireworkPowerLimit();
 		if (powerLimit >= 0 && item.hasItemMeta()) {
@@ -363,7 +363,7 @@ public class PlayerListener implements Listener {
 		if (!Settings.isInCombatEnabled() || !pvplayer.isInCombat())
 			return;
 
-		TeleportCause cause = event.getCause();
+		final TeleportCause cause = event.getCause();
 		if (cause.equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
 			event.setCancelled(true);
 			pvplayer.message(Messages.getEnderpearlBlockedIncombat());

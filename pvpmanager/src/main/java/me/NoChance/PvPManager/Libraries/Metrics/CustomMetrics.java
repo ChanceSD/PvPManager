@@ -123,7 +123,7 @@ public class CustomMetrics {
 			map.put("EnderPearls", getMapEntry(Settings.isBlockEnderPearl()));
 			map.put("ChorusFruits", getMapEntry(Settings.isBlockChorusFruit()));
 			map.put("Teleport", getMapEntry(Settings.isBlockTeleport()));
-			map.put("Teleport Always", getMapEntry(Settings.isBlockTeleportAlways()));
+			map.put("Unsafe Teleports", getMapEntry(Settings.isBlockUnsafeTeleports()));
 			map.put("Place Blocks", getMapEntry(Settings.isBlockPlaceBlocks()));
 			map.put("Interact", getMapEntry(Settings.blockInteract()));
 			map.put("Elytra", getMapEntry(Settings.isBlockGlide()));
