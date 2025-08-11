@@ -114,6 +114,7 @@ Tagged In Combat:
     EnderPearls: false
     ChorusFruits: false
     Teleport: true
+    Unsafe Teleports: false
     Place Blocks: false
     Break Blocks: false
     Interact:

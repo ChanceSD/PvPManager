@@ -363,14 +363,19 @@ public class PlayerListener implements Listener {
 		if (!Settings.isInCombatEnabled() || !pvplayer.isInCombat())
 			return;
 
-		if (event.getCause().equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
+		TeleportCause cause = event.getCause();
+		if (cause.equals(TeleportCause.ENDER_PEARL) && Settings.isBlockEnderPearl()) {
 			event.setCancelled(true);
 			pvplayer.message(Messages.getEnderpearlBlockedIncombat());
-		} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && event.getCause() == TeleportCause.CHORUS_FRUIT
+		} else if (CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9") && cause == TeleportCause.CHORUS_FRUIT
 				&& Settings.isBlockChorusFruit()) {
 			event.setCancelled(true);
 			pvplayer.message(Messages.getChorusBlockedInCombat());
-		} else if (event.getCause().equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
+		} else if (cause.equals(TeleportCause.COMMAND) && Settings.isBlockTeleport()) {
+			event.setCancelled(true);
+			pvplayer.message(Messages.getTeleportBlockedInCombat());
+		} else if ((cause.equals(TeleportCause.PLUGIN) || cause.equals(TeleportCause.UNKNOWN))
+				&& Settings.isBlockUnsafeTeleports()) { // Some plugins use PLUGIN or UNKNOWN as the cause.
 			event.setCancelled(true);
 			pvplayer.message(Messages.getTeleportBlockedInCombat());
 		}
