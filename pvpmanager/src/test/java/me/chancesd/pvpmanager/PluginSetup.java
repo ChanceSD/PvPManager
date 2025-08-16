@@ -4,9 +4,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -46,14 +48,20 @@ public class PluginSetup {
 		Mockito.when(world.getName()).thenReturn("");
 		Mockito.when(server.getWorlds()).thenReturn(Arrays.asList(world));
 		Bukkit.setServer(server);
+
 		plugin = Mockito.mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
-		@SuppressWarnings({ "resource", "null" })
+		// Initialize registeredCommands field that doesn't get initialized in mocks
+		final Field registeredCommandsField = plugin.getClass().getSuperclass().getDeclaredField("registeredCommands");
+		registeredCommandsField.setAccessible(true);
+		registeredCommandsField.set(plugin, new HashMap<>());
+		@SuppressWarnings({ "resource" })
 		final PluginDescriptionFile pdf = new PluginDescriptionFile(PluginSetup.class.getClassLoader().getResource("plugin.yml").openStream());
 		final Method method = JavaPlugin.class.getDeclaredMethod("init", PluginLoader.class, Server.class, PluginDescriptionFile.class, File.class, File.class,
 		        ClassLoader.class);
 		method.setAccessible(true);
 		method.invoke(plugin, (Object) null, server, pdf, pluginDirectory, new File(filePath), PluginSetup.class.getClassLoader());
 		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(ArgumentMatchers.anyString());
+
 		plugin.onLoad();
 		plugin.onEnable();
 		setupPlayers();

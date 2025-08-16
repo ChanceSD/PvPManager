@@ -96,10 +96,10 @@ public class SQLStorage implements Storage {
 		if (players.isEmpty())
 			return;
 
-		final List<String> columns = new ArrayList<>(players.iterator().next().getUserData().keySet());
+		final List<String> columns = new ArrayList<>(players.iterator().next().exportPlayerData().toMap().keySet());
 		final Map<Object, Collection<Object>> indexToValues = new HashMap<>();
 		for (final CombatPlayer player : players) {
-			indexToValues.put(player.getUUID().toString(), player.getUserData().values());
+			indexToValues.put(player.getUUID().toString(), player.exportPlayerData().toMap().values());
 		}
 		database.updateValuesBatch(usersTable, UserDataFields.UUID, columns, indexToValues);
 	}

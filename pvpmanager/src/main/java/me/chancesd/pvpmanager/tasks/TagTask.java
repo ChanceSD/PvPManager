@@ -7,6 +7,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import me.chancesd.pvpmanager.event.PlayerTagEvent;
+import me.chancesd.pvpmanager.event.PlayerUntagEvent;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Conf;
@@ -18,7 +23,7 @@ import me.chancesd.sdutils.display.ProgressBar;
 import me.chancesd.sdutils.display.DisplayManager.TimeProgressSource;
 import me.chancesd.sdutils.utils.Utils;
 
-public class TagTask {
+public class TagTask implements Listener {
 
 	private final Map<CombatPlayer, CountdownData> taggedCountdowns = new ConcurrentHashMap<>();
 	private final DisplayManager display;
@@ -41,7 +46,17 @@ public class TagTask {
 		return false;
 	}
 
-	public final void startTracking(final CombatPlayer combatPlayer) {
+	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public final void onPlayerTag(final PlayerTagEvent event) {
+		startTracking(event.getCombatPlayer());
+	}
+
+	@EventHandler
+	public final void onPlayerUntag(final PlayerUntagEvent event) {
+		stopTracking(event.getCombatPlayer());
+	}
+
+	private final void startTracking(final CombatPlayer combatPlayer) {
 		final ProgressBar progressBar = new ProgressBar(Conf.ACTION_BAR_MESSAGE.asString(), Conf.ACTION_BAR_BARS.asInt(), combatPlayer.getTotalTagTime(),
 				Conf.ACTION_BAR_SYMBOL.asString());
 
@@ -80,11 +95,9 @@ public class TagTask {
 		taggedCountdowns.put(combatPlayer, countdownData);
 	}
 
-	public final void stopTracking(final CombatPlayer combatPlayer, final UntagReason reason) {
+	private final void stopTracking(final CombatPlayer combatPlayer) {
 		final CountdownData countdownData = taggedCountdowns.remove(combatPlayer);
-		if (reason != UntagReason.TIME_EXPIRED) {
-			display.cancelCountdown(combatPlayer.getPlayer(), countdownData);
-		}
+		display.cancelCountdown(combatPlayer.getPlayer(), countdownData);
 	}
 
 	public Set<CombatPlayer> getTaggedPlayers() {

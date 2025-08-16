@@ -26,6 +26,7 @@ import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.event.PlayerCombatLogEvent;
 import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.player.PlayerData;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.player.UntagReason;
@@ -51,6 +52,8 @@ public class PlayerManager {
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
 		this.tagTask = new TagTask(plugin.getDisplayManager());
+		Bukkit.getPluginManager().registerEvents(tagTask, plugin);
+		
 		if (Conf.KILL_ABUSE_ENABLED.asBool()) {
 			ScheduleUtils.runAsyncTimer(new CleanKillersTask(this), Conf.KILL_ABUSE_TIME.asInt(), Conf.KILL_ABUSE_TIME.asInt(), TimeUnit.SECONDS);
 		}
@@ -115,10 +118,58 @@ public class PlayerManager {
 	 */
 	@NotNull
 	public final CombatPlayer get(final Player player) {
+		if (player == null) {
+			throw new IllegalArgumentException("Player cannot be null");
+		}
+		
 		final CombatPlayer pvPlayer = players.get(player.getUniqueId());
 		if (pvPlayer != null)
 			return pvPlayer;
-		return addUser(new CombatPlayer(player, plugin, tagTask));
+		
+		final CombatPlayer combatPlayer = new CombatPlayer(player, plugin);
+		addUser(combatPlayer);
+		
+		// Don't load data for NPCs
+		if (!CombatUtils.isNPC(player)) {
+			loadPlayerDataAsync(combatPlayer);
+		}
+		
+		return combatPlayer;
+	}
+	
+	/**
+	 * Loads player data asynchronously and applies it
+	 */
+	private void loadPlayerDataAsync(final CombatPlayer combatPlayer) {
+		ScheduleUtils.runAsync(() -> {
+			try {
+				final Map<String, Object> userData = plugin.getStorageManager().getStorage().getUserData(combatPlayer);
+				final PlayerData data = PlayerData.fromMap(userData);
+				if (combatPlayer.getPlayer().isOnline()) {
+					combatPlayer.applyPlayerData(data);
+					if (userData.isEmpty()) {
+						savePlayer(combatPlayer);
+					}
+				}
+			} catch (Exception e) {
+				Log.severe("Failed to load player data for " + combatPlayer.getName(), e);
+			}
+		});
+	}
+	
+	/**
+	 * Saves player data to storage
+	 */
+	public void savePlayer(final CombatPlayer player) {
+		if (!CombatUtils.isReal(player.getUUID())) {
+			return; // Don't save NPCs or invalid players
+		}
+		
+		try {
+			plugin.getStorageManager().getStorage().saveUserData(player);
+		} catch (Exception e) {
+			Log.severe("Failed to save player data for " + player.getName(), e);
+		}
 	}
 
 	@NotNull
@@ -136,6 +187,9 @@ public class PlayerManager {
 		if (player.isInCombat()) {
 			player.untag(UntagReason.LOGOUT);
 		}
+		
+		savePlayer(player);
+		
 		player.cleanForRemoval();
 		players.remove(player.getUUID());
 	}
@@ -222,7 +276,6 @@ public class PlayerManager {
 	}
 
 	private void addOnlinePlayers() {
-		CombatPlayer.startExecutor();
 		final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 		if (scoreboardManager != null) {
 			scoreboardManager.getMainScoreboard().getTeams().forEach(team -> {
@@ -244,7 +297,6 @@ public class PlayerManager {
 		}
 		removeTeams();
 		Log.infoColor(ChatColor.RED + "Saving player data to storage...");
-		CombatPlayer.shutdownExecutorAndWait();
 	}
 
 	private void removeTeams() {

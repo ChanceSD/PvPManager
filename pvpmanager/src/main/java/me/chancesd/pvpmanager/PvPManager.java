@@ -44,13 +44,12 @@ public class PvPManager extends SDPlugin {
 	private static PvPManager instance;
 
 	@Override
-	public void onLoad() {
+	public void onPluginLoad() {
 		Log.setup(getLogger(), "§7[§4§lPvP§8§lManager§7]");
-		super.onLoad();
 	}
 
 	@Override
-	public void onEnable() {
+	public void onPluginEnable() {
 		final long start = System.currentTimeMillis();
 		instance = this;
 		ScheduleUtils.setupExecutor(this);
@@ -72,7 +71,7 @@ public class PvPManager extends SDPlugin {
 	}
 
 	@Override
-	public void onDisable() {
+	public void onPluginDisable() {
 		playerHandler.handlePluginDisable();
 		storageManager.shutdown();
 		ScheduleUtils.cancelAllTasks();

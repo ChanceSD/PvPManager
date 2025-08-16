@@ -113,6 +113,8 @@ public enum Conf {
 	NEWBIE_BLOCK_PLACE(ConfSection.NEWBIE_PROTECTION, "Block Place Blocks", false, Boolean.class),
 	NEWBIE_BLOCK_BREAK(ConfSection.NEWBIE_PROTECTION, "Block Break Blocks", false, Boolean.class),
 	NEWBIE_GODMODE(ConfSection.NEWBIE_PROTECTION, "Protect From Everything", false, Boolean.class),
+	NEWBIE_BOSS_BAR_ENABLED(ConfSection.NEWBIE_PROTECTION, "Boss Bar." + ConfSection.ENABLED, bool -> MCVersion.isAtLeast(MCVersion.V1_9) && bool, Boolean.class, Boolean.class),
+	NEWBIE_BOSS_BAR_MESSAGE(ConfSection.NEWBIE_PROTECTION, "Boss Bar.Message", ChatUtils::colorize, String.class, String.class),
 	NEWBIE_BLACKLIST(ConfSection.NEWBIE_PROTECTION, "Command Blacklist", Conf::getList, List.class, List.class),
 
 	// Item cooldowns

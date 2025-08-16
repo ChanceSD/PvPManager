@@ -33,7 +33,7 @@ public interface Storage {
 
 	public default void saveUserData(final CombatPlayer player) {
 		final long start = System.nanoTime();
-		saveUserData(player.getUUID(), player.getUserData());
+		saveUserData(player.getUUID(), player.exportPlayerData().toMap());
 		Log.debug("Finished saving " + player + " - " + (System.nanoTime() - start) / 1_000_000D + " ms");
 	}
 

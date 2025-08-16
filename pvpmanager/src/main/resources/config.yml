@@ -188,6 +188,11 @@ Newbie Protection:
   Block Break Blocks: false
   # Protect newbies from all types of damage including PvE, essentially godmode
   Protect From Everything: false
+  # Display a boss bar showing remaining newbie protection time
+  Boss Bar:
+    Enabled: true
+    # Message to show in the boss bar. Use <time> placeholder for remaining time (auto-formatted as min:sec)
+    Message: '&6✦ &a&lNewbie Protection &6✦ &e<time>'
   Command Blacklist:
     - 'examplecommand'
 

@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,15 +13,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.event.PlayerTagEvent;
 import me.chancesd.pvpmanager.event.PlayerTogglePvPEvent;
 import me.chancesd.pvpmanager.event.PlayerUntagEvent;
 import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.hook.TABHook;
-import me.chancesd.pvpmanager.library.rollbar.PMRUncaughExceptionHandler;
 import me.chancesd.pvpmanager.player.nametag.BukkitNameTag;
 import me.chancesd.pvpmanager.player.nametag.NameTag;
 import me.chancesd.pvpmanager.player.nametag.TABNameTag;
@@ -32,9 +27,7 @@ import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.setting.ItemCooldown;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
-import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.tasks.NewbieTask;
-import me.chancesd.pvpmanager.tasks.TagTask;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -44,7 +37,7 @@ public class CombatPlayer extends EcoPlayer {
 
 	private boolean newbie;
 	private boolean tagged;
-	private boolean pvpState;
+	private boolean pvpState = Conf.DEFAULT_PVP.asBool() || CombatUtils.isNPC(getPlayer());
 	private boolean pvpLogged;
 	private boolean override;
 	private boolean loaded;
@@ -60,19 +53,13 @@ public class CombatPlayer extends EcoPlayer {
 	private final Map<String, Integer> victim = new HashMap<>();
 	private final Map<Material, Long> itemCooldown = new EnumMap<>(Material.class);
 	private final PvPManager plugin;
-	private final TagTask tagTask;
 	private NameTag nametag;
-	private static ExecutorService executor;
 
-	public CombatPlayer(@NotNull final Player player, final PvPManager plugin, final TagTask tagTask) {
+	public CombatPlayer(@NotNull final Player player, final PvPManager plugin) {
 		super(player, plugin.getDependencyManager().getEconomy());
-		this.pvpState = Conf.DEFAULT_PVP.asBool() || CombatUtils.isNPC(player);
 		this.plugin = plugin;
-		this.tagTask = tagTask;
 		setCombatWorld(plugin.getWorldManager().getWorld(getPlayer().getWorld()));
-		if (!CombatUtils.isNPC(player)) {
-			executor.execute(this::loadData);
-		}
+		initializeNameTag();
 	}
 
 	public final long getToggleTime() {
@@ -136,7 +123,6 @@ public class CombatPlayer extends EcoPlayer {
 	public final void setNewbie(final boolean newbie) {
 		if (newbie) {
 			this.newbieTask = new NewbieTask(this, 0);
-			message(Lang.NEWBIE_PROTECTION.msgTimeUntil(newbieTask.getFinishTime()));
 		} else if (this.newbie && newbieTask != null) {
 			newbieTask.cancel();
 			this.newbieTask = null;
@@ -171,10 +157,14 @@ public class CombatPlayer extends EcoPlayer {
 		if (tagged)
 			return;
 
+		this.totalTagTime = timeMiliseconds;
+
 		final PlayerTagEvent event = new PlayerTagEvent(getPlayer(), this, isAttacker, other.getPlayer());
 		Bukkit.getPluginManager().callEvent(event);
-		if (event.isCancelled())
+		if (event.isCancelled()) {
+			this.totalTagTime = 0;
 			return;
+		}
 
 		if (Conf.GLOWING_IN_COMBAT.asBool() && MCVersion.isAtLeast(MCVersion.V1_9)) {
 			getPlayer().setGlowing(true);
@@ -183,7 +173,7 @@ public class CombatPlayer extends EcoPlayer {
 		getPlayer().closeInventory();
 
 		if (nametag != null) {
-			executor.execute(nametag::setInCombat);
+			ScheduleUtils.runAsync(nametag::setInCombat);
 		}
 
 		final String message;
@@ -199,8 +189,6 @@ public class CombatPlayer extends EcoPlayer {
 		sendActionBar(actionBarMessage, 400);
 
 		this.tagged = true;
-		this.totalTagTime = timeMiliseconds;
-		tagTask.startTracking(this);
 	}
 
 	/**
@@ -230,7 +218,7 @@ public class CombatPlayer extends EcoPlayer {
 		}
 
 		if (nametag != null) {
-			executor.execute(nametag::restoreNametag);
+			ScheduleUtils.runAsync(nametag::restoreNametag);
 		}
 
 		message(Lang.OUT_OF_COMBAT);
@@ -238,7 +226,6 @@ public class CombatPlayer extends EcoPlayer {
 
 		this.lastHitters.clear();
 		this.tagged = false;
-		tagTask.stopTracking(this, reason);
 	}
 
 	/**
@@ -397,15 +384,7 @@ public class CombatPlayer extends EcoPlayer {
 		this.lastDeathWasPvP = lastDeathWasPvP;
 	}
 
-	private synchronized void loadData() {
-		final Map<String, Object> userData = plugin.getStorageManager().getStorage().getUserData(this);
-		loadUserData(userData);
-		if (Conf.NEWBIE_ENABLED.asBool() && userData.isEmpty() && !getPlayer().hasPlayedBefore()) {
-			setNewbie(true);
-		}
-		if (getCombatWorld().isPvPForced() != CombatWorld.WorldOptionState.NONE) {
-			this.pvpState = getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON;
-		}
+	private void initializeNameTag() {
 		if (Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
 			try {
 				final TABHook tab = (TABHook) plugin.getDependencyManager().getDependency(Hook.TAB);
@@ -423,53 +402,45 @@ public class CombatPlayer extends EcoPlayer {
 						+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
 			}
 		}
-		plugin.getStorageManager().getStorage().saveUserData(this);
+	}
+
+	/**
+	 * Apply loaded player data to this CombatPlayer
+	 */
+	public void applyPlayerData(final PlayerData data) {
+		// Apply loaded data (overriding defaults)
+		this.pvpState = data.isPvpEnabled();
+		this.toggleTime = data.getToggleTime();
+		this.newbie = data.isNewbie();
+
+		// Handle newbie task if needed
+		if (this.newbie && data.getNewbieTimeLeft() > 0) {
+			this.newbieTask = new NewbieTask(this, data.getNewbieTimeLeft());
+		}
+
+		// Apply world-specific PvP rules (these override database values)
+		if (getCombatWorld().isPvPForced() != CombatWorld.WorldOptionState.NONE) {
+			this.pvpState = getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON;
+		}
+
 		this.loaded = true;
-		notifyAll();
+		// Wake up any threads waiting for data to load
+		synchronized (this) {
+			notifyAll();
+		}
 		Log.debug("Finished loading data for " + this + (nametag != null ? " with " + nametag.getClass().getSimpleName() : ""));
 	}
 
-	private void loadUserData(final Map<String, Object> userData) {
-		if (userData.isEmpty()) {
-			return;
-		}
-
-		final Object pvpstate = userData.get(UserDataFields.PVPSTATUS);
-		if (pvpstate instanceof Integer) {
-			this.pvpState = (int) pvpstate != 0;
-		} else if (pvpstate instanceof Boolean) {
-			this.pvpState = (boolean) pvpstate;
-		}
-		final Object pvpToggleTime = userData.get(UserDataFields.TOGGLETIME);
-		if (pvpToggleTime instanceof Integer || pvpToggleTime instanceof Long) {
-			this.toggleTime = ((Number) pvpToggleTime).longValue();
-		}
-		final Object newbieState = userData.get(UserDataFields.NEWBIE);
-		if (newbieState instanceof Integer) {
-			this.newbie = (int) newbieState != 0;
-		} else if (newbieState instanceof Boolean) {
-			this.newbie = (boolean) newbieState;
-		}
-		if (this.newbie) {
-			final Object newbieTime = userData.get(UserDataFields.NEWBIETIMELEFT);
-			if (newbieTime instanceof Integer || newbieTime instanceof Long) {
-				final long timeleft = ((Number) newbieTime).longValue();
-				this.newbieTask = new NewbieTask(this, timeleft);
-			}
-		}
-	}
-
-	public final Map<String, Object> getUserData() {
-		final Map<String, Object> userData = new HashMap<>();
-		userData.put(UserDataFields.UUID, getUUID().toString());
-		userData.put(UserDataFields.NAME, getName());
-		userData.put(UserDataFields.DISPLAYNAME, CombatUtils.truncateString(getPlayer().getDisplayName(), 255));
-		userData.put(UserDataFields.PVPSTATUS, hasPvPEnabled());
-		userData.put(UserDataFields.TOGGLETIME, getToggleTime());
-		userData.put(UserDataFields.NEWBIE, isNewbie());
-		userData.put(UserDataFields.NEWBIETIMELEFT, getNewbieTimeLeft());
-		userData.put(UserDataFields.LASTSEEN, System.currentTimeMillis());
-		return userData;
+	public PlayerData exportPlayerData() {
+		return new PlayerData(
+				getUUID(),
+				getName(),
+				getPlayer().getDisplayName(),
+				hasPvPEnabled(),
+				getToggleTime(),
+				isNewbie(),
+				getNewbieTimeLeft(),
+				System.currentTimeMillis());
 	}
 
 	public final void cleanForRemoval() {
@@ -479,7 +450,6 @@ public class CombatPlayer extends EcoPlayer {
 		if (nametag != null) {
 			nametag.cleanup();
 		}
-		executor.execute(() -> plugin.getStorageManager().getStorage().saveUserData(this));
 	}
 
 	@Nullable
@@ -501,24 +471,6 @@ public class CombatPlayer extends EcoPlayer {
 			Log.severe(e.getMessage(), e);
 			Thread.currentThread().interrupt();
 		}
-	}
-
-	public static void shutdownExecutorAndWait() {
-		try {
-			Log.debug(executor.toString());
-			executor.shutdown();
-			executor.awaitTermination(5, TimeUnit.SECONDS);
-			startExecutor();
-		} catch (final InterruptedException e) {
-			Log.severe(e.getMessage(), e);
-			Thread.currentThread().interrupt();
-		}
-	}
-
-	public static void startExecutor() {
-		executor = ScheduleUtils.newBoundedCachedThreadPool(4, Math.max(4, Runtime.getRuntime().availableProcessors()),
-				new ThreadFactoryBuilder().setNameFormat("PvPManager Player Thread - %d")
-						.setUncaughtExceptionHandler(new PMRUncaughExceptionHandler()).build());
 	}
 
 	/**

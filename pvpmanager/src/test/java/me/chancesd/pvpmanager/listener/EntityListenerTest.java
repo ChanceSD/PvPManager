@@ -10,9 +10,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.mockito.Mockito.mockStatic;
+
+import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,8 +44,10 @@ public class EntityListenerTest {
 	private EntityDamageByEntityEvent mockEvent;
 	private EntityDamageByEntityEvent projMockEvent;
 	private static PlayerManager ph;
-	private static Player attacker;
-	private static Player defender;
+	private Player attacker;
+	private Player defender;
+	private CombatPlayer combatAttacker;
+	private CombatPlayer combatDefender;
 
 	@BeforeAll
 	public static void setupClass() {
@@ -49,13 +55,17 @@ public class EntityListenerTest {
 		ph = plugin.getPlayerManager();
 		damageListener = new EntityListener(ph);
 		Conf.PVP_BLOOD.disable(); // avoid loading Material class while testing
-		attacker = PT.getAttacker();
-		defender = PT.getDefender();
 	}
 
 	@BeforeEach
 	public final void setup() {
 		ph.getPlayers().clear();
+		ph.setGlobalStatus(true);
+		// Create fresh players for each test
+		attacker = PT.createPlayer("Attacker");
+		defender = PT.createPlayer("Defender");
+		combatAttacker = ph.get(attacker);
+		combatDefender = ph.get(defender);
 	}
 
 	private void createAttack(final boolean cancelled, final Player attackerPlayer) {
@@ -190,12 +200,11 @@ public class EntityListenerTest {
 
 	@Test
 	final void cancelNewbie() {
-		final Player newbieAttacker = PT.createPlayer("attacker");
-		ph.get(newbieAttacker).setNewbie(true);
-		createAttack(false, newbieAttacker);
+		combatAttacker.setNewbie(true);
+		createAttack(false);
 
-		assertEquals(ProtectionType.NEWBIE, ph.checkProtection(newbieAttacker, defender).type());
-		verify(newbieAttacker, times(2)).sendMessage(Lang.NEWBIE_PROTECTION_ON_HIT.msg());
+		assertEquals(ProtectionType.NEWBIE, ph.checkProtection(attacker, defender).type());
+		verify(attacker, times(2)).sendMessage(Lang.NEWBIE_PROTECTION_ON_HIT.msg());
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);
@@ -203,7 +212,7 @@ public class EntityListenerTest {
 
 	@Test
 	final void cancelPvPDisabled() {
-		ph.get(defender).setPvP(false);
+		combatDefender.setPvP(false);
 		createAttack(false);
 
 		assertEquals(ProtectionType.PVPDISABLED, ph.checkProtection(attacker, defender).type());
@@ -215,21 +224,16 @@ public class EntityListenerTest {
 
 	@Test
 	final void failCancel() {
-		final Player playerAttacker = PT.createPlayer("FailCancelAtttacker");
-		final Player playerDefender = PT.createPlayer("FailCancelDefender");
-		final CombatPlayer combatDefender = ph.get(defender);
-		final CombatPlayer combatAttacker = ph.get(attacker);
-
 		when(attacker.getAllowFlight()).thenReturn(true);
 		when(defender.getAllowFlight()).thenReturn(true);
-		when(playerAttacker.isFlying()).thenReturn(true);
-		when(playerDefender.isFlying()).thenReturn(true);
-		assertEquals(ProtectionType.FAIL, ph.checkProtection(playerAttacker, playerDefender).type());
-		createAttack(false, playerAttacker, playerDefender);
+		when(attacker.isFlying()).thenReturn(true);
+		when(defender.isFlying()).thenReturn(true);
+		assertEquals(ProtectionType.FAIL, ph.checkProtection(attacker, defender).type());
+		createAttack(false);
 		assertTrue(combatAttacker.isInCombat());
 		assertTrue(combatDefender.isInCombat());
-		verify(playerAttacker, times(2)).setFlying(false);
-		verify(playerDefender, times(2)).setFlying(false);
+		verify(attacker, times(2)).setFlying(false);
+		verify(defender, times(2)).setFlying(false);
 
 		verify(mockEvent, never()).setCancelled(true);
 		verify(projMockEvent, never()).setCancelled(true);
@@ -237,12 +241,12 @@ public class EntityListenerTest {
 
 	@Test
 	final void overrideCancel() {
-		ph.get(attacker).toggleOverride();
+		combatAttacker.toggleOverride();
 		createAttack(false);
 
 		assertEquals(ProtectionType.FAIL_OVERRIDE, ph.checkProtection(attacker, defender).type());
-		assertTrue(ph.get(attacker).isInCombat());
-		assertTrue(ph.get(defender).isInCombat());
+		assertTrue(combatAttacker.isInCombat());
+		assertTrue(combatDefender.isInCombat());
 
 		verify(mockEvent, times(1)).setCancelled(false); // only when creating the attack
 		verify(projMockEvent, times(1)).setCancelled(false); // only when creating the attack
@@ -250,15 +254,163 @@ public class EntityListenerTest {
 
 	@Test
 	final void overrideCancelled() {
-		ph.get(attacker).toggleOverride();
+		combatAttacker.toggleOverride();
 		createAttack(true);
 
 		assertEquals(ProtectionType.FAIL_OVERRIDE, ph.checkProtection(attacker, defender).type());
-		assertTrue(ph.get(attacker).isInCombat());
-		assertTrue(ph.get(defender).isInCombat());
+		assertTrue(combatAttacker.isInCombat());
+		assertTrue(combatDefender.isInCombat());
 
 		verify(mockEvent).setCancelled(false);
 		verify(projMockEvent).setCancelled(false);
+	}
+
+	@Test
+	final void respawnProtection() {
+		combatDefender.setRespawnTime(System.currentTimeMillis());
+		createAttack(false);
+
+		assertEquals(ProtectionType.RESPAWN_PROTECTION, ph.checkProtection(attacker, defender).type());
+		verify(mockEvent).setCancelled(true);
+		verify(projMockEvent).setCancelled(true);
+	}
+
+	@Test
+	final void respawnProtectionAttacker() {
+		combatAttacker.setRespawnTime(System.currentTimeMillis());
+		createAttack(false);
+
+		assertEquals(ProtectionType.RESPAWN_PROTECTION, ph.checkProtection(attacker, defender).type());
+		assertTrue(ph.checkProtection(attacker, defender).isAttacker()); // Attacker has protection
+		verify(mockEvent).setCancelled(true);
+		verify(projMockEvent).setCancelled(true);
+	}
+
+	@Test
+	final void worldProtection() {
+		// Set up world as non-combat world
+		combatDefender.getCombatWorld().setCombatAllowed(false);
+		createAttack(false);
+
+		assertEquals(ProtectionType.WORLD_PROTECTION, ph.checkProtection(attacker, defender).type());
+		verify(mockEvent).setCancelled(true);
+		verify(projMockEvent).setCancelled(true);
+	}
+
+	@Test
+	final void globalProtection() {
+		ph.setGlobalStatus(false);
+		createAttack(false);
+
+		assertEquals(ProtectionType.GLOBAL_PROTECTION, ph.checkProtection(attacker, defender).type());
+		verify(mockEvent).setCancelled(true);
+		verify(projMockEvent).setCancelled(true);
+	}
+
+	@Test
+	final void tntAttack() {
+		final TNTPrimed tnt = mock(TNTPrimed.class);
+		when(tnt.getSource()).thenReturn(attacker);
+
+		final EntityDamageByEntityEvent tntEvent = createDamageEvent(tnt, defender, false);
+		assertTrue(CombatUtils.isPvP(tntEvent));
+
+		callEvent(tntEvent);
+		// Verify combat tagging behavior for TNT attacks
+		assertTrue(combatAttacker.isInCombat());
+		assertTrue(combatDefender.isInCombat());
+	}
+
+	@Test
+	final void areaEffectCloudAttack() {
+		final AreaEffectCloud cloud = mock(AreaEffectCloud.class);
+		when(cloud.getSource()).thenReturn(attacker);
+
+		final EntityDamageByEntityEvent cloudEvent = createDamageEvent(cloud, defender, false);
+		assertTrue(CombatUtils.isPvP(cloudEvent));
+
+		callEvent(cloudEvent);
+		// Verify combat tagging for area effect clouds
+		assertTrue(combatAttacker.isInCombat());
+		assertTrue(combatDefender.isInCombat());
+	}
+
+	@Test
+	final void combatTagging() {
+		assertFalse(combatAttacker.isInCombat());
+		assertFalse(combatDefender.isInCombat());
+
+		createAttack(false);
+
+		assertTrue(combatAttacker.isInCombat());
+		assertTrue(combatDefender.isInCombat());
+	}
+
+	@Test
+	final void excludedWorld() {
+		final String excludedWorldName = "excluded_world";
+		
+		// Configure world as excluded
+		when(defender.getWorld().getName()).thenReturn(excludedWorldName);
+		when(attacker.getWorld().getName()).thenReturn(excludedWorldName);
+		
+		// Mock CombatUtils.isWorldExcluded to return true for our test world
+		try (var mockedCombatUtils = mockStatic(CombatUtils.class)) {
+			mockedCombatUtils.when(() -> CombatUtils.isWorldExcluded(excludedWorldName)).thenReturn(true);
+			
+			mockEvent = createDamageEvent(attacker, defender, false);
+			
+			// Call the listener directly
+			damageListener.onPlayerDamage(mockEvent);
+			
+			// Event should remain unchanged (not cancelled, not processed)
+			assertFalse(mockEvent.isCancelled());
+			// No combat tagging should occur
+			assertFalse(combatAttacker.isInCombat());
+			assertFalse(combatDefender.isInCombat());
+		}
+	}
+
+	@Test
+	final void multipleProtectionTypes() {
+		// Test when player has multiple protections - respawn takes precedence
+		combatDefender.setNewbie(true);
+		combatDefender.setRespawnTime(System.currentTimeMillis());
+		createAttack(false);
+
+		assertEquals(ProtectionType.RESPAWN_PROTECTION, ph.checkProtection(attacker, defender).type());
+		verify(mockEvent).setCancelled(true);
+		verify(projMockEvent).setCancelled(true);
+	}
+
+	@Test
+	final void vulnerableState() {
+		// Test vulnerable state when both players are in combat and enemies
+		combatAttacker.tag(true, combatDefender);
+		combatDefender.tag(false, combatAttacker);
+		
+		// With vulnerable enabled and override, should allow attack
+		combatAttacker.toggleOverride();
+		createAttack(false);
+
+		assertEquals(ProtectionType.FAIL_OVERRIDE, ph.checkProtection(attacker, defender).type());
+		verify(mockEvent, never()).setCancelled(true);
+		verify(projMockEvent, never()).setCancelled(true);
+	}
+
+	@Test
+	final void preCancelledEvent() {
+		// Test that pre-cancelled events are handled appropriately
+		mockEvent = createDamageEvent(attacker, defender, true);
+		projMockEvent = createDamageEvent(mock(Projectile.class), defender, true);
+
+		// Pre-cancelled events should not trigger normal PvP logic
+		callEvent(mockEvent);
+		callEvent(projMockEvent);
+
+		// Verify the events remain cancelled and no additional processing occurs
+		assertTrue(mockEvent.isCancelled());
+		assertTrue(projMockEvent.isCancelled());
 	}
 
 }

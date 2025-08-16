@@ -114,19 +114,19 @@ public final class CombatUtils {
 		if (!(defender instanceof Player))
 			return false;
 		if (attacker instanceof Player)
-			return Conf.SELF_TAG.asBool() || !attacker.equals(defender);
+			return isValidPvPAttack(attacker, defender);
 
 		if (attacker instanceof Projectile || MCVersion.isAtLeast(MCVersion.V1_9) && attacker instanceof AreaEffectCloud) {
 			final ProjectileSource projSource = getSource(attacker);
 			if (projSource instanceof Player) {
 				final Entity shooter = (Entity) projSource;
-				if (Conf.SELF_TAG.asBool() || !shooter.equals(defender))
-					return !Conf.IGNORE_NO_DMG_HITS.asBool() || event.getDamage() != 0;
+				if (isValidPvPAttack(shooter, defender))
+					return shouldCountDamage(event);
 			}
 		}
 		if (attacker instanceof final TNTPrimed tnt) {
 			final Entity tntAttacker = tnt.getSource();
-			if (tntAttacker instanceof Player && (Conf.SELF_TAG.asBool() || !tntAttacker.equals(defender))) {
+			if (tntAttacker instanceof Player && isValidPvPAttack(tntAttacker, defender)) {
 				return true;
 			}
 		}
@@ -135,19 +135,27 @@ public final class CombatUtils {
 			if (!(lastDamageCause instanceof final EntityDamageByEntityEvent damageEvent))
 				return false;
 			final Entity crystalSource = damageEvent.getDamager();
-			if (crystalSource instanceof Player && !crystalSource.equals(defender))
+			if (crystalSource instanceof Player && isValidPvPAttack(crystalSource, defender))
 				return true;
 			if (crystalSource instanceof final Projectile projectile) {
 				final ProjectileSource projSource = projectile.getShooter();
 				if (projSource instanceof Player) {
 					final Entity shooter = (Entity) projSource;
-					if (Conf.SELF_TAG.asBool() || !shooter.equals(defender))
+					if (isValidPvPAttack(shooter, defender))
 						return true;
 				}
 			}
 		}
 
 		return false;
+	}
+
+	private static boolean isValidPvPAttack(final Entity attacker, final Entity defender) {
+		return Conf.SELF_TAG.asBool() || !attacker.equals(defender);
+	}
+
+	private static boolean shouldCountDamage(final EntityDamageByEntityEvent event) {
+		return !Conf.IGNORE_NO_DMG_HITS.asBool() || event.getDamage() != 0;
 	}
 
 	public static final boolean isPvP(final EntityCombustByEntityEvent event) {
@@ -163,7 +171,7 @@ public final class CombatUtils {
 			final ProjectileSource projSource = projectile.getShooter();
 			if (projSource instanceof Player) {
 				final Entity shooter = (Entity) projSource;
-				return !shooter.equals(defender);
+				return isValidPvPAttack(shooter, defender);
 			}
 		}
 
