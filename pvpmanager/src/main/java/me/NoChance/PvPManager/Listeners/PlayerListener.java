@@ -101,7 +101,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler
 	public final void onFireworkUseWhileGliding(final PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
 		if (!player.isGliding())
