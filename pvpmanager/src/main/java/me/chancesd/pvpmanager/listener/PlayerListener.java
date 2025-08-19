@@ -89,6 +89,7 @@ public class PlayerListener implements Listener {
 		if (!pvPlayer.isInCombat())
 			return;
 
+		@SuppressWarnings("deprecation")
 		final ItemStack item = player.getInventory().getItemInHand();
 		Material fireworkMaterial = null;
 		if (MCVersion.isAtLeast(MCVersion.V1_13)) {

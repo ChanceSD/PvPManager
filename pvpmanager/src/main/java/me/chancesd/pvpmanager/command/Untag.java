@@ -10,6 +10,7 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Lang;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.sdutils.command.ArgumentType;
 import me.chancesd.sdutils.command.BaseCommand;
 import me.chancesd.sdutils.command.CommandArgument;
@@ -21,7 +22,7 @@ public class Untag extends BaseCommand {
 	public Untag(final PluginCommand pluginCommand, final PlayerManager playerManager) {
 		super(pluginCommand);
 		this.playerManager = playerManager;
-		this.permission("pvpmanager.admin")
+		this.permission(Permissions.COMMAND_UNTAG.getPermission())
 				.description("Untags a player")
 				.usage("/untag <player|*>").argument("target", ArgumentType.PLAYER_OR_ALL).required().endArgument();
 	}

@@ -22,8 +22,8 @@ public class PvPStatus extends BaseCommand {
 		super(pluginCommand);
 		this.playerManager = playerManager;
 		this.description("Check PvP combat status")
-				.usage("/pvpstatus [player]").permission("pvpmanager.pvpstatus.self")
-				.argument("target", ArgumentType.PLAYER).requirePermission(Permissions.COMMAND_PVP_TOGGLE_OTHERS.getPermission()).endArgument();
+				.usage("/pvpstatus [player]").permission(Permissions.COMMAND_PVPSTATUS.getPermission())
+				.argument("target", ArgumentType.PLAYER).requirePermission(Permissions.COMMAND_PVPSTATUS_OTHERS.getPermission()).endArgument();
 	}
 
 	@Override

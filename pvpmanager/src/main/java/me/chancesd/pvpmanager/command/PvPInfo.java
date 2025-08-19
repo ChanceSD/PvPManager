@@ -26,8 +26,8 @@ public class PvPInfo extends BaseCommand {
 		super(pluginCommand);
 		this.ph = ph;
 		this.description("Check your or other player info")
-				.usage("/pvpinfo [player]").permission(Permissions.COMMAND_PVP_INFO.getPermission())
-				.argument(ARG_PLAYER, ArgumentType.PLAYER).requirePermission(Permissions.COMMAND_PVP_INFO_OTHERS.getPermission()).endArgument();
+				.usage("/pvpinfo [player]").permission(Permissions.COMMAND_PVPINFO.getPermission())
+				.argument(ARG_PLAYER, ArgumentType.PLAYER).requirePermission(Permissions.COMMAND_PVPINFO_OTHERS.getPermission()).endArgument();
 	}
 
 	@Override

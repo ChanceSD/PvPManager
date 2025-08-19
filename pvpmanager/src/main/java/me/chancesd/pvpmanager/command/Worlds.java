@@ -33,7 +33,7 @@ public class Worlds extends BaseCommand {
 		// Configure command
 		this.description("Control panel to manage world PvP")
 				.usage("/pmr worlds [list|set] [world] [option] [value]")
-				.permission(Permissions.COMMAND_MENU.getPermission());
+				.permission(Permissions.ADMIN.getPermission());
 
 		// Add subcommands
 		subCommand("list", new WorldsListCommand());
@@ -159,7 +159,7 @@ public class Worlds extends BaseCommand {
 		public WorldsListCommand() {
 			this.description("List all worlds and their PvP settings")
 					.usage("/pmr worlds list")
-					.permission(Permissions.COMMAND_MENU.getPermission());
+					.permission(Permissions.ADMIN.getPermission());
 		}
 
 		@Override
@@ -183,7 +183,7 @@ public class Worlds extends BaseCommand {
 		public WorldsSetCommand() {
 			this.description("Set world PvP options")
 					.usage("/pmr worlds set <world> <option> <value> [--menu]")
-					.permission(Permissions.COMMAND_MENU.getPermission())
+					.permission(Permissions.ADMIN.getPermission())
 					.argument("world", ArgumentType.WORLD).required().endArgument()
 					.argument("option", ArgumentType.STRING).required().tabComplete("PvP", "ForcePvP").endArgument()
 					.argument("value", ArgumentType.STRING).required().tabComplete("ON", "OFF", "NONE").endArgument()

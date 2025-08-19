@@ -2,8 +2,6 @@ package me.chancesd.pvpmanager.listener;
 
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
-import me.ryanhamshire.GriefPrevention.Messages;
-
 import java.util.Arrays;
 
 import org.bukkit.entity.Player;

@@ -28,11 +28,10 @@ public class Tag extends BaseCommand {
 		this.ph = ph;
 		final String defaultCombatTime = String.valueOf(Conf.TIME_IN_COMBAT.asInt());
 		description("Tag a player in combat")
-				.usage("/tag [player] [time]")
-				.argument(ARG_TARGET, ArgumentType.PLAYER_OR_ALL).requirePermission(Permissions.COMMAND_TAG.getPermission()).endArgument()
+				.usage("/tag [player] [time]").permission(Permissions.COMMAND_TAG.getPermission())
+				.argument(ARG_TARGET, ArgumentType.PLAYER_OR_ALL).endArgument()
 				.argument(ARG_TIME, ArgumentType.INTEGER).defaultValue(defaultCombatTime).dependsOn(ARG_TARGET)
-				.tabComplete(defaultCombatTime, "30", "60", "120")
-				.endArgument();
+				.tabComplete(defaultCombatTime, "30", "60", "120").endArgument();
 	}
 
 	@Override

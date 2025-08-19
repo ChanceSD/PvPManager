@@ -25,9 +25,9 @@ public class PvP extends BaseCommand {
 	public PvP(final PluginCommand pluginCommand, final PlayerManager playerHandler) {
 		super(pluginCommand);
 		this.ph = playerHandler;
-		permission(Permissions.COMMAND_PVP_TOGGLE.getPermission())
-				.argument("player", ArgumentType.PLAYER_OR_ALL).requirePermission(Permissions.COMMAND_PVP_ADMIN.getPermission()).endArgument()
-				.argument("status", ArgumentType.BOOLEAN).requirePermission(Permissions.COMMAND_PVP_ADMIN.getPermission()).tabComplete("ON", "OFF")
+		permission(Permissions.COMMAND_PVP.getPermission())
+				.argument("player", ArgumentType.PLAYER_OR_ALL).requirePermission(Permissions.COMMAND_PVP_OTHERS.getPermission()).endArgument()
+				.argument("status", ArgumentType.BOOLEAN).requirePermission(Permissions.COMMAND_PVP_OTHERS.getPermission()).tabComplete("ON", "OFF")
 				.endArgument()
 				.description("Toggle PvP for yourself or others");
 	}

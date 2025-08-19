@@ -8,27 +8,27 @@ import com.google.common.base.Preconditions;
 
 public enum Permissions {
 	ADMIN("pvpmanager.admin"),
-	COMMAND_ANNOUNCE("pvpmanager.admin"),
-	COMMAND_DEBUG("pvpmanager.debug"),
-	COMMAND_LIST("pvpmanager.list"),
-	COMMAND_MENU("pvpmanager.menu"),
-	COMMAND_NEWBIE("pvpmanager.admin"),
-	COMMAND_OVERRIDE("pvpmanager.override"),
-	COMMAND_PVP_GLOBAL("pvpmanager.admin"),
-	COMMAND_PVP_INFO("pvpmanager.info"),
-	COMMAND_PVP_INFO_OTHERS("pvpmanager.info.others"),
-	COMMAND_PVP_TOGGLE("pvpmanager.pvpstatus.change"),
-	COMMAND_PVP_TOGGLE_OTHERS("pvpmanager.pvpstatus.others"),
-	COMMAND_PVP_ADMIN("pvpmanager.admin"),
-	COMMAND_RELOAD("pvpmanager.reload"),
-	COMMAND_TAG("pvpmanager.admin"),
-	EXEMPT_BLOCK_COMMANDS("pvpmanager.exempt.block.commands"),
-	EXEMPT_COMBAT_LOG("pvpmanager.nocombatlog"),
-	EXEMPT_COMBAT_TAG("pvpmanager.nocombattag"),
-	EXEMPT_DISABLE_ACTIONS("pvpmanager.nodisable"),
-	EXEMPT_KILL_ABUSE("pvpmanager.nokillabuse"),
-	EXEMPT_PROTECTION_RESPAWN("pvpmanager.bypass.protection.respawn"),
-	EXEMPT_PVPTOGGLE_COOLDOWN("pvpmanager.pvpstatus.nocooldown");
+	COMMAND_ANNOUNCE("pvpmanager.command.announce"),
+	COMMAND_NEWBIE("pvpmanager.command.newbie"),
+	COMMAND_OVERRIDE("pvpmanager.command.override"),
+	COMMAND_PVP("pvpmanager.command.pvp"),
+	COMMAND_PVP_OTHERS("pvpmanager.command.pvp.others"),
+	COMMAND_PVPGLOBAL("pvpmanager.command.pvpglobal"),
+	COMMAND_PVPINFO("pvpmanager.command.pvpinfo"),
+	COMMAND_PVPINFO_OTHERS("pvpmanager.command.pvpinfo.others"),
+	COMMAND_PVPLIST("pvpmanager.command.pvplist"),
+	COMMAND_PVPSTATUS("pvpmanager.command.pvpstatus"),
+	COMMAND_PVPSTATUS_OTHERS("pvpmanager.command.pvpstatus.others"),
+	COMMAND_TAG("pvpmanager.command.tag"),
+	COMMAND_UNTAG("pvpmanager.command.untag"),
+	// Exempt permissions
+	EXEMPT_BLOCK_COMMANDS("pvpmanager.exempt.blockcommands"),
+	EXEMPT_COMBAT_LOG("pvpmanager.exempt.combatlog"),
+	EXEMPT_COMBAT_TAG("pvpmanager.exempt.combattag"),
+	EXEMPT_DISABLE_ACTIONS("pvpmanager.exempt.disableactions"),
+	EXEMPT_KILL_ABUSE("pvpmanager.exempt.killabuse"),
+	EXEMPT_PROTECTION_RESPAWN("pvpmanager.exempt.respawnprotection"),
+	EXEMPT_PVPTOGGLE_COOLDOWN("pvpmanager.exempt.pvptogglecooldown");
 
 	@NotNull
 	private final String permission;

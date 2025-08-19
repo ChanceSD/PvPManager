@@ -26,7 +26,7 @@ public class PvPList extends BaseCommand {
 		super(pluginCommand);
 		this.ph = ph;
 		this.description("List the PvP state of all players")
-				.usage("/pvplist [alloffline]").permission(Permissions.COMMAND_LIST.getPermission())
+				.usage("/pvplist [alloffline]").permission(Permissions.COMMAND_PVPLIST.getPermission())
 				.argument("alloffline", ArgumentType.STRING).endArgument();
 	}
 

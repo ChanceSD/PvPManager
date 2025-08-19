@@ -22,7 +22,7 @@ public class PvPGlobal extends BaseCommand {
 		this.playerManager = playerManager;
 		description("Toggle PvP for the whole server")
 				.usage("/pvpglobal <on|off>")
-				.permission(Permissions.COMMAND_PVP_GLOBAL.getPermission())
+				.permission(Permissions.COMMAND_PVPGLOBAL.getPermission())
 				.argument("status", ArgumentType.STRING).required().tabComplete("ON", "OFF").endArgument();
 	}
 

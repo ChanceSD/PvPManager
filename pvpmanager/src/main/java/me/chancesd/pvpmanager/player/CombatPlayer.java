@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.event.NewbieProtectionEvent;
 import me.chancesd.pvpmanager.event.PlayerTagEvent;
 import me.chancesd.pvpmanager.event.PlayerTogglePvPEvent;
 import me.chancesd.pvpmanager.event.PlayerUntagEvent;

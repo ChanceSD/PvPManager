@@ -44,8 +44,7 @@ public class PM extends BaseCommand {
 
 		// Configure main command
 		this.description("PvPManager administration commands")
-				.usage("/pmr [subcommand]")
-				.permission(Permissions.COMMAND_MENU.getPermission()); // Add all subcommands
+				.usage("/pmr [subcommand]").argument("page", ArgumentType.INTEGER).endArgument();
 		subCommand("reload", new ReloadCommand());
 		subCommand("update", new UpdateCommand());
 		subCommand("cleanup", new CleanupCommand());
@@ -54,15 +53,19 @@ public class PM extends BaseCommand {
 		subCommand("locale", new LocaleCommand());
 		subCommand("worlds", new Worlds(plugin));
 		helpCommand = new Help();
-		subCommand("menu", helpCommand);
 	}
 
 	@Override
 	public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
-		// If no arguments provided, show help menu
 		if (args.isEmpty()) {
 			helpCommand.helpMenu(sender, 1);
 			return;
+		} else if (args.size() == 1) {
+			final int page = getArgument(args, "page").getAsInt();
+			if (page > 0) {
+				helpCommand.helpMenu(sender, page);
+				return;
+			}
 		}
 
 		// This should never be reached since subcommands handle everything
@@ -74,7 +77,7 @@ public class PM extends BaseCommand {
 		public ReloadCommand() {
 			this.displayName("Reload").description("Reload PvPManager")
 					.usage("/pmr reload")
-					.permission(Permissions.COMMAND_RELOAD.getPermission());
+					.permission(Permissions.ADMIN.getPermission());
 		}
 
 		@Override
@@ -89,7 +92,7 @@ public class PM extends BaseCommand {
 		public UpdateCommand() {
 			this.displayName("Update").description("Update to latest version")
 					.usage("/pmr update")
-					.permission(Permissions.COMMAND_MENU.getPermission());
+					.permission(Permissions.ADMIN.getPermission());
 		}
 
 		@Override
@@ -115,7 +118,7 @@ public class PM extends BaseCommand {
 		public CleanupCommand() {
 			this.displayName("Cleanup").description("Cleanup inactive users")
 					.usage("/pmr cleanup <days>")
-					.permission(Permissions.COMMAND_MENU.getPermission())
+					.permission(Permissions.ADMIN.getPermission())
 					.argument("days", ArgumentType.INTEGER).required().endArgument();
 		}
 
@@ -164,7 +167,7 @@ public class PM extends BaseCommand {
 		public ConvertCommand() {
 			this.displayName("Convert").description("Convert database (SQLITE/MYSQL)")
 					.usage("/pmr convert <databaseType>")
-					.permission(Permissions.COMMAND_MENU.getPermission())
+					.permission(Permissions.ADMIN.getPermission())
 					.argument("databaseType", ArgumentType.STRING).required().tabComplete("SQLITE", "MYSQL").endArgument();
 		}
 
@@ -211,7 +214,7 @@ public class PM extends BaseCommand {
 		public DebugCommand() {
 			this.displayName("Debug").description("Debug utilities")
 					.usage("/pmr debug <subcommand> [player]")
-					.permission(Permissions.COMMAND_MENU.getPermission())
+					.permission(Permissions.ADMIN.getPermission())
 					.argument("subcommand", ArgumentType.STRING).required().tabComplete("toggle", "damagedebug", "tag", "tagall", "attack", "players")
 					.endArgument()
 					.argument("player", ArgumentType.PLAYER).endArgument();
@@ -325,7 +328,7 @@ public class PM extends BaseCommand {
 		public LocaleCommand() {
 			this.displayName("Locale").description("Change plugin language")
 					.usage("/pmr locale [language]")
-					.permission(Permissions.COMMAND_MENU.getPermission())
+					.permission(Permissions.ADMIN.getPermission())
 					.argument("language", ArgumentType.STRING).tabComplete(Locale.asStringList()).endArgument();
 		}
 
