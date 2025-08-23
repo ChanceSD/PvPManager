@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
+import me.NoChance.PvPManager.Events.NewbieProtectionEvent;
 import me.NoChance.PvPManager.Events.PlayerTagEvent;
 import me.NoChance.PvPManager.Events.PlayerTogglePvPEvent;
 import me.NoChance.PvPManager.Events.PlayerUntagEvent;
@@ -151,6 +152,13 @@ public class PvPlayer extends EcoPlayer {
 		} else {
 			message(Messages.getErrorNotNewbie());
 		}
+
+		// Fire event if the newbie state actually changed
+		if (this.newbie != newbie) {
+			final NewbieProtectionEvent event = new NewbieProtectionEvent(getPlayer(), this, newbie);
+			ScheduleUtils.ensureMainThread(() -> Bukkit.getPluginManager().callEvent(event));
+		}
+
 		this.newbie = newbie;
 	}
 
