@@ -2,6 +2,7 @@ package me.NoChance.PvPManager.Listeners;
 
 import me.chancesd.pvpmanager.world.CombatWorld;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -104,7 +105,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onFireworkUseWhileGliding(final PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
-		if (!player.isGliding())
+		if (MCVersion.isLowerThan(MCVersion.V1_9) || !player.isGliding())
 			return;
 
 		final Action action = event.getAction();
