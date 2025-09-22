@@ -12,6 +12,7 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.sdutils.utils.ChatUtils;
 import me.chancesd.sdutils.command.ArgumentType;
 import me.chancesd.sdutils.command.BaseCommand;
 import me.chancesd.sdutils.command.CommandArgument;
@@ -29,7 +30,7 @@ public class Tag extends BaseCommand {
 		final String defaultCombatTime = String.valueOf(Conf.TIME_IN_COMBAT.asInt());
 		description("Tag a player in combat")
 				.usage("/tag [player] [time]").permission(Permissions.COMMAND_TAG.getPermission())
-				.argument(ARG_TARGET, ArgumentType.PLAYER_OR_ALL).endArgument()
+				.argument(ARG_TARGET, ArgumentType.PLAYER_OR_ALL).requirePermission(Permissions.COMMAND_TAG_OTHERS.getPermission()).endArgument()
 				.argument(ARG_TIME, ArgumentType.INTEGER).defaultValue(defaultCombatTime).dependsOn(ARG_TARGET)
 				.tabComplete(defaultCombatTime, "30", "60", "120").endArgument();
 	}
@@ -39,7 +40,7 @@ public class Tag extends BaseCommand {
 		// Handle player checking their own tag status (no args provided)
 		if (args.isEmpty()) {
 			if (!(sender instanceof final Player player)) {
-				sender.sendMessage("§cThis command can only be used by players when checking your own tag status.");
+				ChatUtils.send(sender, "&#FF5555This command can only be used by players when checking your own tag status.");
 				return;
 			}
 			showPlayerTagStatus(ph.get(player));
@@ -69,16 +70,16 @@ public class Tag extends BaseCommand {
 		for (final CombatPlayer player : ph.getPlayers().values()) {
 			player.tag(true, player, time);
 		}
-		sender.sendMessage(Lang.PREFIX + " §aAll players have been tagged");
+		ChatUtils.send(sender, Lang.PREFIX + " &aAll players have been tagged");
 	}
 
 	private void tagPlayer(final CommandSender sender, final String name, final long time) {
 		final CombatPlayer target = ph.get(Bukkit.getPlayer(name));
 		if (target.isInCombat()) {
-			sender.sendMessage(Lang.PREFIX + " §cThat player is already in combat");
+			ChatUtils.send(sender, Lang.PREFIX + " &#FF5555That player is already in combat");
 			return;
 		}
 		target.tag(true, target, time);
-		sender.sendMessage(Lang.PREFIX + " " + target.getName() + " §2has been tagged for §e" + time / 1000 + " §2seconds");
+		ChatUtils.send(sender, Lang.PREFIX + " &f" + target.getName() + " &ahas been tagged for &f" + time / 1000 + " &aseconds");
 	}
 }

@@ -43,7 +43,7 @@ Combat Tag:
     Action Bar:
       Enabled: true
       # You can use any PlaceholderAPI placeholders here
-      Message: '&b&lCombat &a<barsLeft>&c<barsPassed> &e&l<time> &b[sec] &4%pvpmanager_current_enemy% &8(%pvpmanager_current_enemy_health%&8&c❤&8)'
+      Message: '&8[&c&lCOMBAT&8] &7<time>s &8• &a<barsLeft>&#AA5555<barsPassed> &8• &7%pvpmanager_current_enemy% &8(&c%pvpmanager_current_enemy_health%❤&8)'
       # Symbol to use for the progress bar and how many times to repeat it. Other symbols ▊,▮,▯,|
       Symbol: '▊'
       Total Bars: 20
@@ -192,7 +192,7 @@ Newbie Protection:
   Boss Bar:
     Enabled: true
     # Message to show in the boss bar. Use <time> placeholder for remaining time (auto-formatted as min:sec)
-    Message: '&6✦ &a&lNewbie Protection &6✦ &e<time>'
+    Message: '&6✦ &a&lNewbie Protection &6✦ &e&l<time>'
   Command Blacklist:
     - 'examplecommand'
 

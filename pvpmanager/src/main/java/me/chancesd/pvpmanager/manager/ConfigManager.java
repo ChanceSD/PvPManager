@@ -101,7 +101,12 @@ public class ConfigManager {
 			this.prepareFile(configFile, CONFIG_NAME);
 			Log.infoColor(ChatColor.DARK_GREEN + "New config file created successfully!");
 		}
-		Conf.initialize(plugin, loadYamlConfiguration(configFile));
+		final YamlConfiguration yamlConfig = loadYamlConfiguration(configFile);
+		final Configuration defaults = plugin.getConfig().getDefaults();
+		if (yamlConfig != null && defaults != null) {
+			yamlConfig.setDefaults(defaults);
+		}
+		Conf.initialize(plugin, yamlConfig);
 	}
 
 	private YamlConfiguration loadYamlConfiguration(final File file) {
@@ -139,7 +144,7 @@ public class ConfigManager {
 	}
 
 	public boolean isMajorVersionUpgrade() {
-		return oldVersion <= 83;
+		return oldVersion < 200;
 	}
 
 	public YamlConfiguration getHooksConfig() {

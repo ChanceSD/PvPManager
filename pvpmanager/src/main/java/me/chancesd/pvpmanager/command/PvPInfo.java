@@ -39,35 +39,105 @@ public class PvPInfo extends BaseCommand {
 			final Player targetPlayer = targetArg.getAsPlayerOrNull();
 			sendInfo(sender, ph.get(targetPlayer));
 		} else {
-			sender.sendMessage("§cThis command requires a target player when used from console.");
+			ChatUtils.send(sender, "&#FF5555This command requires a target player when used from console.");
 		}
 	}
 
 	private void sendInfo(final CommandSender sender, final CombatPlayer target) {
-		sender.sendMessage(Lang.getString("PvPInfo_Title"));
-		sender.sendMessage(Lang.getString("PvPInfo_Line1") + target.getName());
-		sender.sendMessage(Lang.getString("PvPInfo_Line2") + target.getUUID());
-		sender.sendMessage(Lang.getString("PvPInfo_Line3") + target.hasPvPEnabled());
-		sender.sendMessage(Lang.getString("PvPInfo_Line4") + target.isInCombat());
-		sender.sendMessage(Lang.getString("PvPInfo_Line5") + target.isNewbie());
-		sender.sendMessage(Lang.getString("PvPInfo_Line6") + target.getPlayer().getWorld().getName());
-		sender.sendMessage(Lang.getString("PvPInfo_Line7") + target.hasOverride());
-		sender.sendMessage(ChatUtils.colorize("&2- Enemies: &7"
-				+ (target.getEnemies().isEmpty() ? "&cNone" : target.getEnemies().stream().map(CombatPlayer::getName).toList())));
-		sender.sendMessage(ChatUtils.colorize("&2- Exempt Perms: &7" + getExemptions(target.getPlayer())));
+		// Header with player name
+		ChatUtils.send(sender, Lang.getString("PvPInfo_Header").replace("{player}", target.getName()));
 
+		// Basic info
+		ChatUtils.send(sender, Lang.getString("PvPInfo_UUID") + target.getUUID());
+
+		// Combat status with time remaining
+		if (target.isInCombat()) {
+			final long timeLeft = target.getTagTimeLeft();
+			ChatUtils.send(sender, Lang.getString("PvPInfo_Combat") + "&#FF5555⚔ In combat &7(" + timeLeft / 1000 + "s left)");
+		} else {
+			ChatUtils.send(sender, Lang.getString("PvPInfo_Combat") + "&a✗ Not in combat");
+		}
+
+		// Combined protection status
+		ChatUtils.send(sender, Lang.getString("PvPInfo_Protection") + getProtectionStatus(target));
+
+		// World and override
+		ChatUtils.send(sender, Lang.getString("PvPInfo_World") + target.getPlayer().getWorld().getName());
+		ChatUtils.send(sender, Lang.getString("PvPInfo_Override") + (target.hasOverride() ? "&a✓ Enabled" : "&c✗ Disabled"));
+
+		// Enemies
+		if (target.getEnemies().isEmpty()) {
+			ChatUtils.send(sender, Lang.getString("PvPInfo_Enemies") + "&cNone");
+		} else {
+			final String enemies = String.join("&7, &f", target.getEnemies().stream().map(CombatPlayer::getName).toList());
+			ChatUtils.send(sender, Lang.getString("PvPInfo_Enemies") + enemies);
+		}
+
+		// Exemptions
+		ChatUtils.send(sender, Lang.getString("PvPInfo_Exemptions") + getExemptions(target.getPlayer()));
+
+		// Footer
+		ChatUtils.send(sender, Lang.getString("PvPInfo_Footer"));
+	}
+
+	private String getProtectionStatus(final CombatPlayer target) {
+		final List<String> protections = new ArrayList<>();
+
+		// Check for all possible protection types individually
+		// This duplicates logic from PlayerManager.checkProtection() but allows showing multiple protections
+
+		// Global protection check
+		if (!ph.getGlobalStatus()) {
+			protections.add("&#CC6666🛡 Global");
+		}
+
+		// World protection check
+		if (!target.getCombatWorld().isCombatAllowed()) {
+			protections.add("&#9966CC🛡 World");
+		}
+
+		// Respawn protection check
+		if (target.hasRespawnProtection()) {
+			protections.add("&#5599FF🛡 Respawn");
+		}
+
+		// Newbie protection (special handling with time)
+		if (target.isNewbie()) {
+			final long timeLeft = target.getNewbieTimeLeft();
+			if (timeLeft > 0) {
+				protections.add("&#FFAA00🛡 Newbie &7(" + timeLeft / 1000 / 60 + "m left)");
+			} else {
+				protections.add("&#FFAA00🛡 Newbie");
+			}
+		}
+
+		// PvP disabled check
+		if (!target.hasPvPEnabled()) {
+			protections.add("&#FF6666🛡 PvP Disabled");
+		}
+
+		// AFK protection check via DependencyManager
+		if (ph.getPlugin().getDependencyManager().shouldProtectAFK(target.getPlayer())) {
+			protections.add("&#66CCAA🛡 AFK");
+		}
+
+		if (protections.isEmpty()) {
+			return "&c✗ None";
+		}
+
+		return String.join("&7, ", protections);
 	}
 
 	public String getExemptions(final Player player) {
 		final List<String> exemptions = new ArrayList<>();
-		checkExemption(exemptions, "&aCombatTag&7", Permissions.EXEMPT_COMBAT_TAG, player);
-		checkExemption(exemptions, "&aCombatLog&7", Permissions.EXEMPT_COMBAT_LOG, player);
-		checkExemption(exemptions, "&aDisableActions&7", Permissions.EXEMPT_DISABLE_ACTIONS, player);
-		checkExemption(exemptions, "&aKillAbuse&7", Permissions.EXEMPT_KILL_ABUSE, player);
-		checkExemption(exemptions, "&aBlockCommands&7", Permissions.EXEMPT_BLOCK_COMMANDS, player);
+		checkExemption(exemptions, "&aCombatTag", Permissions.EXEMPT_COMBAT_TAG, player);
+		checkExemption(exemptions, "&aCombatLog", Permissions.EXEMPT_COMBAT_LOG, player);
+		checkExemption(exemptions, "&aDisableActions", Permissions.EXEMPT_DISABLE_ACTIONS, player);
+		checkExemption(exemptions, "&aKillAbuse", Permissions.EXEMPT_KILL_ABUSE, player);
+		checkExemption(exemptions, "&aBlockCommands", Permissions.EXEMPT_BLOCK_COMMANDS, player);
 		if (exemptions.isEmpty())
 			return "&cNone";
-		return exemptions.toString();
+		return String.join("&7, ", exemptions);
 	}
 
 	private void checkExemption(final List<String> exemptions, final @NotNull String displayName, final Permissions perm, final Player player) {

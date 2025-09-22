@@ -20,6 +20,7 @@ public enum Permissions {
 	COMMAND_PVPSTATUS("pvpmanager.command.pvpstatus"),
 	COMMAND_PVPSTATUS_OTHERS("pvpmanager.command.pvpstatus.others"),
 	COMMAND_TAG("pvpmanager.command.tag"),
+	COMMAND_TAG_OTHERS("pvpmanager.command.tag.others"),
 	COMMAND_UNTAG("pvpmanager.command.untag"),
 	// Exempt permissions
 	EXEMPT_BLOCK_COMMANDS("pvpmanager.exempt.blockcommands"),

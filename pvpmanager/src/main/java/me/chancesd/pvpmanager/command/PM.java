@@ -26,11 +26,11 @@ import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
-import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.command.ArgumentType;
 import me.chancesd.sdutils.command.BaseCommand;
 import me.chancesd.sdutils.command.CommandArgument;
+import me.chancesd.sdutils.utils.ChatUtils;
 
 public class PM extends BaseCommand {
 
@@ -67,9 +67,6 @@ public class PM extends BaseCommand {
 				return;
 			}
 		}
-
-		// This should never be reached since subcommands handle everything
-		sender.sendMessage(Lang.ERROR_COMMAND.msg());
 	}
 
 	// Subcommand classes
@@ -83,7 +80,7 @@ public class PM extends BaseCommand {
 		@Override
 		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 			reload(false);
-			sender.sendMessage(Lang.PREFIX + " §aPvPManager reloaded!");
+			sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " &#55FF55PvPManager reloaded!"));
 		}
 	}
 
@@ -101,15 +98,16 @@ public class PM extends BaseCommand {
 				final UpdateManager updateManager = plugin.getUpdateManager();
 				if (updateManager.hasUpdateAvailable()) {
 					if (updateManager.getUpdater().downloadFile()) {
-						sender.sendMessage("§2Update Successful. On next restart you will have §e" + updateManager.getNewVersion());
+						sender.sendMessage(
+								ChatUtils.colorize("&#00AA00Update Successful. On next restart you will have &#FFFF55" + updateManager.getNewVersion()));
 					} else {
-						sender.sendMessage("§4An error ocurred while updating, please report to the developer");
+						sender.sendMessage(ChatUtils.colorize("&#FF5555An error ocurred while updating, please report to the developer"));
 					}
 				} else {
-					sender.sendMessage("§2You have the latest version: §ePvPManager v" + updateManager.getCurrentversion());
+					sender.sendMessage(ChatUtils.colorize("&#00AA00You have the latest version: &#FFFF55PvPManager v" + updateManager.getCurrentversion()));
 				}
 			} else {
-				sender.sendMessage("§4Update Checking is disabled, enable it in the Config file");
+				sender.sendMessage(ChatUtils.colorize("&#FF5555Update Checking is disabled, enable it in the Config file"));
 			}
 		}
 	}
@@ -119,47 +117,44 @@ public class PM extends BaseCommand {
 			this.displayName("Cleanup").description("Cleanup inactive users")
 					.usage("/pmr cleanup <days>")
 					.permission(Permissions.ADMIN.getPermission())
-					.argument("days", ArgumentType.INTEGER).required().endArgument();
+					.argument("days", ArgumentType.INTEGER).endArgument();
 		}
 
 		@Override
 		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 			if (args.isEmpty()) {
-				sender.sendMessage("§4§lUsage: §f/pmr cleanup <days>");
-				sender.sendMessage("§cThis command will remove users from the database that haven't logged in during the last x days.");
-				sender.sendMessage(
-						"§cThis means that if they come back their remaining newbie protection(if they had any) will be gone and their previous PvP state will also be default.");
+				sender.sendMessage(ChatUtils.colorize("&#FF5555Usage: &#FFFFFF/pmr cleanup <days>"));
+				sender.sendMessage(ChatUtils
+						.colorize("&#999999This command will remove users from the database that haven't logged in during the last &#FFFF55x &#999999days."));
+				sender.sendMessage(ChatUtils.colorize(
+						"&cThis means that if they come back their remaining newbie protection(if they had any) and their previous PvP state will be default."));
 				return;
 			}
 
-			try {
-				final int daysValue = Integer.parseInt(args.get(0).getValue());
-				final long days = TimeUnit.DAYS.toMillis(daysValue);
-				sender.sendMessage("§2Cleaning up users that haven't logged in the past " + daysValue + " days");
-				sender.sendMessage("§2This might take a while depending on the size of your database");
+			final int daysValue = getArgument(args, "days").getAsInt();
+			final long days = TimeUnit.DAYS.toMillis(daysValue);
+			sender.sendMessage(ChatUtils.colorize("&#999999Cleaning users that haven't logged in the past &#FFFF55" + daysValue + " &#999999days"));
+			sender.sendMessage(ChatUtils.colorize("&#999999This might take a while depending on the size of your database"));
 
-				new BukkitRunnable() {
-					@Override
-					public void run() {
-						final ArrayList<UUID> ids = new ArrayList<>();
-						for (final Map<String, Object> userData : plugin.getStorageManager().getStorage().getAllUserData()) {
-							final String id = (String) userData.get(UserDataFields.UUID);
-							final UUID uuid = UUID.fromString(id);
-							final OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-							if (p.isOnline()) {
-								continue;
-							}
-							if (System.currentTimeMillis() - p.getLastPlayed() > days) {
-								ids.add(uuid);
-							}
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					final ArrayList<UUID> ids = new ArrayList<>();
+					for (final Map<String, Object> userData : plugin.getStorageManager().getStorage().getAllUserData()) {
+						final String id = (String) userData.get(UserDataFields.UUID);
+						final UUID uuid = UUID.fromString(id);
+						final OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
+						if (p.isOnline()) {
+							continue;
 						}
-						ids.forEach(plugin.getStorageManager().getStorage()::removeUserData);
-						sender.sendMessage(Lang.PREFIX + " §2Finished. Cleaned up " + ids.size() + " inactive users.");
+						if (System.currentTimeMillis() - p.getLastPlayed() > days) {
+							ids.add(uuid);
+						}
 					}
-				}.runTaskAsynchronously(plugin);
-			} catch (final NumberFormatException e) {
-				sender.sendMessage("§cError, days must be a number!");
-			}
+					ids.forEach(plugin.getStorageManager().getStorage()::removeUserData);
+					sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " &#55FF55Finished. Cleaned up " + ids.size() + " inactive users."));
+				}
+			}.runTaskAsynchronously(plugin);
 		}
 	}
 
@@ -168,14 +163,15 @@ public class PM extends BaseCommand {
 			this.displayName("Convert").description("Convert database (SQLITE/MYSQL)")
 					.usage("/pmr convert <databaseType>")
 					.permission(Permissions.ADMIN.getPermission())
-					.argument("databaseType", ArgumentType.STRING).required().tabComplete("SQLITE", "MYSQL").endArgument();
+					.argument("databaseType", ArgumentType.STRING).tabComplete("SQLITE", "MYSQL").endArgument();
 		}
 
 		@Override
 		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 			if (args.isEmpty()) {
-				sender.sendMessage(Lang.PREFIX + " §4§lUsage: §e/pmr convert <databaseType>");
-				sender.sendMessage(Lang.PREFIX + " §cCurrently the database types are: " + Arrays.asList(DatabaseType.values()));
+				sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " &#FF5555&lUsage: &e/pmr convert <databaseType>"));
+				sender.sendMessage(
+						ChatUtils.colorize(Lang.PREFIX + " &cCurrently the database types are: &7" + Arrays.asList(DatabaseType.values())));
 				return;
 			}
 
@@ -184,28 +180,30 @@ public class PM extends BaseCommand {
 			try {
 				databaseType = DatabaseType.valueOf(dbType.toUpperCase());
 			} catch (final IllegalArgumentException e) {
-				sender.sendMessage(Lang.PREFIX + " §cInvalid database type. Available types are: " + Arrays.asList(DatabaseType.values()));
+				sender.sendMessage(
+						ChatUtils.colorize(Lang.PREFIX + " &#FF5555Invalid database type. Available types are: &7" + Arrays.asList(DatabaseType.values())));
 				return;
 			}
 
 			final DatabaseType currentType = plugin.getStorageManager().getStorage().getDatabaseType();
 			if (currentType == databaseType) {
-				sender.sendMessage(Lang.PREFIX + " §cCan't convert. You are already running on " + databaseType);
+				sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " &#FF5555Can't convert. You are already running on " + databaseType));
 				return;
 			}
 
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-				sender.sendMessage("§2Starting database conversion from " + currentType + " to " + databaseType);
+				sender.sendMessage(ChatUtils.colorize("&#00AA00Starting database conversion from " + currentType + " to " + databaseType));
 				try {
 					plugin.getStorageManager().convertFromCurrent(databaseType, sender, System.currentTimeMillis());
 				} catch (final Exception e) {
-					sender.sendMessage(Lang.PREFIX + " §cError! Make sure you entered the correct MySQL details in the config");
+					sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " &#FF5555Error! Make sure you entered the correct MySQL details in the config"));
 					return;
 				}
 				plugin.getConfig().set("Database.Type", databaseType.toString());
 				plugin.saveConfig();
 				reload(false);
-				sender.sendMessage(Lang.PREFIX + " §aYou are now running on " + plugin.getStorageManager().getStorage().getDatabaseType());
+				sender.sendMessage(
+						ChatUtils.colorize(Lang.PREFIX + " &#00AA00You are now running on " + plugin.getStorageManager().getStorage().getDatabaseType()));
 			});
 		}
 	}
@@ -215,7 +213,7 @@ public class PM extends BaseCommand {
 			this.displayName("Debug").description("Debug utilities")
 					.usage("/pmr debug <subcommand> [player]")
 					.permission(Permissions.ADMIN.getPermission())
-					.argument("subcommand", ArgumentType.STRING).required().tabComplete("toggle", "damagedebug", "tag", "tagall", "attack", "players")
+					.argument("subcommand", ArgumentType.STRING).tabComplete("toggle", "damagedebug", "attack", "players")
 					.endArgument()
 					.argument("player", ArgumentType.PLAYER).endArgument();
 		}
@@ -224,13 +222,19 @@ public class PM extends BaseCommand {
 		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 			// Check if we have enough arguments before proceeding
 			if (args.isEmpty()) {
-				sender.sendMessage("§4§lUsage: §f/pmr debug <subcommand>");
-				sender.sendMessage("§cAvailable subcommands: toggle, damagedebug, attack, players");
+				sender.sendMessage(ChatUtils.colorize("&#FF5555&lUsage: &#FFFFFF/pmr debug <subcommand>"));
+				sender.sendMessage(ChatUtils.colorize("&cAvailable subcommands: &7toggle, damagedebug, attack, players"));
 				return;
 			}
 
-			final String subcommand = args.get(0).getValue().toLowerCase();
-			final CombatPlayer targetPlayer = getTargetPlayer(sender, args);
+			final String subcommand = getArgument(args, "subcommand").getValue().toLowerCase();
+			final CommandArgument argument = getArgument(args, "player");
+			CombatPlayer targetPlayer = null;
+			if (argument != null) {
+				targetPlayer = plugin.getPlayerManager().get(argument.getAsPlayerOrNull());
+			} else if (sender instanceof final Player commandSender) {
+				targetPlayer = plugin.getPlayerManager().get(commandSender);
+			}
 			switch (subcommand) {
 			case "toggle":
 				toggleDebugMode(sender);
@@ -241,58 +245,30 @@ public class PM extends BaseCommand {
 			case "players":
 				listPlayers(sender);
 				break;
-			case "tag":
-				if (targetPlayer != null) {
-					targetPlayer.tag(true, targetPlayer);
-					sender.sendMessage("Tagged player: " + targetPlayer.getName());
-				} else {
-					sender.sendMessage("§cPlayer not specified or not online.");
-				}
-				break;
-			case "tagall":
-				for (final CombatPlayer player : plugin.getPlayerManager().getPlayers().values()) {
-					player.tag(true, player);
-				}
-				sender.sendMessage("Tagged all players");
-				break;
 			case "attack":
 				if (targetPlayer != null) {
 					attackPlayer(sender, targetPlayer);
 				} else {
-					sender.sendMessage("§cPlayer not specified or not online.");
+					ChatUtils.send(sender, "&#FF5555Player not specified");
 				}
 				break;
 			default:
-				sender.sendMessage("§cInvalid subcommand. Use /pmr debug <toggle|damagedebug|tag|tagall|players|attack> [player]");
+				ChatUtils.send(sender, "&#FF5555Invalid subcommand. Use &7/pmr debug <toggle|damagedebug|players|attack> [player]");
 				break;
 			}
-		}
-
-		private CombatPlayer getTargetPlayer(final CommandSender sender, final List<CommandArgument> args) {
-			if (args.size() >= 2) {
-				final String playerName = args.get(1).getValue();
-				if (!CombatUtils.isOnline(playerName)) {
-					sender.sendMessage("§4Player not online!");
-					return null;
-				}
-				return plugin.getPlayerManager().get(Bukkit.getPlayer(playerName));
-			} else if (sender instanceof final Player player) {
-				return plugin.getPlayerManager().get(player);
-			}
-			return null;
 		}
 
 		private void toggleDebugMode(final CommandSender sender) {
 			Conf.setDebug(!Conf.DEBUG_MODE.asBool());
 			Log.info("Debug mode: " + Conf.DEBUG_MODE.asBool());
-			sender.sendMessage("Debug mode: " + Conf.DEBUG_MODE.asBool());
+			ChatUtils.send(sender, "Debug mode: " + Conf.DEBUG_MODE.asBool());
 		}
 
 		private void toggleDamageDebug(final CommandSender sender) {
 			if (damageListener == null) {
-				sender.sendMessage("§4Warning §f- Some plugin features are disabled while in this mode");
-				sender.sendMessage("Enabling a damage listener for debugging, check the console for details on every entity hit");
-				sender.sendMessage("§cRun this command again §fafter you are done to disable debugging or reload the plugin");
+				ChatUtils.send(sender, "&#AA0000Warning &#FFFFFF- Some plugin features are disabled while in this mode");
+				ChatUtils.send(sender, "Enabling a damage listener for debugging, check the console for details on every entity hit");
+				ChatUtils.send(sender, "&#FF5555Run this command again &#FFFFFFafter you are done to disable debugging or reload the plugin");
 				Conf.setDebug(true);
 				damageListener = new DebugEntityListener(plugin.getPlayerManager());
 				HandlerList.unregisterAll(plugin.getEntityListener());
@@ -309,18 +285,20 @@ public class PM extends BaseCommand {
 		private void listPlayers(final CommandSender sender) {
 			for (final CombatPlayer player : plugin.getPlayerManager().getPlayers().values()) {
 				if (!Bukkit.getOnlinePlayers().contains(player.getPlayer())) {
-					sender.sendMessage("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
+					ChatUtils.send(sender,
+							"UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
 					Log.info("UUID: " + player.getUUID() + " - Name: " + player.getName() + " - Metadata: " + player.getPlayer().hasMetadata("NPC"));
 				}
 			}
-			sender.sendMessage("§aPlayers: §c" + plugin.getPlayerManager().getPlayers().size() + "§a/" + Bukkit.getOnlinePlayers().size());
+			ChatUtils.send(sender,
+					"&aPlayers: &c" + plugin.getPlayerManager().getPlayers().size() + "&a/" + Bukkit.getOnlinePlayers().size());
 			Log.info("Players: " + plugin.getPlayerManager().getPlayers().size() + "/" + Bukkit.getOnlinePlayers().size());
 		}
 
 		private void attackPlayer(final CommandSender sender, final CombatPlayer targetPlayer) {
 			// Simulate attacking a player for debugging purposes
 			targetPlayer.getPlayer().damage(5.0);
-			sender.sendMessage("Attacked player with 5 damage");
+			ChatUtils.send(sender, "Attacked player with 5 damage");
 		}
 	}
 
@@ -335,8 +313,8 @@ public class PM extends BaseCommand {
 		@Override
 		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 			if (args.isEmpty()) {
-				sender.sendMessage(Lang.PREFIX + " §aYour current Locale is: §c" + Lang.getLocale());
-				sender.sendMessage(Lang.PREFIX + " §aAvailable languages are: §c" + Locale.asStringList());
+				ChatUtils.send(sender, Lang.PREFIX + " &7Your current Locale is: &#FF5555" + Lang.getLocale());
+				ChatUtils.send(sender, Lang.PREFIX + " &7Available languages are: &#FF5555" + Locale.asStringList());
 				return;
 			}
 
@@ -344,18 +322,18 @@ public class PM extends BaseCommand {
 			try {
 				locale = Locale.valueOf(args.get(0).getValue().toUpperCase());
 			} catch (final IllegalArgumentException e) {
-				sender.sendMessage(Lang.PREFIX + " §cInvalid Locale. Available languages are: " + Locale.asStringList());
+				ChatUtils.send(sender, Lang.PREFIX + " &#FF5555Invalid Locale. &7Available languages are: &e" + Locale.asStringList());
 				return;
 			}
 			if (Lang.getLocale() == locale) {
-				sender.sendMessage(Lang.PREFIX + " §cCan't change Locale. You are already using " + locale);
+				ChatUtils.send(sender, Lang.PREFIX + " &#FF5555Can't change Locale. You are already using " + locale);
 				return;
 			}
 
 			Conf.LOCALE.set(locale.name());
 			changeConfigSetting("General.Locale", locale.name());
 			Lang.setup(plugin);
-			sender.sendMessage(Lang.PREFIX + " §aLanguage changed to " + Lang.getLocale() + " - Filename: " + Lang.getLocale().fileName());
+			ChatUtils.send(sender, Lang.PREFIX + " &aLanguage changed to &e" + Lang.getLocale() + "&a - &7Filename: " + Lang.getLocale().fileName());
 		}
 
 		private void changeConfigSetting(final String path, final String value) {

@@ -1,10 +1,10 @@
-package me.NoChance.PvPManager.Events;
+package me.chancesd.pvpmanager.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 
 /**
  * This event is fired when a player's newbie protection status changes.
@@ -15,10 +15,10 @@ public final class NewbieProtectionEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
 	private final Player player;
-	private final PvPlayer pvplayer;
+	private final CombatPlayer pvplayer;
 	private final boolean starting;
 
-	public NewbieProtectionEvent(final Player player, final PvPlayer pvplayer, final boolean starting) {
+	public NewbieProtectionEvent(final Player player, final CombatPlayer pvplayer, final boolean starting) {
 		this.player = player;
 		this.pvplayer = pvplayer;
 		this.starting = starting;
@@ -38,7 +38,7 @@ public final class NewbieProtectionEvent extends Event {
 	 *
 	 * @return PvPlayer instance of the player
 	 */
-	public final PvPlayer getPvPlayer() {
+	public final CombatPlayer getPvPlayer() {
 		return pvplayer;
 	}
 

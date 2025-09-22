@@ -82,7 +82,7 @@ public class Newbie extends BaseCommand {
 			// If no player argument provided, check own time (for players only)
 			if (args.isEmpty()) {
 				if (!(sender instanceof Player)) {
-					sender.sendMessage("§cConsole must specify a player: /newbie checktime <player>");
+					ChatUtils.send(sender, "&#FF5555Console must specify a player: &#FFFFFF/newbie checktime <player>");
 					return;
 				}
 
@@ -99,7 +99,7 @@ public class Newbie extends BaseCommand {
 
 			// Check another player's time (requires admin permission)
 			if (!sender.hasPermission(Permissions.COMMAND_NEWBIE.getPermission())) {
-				sender.sendMessage("§cYou don't have permission to check other players' newbie time.");
+				ChatUtils.send(sender, "&#FF5555You don't have permission to check other players' newbie time.");
 				return;
 			}
 
@@ -127,7 +127,7 @@ public class Newbie extends BaseCommand {
 			final Player targetPlayer = getArgument(args, ARG_PLAYER).getAsPlayerOrNull();
 			final CombatPlayer target = ph.get(targetPlayer);
 			target.setNewbie(true);
-			sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " Added newbie protection to &e " + target.getName()));
+			sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " Added newbie protection to &#FFFF55" + target.getName()));
 		}
 	}
 
@@ -148,7 +148,7 @@ public class Newbie extends BaseCommand {
 			final Player targetPlayer = getArgument(args, ARG_PLAYER).getAsPlayerOrNull();
 			final CombatPlayer target = ph.get(targetPlayer);
 			target.setNewbie(false);
-			sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " Removed newbie protection from &e " + target.getName()));
+			sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " Removed newbie protection from &#FFFF55" + target.getName()));
 		}
 	}
 }

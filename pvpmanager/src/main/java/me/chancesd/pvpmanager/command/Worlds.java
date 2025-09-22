@@ -51,9 +51,6 @@ public class Worlds extends BaseCommand {
 			}
 			return;
 		}
-
-		// This should never be reached since subcommands handle everything
-		sender.sendMessage(Lang.ERROR_COMMAND.msg());
 	}
 
 	public void createWorldMenu(final Player player) {

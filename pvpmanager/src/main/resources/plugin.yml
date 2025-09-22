@@ -48,7 +48,6 @@ commands:
       usage: "Usage: /<command> [player]"
    pvpstatus:
       description: Check PvP status of yourself or another player
-      aliases: [pstatus]
       permission: pvpmanager.command.pvpstatus
       usage: "Usage: /<command> [player]"
    pvplist:
@@ -57,7 +56,7 @@ commands:
       permission: pvpmanager.command.pvplist
    pvptag:
       description: Shows time left until out of combat or tag player
-      aliases: [combattag]
+      aliases: [combattag, tag]
       permission: pvpmanager.command.tag
    untag:
       description: Remove combat tag from a player or all players 
@@ -93,6 +92,7 @@ permissions:
        pvpmanager.command.pvpstatus: true
        pvpmanager.command.pvpstatus.others: true
        pvpmanager.command.tag: true
+       pvpmanager.command.tag.others: true
        pvpmanager.command.untag: true
        pvpmanager.exempt.pvptogglecooldown: true
    pvpmanager.exempt:
@@ -118,7 +118,7 @@ permissions:
      default: false
    pvpmanager.command.pvp:
      description: Allows toggling your own PvP status
-     default: true
+     default: false
    pvpmanager.command.pvp.others:
      description: Allows toggling other players' PvP status
      default: false
@@ -143,10 +143,13 @@ permissions:
    pvpmanager.command.tag:
      description: Allows tagging yourself in combat
      default: true
+   pvpmanager.command.tag.others:
+     description: Allows tagging other players in combat
+     default: false
    pvpmanager.command.untag:
      description: Allows access to the untag command
      default: false
-   # Exempt permissions - standardized structure
+   # Exempt permissions
    pvpmanager.exempt.blockcommands:
      description: Players with this permission can use commands while tagged
      default: false

@@ -178,16 +178,12 @@ public class CombatPlayer extends EcoPlayer {
 		}
 
 		final String message;
-		final String actionBarMessage;
 		if (isAttacker) {
 			message = Lang.TAGGED_ATTACKER.msg(other.getName());
-			actionBarMessage = Lang.TAGGED_ATTACKER_ACTIONBAR.msg(other.getName());
 		} else {
 			message = Lang.TAGGED_DEFENDER.msg(other.getName());
-			actionBarMessage = Lang.TAGGED_DEFENDER_ACTIONBAR.msg(other.getName());
 		}
 		message(message);
-		sendActionBar(actionBarMessage, 400);
 
 		this.tagged = true;
 	}

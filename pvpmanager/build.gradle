@@ -10,8 +10,8 @@ version = '3.18.30'
 description = 'A powerful plugin to manage various PvP combat features'
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
-    compileOnly 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT'
     compileOnly 'net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.19.2'
     compileOnly('com.github.EssentialsX.Essentials:EssentialsX:2.20.0') {
         exclude group: '*', module: '*'
@@ -34,7 +34,7 @@ dependencies {
     }
     compileOnly 'com.github.cryptomorin:kingdoms:1.16.8.1.1'
     compileOnly 'com.github.TechFortress:GriefPrevention:17.0.0'
-    compileOnly 'me.neznamy:tab-api:4.0.2'
+    compileOnly 'com.github.NEZNAMY:TAB-API:5.2.5'
     
     compileOnly 'com.zaxxer:HikariCP:4.0.3'
     compileOnly 'org.apache.logging.log4j:log4j-core:2.23.1'
@@ -100,9 +100,6 @@ processResources {
 test {
     useJUnitPlatform()
     include '**/*InstanceCreator.class'
-    javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
 }
 
 tasks.build {

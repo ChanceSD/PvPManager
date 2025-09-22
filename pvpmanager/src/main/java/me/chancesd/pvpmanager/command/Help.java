@@ -16,6 +16,7 @@ public class Help {
 	private static final String STAFF_COMMAND_COLOR = "#FF5722";
 	private static final String DESCRIPTION_COLOR = "#9E9E9E";
 
+
 	// Category constants
 	private static final String PLAYER_CATEGORY = "player";
 	private static final String STAFF_CATEGORY = "staff";
@@ -39,8 +40,8 @@ public class Help {
 		final String usage = command.getUsage() != null && !command.getUsage().isEmpty() ? command.getUsage() : null;
 
 		final StringBuilder hoverText = new StringBuilder();
-		hoverText.append("&7").append(actionText);
-		hoverText.append("\n#812c6c► ").append(description);
+	hoverText.append("#90A4AE").append(actionText);
+	hoverText.append("\n#455A64► #CFD8DC").append(description);
 
 		final boolean hasUsage = usage != null;
 		final boolean hasPermissions = !permissions.isEmpty();
@@ -50,11 +51,12 @@ public class Help {
 		}
 
 		if (hasUsage) {
-			hoverText.append("\n#4CAF50&lUsage: &8").append(usage);
+			hoverText.append("\n#78909C&lUsage: #607D8B").append(usage);
 		}
 
 		if (hasPermissions) {
-			hoverText.append("\n#FF5722&lRequires: &c").append(permissions.stream().findFirst().get());
+			final String perms = String.join(", ", permissions);
+			hoverText.append("\n#78909C&lRequires: #546E7A").append(perms);
 		}
 
 		return hoverText.toString();
@@ -178,7 +180,7 @@ public class Help {
 		final String usage = "/pmr " + subcommandName;
 		final String hoverText = buildAutoHoverText(subcommand, description);
 		final String displayText = String.format("  %s%s %s&8- &7%s", STAFF_COMMAND_COLOR, usage, DESCRIPTION_COLOR, description);
-		content.addLine(displayText, subcommandName, hoverText);
+		content.addLine(displayText, usage, hoverText);
 	}
 
 	private ChatMenu createHelpMenu(final CommandSender sender) {
@@ -216,16 +218,14 @@ public class Help {
 			addPmrSubcommandIfAvailable(contentProvider, sender, "locale");
 		}
 
+		final String pluginVersion = plugin.getDescription().getVersion();
 		return ChatMenu.builder()
-				.header("#607D8B&l╔══════ §4§lPvP§8§lManager #f7e758&lv4.10" + "" + " #9E9E9E(Page {page}/{total}) #607D8B&l══════╗")
+				.header("#607D8B&l╔══════ §4§lPvP§8§lManager #f7e758&lv" + pluginVersion
+						+ " #9E9E9E({page}/{total}) #607D8B&l══════╗")
 				.footer("#607D8B&l╚══════════════════════════════╝")
 				.linesPerPage(15)
 				.contentProvider(contentProvider)
-				.navigation(NavigationButtons.builder()
-						.navigationPrefix("/pmr")
-						.previousText("&7[&c« Previous Page&7]")
-						.nextText("&7[&cNext Page »&7]")
-						.build())
+				.navigation(NavigationButtons.builder().navigationPrefix("/pmr").build())
 				.build();
 	}
 }
