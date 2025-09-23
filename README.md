@@ -17,7 +17,6 @@ Useful Links
 **Bukkit:** https://dev.bukkit.org/bukkit-plugins/pvpmanager/  
 **Modrinth:** https://modrinth.com/plugin/pvpmanager
 
-**Discord:** https://discord.gg/QFTjs3g  
 **Dev Builds:** https://ci.codemc.io/job/ChanceSD/job/PvPManager/  
 **Crowdin Translations:** https://crowdin.com/project/pvpmanager  
 
@@ -33,29 +32,38 @@ Maven Repo:
 Artifact Information:
 ```xml
 <dependency>
-    <groupId>me.NoChance.PvPManager</groupId>
+    <groupId>me.chancesd.pvpmanager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>3.19.10</version>
+    <version>4.0</version>
     <scope>provided</scope>
 </dependency>
  ```
 
 Description
 ------------
-PvPManager is an all in one PvP plugin.
-There are some features that are better covered by a dedicated separate plugin. Even so, PvPManager aims to cover most of those even if in a more superficial way, always maintaining good performance as a goal.  
+PvPManager is a comprehensive PvP management plugin that handles combat mechanics, player protection, and server administration. It covers most PvP-related features while maintaining excellent performance.
 
-**Some of the plugin's main features are:**
-- Toggle PvP for each player, world, server
-- Stop combat logging by issuing punishments
-- Disable several actions while in combat such as fly, gamemode, blocking commands, etc
-- Stop what we named as "border hopping" which happens when a player enters combat and attempts to run away to a safezone
-- Protect new players from being killed by other players
-- Stop spawn killing or KDR abuse by issuing a kick or any other custom command
-- Give money rewards, penalties, steal money or execute commands when a player kills another
-- Keep/Drop player inventory depending whether they died in PvP or transfer drops directly to the killer
+**Combat Management:**
+- Toggle PvP for individual players, worlds, or the entire server
+- Combat tagging with customizable timers and visual indicators
+- Action bar and boss bar displays for combat status
+- Disable actions while in combat (fly, gamemode, commands, etc.)
+- Prevent combat logging with flexible punishment system
 
-There is a more detailed description of all features on the plugin page and in the config.  
+**Player Protection:**
+- Newbie protection for new players
+- Respawn and teleport protection
+- Stop "border hopping" when players flee to safezones during combat
+- Prevent KDR abuse with configurable kick thresholds
+
+**Additional Features:**
+- Money rewards, penalties, and custom commands on kills
+- Flexible inventory handling (keep/drop/transfer to killer)
+- Item cooldown system and combat action restrictions
+- PlaceholderAPI support and plugin integrations (WorldGuard, Citizens, etc.)
+- [Premium version](https://www.spigotmc.org/resources/pvpmanager.10610/) available with additional features
+
+For detailed feature descriptions and configuration options, check the [Wiki](https://github.com/ChanceSD/PvPManager/wiki).  
 
 bStats
 -----------
