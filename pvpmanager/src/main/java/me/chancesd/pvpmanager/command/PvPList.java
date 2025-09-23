@@ -78,7 +78,7 @@ public class PvPList extends BaseCommand {
 			if (!pvpState && name != null)
 				list.append(name).append(", ");
 		}
-		if (list.toString().isEmpty())
+		if (list.isEmpty())
 			return Lang.PVP_LIST_NO_RESULTS.msg();
 		list.delete(list.length() - 2, list.length());
 		return list.toString();
@@ -92,7 +92,7 @@ public class PvPList extends BaseCommand {
 				list.append(p.getName()).append(", ");
 			}
 		}
-		if (list.toString().isEmpty())
+		if (list.isEmpty())
 			return Lang.PVP_LIST_NO_RESULTS.msg();
 		list.delete(list.length() - 2, list.length());
 		return list.toString();

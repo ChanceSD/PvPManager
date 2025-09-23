@@ -49,7 +49,6 @@ public class Worlds extends BaseCommand {
 			} else {
 				sender.sendMessage("§cConsole must use '/pmr worlds list' to see world information.");
 			}
-			return;
 		}
 	}
 

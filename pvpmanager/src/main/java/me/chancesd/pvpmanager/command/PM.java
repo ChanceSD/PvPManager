@@ -59,12 +59,10 @@ public class PM extends BaseCommand {
 	public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 		if (args.isEmpty()) {
 			helpCommand.helpMenu(sender, 1);
-			return;
 		} else if (args.size() == 1) {
 			final int page = getArgument(args, "page").getAsInt();
 			if (page > 0) {
 				helpCommand.helpMenu(sender, page);
-				return;
 			}
 		}
 	}

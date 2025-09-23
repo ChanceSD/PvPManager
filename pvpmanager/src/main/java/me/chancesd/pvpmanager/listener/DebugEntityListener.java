@@ -36,6 +36,7 @@ import me.chancesd.sdutils.utils.MCVersion;
 
 public class DebugEntityListener implements Listener {
 
+	private static final String CONSIDERED_NOT_PVP = "Ignoring damage because it wasn't considered PvP";
 	private final PlayerManager ph;
 	private final WorldGuardDependency wg;
 	private final Cache<LightningStrike, Location> lightningCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.SECONDS).build();
@@ -60,7 +61,7 @@ public class DebugEntityListener implements Listener {
 
 		if (!CombatUtils.isPvP(event)) {
 			if (!(event.getEntity() instanceof Player)) {
-				Log.debug("Ignoring damage because it wasn't considered PvP");
+				Log.debug(CONSIDERED_NOT_PVP);
 				return;
 			}
 			final CombatPlayer attacked = ph.get((Player) event.getEntity());
@@ -70,7 +71,7 @@ public class DebugEntityListener implements Listener {
 				return;
 			} else if (event.getDamager() instanceof final LightningStrike lightning) {
 				if (!lightningCache.asMap().containsKey(lightning)) {
-					Log.debug("Ignoring damage because it wasn't considered PvP");
+					Log.debug(CONSIDERED_NOT_PVP);
 					return;
 				}
 				if (!attacked.hasPvPEnabled() || attacked.isNewbie() || attacked.hasRespawnProtection()) {
@@ -79,7 +80,7 @@ public class DebugEntityListener implements Listener {
 					return;
 				}
 			}
-			Log.debug("Ignoring damage because it wasn't considered PvP");
+			Log.debug(CONSIDERED_NOT_PVP);
 			return;
 		}
 
