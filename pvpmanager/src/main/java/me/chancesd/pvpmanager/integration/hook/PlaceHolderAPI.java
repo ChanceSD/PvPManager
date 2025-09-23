@@ -12,7 +12,6 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.Utils;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class PlaceHolderAPI extends PlaceholderExpansion {
@@ -85,9 +84,9 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 
 	private String getPAPIBoolean(final boolean value) {
 		if (value)
-			return PlaceholderAPIPlugin.booleanTrue();
+			return Conf.PLACEHOLDER_BOOLEAN_TRUE.asString();
 		else
-			return PlaceholderAPIPlugin.booleanFalse();
+			return Conf.PLACEHOLDER_BOOLEAN_FALSE.asString();
 	}
 
 	private void registerPlaceholder(final String name) {

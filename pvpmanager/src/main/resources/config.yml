@@ -296,6 +296,12 @@ Database:
     Password: '12345'
     Database: minecraft
 
+# PlaceholderAPI boolean formatting
+Placeholders:
+  Boolean Format:
+    True: '&a✓'
+    False: '&c✗'
+
 # Should PvPManager be allowed to check for updates and tell you about them
 # Auto Update - After checking should the update be downloaded automatically for you?
 Update Check:

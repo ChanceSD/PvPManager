@@ -157,6 +157,9 @@ public enum Conf {
 	METRICS_OPT_OUT("Metrics", "Opt-out", false, Boolean.class),
 	HARMFUL_POTIONS("Harmful Potions", "", Conf::getSet, List.class, Set.class),
 
+	PLACEHOLDER_BOOLEAN_TRUE("Placeholders", "Boolean Format.True", ChatUtils::colorize, String.class, String.class),
+	PLACEHOLDER_BOOLEAN_FALSE("Placeholders", "Boolean Format.False", ChatUtils::colorize, String.class, String.class),
+
 	DEBUG_MODE("Debug Mode", "", Conf::setDebug, Boolean.class, Boolean.class);
 
 	public enum DropMode {
