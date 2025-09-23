@@ -5,41 +5,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import me.NoChance.PvPManager.PvPlayer;
+import me.chancesd.sdutils.database.DatabaseConfigBuilder.DatabaseType;
 import me.chancesd.sdutils.utils.Log;
-import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 
 public interface Storage {
 
 	public boolean userExists(final UUID uuid);
 
-	public default boolean userExists(final PvPlayer player) {
+	public default boolean userExists(final CombatPlayer player) {
 		return userExists(player.getUUID());
 	}
 
 	public Map<String, Object> getUserData(final UUID uuid);
 
-	public default Map<String, Object> getUserData(final PvPlayer player) {
+	public default Map<String, Object> getUserData(final CombatPlayer player) {
 		return getUserData(player.getUUID());
 	}
 
 	public void removeUserData(final UUID uuid);
 
-	public default void removeUserData(final PvPlayer player) {
+	public default void removeUserData(final CombatPlayer player) {
 		removeUserData(player.getUUID());
 	}
 
 	public boolean saveUserData(UUID uuid, Map<String, Object> userData);
 
-	public default void saveUserData(final PvPlayer player) {
+	public default void saveUserData(final CombatPlayer player) {
 		final long start = System.nanoTime();
-		saveUserData(player.getUUID(), player.getUserData());
+		saveUserData(player.getUUID(), player.exportPlayerData().toMap());
 		Log.debug("Finished saving " + player + " - " + (System.nanoTime() - start) / 1_000_000D + " ms");
 	}
 
 	public List<Map<String, Object>> getAllUserData();
 
-	public void saveUserDataBatch(final Collection<PvPlayer> players);
+	public void saveUserDataBatch(final Collection<CombatPlayer> players);
 
 	public void increment(final String field, final UUID uuid);
 

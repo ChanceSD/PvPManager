@@ -8,8 +8,15 @@ group = 'me.chancesd.pvpmanager'
 subprojects {
     apply plugin: 'java'
 
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
     repositories {
         mavenCentral()
+        mavenLocal()
         maven { url = 'https://hub.spigotmc.org/nexus/content/groups/public/' }
         maven { url = 'https://jitpack.io' }
         maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
@@ -23,13 +30,19 @@ subprojects {
     }
 
     dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
-        testImplementation 'org.junit.platform:junit-platform-suite:1.12.1'
-        testImplementation 'org.mockito:mockito-core:5.16.1'
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.13.0'
+        testImplementation 'org.junit.platform:junit-platform-suite:1.13.0'
+        testImplementation 'org.mockito:mockito-core:5.18.0'
     }
 
     test {
         useJUnitPlatform()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        sourceCompatibility = '17'
+        targetCompatibility = '17'
     }
 }
 
@@ -42,8 +55,4 @@ publishing {
             url = uri('https://repo.codemc.io/repository/maven-snapshots/')
         }
     }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
 }

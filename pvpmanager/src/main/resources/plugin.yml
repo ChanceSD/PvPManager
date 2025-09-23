@@ -12,9 +12,9 @@ softdepend:
   - WorldGuard
   - LibsDisguises
   - SimpleClans
-  - EZRanksLite
   - Essentials
   - PlaceholderAPI
+  - GriefPrevention
   - Towny
   - HuskTowns
   - HuskClaims
@@ -22,52 +22,52 @@ softdepend:
   - TAB
 
 libraries:
-  - com.zaxxer:HikariCP:4.0.3
+  - com.zaxxer:HikariCP:5.1.0
   - org.slf4j:slf4j-api:2.0.13 # for MC 1.8
 
 commands:
    pvpmanager:
       description: Shows the main PvPManager help page
-      aliases: [pm, pvpm, pmr]
+      aliases: [pmr, pvpm, pm]
    pvp:
       description: Toggles PvP status
       aliases: [togglepvp, pvptoggle]
-      usage: "Usage: /<command> [on|off] or /<command> [player] [on|off]"
+      usage: "Usage: /<command> or /<command> [player] [on|off]"
+      permission: pvpmanager.command.pvp
    newbie:
       description: Check time left as a newbie or force disable newbie
-      aliases: [newbietime]
+      aliases: [grace]
       usage: "Usage: /<command> add/checktime/remove [name] or /<command> disable"
    pvpoverride:
       description: Allows the player to attack everyone everywhere
       aliases: [pvpo]
-      permission: pvpmanager.override
+      permission: pvpmanager.command.override
    pvpinfo:
       description: Allows the player to see his or others information
-      aliases: [pvpi]
-      permission: pvpmanager.info
+      permission: pvpmanager.command.pvpinfo
       usage: "Usage: /<command> [player]"
    pvpstatus:
-      description: Allows the player to see his or others pvp status
-      aliases: [pvps, pstatus]
-      permission: pvpmanager.pvpstatus.self
+      description: Check PvP status of yourself or another player
+      permission: pvpmanager.command.pvpstatus
       usage: "Usage: /<command> [player]"
    pvplist:
       description: List the PvP state of all online or offline players
-      aliases: [plist, pvpl]
-      permission: pvpmanager.list
+      aliases: [listpvp]
+      permission: pvpmanager.command.pvplist
    pvptag:
       description: Shows time left until out of combat or tag player
-      aliases: [ct, ctag, combattag]
+      aliases: [combattag, tag]
+      permission: pvpmanager.command.tag
    untag:
-      description: Untags a player  
-      permission: pvpmanager.admin
+      description: Remove combat tag from a player or all players 
+      permission: pvpmanager.command.untag
       usage: "Usage: /<command> <player>"
    announce:
       description: Broadcasts a message to all players with color support
-      permission: pvpmanager.admin
+      permission: pvpmanager.command.announce   
    pvpglobal:
       description: Toggle PvP for the whole server
-      permission: pvpmanager.admin
+      permission: pvpmanager.command.pvpglobal
       usage: "Usage: /<command> <on|off>"
 
 permissions:
@@ -77,68 +77,97 @@ permissions:
      children:
        pvpmanager.admin: true
    pvpmanager.admin:
-     description: Gives access to admin features
+     description: Gives access to admin features and all commands
      default: false
      children:
-       pvpmanager.reload: true
-       pvpmanager.user: true
-       pvpmanager.override: true
-       pvpmanager.info: true
-       pvpmanager.info.others: true
-       pvpmanager.pvpstatus.nocooldown: true
+       pvpmanager.command.announce: true
+       pvpmanager.command.newbie: true
+       pvpmanager.command.override: true
+       pvpmanager.command.pvp: true
+       pvpmanager.command.pvp.others: true
+       pvpmanager.command.pvpglobal: true
+       pvpmanager.command.pvpinfo: true
+       pvpmanager.command.pvpinfo.others: true
+       pvpmanager.command.pvplist: true
+       pvpmanager.command.pvpstatus: true
+       pvpmanager.command.pvpstatus.others: true
+       pvpmanager.command.tag: true
+       pvpmanager.command.tag.others: true
+       pvpmanager.command.untag: true
+       pvpmanager.exempt.pvptogglecooldown: true
    pvpmanager.exempt:
      description: Exempts player from consequences during combat
      default: false
      children:
-       pvpmanager.nocombattag: true
-       pvpmanager.nocombatlog: true
-       pvpmanager.nodisable: true
-       pvpmanager.nokillabuse: true
-   pvpmanager.user:
-     description: Gives access to features appropriate for average users
+       pvpmanager.exempt.blockcommands: true
+       pvpmanager.exempt.combatlog: true
+       pvpmanager.exempt.combattag: true
+       pvpmanager.exempt.disableactions: true
+       pvpmanager.exempt.killabuse: true
+       pvpmanager.exempt.respawnprotection: true
+       pvpmanager.exempt.pvptogglecooldown: true
+   # Individual command permissions
+   pvpmanager.command.announce:
+     description: Allows access to the announce command
      default: false
-     children:
-       pvpmanager.pvpstatus.change: true
-       pvpmanager.pvpstatus.self: true
-       pvpmanager.pvpstatus.others: true
-       pvpmanager.list: true
-       pvpmanager.menu: true
-   pvpmanager.pvpstatus.nocooldown:
-     description: No cooldown for pvp toggle command
+   pvpmanager.command.newbie:
+     description: Allows access to newbie management commands (add, remove, checktime others)
      default: false
-   pvpmanager.pvpstatus.change:
-     description: Allows you to change your PvP status between <on> and <off>
+   pvpmanager.command.override:
+     description: Allows access to the pvpoverride command
      default: false
-   pvpmanager.reload:
-     description: Allows acess to the PvPManager reload command
+   pvpmanager.command.pvp:
+     description: Allows toggling your own PvP status
      default: false
-   pvpmanager.nocombattag:
-     description: Exempts a player from being tagged in combat
+   pvpmanager.command.pvp.others:
+     description: Allows toggling other players' PvP status
      default: false
-   pvpmanager.nocombatlog:
-     description: Exempts a player from combat log punishments
+   pvpmanager.command.pvpglobal:
+     description: Allows access to the pvpglobal command
      default: false
-   pvpmanager.override:
-     description: Players with this permission can use the pvp override command and attack everywhere
+   pvpmanager.command.pvpinfo:
+     description: Allows viewing your own PvP information
+     default: true
+   pvpmanager.command.pvpinfo.others:
+     description: Allows viewing other players' PvP information
      default: false
-   pvpmanager.nodisable:
-     description: Players with this permission don't get fly and gamemode disabled
+   pvpmanager.command.pvplist:
+     description: Allows access to the pvplist command
+     default: true
+   pvpmanager.command.pvpstatus:
+     description: Allows checking your own PvP status
+     default: true
+   pvpmanager.command.pvpstatus.others:
+     description: Allows checking other players' PvP status
      default: false
-   pvpmanager.nokillabuse:
-     description: Players with this permission don't get punished by kill abuse
+   pvpmanager.command.tag:
+     description: Allows tagging yourself in combat
+     default: true
+   pvpmanager.command.tag.others:
+     description: Allows tagging other players in combat
      default: false
-   pvpmanager.exempt.block.commands:
+   pvpmanager.command.untag:
+     description: Allows access to the untag command
+     default: false
+   # Exempt permissions
+   pvpmanager.exempt.blockcommands:
      description: Players with this permission can use commands while tagged
      default: false
-   pvpmanager.bypass.protection.respawn:
+   pvpmanager.exempt.combatlog:
+     description: Exempts a player from combat log punishments
+     default: false
+   pvpmanager.exempt.combattag:
+     description: Exempts a player from being tagged in combat
+     default: false
+   pvpmanager.exempt.disableactions:
+     description: Players with this permission don't get fly and gamemode disabled
+     default: false
+   pvpmanager.exempt.killabuse:
+     description: Players with this permission don't get punished by kill abuse
+     default: false
+   pvpmanager.exempt.respawnprotection:
      description: Players with this permission do not get respawn protection
-     default: false 
-   pvpmanager.list:
-     description: Allows access to the list of players with PvP enabled and disabled
      default: false
-   pvpmanager.menu:
-     description: Allows access to the PvPManager help menu
-     default: false
-   pvpmanager.info.others:
-     description: Allows using the PvPManager info command to check other player's info
+   pvpmanager.exempt.pvptogglecooldown:
+     description: No cooldown for pvp toggle command
      default: false

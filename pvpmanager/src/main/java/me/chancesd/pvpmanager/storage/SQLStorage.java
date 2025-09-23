@@ -3,32 +3,31 @@ package me.chancesd.pvpmanager.storage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 import me.chancesd.pvpmanager.storage.fields.WorldDataFields;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Settings.Messages;
-import me.chancesd.pvpmanager.storage.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.sdutils.database.Database;
+import me.chancesd.sdutils.database.DatabaseConfigBuilder;
+import me.chancesd.sdutils.database.DatabaseConfigBuilder.DatabaseType;
+import me.chancesd.sdutils.database.DatabaseFactory;
+import me.chancesd.sdutils.database.Table;
+import me.chancesd.sdutils.utils.Log;
+import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.storage.converter.DisplayNameConverter;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
-import me.chancesd.sdutils.utils.Log;
 
 public class SQLStorage implements Storage {
 
 	private Table usersTable;
 	private Table worldsTable;
 	private final JavaPlugin plugin;
-	private final File sqliteFile;
 	private final ConfigurationSection dbConfigSection;
 	private final Database database;
 
@@ -38,8 +37,8 @@ public class SQLStorage implements Storage {
 
 	public SQLStorage(final PvPManager plugin, final DatabaseType dbType) {
 		this.plugin = plugin;
-		this.sqliteFile = new File(plugin.getDataFolder(), "database.db");
 		this.dbConfigSection = plugin.getConfig().getConfigurationSection("Database");
+		final File sqliteFile = new File(plugin.getDataFolder(), "database.db");
 		final DatabaseConfigBuilder config;
 		if (dbType == null) {
 			config = new DatabaseConfigBuilder(dbConfigSection, sqliteFile);
@@ -93,14 +92,14 @@ public class SQLStorage implements Storage {
 	}
 
 	@Override
-	public void saveUserDataBatch(final Collection<PvPlayer> players) {
+	public void saveUserDataBatch(final Collection<CombatPlayer> players) {
 		if (players.isEmpty())
 			return;
 
-		final List<String> columns = new ArrayList<>(players.iterator().next().getUserData().keySet());
+		final List<String> columns = new ArrayList<>(players.iterator().next().exportPlayerData().toMap().keySet());
 		final Map<Object, Collection<Object>> indexToValues = new HashMap<>();
-		for (final PvPlayer player : players) {
-			indexToValues.put(player.getUUID().toString(), player.getUserData().values());
+		for (final CombatPlayer player : players) {
+			indexToValues.put(player.getUUID().toString(), player.exportPlayerData().toMap().values());
 		}
 		database.updateValuesBatch(usersTable, UserDataFields.UUID, columns, indexToValues);
 	}

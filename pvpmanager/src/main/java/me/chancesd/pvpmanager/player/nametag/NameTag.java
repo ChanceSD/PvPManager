@@ -1,23 +1,23 @@
 package me.chancesd.pvpmanager.player.nametag;
 
-import me.NoChance.PvPManager.PvPlayer;
-import me.NoChance.PvPManager.Settings.Settings;
-import me.NoChance.PvPManager.Utils.ChatUtils;
+import me.chancesd.pvpmanager.player.CombatPlayer;
+import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.sdutils.utils.ChatUtils;
 
 public abstract class NameTag {
 
-	protected final PvPlayer pvPlayer;
+	protected final CombatPlayer pvPlayer;
 	protected final String combatPrefix;
 	protected final String combatSuffix;
 	protected final String pvpOnPrefix;
 	protected final String pvpOffPrefix;
 
-	protected NameTag(final PvPlayer p) {
+	protected NameTag(final CombatPlayer p) {
 		this.pvPlayer = p;
-		this.combatPrefix = ChatUtils.colorize(Settings.getNameTagPrefix());
-		this.combatSuffix = ChatUtils.colorize(Settings.getNameTagSuffix());
-		this.pvpOnPrefix = Settings.getToggleColorOn().equalsIgnoreCase("none") ? "" : ChatUtils.colorize(Settings.getToggleColorOn());
-		this.pvpOffPrefix = Settings.getToggleColorOff().equalsIgnoreCase("none") ? "" : ChatUtils.colorize(Settings.getToggleColorOff());
+		this.combatPrefix = ChatUtils.colorize(Conf.NAMETAG_PREFIX.asString());
+		this.combatSuffix = ChatUtils.colorize(Conf.NAMETAG_SUFFIX.asString());
+		this.pvpOnPrefix = ChatUtils.colorize(Conf.TOGGLE_PREFIX_ON.asString());
+		this.pvpOffPrefix = ChatUtils.colorize(Conf.TOGGLE_PREFIX_OFF.asString());
 	}
 
 	public abstract void setInCombat();
