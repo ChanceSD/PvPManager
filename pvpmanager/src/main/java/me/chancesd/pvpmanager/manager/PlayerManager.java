@@ -53,7 +53,7 @@ public class PlayerManager {
 		this.dependencyManager = plugin.getDependencyManager();
 		this.tagTask = new TagTask(plugin.getDisplayManager());
 		Bukkit.getPluginManager().registerEvents(tagTask, plugin);
-		
+
 		if (Conf.KILL_ABUSE_ENABLED.asBool()) {
 			ScheduleUtils.runAsyncTimer(new CleanKillersTask(this), Conf.KILL_ABUSE_TIME.asInt(), Conf.KILL_ABUSE_TIME.asInt(), TimeUnit.SECONDS);
 		}
@@ -114,29 +114,29 @@ public class PlayerManager {
 
 	/**
 	 * @param player the player instance
-	 * @return PvPlayer instance for the provided player
+	 * @return CombatPlayer instance for the provided player
 	 */
 	@NotNull
 	public final CombatPlayer get(final Player player) {
 		if (player == null) {
 			throw new IllegalArgumentException("Player cannot be null");
 		}
-		
+
 		final CombatPlayer pvPlayer = players.get(player.getUniqueId());
 		if (pvPlayer != null)
 			return pvPlayer;
-		
+
 		final CombatPlayer combatPlayer = new CombatPlayer(player, plugin);
 		addUser(combatPlayer);
-		
+
 		// Don't load data for NPCs
 		if (!CombatUtils.isNPC(player)) {
 			loadPlayerDataAsync(combatPlayer);
 		}
-		
+
 		return combatPlayer;
 	}
-	
+
 	/**
 	 * Loads player data asynchronously and applies it
 	 */
@@ -151,12 +151,12 @@ public class PlayerManager {
 						savePlayer(combatPlayer);
 					}
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				Log.severe("Failed to load player data for " + combatPlayer.getName(), e);
 			}
 		});
 	}
-	
+
 	/**
 	 * Saves player data to storage
 	 */
@@ -164,10 +164,10 @@ public class PlayerManager {
 		if (!CombatUtils.isReal(player.getUUID())) {
 			return; // Don't save NPCs or invalid players
 		}
-		
+
 		try {
 			plugin.getStorageManager().getStorage().saveUserData(player);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			Log.severe("Failed to save player data for " + player.getName(), e);
 		}
 	}
@@ -187,9 +187,9 @@ public class PlayerManager {
 		if (player.isInCombat()) {
 			player.untag(UntagReason.LOGOUT);
 		}
-		
+
 		savePlayer(player);
-		
+
 		player.cleanForRemoval();
 		players.remove(player.getUUID());
 	}

@@ -144,7 +144,7 @@ public class ConfigManager {
 	}
 
 	public boolean isMajorVersionUpgrade() {
-		return oldVersion < 200;
+		return oldVersion != 0 && oldVersion < 200;
 	}
 
 	public YamlConfiguration getHooksConfig() {
