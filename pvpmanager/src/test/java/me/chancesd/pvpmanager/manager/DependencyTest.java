@@ -38,7 +38,7 @@ public class DependencyTest {
 		when(plugin.getDescription()).thenReturn(new PluginDescriptionFile("Plugin", "1.0", "plugin"));
 		when(server.getPluginManager().getPlugin(AdditionalMatchers.not(ArgumentMatchers.eq("Towny")))).thenReturn(plugin);
 		assertEquals(server.getPluginManager().getPlugin("PvPManager"), plugin);
-		new DependencyManager();
+		new DependencyManager().onEnableSetup();
 	}
 
 	@Test

@@ -46,13 +46,14 @@ public class PvPManager extends SDPlugin {
 	@Override
 	public void onPluginLoad() {
 		Log.setup(getLogger(), "§7[§4§lPvP§8§lManager§7]");
+		dependencyManager = new DependencyManager();
+		dependencyManager.onLoadSetup();
 	}
 
 	@Override
 	public void onPluginEnable() {
 		final long start = System.currentTimeMillis();
 		instance = this;
-		ScheduleUtils.setupExecutor(this);
 		if (ScheduleUtils.checkFolia()) {
 			Log.infoColor(ChatColor.AQUA + "Running on Folia. Support for Folia is still experimental");
 			Log.infoColor(ChatColor.AQUA + "Please report any errors you find, most likely nobody reported them yet as not many people use Folia");
@@ -60,7 +61,7 @@ public class PvPManager extends SDPlugin {
 		loadFiles();
 		updateManager = new UpdateManager(this);
 		storageManager = new StorageManager(this);
-		dependencyManager = new DependencyManager();
+		dependencyManager.onEnableSetup();
 		worldManager = new WorldManager(this);
 		playerHandler = new PlayerManager(this);
 		startListeners();
@@ -73,6 +74,7 @@ public class PvPManager extends SDPlugin {
 	@Override
 	public void onPluginDisable() {
 		playerHandler.handlePluginDisable();
+		dependencyManager.onDisableCleanup();
 		storageManager.shutdown();
 		ScheduleUtils.cancelAllTasks();
 		instance = null;

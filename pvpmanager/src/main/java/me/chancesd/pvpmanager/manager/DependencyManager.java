@@ -29,6 +29,7 @@ import me.chancesd.pvpmanager.integration.hook.SimpleClansHook;
 import me.chancesd.pvpmanager.integration.hook.TABHook;
 import me.chancesd.pvpmanager.integration.hook.TownyHook;
 import me.chancesd.pvpmanager.integration.hook.VaultHook;
+import me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardFlagHandler;
 import me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardModernHook;
 import me.chancesd.pvpmanager.integration.type.AFKDependency;
 import me.chancesd.pvpmanager.integration.type.Dependency;
@@ -58,7 +59,12 @@ public class DependencyManager {
 	private final ArrayList<ForceToggleDependency> togglePvPChecks = new ArrayList<>();
 	private final ArrayList<AFKDependency> afkChecks = new ArrayList<>();
 
-	public DependencyManager() {
+	public void onLoadSetup() {
+		if (Hook.WORLDGUARD.getPlugin() != null)
+			WorldGuardFlagHandler.initializeFlags();
+	}
+
+	public void onEnableSetup() {
 		if (Bukkit.getPluginManager().getPlugin("TAB-Bridge") != null && (Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool())) {
 			Log.info("TAB-Bridge detected. Nametags in combat disabled due to incompatibility. Use the prefix/suffix placeholders instead");
 			Conf.NAMETAG_COMBAT_ENABLED.disable();
@@ -80,6 +86,11 @@ public class DependencyManager {
 			Log.infoColor(ChatColor.LIGHT_PURPLE + "Delayed checking for any missing hooks...");
 			setupHooks(hooks);
 		});
+	}
+
+	public void onDisableCleanup() {
+		if (Hook.WORLDGUARD.isEnabled())
+			WorldGuardFlagHandler.shutdown();
 	}
 
 	private List<Hook> setupHooks(final Hook... hooks) {
@@ -129,7 +140,8 @@ public class DependencyManager {
 					yield legacyHook;
 				} catch (final Exception e) {
 					throw new DependencyException("Failed to load WorldGuardLegacyHook", e, hook);
-				}			}
+				}
+			}
 		}
 		case ESSENTIALS -> new EssentialsHook(hook);
 		case PLACEHOLDERAPI -> new PlaceHolderAPIHook(hook);

@@ -1,5 +1,7 @@
 package me.chancesd.pvpmanager.integration.hook.worldguard;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -7,10 +9,15 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import com.sk89q.worldguard.session.Session;
+import com.sk89q.worldguard.session.SessionManager;
+import com.sk89q.worldguard.session.handler.Handler;
 
 import me.chancesd.pvpmanager.integration.BaseDependency;
 import me.chancesd.pvpmanager.integration.Hook;
@@ -20,6 +27,7 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Lang;
+import me.chancesd.sdutils.utils.Log;
 import me.chancesd.pvpmanager.setting.Conf;
 
 public class WorldGuardModernHook extends BaseDependency implements WorldGuardDependency, ForceToggleDependency {
@@ -29,6 +37,27 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 	public WorldGuardModernHook(final Hook hook) {
 		super(hook);
 		regionQuery = com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
+		final SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
+
+		// Register flag handler for online players, workaround since WG doesn't unregister handlers
+		for (final Player player : Bukkit.getOnlinePlayers()) {
+			final Session session = sessionManager.get(WorldGuardPlugin.inst().wrapPlayer(player));
+			try {
+				final Field handlersField = session.getClass().getDeclaredField("handlers");
+				handlersField.setAccessible(true);
+				@SuppressWarnings("unchecked")
+				final HashMap<Class<?>, Handler> handlers = (HashMap<Class<?>, Handler>) handlersField.get(session);
+
+				handlers.entrySet().removeIf(
+						entry -> entry.getValue().getClass().getName().equals("me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardFlagHandler"));
+			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+				Log.severe("Failed to remove old WG FlagHandler, flags might not work correctly until the player rejoins", e);
+			}
+
+			session.register(WorldGuardFlagHandler.FACTORY.create(session));
+		}
+
+		sessionManager.registerHandler(WorldGuardFlagHandler.FACTORY, null);
 	}
 
 	// This method has no use in free version, use canAttackAt() instead
@@ -85,7 +114,7 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 
 	@Override
 	public boolean shouldDisable(final Player damager, final Player defender, final ProtectionType reason) {
-		if (hasAllowPvPFlag(defender) || containsRegionsAt(defender.getLocation(), Conf.WORLDGUARD_OVERRIDES_LIST.asSet())) {
+		if (hasAllowPvPFlag(defender)) {
 			final CombatPlayer attacker = CombatPlayer.get(damager);
 			final CombatPlayer attacked = CombatPlayer.get(defender);
 			if (reason == ProtectionType.PVPDISABLED) {

@@ -96,7 +96,6 @@ public enum Conf {
 	COMMANDS_PVP_ON(ConfSection.PVP_TOGGLE, "Commands PvP On", Conf::getCommandList, List.class, List.class),
 	COMMANDS_PVP_OFF(ConfSection.PVP_TOGGLE, "Commands PvP Off", Conf::getCommandList, List.class, List.class),
 	WORLDGUARD_OVERRIDES(ConfSection.PVP_TOGGLE, "WorldGuard Overrides.Enabled", true, Boolean.class),
-	WORLDGUARD_OVERRIDES_LIST(ConfSection.PVP_TOGGLE, "WorldGuard Overrides.Region List", Conf::getSet, List.class, Set.class),
 
 	// Anti border hopping
 	VULNERABLE_ENABLED(ConfSection.BORDER_HOPPING, "Vulnerable.Enabled", true, Boolean.class),
@@ -157,8 +156,8 @@ public enum Conf {
 	METRICS_OPT_OUT("Metrics", "Opt-out", false, Boolean.class),
 	HARMFUL_POTIONS("Harmful Potions", "", Conf::getSet, List.class, Set.class),
 
-	PLACEHOLDER_BOOLEAN_TRUE("Placeholders", "Boolean Format.True", ChatUtils::colorize, String.class, String.class),
-	PLACEHOLDER_BOOLEAN_FALSE("Placeholders", "Boolean Format.False", ChatUtils::colorize, String.class, String.class),
+	PLACEHOLDER_BOOLEAN_TRUE("Placeholders", "Boolean Format.true", ChatUtils::colorize, String.class, String.class),
+	PLACEHOLDER_BOOLEAN_FALSE("Placeholders", "Boolean Format.false", ChatUtils::colorize, String.class, String.class),
 
 	DEBUG_MODE("Debug Mode", "", Conf::setDebug, Boolean.class, Boolean.class);
 
