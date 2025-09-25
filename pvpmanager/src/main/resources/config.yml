@@ -272,6 +272,8 @@ Other Settings:
 # What should be disabled when a player enters PvP
 Disable On Hit:
   Fly: true
+  # Whether to restore flight after combat ends. Set to false if you have items that grant temporary flight
+  Restore Fly: true
   # Anything not Survival gets disabled
   GameMode: true
   # Disguises from LibsDisguises

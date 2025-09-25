@@ -205,7 +205,7 @@ public class CombatPlayer extends EcoPlayer {
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this, reason);
 		ScheduleUtils.ensureMainThread(() -> {
 			Bukkit.getPluginManager().callEvent(event);
-			if (Conf.DISABLE_FLY.asBool() && getWasAllowedFlight()) {
+			if (Conf.DISABLE_FLY.asBool() && Conf.RESTORE_FLY.asBool() && getWasAllowedFlight()) {
 				getPlayer().setAllowFlight(getWasAllowedFlight()); // Sync because there's an async catcher on MC 1.8
 			}
 		}, getPlayer());

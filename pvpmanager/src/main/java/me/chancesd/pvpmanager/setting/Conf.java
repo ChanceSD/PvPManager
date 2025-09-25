@@ -145,6 +145,7 @@ public enum Conf {
 
 	// Disable on hit
 	DISABLE_FLY(ConfSection.DISABLE_ON_HIT, "Fly", true, Boolean.class),
+	RESTORE_FLY(ConfSection.DISABLE_ON_HIT, "Restore Fly", true, Boolean.class),
 	DISABLE_GAMEMODE(ConfSection.DISABLE_ON_HIT, "GameMode", true, Boolean.class),
 	DISABLE_DISGUISE(ConfSection.DISABLE_ON_HIT, "Disguise", true, Boolean.class),
 	DISABLE_GODMODE(ConfSection.DISABLE_ON_HIT, "GodMode", true, Boolean.class),
