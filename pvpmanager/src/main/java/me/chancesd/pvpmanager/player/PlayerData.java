@@ -3,6 +3,7 @@ package me.chancesd.pvpmanager.player;
 import java.util.Map;
 import java.util.UUID;
 
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
@@ -104,7 +105,7 @@ public class PlayerData {
      * Creates default PlayerData for new players
      */
     public static PlayerData createDefault() {
-        return new PlayerData(null, null, null, false, 0, false, 0, System.currentTimeMillis());
+        return new PlayerData(null, null, null, Conf.DEFAULT_PVP.asBool(), 0, false, 0, System.currentTimeMillis());
     }
     
     /**

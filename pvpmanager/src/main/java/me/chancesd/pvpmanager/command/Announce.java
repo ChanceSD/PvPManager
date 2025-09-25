@@ -5,7 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
+import me.chancesd.pvpmanager.setting.lang.Replacement;
 import me.chancesd.sdutils.command.ArgumentType;
 import me.chancesd.sdutils.command.BaseCommand;
 import me.chancesd.sdutils.command.CommandArgument;
@@ -25,7 +27,7 @@ public class Announce extends BaseCommand {
 		final String message = getArgument(args, "message").getValue();
 
 		// Broadcast the message to all players
-		final String colorizedMessage = ChatUtils.colorize(message);
+		final String colorizedMessage = ChatUtils.colorize(message).replace(Replacement.PREFIX.getPlaceholder(), Lang.PREFIX.msg());
 		Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(colorizedMessage));
 
 		// Also send to console

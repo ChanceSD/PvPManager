@@ -50,7 +50,7 @@ Combat Tag:
     Boss Bar:
       Enabled: true
       # You can use any PlaceholderAPI placeholders here
-      Message: '&8&l[&c&lIn Combat&8&l] &e&l<time> seconds'
+      Message: '&8&l[&c&lCOMBAT&8&l] &e&l<time> seconds'
       # See here for bar color options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
       BarColor: RED
       # See here for bar style options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarStyle.html
@@ -86,6 +86,8 @@ Combat Tag:
         - 'BUTTON'
         - 'BED'
         - 'PRESSURE_PLATE'
+        - 'SLAB'
+        - 'STAIRS'
         - 'CARPET'
     # Command whitelist is recursive, allowing 'tell' will allow 'tell' with any number of arguments
     Commands:
@@ -120,7 +122,7 @@ Combat Log Punishments:
   # List of commands to execute on combat log, use '{player}' for player name
   # The 'announce' command can be optionally used to broadcast, you can add more or to disable just delete the command
   Commands On Combat Log:
-    - 'announce {prefix} {player} tried to escape combat and died!'
+    - 'announce #bf973f{prefix} {player} #361010tried to escape combat!'
 
 ######################
 ####  PvP Toggle  ####
@@ -299,8 +301,8 @@ Database:
 # PlaceholderAPI boolean formatting
 Placeholders:
   Boolean Format:
-    True: '&a✓'
-    False: '&c✗'
+    True: '#6fc93e✓'
+    False: '#c9453e✗'
 
 # Should PvPManager be allowed to check for updates and tell you about them
 # Auto Update - After checking should the update be downloaded automatically for you?

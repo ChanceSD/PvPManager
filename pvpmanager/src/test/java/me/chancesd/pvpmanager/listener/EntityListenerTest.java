@@ -349,20 +349,20 @@ public class EntityListenerTest {
 	@Test
 	final void excludedWorld() {
 		final String excludedWorldName = "excluded_world";
-		
+
 		// Configure world as excluded
 		when(defender.getWorld().getName()).thenReturn(excludedWorldName);
 		when(attacker.getWorld().getName()).thenReturn(excludedWorldName);
-		
+
 		// Mock CombatUtils.isWorldExcluded to return true for our test world
 		try (var mockedCombatUtils = mockStatic(CombatUtils.class)) {
 			mockedCombatUtils.when(() -> CombatUtils.isWorldExcluded(excludedWorldName)).thenReturn(true);
-			
+
 			mockEvent = createDamageEvent(attacker, defender, false);
-			
+
 			// Call the listener directly
 			damageListener.onPlayerDamage(mockEvent);
-			
+
 			// Event should remain unchanged (not cancelled, not processed)
 			assertFalse(mockEvent.isCancelled());
 			// No combat tagging should occur
@@ -388,7 +388,7 @@ public class EntityListenerTest {
 		// Test vulnerable state when both players are in combat and enemies
 		combatAttacker.tag(true, combatDefender);
 		combatDefender.tag(false, combatAttacker);
-		
+
 		// With vulnerable enabled and override, should allow attack
 		combatAttacker.toggleOverride();
 		createAttack(false);

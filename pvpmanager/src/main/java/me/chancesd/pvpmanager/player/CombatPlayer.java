@@ -38,7 +38,7 @@ public class CombatPlayer extends EcoPlayer {
 
 	private boolean newbie;
 	private boolean tagged;
-	private boolean pvpState = Conf.DEFAULT_PVP.asBool() || CombatUtils.isNPC(getPlayer());
+	private boolean pvpState;
 	private boolean pvpLogged;
 	private boolean override;
 	private boolean loaded;
@@ -59,6 +59,7 @@ public class CombatPlayer extends EcoPlayer {
 	public CombatPlayer(@NotNull final Player player, final PvPManager plugin) {
 		super(player, plugin.getDependencyManager().getEconomy());
 		this.plugin = plugin;
+		this.pvpState = Conf.DEFAULT_PVP.asBool();
 		setCombatWorld(plugin.getWorldManager().getWorld(getPlayer().getWorld()));
 		initializeNameTag();
 	}
@@ -122,8 +123,12 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public final void setNewbie(final boolean newbie) {
+		setNewbie(newbie, 0);
+	}
+
+	public final void setNewbie(final boolean newbie, final long time) {
 		if (newbie) {
-			this.newbieTask = new NewbieTask(this, 0);
+			this.newbieTask = new NewbieTask(this, time);
 		} else if (this.newbie && newbieTask != null) {
 			newbieTask.cancel();
 			this.newbieTask = null;
@@ -406,13 +411,15 @@ public class CombatPlayer extends EcoPlayer {
 	 */
 	public void applyPlayerData(final PlayerData data) {
 		// Apply loaded data (overriding defaults)
-		this.pvpState = data.isPvpEnabled();
+		this.pvpState = data.isPvpEnabled() || CombatUtils.isNPC(getPlayer());
 		this.toggleTime = data.getToggleTime();
 		this.newbie = data.isNewbie();
 
-		// Handle newbie task if needed
-		if (this.newbie && data.getNewbieTimeLeft() > 0) {
-			this.newbieTask = new NewbieTask(this, data.getNewbieTimeLeft());
+		if (Conf.NEWBIE_ENABLED.asBool() && (this.newbie && data.getNewbieTimeLeft() > 0 || !getPlayer().hasPlayedBefore())) {
+			setNewbie(true, data.getNewbieTimeLeft());
+		} else if (!Conf.NEWBIE_ENABLED.asBool() && this.newbie) {
+			// If newbie protection is disabled but player has newbie flag, clear it
+			setNewbie(false);
 		}
 
 		// Apply world-specific PvP rules (these override database values)

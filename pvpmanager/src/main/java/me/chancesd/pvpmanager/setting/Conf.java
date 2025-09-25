@@ -317,7 +317,7 @@ public enum Conf {
 			try {
 				setting.loadSetting();
 			} catch (final Exception ex) {
-				Log.severe("Error loading the seetings for " + setting.section + "." + setting.configKey, ex);
+				Log.severe("Error loading settings for " + setting.section + "." + setting.configKey, ex);
 			}
 		});
 		Log.infoColor(ChatColor.GREEN + "Using player nametags: " + ChatColor.AQUA + (NAMETAG_COMBAT_ENABLED.asBool() || TOGGLE_NAMETAG_ENABLED.asBool()));
@@ -327,7 +327,7 @@ public enum Conf {
 		try {
 			return Enum.valueOf(clazz, value);
 		} catch (final IllegalArgumentException e) {
-			Log.warning("Error! " + clazz.getSimpleName() + " '" + value + "' does not exist!");
+			Log.warning("Error! " + clazz.getSimpleName() + " '" + value + "' does not exist! Check your config");
 			return null;
 		}
 	}
