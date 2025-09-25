@@ -49,7 +49,7 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 				final HashMap<Class<?>, Handler> handlers = (HashMap<Class<?>, Handler>) handlersField.get(session);
 
 				handlers.entrySet().removeIf(
-						entry -> entry.getValue().getClass().getName().equals("me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardFlagHandler"));
+						entry -> entry.getValue().getClass().getName().equals(WorldGuardFlagHandler.class.getName()));
 			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 				Log.severe("Failed to remove old WG FlagHandler, flags might not work correctly until the player rejoins", e);
 			}
