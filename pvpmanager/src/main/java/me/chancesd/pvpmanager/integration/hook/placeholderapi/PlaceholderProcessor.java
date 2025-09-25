@@ -1,4 +1,4 @@
-package me.chancesd.pvpmanager.integration.hook;
+package me.chancesd.pvpmanager.integration.hook.placeholderapi;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -12,16 +12,20 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.Utils;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
-public class PlaceHolderAPI extends PlaceholderExpansion {
+/**
+ * Standalone placeholder processor for PvPManager placeholders.
+ * This class provides placeholder replacement functionality without depending on PlaceholderAPI classes.
+ * Contains the core logic that is shared between PlaceholderAPI integration and fallback processing.
+ */
+public class PlaceholderProcessor {
 
 	private final PvPManager plugin;
 	@NotNull
 	private final List<String> placeholders = new ArrayList<>();
 	private final DecimalFormat df = new DecimalFormat("#.##");
 
-	public PlaceHolderAPI(final PvPManager plugin) {
+	public PlaceholderProcessor(final PvPManager plugin) {
 		this.plugin = plugin;
 		registerPlaceholder("in_combat");
 		registerPlaceholder("combat_timeleft");
@@ -32,15 +36,41 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		registerPlaceholder("newbie_timeleft");
 		registerPlaceholder("has_override");
 		registerPlaceholder("has_respawn_prot");
+		registerPlaceholder("combat_prefix");
 		registerPlaceholder("player_health");
 		registerPlaceholder("current_enemy");
 		registerPlaceholder("current_enemy_health");
-		registerPlaceholder("combat_prefix");
 		registerPlaceholder("global_pvp_status");
 	}
 
-	@Override
-	public String onPlaceholderRequest(final Player player, final String identifier) {
+	public String replacePlaceholders(final Player player, String message) {
+		if (message == null || player == null) {
+			return message;
+		}
+
+		String result = message;
+		for (final String placeholder : placeholders) {
+			if (result.contains("%" + placeholder + "%")) {
+				final String identifier = placeholder.substring("pvpmanager_".length());
+				final String replacement = processPlaceholder(player, identifier);
+				if (replacement != null) {
+					result = result.replace("%" + placeholder + "%", replacement);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Core placeholder processing logic shared by both PlaceholderAPI integration and fallback processing.
+	 * This method contains the actual placeholder replacement logic.
+	 *
+	 * @param player     The player to get placeholder values for
+	 * @param identifier The placeholder identifier (without pvpmanager_ prefix)
+	 * @return The placeholder value or null if not found
+	 */
+	public String processPlaceholder(final Player player, final String identifier) {
 		if (player == null)
 			return "";
 
@@ -90,40 +120,9 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 	}
 
 	private void registerPlaceholder(final String name) {
-		placeholders.add(getIdentifier() + "_" + name);
+		placeholders.add("pvpmanager_" + name);
 	}
 
-	@Override
-	public boolean persist() {
-		return true;
-	}
-
-	@Override
-	public boolean canRegister() {
-		return true;
-	}
-
-	@Override
-	public String getAuthor() {
-		return plugin.getDescription().getAuthors().toString();
-	}
-
-	@Override
-	public String getName() {
-		return plugin.getDescription().getName();
-	}
-
-	@Override
-	public String getIdentifier() {
-		return "pvpmanager";
-	}
-
-	@Override
-	public String getVersion() {
-		return plugin.getDescription().getVersion();
-	}
-
-	@Override
 	public List<String> getPlaceholders() {
 		return placeholders;
 	}

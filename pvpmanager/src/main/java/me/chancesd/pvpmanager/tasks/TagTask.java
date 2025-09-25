@@ -15,7 +15,7 @@ import me.chancesd.pvpmanager.event.PlayerUntagEvent;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.sdutils.utils.ChatUtils;
+import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.display.BossBarBuilder;
 import me.chancesd.sdutils.display.CountdownData;
 import me.chancesd.sdutils.display.DisplayManager;
@@ -75,7 +75,7 @@ public class TagTask implements Listener {
 		final CountdownData.Builder builder = new CountdownData.Builder();
 		if (Conf.ACTION_BAR_ENABLED.asBool()) {
 			builder.withActionBar(progressBar, timeSource -> {
-				final String message = ChatUtils.setPlaceholders(combatPlayer.getPlayer(), progressBar.getMessage());
+				final String message = CombatUtils.processPlaceholders(combatPlayer.getPlayer(), progressBar.getMessage());
 				combatPlayer.sendActionBar(message);
 				return message;
 			});
@@ -84,7 +84,7 @@ public class TagTask implements Listener {
 			builder.withBossBar(bossBar.build(), timeSource -> {
 				final String message = Conf.BOSS_BAR_MESSAGE.asString().replace("<time>",
 						Double.toString(Utils.roundTo1Decimal(timeSource.getGoal() - timeSource.getProgress())));
-				return ChatUtils.setPlaceholders(combatPlayer.getPlayer(), message);
+				return CombatUtils.processPlaceholders(combatPlayer.getPlayer(), message);
 			});
 		}
 		final CountdownData countdownData = builder.withTimeSource(timeProgressSource)

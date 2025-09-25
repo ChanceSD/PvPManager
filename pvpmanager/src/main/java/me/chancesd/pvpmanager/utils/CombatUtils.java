@@ -31,14 +31,18 @@ import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.integration.hook.placeholderapi.PlaceholderProcessor;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.sdutils.utils.ReflectionUtil;
+import me.chancesd.sdutils.utils.ChatUtils;
 
 public final class CombatUtils {
 
 	private static final DecimalFormat decimalFormat = new DecimalFormat();
+	private static PlaceholderProcessor cachedPlaceholderProcessor;
 
 	private CombatUtils() {
 	}
@@ -279,6 +283,27 @@ public final class CombatUtils {
 
 	public static String truncateString(final String text, final int size) {
 		return text.substring(0, Math.min(text.length(), size));
+	}
+
+	/**
+	 * Process placeholders in a message, combining PlaceholderAPI support with PvPManager fallback
+	 *
+	 * @param player  The player to get placeholder values for
+	 * @param message The message containing placeholders
+	 * @return The message with placeholders replaced
+	 */
+	public static String processPlaceholders(final Player player, final String message) {
+		if (message == null) {
+			return message;
+		}
+
+		// Use ChatUtils with PvPManager fallback for when PlaceholderAPI is disabled
+		return ChatUtils.setPlaceholders(player, message, (p, msg) -> {
+			if (cachedPlaceholderProcessor == null) {
+				cachedPlaceholderProcessor = new PlaceholderProcessor(PvPManager.getInstance());
+			}
+			return cachedPlaceholderProcessor.replacePlaceholders(p, msg);
+		});
 	}
 
 	private static ProjectileSource getSource(final Entity entity) {

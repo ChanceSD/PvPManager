@@ -86,7 +86,7 @@ public class BukkitNameTag extends NameTag {
 			return;
 		inCombat = registerTeam(combatTeamID);
 		Log.debug("Creating combat team with name " + combatTeamID);
-		inCombat.setPrefix(combatPrefix.replace(" &8(&7%pvpmanager_combat_timeleft%s&8)", ""));
+		inCombat.setPrefix(combatPrefix.replace("§8(§7%pvpmanager_combat_timeleft%s§8) ", ""));
 		setTeamColor(inCombat, combatPrefix);
 	}
 

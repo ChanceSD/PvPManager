@@ -1,4 +1,4 @@
-package me.chancesd.pvpmanager.integration.hook;
+package me.chancesd.pvpmanager.integration.hook.placeholderapi;
 
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.integration.BaseDependency;

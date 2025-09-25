@@ -7,9 +7,9 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.tasks.PausableTask;
 import me.chancesd.sdutils.utils.Log;
-import me.chancesd.sdutils.utils.ChatUtils;
 import me.chancesd.sdutils.utils.TimeUtil;
 import me.chancesd.sdutils.display.BossBarBuilder;
 import me.chancesd.sdutils.display.CountdownData;
@@ -93,7 +93,7 @@ public class NewbieTask extends PausableTask {
 					final String currentFormattedTime = TimeUtil.getDiffDuration(Lang.class, currentTimeLeft);
 					final String message = Conf.NEWBIE_BOSS_BAR_MESSAGE.asString()
 							.replace("<time>", currentFormattedTime);
-					return ChatUtils.setPlaceholders(player.getPlayer(), message);
+					return CombatUtils.processPlaceholders(player.getPlayer(), message);
 				})
 				.withTimeSource(timeProgressSource)
 				.onFinish(this::stopBossBarDisplay);
