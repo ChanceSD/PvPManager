@@ -238,6 +238,8 @@ public enum Conf {
 			doubleValue = config.getDouble(path, (double) def);
 		} else if (clazz == List.class) {
 			stringList = config.getStringList(path);
+		} else {
+			Log.severe("Error loading config value for " + path);
 		}
 	}
 
@@ -255,6 +257,12 @@ public enum Conf {
 			stringValue = (String) function.apply(config.getString(path));
 		} else if (clazzResult == Boolean.class) {
 			boolValue = (boolean) function.apply(config.getBoolean(path));
+		} else if (clazzResult == Integer.class) {
+			intValue = (int) function.apply(config.getInt(path));
+		} else if (clazzResult == Double.class) {
+			doubleValue = (double) function.apply(config.getDouble(path));
+		} else {
+			Log.severe("Error loading config value for " + path);
 		}
 	}
 

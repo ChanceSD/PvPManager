@@ -21,7 +21,7 @@ General Settings:
 Combat Tag:
   Enabled: true
   # How long should the combat tag last in seconds
-  Time: 20
+  Time: 15
   # Sets the player glowing while tagged, for MC 1.9+
   Glowing: true
   # Will untag the player when they kill their current enemies
