@@ -122,7 +122,7 @@ Combat Log Punishments:
   # List of commands to execute on combat log, use '{player}' for player name
   # The 'announce' command can be optionally used to broadcast, you can add more or to disable just delete the command
   Commands On Combat Log:
-    - 'announce #bf973f{prefix} {player} #361010tried to escape combat!'
+    - 'announce {prefix} #f09a11{player} #ed5e26tried to escape combat!'
 
 ######################
 ####  PvP Toggle  ####

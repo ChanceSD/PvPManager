@@ -1,10 +1,12 @@
 package me.chancesd.pvpmanager.setting;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -13,6 +15,7 @@ import java.nio.file.Files;
 import java.time.temporal.ChronoUnit;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.stream.Stream;
@@ -279,7 +282,8 @@ public enum Lang implements TimeLangProvider {
 				if (!LANG_PROPERTIES.containsKey(a)) {
 					Log.info("Added missing '" + a + "' key to messages file.");
 					final String newProperty = original.getProperty(a) != null ? original.getProperty(a) : originalEN.getProperty(a);
-					addMessage(a + " = " + new String(newProperty.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
+					final String messageToAdd = a + " = " + new String(newProperty.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+					addMessage(messageToAdd);
 					LANG_PROPERTIES.setProperty(a, newProperty);
 				}
 			}
@@ -288,12 +292,69 @@ public enum Lang implements TimeLangProvider {
 		}
 	}
 
-	private static void addMessage(final String a) {
-		try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), StandardCharsets.UTF_8))) {
-			pw.println(a);
+	private static void addMessage(final String messageToAdd) {
+		final String messageKey = messageToAdd.split(" = ")[0];
+		final String escapedMessage = messageToAdd.replace("\n", "\\n");
+		String previousKey = null;
+
+		// Find insertion position from internal file
+		try (InputStream inputStream = plugin.getResource(LOCALE_FOLDER + Locale.EN.fileName());
+			 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				if (line.contains(" = ") && !line.startsWith("#")) {
+					final String currentKey = line.split(" = ")[0];
+					if (currentKey.equals(messageKey)) {
+						// Find existing previous key by walking backwards
+						while (previousKey != null && !LANG_PROPERTIES.containsKey(previousKey)) {
+							previousKey = findKeyBefore(previousKey);
+						}
+						break;
+					}
+					previousKey = currentKey;
+				}
+			}
+
+			// Insert at found position or append
+			if (previousKey != null && LANG_PROPERTIES.containsKey(previousKey)) {
+				final List<String> lines = Files.readAllLines(messagesFile.toPath(), StandardCharsets.UTF_8);
+				for (int i = 0; i < lines.size(); i++) {
+					if (lines.get(i).trim().startsWith(previousKey + " = ")) {
+						lines.add(i + 1, escapedMessage);
+						Files.write(messagesFile.toPath(), lines, StandardCharsets.UTF_8);
+						return;
+					}
+				}
+			}
 		} catch (final IOException e) {
 			Log.severe(e.getMessage(), e);
 		}
+
+		try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messagesFile, true), StandardCharsets.UTF_8))) {
+			pw.println(escapedMessage);
+		} catch (final IOException e) {
+			Log.severe(e.getMessage(), e);
+		}
+	}
+
+	private static String findKeyBefore(final String targetKey) {
+		try (InputStream inputStream = plugin.getResource(LOCALE_FOLDER + Locale.EN.fileName());
+			 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+			String line;
+			String previousKey = null;
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				if (line.contains(" = ") && !line.startsWith("#")) {
+					final String currentKey = line.split(" = ")[0];
+					if (currentKey.equals(targetKey)) return previousKey;
+					previousKey = currentKey;
+				}
+			}
+		} catch (final IOException e) {
+			Log.severe(e.getMessage(), e);
+		}
+		return null;
 	}
 
 	public static void messageProtection(final ProtectionResult result, final Player player, final Player attacked) {

@@ -99,6 +99,9 @@ processResources {
 test {
     useJUnitPlatform()
     include '**/*InstanceCreator.class'
+    
+    // Configure Mockito as Java agent to avoid warnings (Java 21+ compatibility)
+    jvmArgs("-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}")
 }
 
 tasks.build {
