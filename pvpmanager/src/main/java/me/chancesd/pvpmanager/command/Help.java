@@ -104,7 +104,7 @@ public class Help {
 	 */
 	private String buildAutoHoverText(final BaseCommand command, final String description) {
 		final String usage = getCommandUsage(command, "");
-		final boolean needsParameters = usage.contains("<") || usage.contains("[");
+		final boolean needsParameters = usage.contains("<");
 
 		if (needsParameters) {
 			return buildSyntaxHoverText(description, command);

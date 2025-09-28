@@ -155,7 +155,7 @@ public final class CombatUtils {
 	}
 
 	private static boolean isValidPvPAttack(final Entity attacker, final Entity defender) {
-		return Conf.SELF_TAG.asBool() || !attacker.equals(defender);
+		return Conf.SELF_TAG.asBool() || !defender.equals(attacker);
 	}
 
 	private static boolean shouldCountDamage(final EntityDamageByEntityEvent event) {

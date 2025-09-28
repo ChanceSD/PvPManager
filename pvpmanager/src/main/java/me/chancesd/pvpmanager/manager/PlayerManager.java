@@ -1,6 +1,5 @@
 package me.chancesd.pvpmanager.manager;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -13,8 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -42,7 +39,7 @@ public class PlayerManager {
 	private final Map<UUID, CombatPlayer> players = new ConcurrentHashMap<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
-	@NotNull
+	private final DeathHandler deathHandler;
 	private final PvPManager plugin;
 	private final TagTask tagTask;
 	private boolean globalStatus = true;
@@ -51,6 +48,7 @@ public class PlayerManager {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
+		this.deathHandler = new DeathHandler(this);
 		this.tagTask = new TagTask(plugin.getDisplayManager());
 		Bukkit.getPluginManager().registerEvents(tagTask, plugin);
 
@@ -216,65 +214,6 @@ public class PlayerManager {
 		}
 	}
 
-	public void handleCombatLogDrops(final PlayerDeathEvent event, final Player player) {
-		if (!Conf.DROP_EXP.asBool()) {
-			keepExp(event);
-		}
-		if (!Conf.DROP_INVENTORY.asBool() && Conf.DROP_ARMOR.asBool()) {
-			CombatUtils.fakeItemStackDrop(player, player.getInventory().getArmorContents());
-			player.getInventory().setArmorContents(null);
-		} else if (Conf.DROP_INVENTORY.asBool() && !Conf.DROP_ARMOR.asBool()) {
-			CombatUtils.fakeItemStackDrop(player, player.getInventory().getContents());
-			player.getInventory().clear();
-		}
-		if (!Conf.DROP_INVENTORY.asBool() || !Conf.DROP_ARMOR.asBool()) {
-			keepInv(event);
-		}
-	}
-
-	public void handlePlayerDrops(final PlayerDeathEvent event, final Player player, final Player killer) {
-		if (player.equals(killer))
-			return;
-		switch (Conf.PLAYER_DROP_MODE.asEnum(Conf.DropMode.class)) {
-		case DROP:
-			if (killer == null) {
-				keepInv(event);
-				keepExp(event);
-			}
-			break;
-		case KEEP:
-			if (killer != null) {
-				keepInv(event);
-				keepExp(event);
-			}
-			break;
-		case TRANSFER:
-			if (killer != null) {
-				final ItemStack[] drops = event.getDrops().toArray(new ItemStack[event.getDrops().size()]);
-				final HashMap<Integer, ItemStack> returned = killer.getInventory().addItem(drops);
-				CombatUtils.fakeItemStackDrop(player, returned.values().toArray(new ItemStack[returned.values().size()]));
-				event.getDrops().clear();
-			}
-			break;
-		case CLEAR:
-			event.getDrops().clear();
-			event.setDroppedExp(0);
-			break;
-		default:
-			break;
-		}
-	}
-
-	private void keepInv(final PlayerDeathEvent event) {
-		event.setKeepInventory(true);
-		event.getDrops().clear();
-	}
-
-	private void keepExp(final PlayerDeathEvent event) {
-		event.setKeepLevel(true);
-		event.setDroppedExp(0);
-	}
-
 	private void addOnlinePlayers() {
 		final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 		if (scoreboardManager != null) {
@@ -341,6 +280,10 @@ public class PlayerManager {
 
 	public ConfigManager getConfigManager() {
 		return configManager;
+	}
+
+	public DeathHandler getDeathHandler() {
+		return deathHandler;
 	}
 
 }

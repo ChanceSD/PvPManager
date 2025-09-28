@@ -1,11 +1,8 @@
 package me.chancesd.pvpmanager.listener;
 
 import me.chancesd.sdutils.utils.Log;
-import me.chancesd.sdutils.utils.MCVersion;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -27,14 +24,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import me.chancesd.pvpmanager.integration.Hook;
-import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
@@ -49,12 +41,10 @@ import me.chancesd.sdutils.scheduler.ScheduleUtils;
 public class PlayerListener implements Listener {
 
 	private final PlayerManager playerHandler;
-	private final WorldGuardDependency wg;
 	private final Cache<UUID, String> msgCooldown = CacheBuilder.newBuilder().weakValues().expireAfterWrite(800, TimeUnit.MILLISECONDS).build();
 
 	public PlayerListener(final PlayerManager ph) {
 		this.playerHandler = ph;
-		this.wg = (WorldGuardDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -72,55 +62,6 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			player.setItemCooldown(type, Conf.ITEM_COOLDOWNS.asMap().get(type));
-		}
-	}
-
-	@EventHandler
-	public final void onFireworkUseWhileGliding(final PlayerInteractEvent event) {
-		final Player player = event.getPlayer();
-		if (MCVersion.isLowerThan(MCVersion.V1_9) || !player.isGliding())
-			return;
-
-		final Action action = event.getAction();
-		if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)
-			return;
-
-		final CombatPlayer pvPlayer = playerHandler.get(player);
-		if (!pvPlayer.isInCombat())
-			return;
-
-		@SuppressWarnings("deprecation")
-		final ItemStack item = player.getInventory().getItemInHand();
-		Material fireworkMaterial = null;
-		if (MCVersion.isAtLeast(MCVersion.V1_13)) {
-			fireworkMaterial = Material.FIREWORK_ROCKET;
-		} else {
-			// For versions before 1.13, try to get the legacy material
-			try {
-				fireworkMaterial = Material.getMaterial("FIREWORK");
-			} catch (final Exception e) {
-				return;
-			}
-		}
-
-		if (item.getType() != fireworkMaterial)
-			return;
-
-		// Check if fireworks are completely blocked
-		if (Conf.BLOCK_FIREWORKS_IN_COMBAT.asBool()) {
-			event.setCancelled(true);
-			pvPlayer.sendActionBar(Lang.FIREWORK_BLOCKED_IN_COMBAT.msg(), 1000);
-			return;
-		}
-
-		// Check power limit
-		final int powerLimit = Conf.FIREWORK_POWER_LIMIT.asInt();
-		if (powerLimit >= 0 && item.hasItemMeta()) {
-			final FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-			if (meta != null && meta.getPower() > powerLimit) {
-				event.setCancelled(true);
-				pvPlayer.sendActionBar(Lang.FIREWORK_POWER_LIMITED_IN_COMBAT.msg(meta.getPower()), 1000);
-			}
 		}
 	}
 
@@ -158,58 +99,9 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public final void onPlayerDeath(final PlayerDeathEvent event) {
-		final Player player = event.getEntity();
-		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
+		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
-
-		final CombatPlayer pvPlayer = playerHandler.get(player);
-		final Player killer = player.getKiller();
-
-		// Player died in combat, process that
-		if (killer != null && !killer.equals(player)) {
-			final CombatPlayer pKiller = playerHandler.get(killer);
-			handlePvPDeath(player, pvPlayer, killer, pKiller, event);
-		}
-
-		if (pvPlayer.isInCombat()) {
-			final Set<CombatPlayer> enemies = pvPlayer.getEnemies();
-			if (Conf.UNTAG_ON_KILL.asBool()) {
-				enemies.forEach(enemy -> enemy.removeEnemy(pvPlayer));
-			}
-			pvPlayer.untag(UntagReason.DEATH);
-		}
-
-		// Let's process player's inventory/exp according to config file
-		if (pvPlayer.hasPvPLogged()) {
-			playerHandler.handleCombatLogDrops(event, player);
-			return;
-		}
-
-		playerHandler.handlePlayerDrops(event, player, killer);
-	}
-
-	private void handlePvPDeath(final Player player, final CombatPlayer pvPlayer, final Player killer, final CombatPlayer pKiller, final PlayerDeathEvent event) {
-		if (Conf.KILL_ABUSE_ENABLED.asBool() && !pKiller.hasPerm(Permissions.EXEMPT_KILL_ABUSE)) {
-			pKiller.addVictim(player);
-		}
-		if (wg == null || !wg.containsRegionsAt(killer.getLocation(), Conf.KILLS_WG_EXCLUSIONS.asSet())) {
-			if (Conf.MONEY_REWARD.asDouble() > 0) {
-				pKiller.giveReward(pvPlayer);
-			}
-			if (Conf.MONEY_PENALTY.asDouble() > 0) {
-				pvPlayer.applyPenalty();
-			}
-			if (pKiller.canExecuteKillCommand()) {
-				CombatUtils.executeCommands(Conf.COMMANDS_ON_KILL.asList(), killer, killer.getName(), player.getName());
-			}
-			pvPlayer.setLastDeathWasPvP(true);
-			if (Conf.EXP_STEAL.asDouble() > 0) {
-				final int expWon = pKiller.giveExp(pvPlayer);
-				event.setDroppedExp(0);
-				event.setNewExp(player.getTotalExperience() - expWon);
-				pvPlayer.message(Lang.EXP_STOLEN.msg(pKiller.getName(), expWon));
-			}
-		}
+		playerHandler.getDeathHandler().processDeath(event);
 	}
 
 	@EventHandler
@@ -256,29 +148,6 @@ public class PlayerListener implements Listener {
 				if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 9) {
 					pvplayer.message(Lang.ATTACK_DENIED_OTHER.msg(target.getName()));
 					e.setCancelled(true);
-					return;
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // cancel on low since some plugins check cancels on normal instead of monitor
-	public final void onPlayerBlockInteract(final PlayerInteractEvent e) {
-		final Player player = e.getPlayer();
-		if (!Conf.BLOCK_INTERACT_IN_COMBAT.asBool()  || e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.PHYSICAL
-				|| CombatUtils.isWorldExcluded(player.getWorld().getName()))
-			return;
-
-		final CombatPlayer combatPlayer = playerHandler.get(player);
-		final Block clickedBlock = e.getClickedBlock();
-		if (clickedBlock == null)
-			return;
-		if (combatPlayer.isInCombat()) {
-			final Material blockType = clickedBlock.getType();
-			for (final String material : Conf.BLOCK_INTERACT_ITEM_LIST.asList()) {
-				if (blockType.name().endsWith(material)) {
-					e.setCancelled(true);
-					combatPlayer.sendActionBar(Lang.INTERACT_BLOCKED_IN_COMBAT.msg(), 1000);
 					return;
 				}
 			}
@@ -346,7 +215,6 @@ public class PlayerListener implements Listener {
 		}
 		if (combatPlayer.wasLastDeathPvP()) {
 			CombatUtils.executeCommands(Conf.COMMANDS_ON_RESPAWN.asList(), event.getPlayer(), event.getPlayer().getName());
-			combatPlayer.setLastDeathWasPvP(false);
 		}
 	}
 
