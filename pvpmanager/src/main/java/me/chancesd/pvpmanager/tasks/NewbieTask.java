@@ -76,14 +76,12 @@ public class NewbieTask extends PausableTask {
 		final TimeProgressSource timeProgressSource = new TimeProgressSource() {
 			@Override
 			public long getGoal() {
-				return Conf.NEWBIE_TIME.asInt();
+				return getDuration() / 1000;
 			}
 
 			@Override
 			public double getProgress() {
-				final long totalDuration = Conf.NEWBIE_TIME.asInt() * 1000L;
-				final long timeLeft = getTimeleft();
-				return (totalDuration - timeLeft) / 1000.0;
+				return (getDuration() - getTimeleft()) / 1000.0;
 			}
 		};
 
@@ -95,8 +93,7 @@ public class NewbieTask extends PausableTask {
 							.replace("<time>", currentFormattedTime);
 					return CombatUtils.processPlaceholders(player.getPlayer(), message);
 				})
-				.withTimeSource(timeProgressSource)
-				.onFinish(this::stopBossBarDisplay);
+				.withTimeSource(timeProgressSource);
 
 		countdownData = builder.build(player.getPlayer());
 		displayManager.createCountdown(player.getPlayer(), countdownData);
