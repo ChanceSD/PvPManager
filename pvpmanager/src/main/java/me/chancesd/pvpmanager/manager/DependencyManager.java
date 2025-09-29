@@ -60,7 +60,7 @@ public class DependencyManager {
 	private final ArrayList<AFKDependency> afkChecks = new ArrayList<>();
 
 	public void onLoadSetup() {
-		if (Hook.WORLDGUARD.getPlugin() != null)
+		if (Hook.WORLDGUARD.getPlugin() != null && Utils.isVersionAtLeast(Utils.stripTags(Hook.WORLDGUARD.getVersion()), "7.0"))
 			WorldGuardFlagHandler.initializeFlags();
 	}
 
@@ -89,7 +89,7 @@ public class DependencyManager {
 	}
 
 	public void onDisableCleanup() {
-		if (Hook.WORLDGUARD.isEnabled())
+		if (Hook.WORLDGUARD.isEnabled() && Utils.isVersionAtLeast(Utils.stripTags(Hook.WORLDGUARD.getVersion()), "7.0"))
 			WorldGuardFlagHandler.shutdown();
 	}
 

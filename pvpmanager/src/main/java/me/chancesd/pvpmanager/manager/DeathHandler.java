@@ -6,12 +6,12 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-
 import me.chancesd.pvpmanager.integration.Hook;
 import me.chancesd.pvpmanager.integration.type.WorldGuardDependency;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.setting.Conf.DropMode;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -99,7 +99,12 @@ public class DeathHandler {
 	public void handlePlayerDrops(final PlayerDeathEvent event, final Player player, final Player killer) {
 		if (player.equals(killer))
 			return;
-		switch (Conf.PLAYER_DROP_MODE.asEnum(Conf.DropMode.class)) {
+		final DropMode dropMode = Conf.PLAYER_DROP_MODE.asEnum(Conf.DropMode.class);
+		if (dropMode == null) {
+			Conf.PLAYER_DROP_MODE.set(DropMode.ALWAYS);
+			return;
+		}
+		switch (dropMode) {
 		case DROP:
 			if (killer == null) {
 				keepInv(event);

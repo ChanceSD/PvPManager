@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.setting.conf.ConfSection;
@@ -291,7 +292,7 @@ public enum Conf {
 		return stringSet;
 	}
 
-	@NotNull
+	@Nullable
 	public <E extends Enum<E>> E asEnum(final Class<E> en) {
 		return en.cast(enumValue);
 	}
@@ -308,6 +309,11 @@ public enum Conf {
 	@SuppressWarnings("java:S3066") // Public setters needed
 	public void set(final boolean booleanValue) {
 		this.boolValue = booleanValue;
+	}
+
+	@SuppressWarnings("java:S3066") // Public setters needed
+	public void set(final Enum<?> enumValue) {
+		this.enumValue = enumValue;
 	}
 
 	public void disable() {

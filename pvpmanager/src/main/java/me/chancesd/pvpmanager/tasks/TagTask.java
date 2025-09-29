@@ -27,12 +27,12 @@ public class TagTask implements Listener {
 
 	private final Map<CombatPlayer, CountdownData> taggedCountdowns = new ConcurrentHashMap<>();
 	private final DisplayManager display;
-	private final BossBarBuilder bossBar;
+	private BossBarBuilder bossBar;
 
 	public TagTask(final DisplayManager display) {
 		this.display = display;
-		this.bossBar = BossBarBuilder.create().barColor(Conf.BOSS_BAR_COLOR.asEnum(BarColor.class))
-				.barStyle(Conf.BOSS_BAR_STYLE.asEnum(BarStyle.class));
+		if (Conf.BOSS_BAR_ENABLED.asBool())
+			this.bossBar = BossBarBuilder.create().barColor(Conf.BOSS_BAR_COLOR.asEnum(BarColor.class)).barStyle(Conf.BOSS_BAR_STYLE.asEnum(BarStyle.class));
 	}
 
 	public final boolean cancel() {
@@ -46,7 +46,7 @@ public class TagTask implements Listener {
 		return false;
 	}
 
-	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public final void onPlayerTag(final PlayerTagEvent event) {
 		startTracking(event.getCombatPlayer());
 	}
