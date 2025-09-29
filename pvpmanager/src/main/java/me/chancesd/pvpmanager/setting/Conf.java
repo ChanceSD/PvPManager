@@ -300,10 +300,12 @@ public enum Conf {
 		return map;
 	}
 
+	@SuppressWarnings("java:S3066") // Public setters needed
 	public void set(final String stringValue) {
 		this.stringValue = stringValue;
 	}
 
+	@SuppressWarnings("java:S3066") // Public setters needed
 	public void set(final boolean booleanValue) {
 		this.boolValue = booleanValue;
 	}

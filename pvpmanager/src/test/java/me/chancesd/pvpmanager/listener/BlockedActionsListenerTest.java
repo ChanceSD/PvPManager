@@ -18,14 +18,14 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 
 @ExtendWith(InstanceCreator.class)
-public class BlockedActionsListenerTest {
+class BlockedActionsListenerTest {
 
 	private static BlockedActionsListener listener;
 	private static PlayerManager ph;
 	private static PluginSetup pt;
 
 	@BeforeAll
-	public static void setupClass() {
+	static void setupClass() {
 		pt = InstanceCreator.getPt();
 		final PvPManager plugin = pt.getPlugin();
 		ph = plugin.getPlayerManager();
@@ -33,7 +33,7 @@ public class BlockedActionsListenerTest {
 	}
 
 	@BeforeEach
-	public final void setup() {
+	final void setup() {
 		ph.getPlayers().clear();
 	}
 

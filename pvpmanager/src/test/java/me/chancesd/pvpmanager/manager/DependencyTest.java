@@ -21,12 +21,12 @@ import me.chancesd.pvpmanager.PluginSetup;
 import me.chancesd.sdutils.utils.Utils;
 
 @ExtendWith(InstanceCreator.class)
-public class DependencyTest {
+class DependencyTest {
 
 	private static Server server;
 
 	@BeforeAll
-	public static void setupClass() {
+	static void setupClass() {
 		final PluginSetup pt = InstanceCreator.getPt();
 		server = pt.getServer();
 		when(server.getServicesManager()).thenReturn(mock(ServicesManager.class));
@@ -52,7 +52,7 @@ public class DependencyTest {
 	}
 
 	@AfterAll
-	public static void cleanup() {
+	static void cleanup() {
 		when(server.getPluginManager().getPlugin(ArgumentMatchers.anyString())).thenReturn(null);
 	}
 

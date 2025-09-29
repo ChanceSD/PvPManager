@@ -284,12 +284,11 @@ public class EntityListener implements Listener {
 
 		final CombatPlayer pvPlayer = playerHandler.get(player);
 
-		if (Conf.PEARL_RENEW_TAG.asBool() && entity.getType() == EntityType.ENDER_PEARL
-				|| Conf.WIND_CHARGE_RENEW_TAG.asBool() && entity.getType() == EntityType.WIND_CHARGE) {
-			if (pvPlayer.isInCombat()) {
-				final CombatPlayer enemy = pvPlayer.getEnemy();
-				pvPlayer.tag(true, enemy != null ? enemy : pvPlayer);
-			}
+		if (pvPlayer.isInCombat() &&
+				(Conf.PEARL_RENEW_TAG.asBool() && entity.getType() == EntityType.ENDER_PEARL
+						|| Conf.WIND_CHARGE_RENEW_TAG.asBool() && entity.getType() == EntityType.WIND_CHARGE)) {
+			final CombatPlayer enemy = pvPlayer.getEnemy();
+			pvPlayer.tag(true, enemy != null ? enemy : pvPlayer);
 		}
 	}
 

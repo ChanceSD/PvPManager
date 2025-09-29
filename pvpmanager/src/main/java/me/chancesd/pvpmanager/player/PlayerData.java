@@ -12,7 +12,7 @@ import me.chancesd.pvpmanager.utils.CombatUtils;
  * Contains all the data that needs to be saved/loaded for a player.
  */
 public class PlayerData {
-    
+
     private final UUID uuid;
     private final String name;
     private final String displayName;
@@ -21,98 +21,173 @@ public class PlayerData {
     private final boolean newbie;
     private final long newbieTimeLeft;
     private final long lastSeen;
-    
-    public PlayerData(UUID uuid, String name, String displayName, boolean pvpEnabled, 
-                     long toggleTime, boolean newbie, long newbieTimeLeft, long lastSeen) {
-        this.uuid = uuid;
-        this.name = name;
-        this.displayName = displayName;
-        this.pvpEnabled = pvpEnabled;
-        this.toggleTime = toggleTime;
-        this.newbie = newbie;
-        this.newbieTimeLeft = newbieTimeLeft;
-        this.lastSeen = lastSeen;
+
+    // Private constructor - use Builder instead
+    private PlayerData(final Builder builder) {
+        this.uuid = builder.uuid;
+        this.name = builder.name;
+        this.displayName = builder.displayName;
+        this.pvpEnabled = builder.pvpEnabled;
+        this.toggleTime = builder.toggleTime;
+        this.newbie = builder.newbie;
+        this.newbieTimeLeft = builder.newbieTimeLeft;
+        this.lastSeen = builder.lastSeen;
     }
-    
+
+    /**
+     * Builder class for PlayerData
+     */
+	@SuppressWarnings("hiding")
+    public static class Builder {
+        private UUID uuid;
+        private String name;
+        private String displayName;
+        private boolean pvpEnabled = false;
+        private long toggleTime = 0;
+        private boolean newbie = false;
+        private long newbieTimeLeft = 0;
+        private long lastSeen = System.currentTimeMillis();
+
+		public Builder uuid(final UUID uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public Builder name(final String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder displayName(final String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        public Builder pvpEnabled(final boolean pvpEnabled) {
+            this.pvpEnabled = pvpEnabled;
+            return this;
+        }
+
+        public Builder toggleTime(final long toggleTime) {
+            this.toggleTime = toggleTime;
+            return this;
+        }
+
+        public Builder newbie(final boolean newbie) {
+            this.newbie = newbie;
+            return this;
+        }
+
+        public Builder newbieTimeLeft(final long newbieTimeLeft) {
+            this.newbieTimeLeft = newbieTimeLeft;
+            return this;
+        }
+
+        public Builder lastSeen(final long lastSeen) {
+            this.lastSeen = lastSeen;
+            return this;
+        }
+
+        public PlayerData build() {
+            return new PlayerData(this);
+        }
+    }
+
+    /**
+     * Creates a new Builder instance
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
     /**
      * Creates PlayerData from raw database map
      */
-    public static PlayerData fromMap(Map<String, Object> userData) {
+    public static PlayerData fromMap(final Map<String, Object> userData) {
         if (userData == null || userData.isEmpty()) {
             return createDefault();
         }
-        
+
         // Extract UUID
         UUID uuid = null;
-        Object uuidObj = userData.get(UserDataFields.UUID);
-        if (uuidObj instanceof String) {
+        final Object uuidObj = userData.get(UserDataFields.UUID);
+		if (uuidObj instanceof final String string) {
             try {
-                uuid = UUID.fromString((String) uuidObj);
-            } catch (IllegalArgumentException e) {
+				uuid = UUID.fromString(string);
+            } catch (final IllegalArgumentException e) {
                 // Invalid UUID format, will use null
             }
         }
-        
+
         // Extract name
-        String name = (String) userData.get(UserDataFields.NAME);
-        
+        final String name = (String) userData.get(UserDataFields.NAME);
+
         // Extract display name
-        String displayName = (String) userData.get(UserDataFields.DISPLAYNAME);
-        
+        final String displayName = (String) userData.get(UserDataFields.DISPLAYNAME);
+
         // Extract PvP status
         boolean pvpEnabled = false;
-        Object pvpState = userData.get(UserDataFields.PVPSTATUS);
+        final Object pvpState = userData.get(UserDataFields.PVPSTATUS);
         if (pvpState instanceof Integer) {
             pvpEnabled = (int) pvpState != 0;
         } else if (pvpState instanceof Boolean) {
             pvpEnabled = (boolean) pvpState;
         }
-        
+
         // Extract toggle time
         long toggleTime = 0;
-        Object toggleTimeObj = userData.get(UserDataFields.TOGGLETIME);
-        if (toggleTimeObj instanceof Number) {
-            toggleTime = ((Number) toggleTimeObj).longValue();
+        final Object toggleTimeObj = userData.get(UserDataFields.TOGGLETIME);
+		if (toggleTimeObj instanceof final Number number) {
+			toggleTime = number.longValue();
         }
-        
+
         // Extract newbie status
         boolean newbie = false;
-        Object newbieState = userData.get(UserDataFields.NEWBIE);
+        final Object newbieState = userData.get(UserDataFields.NEWBIE);
         if (newbieState instanceof Integer) {
             newbie = (int) newbieState != 0;
         } else if (newbieState instanceof Boolean) {
             newbie = (boolean) newbieState;
         }
-        
+
         // Extract newbie time left
         long newbieTimeLeft = 0;
-        Object newbieTime = userData.get(UserDataFields.NEWBIETIMELEFT);
-        if (newbieTime instanceof Number) {
-            newbieTimeLeft = ((Number) newbieTime).longValue();
+        final Object newbieTime = userData.get(UserDataFields.NEWBIETIMELEFT);
+		if (newbieTime instanceof final Number number) {
+			newbieTimeLeft = number.longValue();
         }
-        
+
         // Extract last seen
         long lastSeen = System.currentTimeMillis();
-        Object lastSeenObj = userData.get(UserDataFields.LASTSEEN);
-        if (lastSeenObj instanceof Number) {
-            lastSeen = ((Number) lastSeenObj).longValue();
+        final Object lastSeenObj = userData.get(UserDataFields.LASTSEEN);
+		if (lastSeenObj instanceof final Number number) {
+			lastSeen = number.longValue();
         }
-        
-        return new PlayerData(uuid, name, displayName, pvpEnabled, toggleTime, newbie, newbieTimeLeft, lastSeen);
+
+        return builder()
+                .uuid(uuid)
+                .name(name)
+                .displayName(displayName)
+                .pvpEnabled(pvpEnabled)
+                .toggleTime(toggleTime)
+                .newbie(newbie)
+                .newbieTimeLeft(newbieTimeLeft)
+                .lastSeen(lastSeen)
+                .build();
     }
-    
+
     /**
      * Creates default PlayerData for new players
      */
     public static PlayerData createDefault() {
-        return new PlayerData(null, null, null, Conf.DEFAULT_PVP.asBool(), 0, false, 0, System.currentTimeMillis());
+		return builder().pvpEnabled(Conf.DEFAULT_PVP.asBool()).build();
     }
-    
+
     /**
      * Converts PlayerData to database map format
      */
     public Map<String, Object> toMap() {
-        Map<String, Object> map = new java.util.HashMap<>();
+        final Map<String, Object> map = new java.util.HashMap<>();
         if (uuid != null) {
             map.put(UserDataFields.UUID, uuid.toString());
         }
@@ -129,7 +204,7 @@ public class PlayerData {
         map.put(UserDataFields.LASTSEEN, lastSeen);
         return map;
     }
-    
+
     // Getters
     public UUID getUuid() { return uuid; }
     public String getName() { return name; }
@@ -139,25 +214,4 @@ public class PlayerData {
     public boolean isNewbie() { return newbie; }
     public long getNewbieTimeLeft() { return newbieTimeLeft; }
     public long getLastSeen() { return lastSeen; }
-    
-    // Builder methods for creating modified copies
-    public PlayerData withPvpEnabled(boolean pvpEnabled) {
-        return new PlayerData(uuid, name, displayName, pvpEnabled, toggleTime, newbie, newbieTimeLeft, lastSeen);
-    }
-    
-    public PlayerData withToggleTime(long toggleTime) {
-        return new PlayerData(uuid, name, displayName, pvpEnabled, toggleTime, newbie, newbieTimeLeft, lastSeen);
-    }
-    
-    public PlayerData withNewbie(boolean newbie) {
-        return new PlayerData(uuid, name, displayName, pvpEnabled, toggleTime, newbie, newbieTimeLeft, lastSeen);
-    }
-    
-    public PlayerData withNewbieTimeLeft(long newbieTimeLeft) {
-        return new PlayerData(uuid, name, displayName, pvpEnabled, toggleTime, newbie, newbieTimeLeft, lastSeen);
-    }
-    
-    public PlayerData withCurrentTimestamp() {
-        return new PlayerData(uuid, name, displayName, pvpEnabled, toggleTime, newbie, newbieTimeLeft, System.currentTimeMillis());
-    }
 }

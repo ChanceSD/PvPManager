@@ -19,7 +19,7 @@ import me.chancesd.pvpmanager.InstanceCreator;
 import me.chancesd.pvpmanager.setting.lang.Replacement;
 
 @ExtendWith(InstanceCreator.class)
-public class LangTest {
+class LangTest {
 
 	@Test
 	void testLocalePlaceholderValidation() {

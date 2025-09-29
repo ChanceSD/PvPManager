@@ -189,6 +189,7 @@ public enum Lang implements TimeLangProvider {
 		return message.replace(Replacement.TIME.getPlaceholder(), TimeUtil.getDiffDuration(this, time));
 	}
 
+	@SuppressWarnings("java:S3066")
 	public static void setup(final PvPManager plugin) {
 		Lang.plugin = plugin;
 		final String localeString = Conf.LOCALE.asString();

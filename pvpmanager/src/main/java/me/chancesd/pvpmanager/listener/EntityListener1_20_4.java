@@ -43,8 +43,8 @@ public class EntityListener1_20_4 implements Listener {
 				attacker = playerAttacker;
 			if (entityAttacker instanceof final Projectile proj) {
 				final ProjectileSource projSource = proj.getShooter();
-				if (projSource instanceof Player && !projSource.equals(attacked)) {
-					attacker = (Player) projSource;
+				if (projSource instanceof final Player player && !projSource.equals(attacked)) {
+					attacker = player;
 				}
 			}
 		}

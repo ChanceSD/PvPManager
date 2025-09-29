@@ -37,12 +37,13 @@ public class CustomMetrics {
 			map.put("Drop Mode", getMapEntry(Conf.PLAYER_DROP_MODE.asEnum(Conf.DropMode.class).toString()));
 			map.put("Combat Nametags", getMapEntryFeature(Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool()));
 			map.put("Database Type", getMapEntry(plugin.getStorageManager().getStorage().getDatabaseType().toString()));
+			final String displayType = "Display Type";
 			if (Conf.BOSS_BAR_ENABLED.asBool() && Conf.ACTION_BAR_ENABLED.asBool())
-				map.put("Display Type", getMapEntry("Both"));
+				map.put(displayType, getMapEntry("Both"));
 			else if (!Conf.BOSS_BAR_ENABLED.asBool() && !Conf.ACTION_BAR_ENABLED.asBool())
-				map.put("Display Type", getMapEntry("None"));
+				map.put(displayType, getMapEntry("None"));
 			else
-				map.put("Display Type", getMapEntry(Conf.BOSS_BAR_ENABLED.asBool() ? "Only Bossbar" : "Only Actionbar"));
+				map.put(displayType, getMapEntry(Conf.BOSS_BAR_ENABLED.asBool() ? "Only Bossbar" : "Only Actionbar"));
 			return map;
 		}));
 

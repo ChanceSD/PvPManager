@@ -37,7 +37,7 @@ import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
 @ExtendWith(InstanceCreator.class)
-public class EntityListenerTest {
+class EntityListenerTest {
 
 	private static final PluginSetup PT = InstanceCreator.getPt();
 	private static EntityListener damageListener;
@@ -50,7 +50,7 @@ public class EntityListenerTest {
 	private CombatPlayer combatDefender;
 
 	@BeforeAll
-	public static void setupClass() {
+	static void setupClass() {
 		final PvPManager plugin = PT.getPlugin();
 		ph = plugin.getPlayerManager();
 		damageListener = new EntityListener(ph);
@@ -58,7 +58,7 @@ public class EntityListenerTest {
 	}
 
 	@BeforeEach
-	public final void setup() {
+	final void setup() {
 		ph.getPlayers().clear();
 		ph.setGlobalStatus(true);
 		// Create fresh players for each test

@@ -134,7 +134,7 @@ public class DependencyManager {
 			} else {
 				// Use reflection to instantiate WorldGuardLegacyHook from the pvpmanager-worldguard-legacy module
 				try {
-					final Class<?> clazz = Class.forName("me.NoChance.PvPManager.Dependencies.Hooks.WorldGuardLegacyHook");
+					final Class<?> clazz = Class.forName("me.chancesd.pvpmanager.integration.hook.worldguard.WorldGuardLegacyHook");
 					final Constructor<?> constructor = clazz.getConstructor(Hook.class);
 					final WorldGuardDependency legacyHook = (WorldGuardDependency) constructor.newInstance(hook);
 					yield legacyHook;

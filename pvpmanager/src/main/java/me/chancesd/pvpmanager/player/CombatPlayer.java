@@ -436,15 +436,16 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public PlayerData exportPlayerData() {
-		return new PlayerData(
-				getUUID(),
-				getName(),
-				getPlayer().getDisplayName(),
-				hasPvPEnabled(),
-				getToggleTime(),
-				isNewbie(),
-				getNewbieTimeLeft(),
-				System.currentTimeMillis());
+		return PlayerData.builder()
+				.uuid(getUUID())
+				.name(getName())
+				.displayName(getPlayer().getDisplayName())
+				.pvpEnabled(hasPvPEnabled())
+				.toggleTime(getToggleTime())
+				.newbie(isNewbie())
+				.newbieTimeLeft(getNewbieTimeLeft())
+				.lastSeen(System.currentTimeMillis())
+				.build();
 	}
 
 	public final void cleanForRemoval() {

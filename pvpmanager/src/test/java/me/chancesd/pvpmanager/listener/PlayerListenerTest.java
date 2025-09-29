@@ -26,14 +26,14 @@ import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Conf;
 
 @ExtendWith(InstanceCreator.class)
-public class PlayerListenerTest {
+class PlayerListenerTest {
 
 	private static PlayerListener listener;
 	private static PlayerManager ph;
 	private static PluginSetup pt;
 
 	@BeforeAll
-	public static void setupClass() {
+	static void setupClass() {
 		pt = InstanceCreator.getPt();
 		final PvPManager plugin = pt.getPlugin();
 		ph = plugin.getPlayerManager();
@@ -41,7 +41,7 @@ public class PlayerListenerTest {
 	}
 
 	@BeforeEach
-	public final void setup() {
+	final void setup() {
 		ph.getPlayers().clear();
 	}
 

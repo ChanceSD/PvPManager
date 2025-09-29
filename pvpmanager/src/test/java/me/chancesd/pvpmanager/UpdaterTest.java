@@ -20,7 +20,7 @@ class UpdaterTest {
 	private final PvPManager plugin = InstanceCreator.getPt().getPlugin();
 
 	@BeforeEach
-	public final void setup() {
+	final void setup() {
 		updater = new UpdaterMock(plugin, UpdateType.VERSION_CHECK);
 	}
 
