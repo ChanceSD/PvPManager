@@ -312,6 +312,12 @@ public class CombatPlayer extends EcoPlayer {
 		}
 	}
 
+	/**
+	 * Returns the time when the cooldown for the specified item will expire
+	 *
+	 * @param material The item material
+	 * @return The time in milliseconds when the cooldown will expire, or 0 if there is no cooldown
+	 */
 	public final Long getItemCooldown(final Material material) {
 		return itemCooldown.getOrDefault(material, 0L);
 	}
