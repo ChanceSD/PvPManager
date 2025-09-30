@@ -101,7 +101,7 @@ public class DeathHandler {
 			return;
 		final DropMode dropMode = Conf.PLAYER_DROP_MODE.asEnum(Conf.DropMode.class);
 		if (dropMode == null) {
-			Conf.PLAYER_DROP_MODE.set(DropMode.ALWAYS);
+			Conf.PLAYER_DROP_MODE.setEnum(DropMode.class, "ALWAYS");
 			return;
 		}
 		switch (dropMode) {

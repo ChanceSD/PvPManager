@@ -38,6 +38,7 @@ Combat Tag:
     Nametags:
       Enabled: true
       # Choose the player's nametag prefix while tagged, '&c' would just color their name red
+      # The TAB plugin is required to use placeholders in the nametag
       Prefix: '&4⚔ &8(&7%pvpmanager_combat_timeleft%s&8) &c'
       Suffix: ' &f%pvpmanager_player_health%&c❤'
     Action Bar:

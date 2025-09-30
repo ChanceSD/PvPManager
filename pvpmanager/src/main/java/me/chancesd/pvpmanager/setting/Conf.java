@@ -312,8 +312,10 @@ public enum Conf {
 	}
 
 	@SuppressWarnings("java:S3066") // Public setters needed
-	public void set(final Enum<?> enumValue) {
-		this.enumValue = enumValue;
+	public <E extends Enum<E>> E setEnum(final Class<E> enumClass, final String value) {
+		final E valueOf = Enum.valueOf(enumClass, value);
+		this.enumValue = valueOf;
+		return valueOf;
 	}
 
 	public void disable() {
