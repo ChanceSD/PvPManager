@@ -346,7 +346,6 @@ public class PM extends BaseCommand {
 		plugin.setReloading(true);
 		plugin.getUpdateManager().setUpdateAvailable(false);
 		plugin.onDisable();
-		ScheduleUtils.cancelAllTasks();
 		HandlerList.unregisterAll(plugin);
 		plugin.onEnable();
 		plugin.setReloading(false);

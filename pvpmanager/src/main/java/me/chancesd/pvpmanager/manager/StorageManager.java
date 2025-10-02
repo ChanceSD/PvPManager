@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,17 +36,15 @@ public class StorageManager {
 
 	private final PvPManager plugin;
 	private final Storage storage;
-	private final ScheduledFuture<?> saveTask;
 
 	public StorageManager(final PvPManager plugin) {
 		this.plugin = plugin;
 		this.storage = new SQLStorage(plugin);
 		convertYMLToSQL();
-		saveTask = ScheduleUtils.runAsyncTimer(new StorageSaveTask(plugin, storage), 300, 300, TimeUnit.SECONDS);
+		ScheduleUtils.runAsyncTimer(new StorageSaveTask(plugin, storage), 300, 300, TimeUnit.SECONDS);
 	}
 
 	public void shutdown() {
-		saveTask.cancel(false);
 		storage.shutdown();
 	}
 

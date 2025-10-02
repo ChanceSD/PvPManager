@@ -76,7 +76,6 @@ public class PvPManager extends SDPlugin {
 		playerHandler.handlePluginDisable();
 		dependencyManager.onDisableCleanup();
 		storageManager.shutdown();
-		ScheduleUtils.cancelAllTasks();
 		instance = null;
 	}
 
