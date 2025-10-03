@@ -198,7 +198,7 @@ public class PlayerListener implements Listener {
 				event.setCancelled(true);
 				event.getHook().setHookedEntity(null);
 				Lang.messageProtection(result, player, caught);
-			} else {
+			} else if (!Conf.IGNORE_NO_DMG_HITS.asBool()) {
 				playerHandler.getPlugin().getEntityListener().processDamage(player, caught);
 			}
 		}
