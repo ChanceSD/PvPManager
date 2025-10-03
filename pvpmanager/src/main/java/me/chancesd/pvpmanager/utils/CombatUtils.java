@@ -13,14 +13,12 @@ import org.bukkit.World;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AreaEffectCloud;
-import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -132,22 +130,6 @@ public final class CombatUtils {
 			final Entity tntAttacker = tnt.getSource();
 			if (tntAttacker instanceof Player && isValidPvPAttack(tntAttacker, defender)) {
 				return true;
-			}
-		}
-		if (attacker instanceof final EnderCrystal endercrystal) {
-			final EntityDamageEvent lastDamageCause = endercrystal.getLastDamageCause();
-			if (!(lastDamageCause instanceof final EntityDamageByEntityEvent damageEvent))
-				return false;
-			final Entity crystalSource = damageEvent.getDamager();
-			if (crystalSource instanceof Player && isValidPvPAttack(crystalSource, defender))
-				return true;
-			if (crystalSource instanceof final Projectile projectile) {
-				final ProjectileSource projSource = projectile.getShooter();
-				if (projSource instanceof Player) {
-					final Entity shooter = (Entity) projSource;
-					if (isValidPvPAttack(shooter, defender))
-						return true;
-				}
 			}
 		}
 
