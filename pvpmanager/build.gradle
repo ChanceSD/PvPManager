@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'me.chancesd.pvpmanager'
-version = '4.0.0'
+version = '4.0.3'
 description = 'A powerful plugin to manage various PvP combat features'
 
 dependencies {
@@ -34,11 +34,11 @@ dependencies {
     compileOnly 'com.github.cryptomorin:kingdoms:1.16.8.1.1'
     compileOnly 'com.github.TechFortress:GriefPrevention:17.0.0'
     compileOnly 'com.github.NEZNAMY:TAB-API:5.2.5'
-    
+
     compileOnly 'com.zaxxer:HikariCP:4.0.3'
     compileOnly 'org.apache.logging.log4j:log4j-core:2.23.1'
 
-    implementation 'me.chancesd.sdutils:sdutils:1.3-SNAPSHOT'
+    implementation 'me.chancesd.sdutils:sdutils:1.4-SNAPSHOT'
 
     testImplementation 'org.xerial:sqlite-jdbc:3.46.0.0'
     testImplementation 'com.zaxxer:HikariCP:4.0.3'
@@ -69,7 +69,7 @@ ext {
         'project.groupId'    : project.group,
         'project.version'    : project.version,
         'project.description': project.description,
-        'config.version'     : '81',
+        'config.version'     : '201',
         'database.version'   : '1'
     ]
 }
@@ -99,7 +99,7 @@ processResources {
 test {
     useJUnitPlatform()
     include '**/*InstanceCreator.class'
-    
+
     // Configure Mockito as Java agent to avoid warnings (Java 21+ compatibility)
     jvmArgs("-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}")
 }
