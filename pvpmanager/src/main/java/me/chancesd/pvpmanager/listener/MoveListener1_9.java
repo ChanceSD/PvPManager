@@ -9,8 +9,11 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,6 +77,21 @@ public class MoveListener1_9 implements Listener {
 				player.getWorld().playEffect(player.getEyeLocation(), Effect.SMOKE, 3);
 				cache.put(player.getUniqueId(), player);
 			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	// high priority so we ignore teleports if enderpearls are blocked
+	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
+		if (event.getCause() != TeleportCause.ENDER_PEARL)
+			return;
+		final Player player = event.getPlayer();
+		final CombatPlayer pvplayer = playerManager.get(player);
+		final Location locTo = event.getTo();
+		final Location locFrom = event.getFrom();
+		if (pvplayer.isInCombat() && !depManager.canAttackAt(null, locTo) && depManager.canAttackAt(null, locFrom)) {
+			event.setCancelled(true);
+			pvplayer.message(Lang.PUSHBACK_WARNING);
 		}
 	}
 
