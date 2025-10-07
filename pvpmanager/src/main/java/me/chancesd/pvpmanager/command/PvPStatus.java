@@ -44,7 +44,7 @@ public class PvPStatus extends BaseCommand {
 			return;
 		}
 		final CommandArgument targetArg = getArgument(args, "target");
-		final Player targetPlayer = targetArg.getAsPlayerOrNull();
+		final Player targetPlayer = targetArg.getAsPlayer();
 		final CombatPlayer target = playerManager.get(targetPlayer);
 		if (!target.hasPvPEnabled()) {
 			sender.sendMessage(Lang.OTHERS_STATUS_DISABLED.msg(targetPlayer.getName()));

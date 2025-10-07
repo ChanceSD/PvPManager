@@ -53,7 +53,7 @@ public class Tag extends BaseCommand {
 		if (targetArg.isWildcard()) {
 			tagAll(sender, timeInMs);
 		} else {
-			final Player targetPlayer = targetArg.getAsPlayerOrNull();
+			final Player targetPlayer = targetArg.getAsPlayerOrWildcard();
 			tagPlayer(sender, targetPlayer.getName(), timeInMs);
 		}
 	}

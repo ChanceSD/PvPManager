@@ -36,6 +36,11 @@ public class DisplayNameConverter implements Converter {
 	}
 
 	@Override
+	public int getMinimumDatabaseVersion() {
+		return 1;
+	}
+
+	@Override
 	public void convertAll(final Database database, final ResultSet results) throws SQLException {
 		Log.infoColor(ChatColor.GOLD + ">> Starting database conversion to allow saving bigger display names");
 		final String columnName = "displayname";

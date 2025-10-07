@@ -58,7 +58,7 @@ public class SQLStorage implements Storage {
 				"uuid CHAR(36) NOT NULL, name VARCHAR(255) NOT NULL PRIMARY KEY, pvp BOOLEAN DEFAULT 1, forcepvp VARCHAR(16) DEFAULT 'NONE'");
 		db.registerTable(worldsTable);
 		Log.infoColor(ChatColor.GREEN + "Connected to " + ChatColor.AQUA + config.getType() + ChatColor.GREEN + " database successfully");
-		Log.infoColor(ChatColor.GREEN + "Players stored: " + ChatColor.GOLD + db.getRowCount(usersTable));
+		Log.infoColor(ChatColor.GREEN + "Players stored: " + ChatColor.GOLD + db.executeCountQuery(usersTable, ""));
 		return db;
 	}
 

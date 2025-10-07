@@ -36,7 +36,7 @@ public class PvPInfo extends BaseCommand {
 			sendInfo(sender, ph.get(player));
 		} else if (hasArgument(args, ARG_PLAYER)) {
 			final CommandArgument targetArg = getArgument(args, ARG_PLAYER);
-			final Player targetPlayer = targetArg.getAsPlayerOrNull();
+			final Player targetPlayer = targetArg.getAsPlayer();
 			sendInfo(sender, ph.get(targetPlayer));
 		} else {
 			ChatUtils.send(sender, "&#FF5555This command requires a target player when used from console.");

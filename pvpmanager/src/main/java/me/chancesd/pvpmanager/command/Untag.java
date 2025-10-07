@@ -35,7 +35,7 @@ public class Untag extends BaseCommand {
 			untagAll(sender);
 			return;
 		}
-		final Player targetPlayer = targetArg.getAsPlayerOrNull();
+		final Player targetPlayer = targetArg.getAsPlayerOrWildcard();
 		final CombatPlayer combatPlayer = playerManager.get(targetPlayer);
 		if (!combatPlayer.isInCombat()) {
 			sender.sendMessage(Lang.PREFIX + " §cThat player is not in combat");

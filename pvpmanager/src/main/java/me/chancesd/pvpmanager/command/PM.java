@@ -26,7 +26,6 @@ import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.storage.fields.UserDataFields;
-import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.command.ArgumentType;
 import me.chancesd.sdutils.command.BaseCommand;
 import me.chancesd.sdutils.command.CommandArgument;
@@ -229,7 +228,7 @@ public class PM extends BaseCommand {
 			final CommandArgument argument = getArgument(args, "player");
 			CombatPlayer targetPlayer = null;
 			if (argument != null) {
-				targetPlayer = plugin.getPlayerManager().get(argument.getAsPlayerOrNull());
+				targetPlayer = plugin.getPlayerManager().get(argument.getAsPlayer());
 			} else if (sender instanceof final Player commandSender) {
 				targetPlayer = plugin.getPlayerManager().get(commandSender);
 			}
