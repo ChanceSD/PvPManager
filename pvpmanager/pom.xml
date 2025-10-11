@@ -234,7 +234,7 @@
 		<dependency>
   		  	<groupId>com.github.NEZNAMY</groupId>
   			<artifactId>TAB-API</artifactId>
-  		  	<version>5.2.5</version>
+  		  	<version>5.3.2</version>
    		 	<scope>provided</scope>
 		</dependency>
 
