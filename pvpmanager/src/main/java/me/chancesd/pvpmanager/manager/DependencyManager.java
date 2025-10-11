@@ -60,8 +60,10 @@ public class DependencyManager {
 	private final ArrayList<AFKDependency> afkChecks = new ArrayList<>();
 
 	public void onLoadSetup() {
-		if (Hook.WORLDGUARD.getPlugin() != null && Utils.isVersionAtLeast(Utils.stripTags(Hook.WORLDGUARD.getVersion()), "7.0"))
+		if (Hook.WORLDGUARD.getPlugin() != null && Utils.isVersionAtLeast(Utils.stripTags(Hook.WORLDGUARD.getVersion()), "7.0")
+				&& !PvPManager.getInstance().isReloading()) {
 			WorldGuardFlagHandler.initializeFlags();
+		}
 	}
 
 	public void onEnableSetup() {
@@ -190,6 +192,14 @@ public class DependencyManager {
 	public final boolean shouldDisableProtection(@NotNull final Player attacker, @NotNull final Player defender, final ProtectionType reason) {
 		for (final ForceToggleDependency togglePvPPlugin : togglePvPChecks) {
 			if (togglePvPPlugin.shouldDisable(attacker, defender, reason))
+				return true;
+		}
+		return false;
+	}
+
+	public final boolean shouldDisableProtection(final Player defender) {
+		for (final ForceToggleDependency togglePvPPlugin : togglePvPChecks) {
+			if (togglePvPPlugin.shouldDisable(defender))
 				return true;
 		}
 		return false;

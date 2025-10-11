@@ -96,7 +96,7 @@ public enum Conf {
 	PVP_DISABLED_FEE(ConfSection.PVP_TOGGLE, "PvP Disabled Money Fee", 0, Integer.class),
 	COMMANDS_PVP_ON(ConfSection.PVP_TOGGLE, "Commands PvP On", Conf::getCommandList, List.class, List.class),
 	COMMANDS_PVP_OFF(ConfSection.PVP_TOGGLE, "Commands PvP Off", Conf::getCommandList, List.class, List.class),
-	WORLDGUARD_OVERRIDES(ConfSection.PVP_TOGGLE, "WorldGuard Overrides.Enabled", true, Boolean.class),
+	WORLDGUARD_OVERRIDES(ConfSection.PVP_TOGGLE, "WorldGuard Overrides", true, Boolean.class),
 
 	// Anti border hopping
 	VULNERABLE_ENABLED(ConfSection.BORDER_HOPPING, "Vulnerable.Enabled", true, Boolean.class),

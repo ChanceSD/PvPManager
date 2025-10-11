@@ -48,11 +48,12 @@ public class PvP extends BaseCommand {
 
 		// Admin patterns: /pvp <player|*> [on|off]
 		final CommandArgument playerArg = getArgument(args, "player");
+		final Player player = playerArg.getAsPlayer();
 		if (args.size() == 1) {
 			if (playerArg.isWildcard()) {
 				togglePvPAll(sender, false, true);
 			} else {
-				togglePvPAdmin(sender, playerArg.getValue(), false, true);
+				togglePvPAdmin(sender, player, false, true);
 			}
 			return;
 		}
@@ -61,7 +62,7 @@ public class PvP extends BaseCommand {
 		if (playerArg.isWildcard()) {
 			togglePvPAll(sender, state, false);
 		} else {
-			togglePvPAdmin(sender, playerArg.getValue(), state, false);
+			togglePvPAdmin(sender, player, state, false);
 		}
 	}
 
@@ -74,6 +75,13 @@ public class PvP extends BaseCommand {
 			return;
 		}
 
+		// Check if protection should be removed according to dependencies (e.g. WorldGuard flags)
+		if (!state && ph.getPlugin().getDependencyManager().shouldDisableProtection(player.getPlayer())) {
+			player.message(Lang.ERROR_PVP_TOGGLE_FORCE_PVP);
+			return;
+		}
+
+		// Check if PvP can be toggled in this world
 		final CombatWorld combatWorld = player.getCombatWorld();
 		if (state && combatWorld.isPvPForced() == CombatWorld.WorldOptionState.OFF) {
 			player.message(Lang.ERROR_PVP_TOGGLE_NO_PVP);
@@ -86,18 +94,16 @@ public class PvP extends BaseCommand {
 		player.setPvP(state);
 	}
 
-	private void togglePvPAdmin(final CommandSender sender, final String playerName, final boolean state, final boolean toggle) {
-		if (!CombatUtils.isOnlineWithFeedback(sender, playerName))
-			return;
-		final CombatPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(playerName));
+	private void togglePvPAdmin(final CommandSender sender, final Player player, final boolean state, final boolean toggle) {
+		final CombatPlayer specifiedPlayer = ph.get(player);
 		specifiedPlayer.setPvP(toggle ? !specifiedPlayer.hasPvPEnabled() : state);
 		final String stateMessage = specifiedPlayer.hasPvPEnabled() ? Lang.ENABLED.msg() : Lang.DISABLED.msg();
-		sender.sendMessage(Lang.PVP_TOGGLE_ADMIN_CHANGED.msg(playerName, stateMessage));
+		sender.sendMessage(Lang.PVP_TOGGLE_ADMIN_CHANGED.msg(player.getName(), stateMessage));
 	}
 
 	private void togglePvPAll(final CommandSender sender, final boolean state, final boolean toggle) {
 		for (final Player player : Bukkit.getOnlinePlayers()) {
-			togglePvPAdmin(sender, player.getName(), state, toggle);
+			togglePvPAdmin(sender, player, state, toggle);
 		}
 	}
 

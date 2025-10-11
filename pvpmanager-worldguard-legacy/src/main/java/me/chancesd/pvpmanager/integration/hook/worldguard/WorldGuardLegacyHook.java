@@ -11,6 +11,7 @@ import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -75,6 +76,11 @@ public class WorldGuardLegacyHook extends BaseDependency implements WorldGuardDe
 	@Override
 	public State getWGPvPState(final Location l) {
 		return regionQuery.queryState(l, (Player) null, DefaultFlag.PVP);
+	}
+
+	@Override
+	public State getStateFlagAt(final Location loc, final StateFlag flag) {
+		return regionQuery.queryState(loc, (Player) null, flag);
 	}
 
 	@Override

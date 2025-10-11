@@ -148,10 +148,9 @@ PvP Toggle:
     - 'examplecommand {player} turned pvp on'
   Commands PvP Off:
     - 'examplecommand {player} turned pvp off'
-  # PvP Toggle is forcibly enabled on an attack in all regions with WG's pvp flag set to allow
-  # Use the pvp-protection WorldGuard flag to force PvP enabled in specific regions
-  WorldGuard Overrides:
-    Enabled: true
+  # PvP Toggle is forcibly enabled on an attack in all regions with WG's pvp flag set to ALLOW
+  # If you want it only on specific regions instead, set WorldGuard Overrides to false and use the pvp-protection flag set to DENY
+  WorldGuard Overrides: true
 
 ###############################
 ####  Anti Border Hopping  ####

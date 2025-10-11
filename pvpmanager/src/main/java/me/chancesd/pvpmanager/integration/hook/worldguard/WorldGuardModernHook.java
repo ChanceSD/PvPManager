@@ -12,6 +12,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
@@ -47,7 +48,6 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 				handlersField.setAccessible(true);
 				@SuppressWarnings("unchecked")
 				final HashMap<Class<?>, Handler> handlers = (HashMap<Class<?>, Handler>) handlersField.get(session);
-
 				handlers.entrySet().removeIf(
 						entry -> entry.getValue().getClass().getName().equals(WorldGuardFlagHandler.class.getName()));
 			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
@@ -68,9 +68,9 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 	}
 
 	@Override
-	public boolean canAttackAt(final Player p, final Location l) {
+	public boolean canAttackAt(final Player p, final Location loc) {
 		// State has to be != DENY because you can pvp on ALLOW and on no state
-		return getWGPvPState(l) != State.DENY;
+		return getWGPvPState(loc) != State.DENY;
 	}
 
 	@Override
@@ -84,13 +84,13 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 	}
 
 	@Override
-	public Set<ProtectedRegion> getRegionsAt(final Location l) {
-		return regionQuery.getApplicableRegions(BukkitAdapter.adapt(l)).getRegions();
+	public Set<ProtectedRegion> getRegionsAt(final Location loc) {
+		return regionQuery.getApplicableRegions(BukkitAdapter.adapt(loc)).getRegions();
 	}
 
 	@Override
-	public boolean containsRegionsAt(final Location l, final Set<String> regionIDs) {
-		for (final ProtectedRegion r : getRegionsAt(l)) {
+	public boolean containsRegionsAt(final Location loc, final Set<String> regionIDs) {
+		for (final ProtectedRegion r : getRegionsAt(loc)) {
 			if (regionIDs.contains(r.getId()))
 				return true;
 		}
@@ -98,8 +98,13 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 	}
 
 	@Override
-	public State getWGPvPState(final Location l) {
-		return regionQuery.queryState(BukkitAdapter.adapt(l), null, Flags.PVP);
+	public State getWGPvPState(final Location loc) {
+		return getStateFlagAt(loc, Flags.PVP);
+	}
+
+	@Override
+	public State getStateFlagAt(final Location loc, final StateFlag flag) {
+		return regionQuery.queryState(BukkitAdapter.adapt(loc), null, flag);
 	}
 
 	@Override
@@ -109,17 +114,22 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 
 	@Override
 	public boolean shouldDisable(final Player player) {
+		if (shouldCheckPvPFlag(player) || getStateFlagAt(player.getLocation(), WorldGuardFlagHandler.getNoProtectionFlag()) == State.DENY) {
+			final CombatPlayer cplayer = CombatPlayer.get(player);
+			disablePvPProtection(cplayer);
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean shouldDisable(final Player damager, final Player defender, final ProtectionType reason) {
-		if (hasAllowPvPFlag(defender)) {
+		if (shouldCheckPvPFlag(defender)) {
 			final CombatPlayer attacker = CombatPlayer.get(damager);
 			final CombatPlayer attacked = CombatPlayer.get(defender);
 			if (reason == ProtectionType.PVPDISABLED) {
-				disablePvP(attacker);
-				disablePvP(attacked);
+				disablePvPProtection(attacker);
+				disablePvPProtection(attacked);
 			} else {
 				disableNewbieProtection(attacker);
 				disableNewbieProtection(attacked);
@@ -129,6 +139,10 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 		return false;
 	}
 
+	private boolean shouldCheckPvPFlag(final Player defender) {
+		return Conf.WORLDGUARD_OVERRIDES.asBool() && hasAllowPvPFlag(defender);
+	}
+
 	private void disableNewbieProtection(final CombatPlayer player) {
 		if (player.isNewbie()) {
 			player.setNewbie(false);
@@ -136,7 +150,7 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 		}
 	}
 
-	private void disablePvP(final CombatPlayer player) {
+	private void disablePvPProtection(final CombatPlayer player) {
 		if (!player.hasPvPEnabled()) {
 			player.setPvP(true);
 			player.message(Lang.PVP_FORCE_ENABLED_WG.msg());
@@ -145,7 +159,7 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 
 	@Override
 	public boolean shouldDisableProtection() {
-		return Conf.WORLDGUARD_OVERRIDES.asBool();
+		return true;
 	}
 
 }

@@ -90,7 +90,7 @@ public class WorldGuardFlagHandler extends FlagValueChangeHandler<State> {
 		return flag;
 	}
 
-	public StateFlag getNoProtectionFlag() {
+	public static StateFlag getNoProtectionFlag() {
 		return noProtectionFlag;
 	}
 

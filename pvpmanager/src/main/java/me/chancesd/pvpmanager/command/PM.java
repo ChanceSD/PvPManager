@@ -346,6 +346,7 @@ public class PM extends BaseCommand {
 		plugin.getUpdateManager().setUpdateAvailable(false);
 		plugin.onDisable();
 		HandlerList.unregisterAll(plugin);
+		plugin.onPluginLoad();
 		plugin.onEnable();
 		plugin.setReloading(false);
 		if (silent)
