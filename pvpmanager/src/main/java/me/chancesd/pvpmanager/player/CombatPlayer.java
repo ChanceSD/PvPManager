@@ -370,6 +370,9 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public long getTagTimeLeft() {
+		if (!tagged) {
+			return 0;
+		}
 		return Math.max(getUntagTime() - System.currentTimeMillis(), 0);
 	}
 
