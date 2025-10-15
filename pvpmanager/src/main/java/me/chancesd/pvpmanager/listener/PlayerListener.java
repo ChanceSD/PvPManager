@@ -178,7 +178,7 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public final void onPlayerJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
-		final CombatPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerHandler.createPlayer(player);
 		ScheduleUtils.runAsync(() -> {
 			if (player.isOp() || pvPlayer.hasPerm(Permissions.ADMIN)) {
 				Lang.sendQueuedMsgs(pvPlayer);

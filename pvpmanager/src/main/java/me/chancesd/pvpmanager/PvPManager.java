@@ -35,7 +35,7 @@ import me.chancesd.sdutils.utils.MCVersion;
 public class PvPManager extends SDPlugin {
 
 	private ConfigManager configM;
-	private PlayerManager playerHandler;
+	private PlayerManager playerManager;
 	private UpdateManager updateManager;
 	private StorageManager storageManager;
 	private DependencyManager dependencyManager;
@@ -62,8 +62,9 @@ public class PvPManager extends SDPlugin {
 		updateManager = new UpdateManager(this);
 		storageManager = new StorageManager(this);
 		worldManager = new WorldManager(this);
-		playerHandler = new PlayerManager(this);
+		playerManager = new PlayerManager(this);
 		dependencyManager.onEnableSetup();
+		playerManager.handlePluginEnable();
 		startListeners();
 		registerCommands();
 		startMetrics();
@@ -73,7 +74,7 @@ public class PvPManager extends SDPlugin {
 
 	@Override
 	public void onPluginDisable() {
-		playerHandler.handlePluginDisable();
+		playerManager.handlePluginDisable();
 		dependencyManager.onDisableCleanup();
 		storageManager.shutdown();
 		instance = null;
@@ -86,17 +87,17 @@ public class PvPManager extends SDPlugin {
 
 	private void startListeners() {
 		if (MCVersion.isAtLeast(MCVersion.V1_9)) {
-			registerListener(new EntityListener1_9(playerHandler));
+			registerListener(new EntityListener1_9(playerManager));
 		}
-		entityListener = new EntityListener(playerHandler);
+		entityListener = new EntityListener(playerManager);
 		registerListener(entityListener);
 		if (MCVersion.isAtLeast(MCVersion.V1_11_2)) {
-			registerListener(new PlayerListener1_11(playerHandler));
+			registerListener(new PlayerListener1_11(playerManager));
 		}
-		registerListener(new PlayerListener(playerHandler));
-		registerListener(new BlockedActionsListener(playerHandler));
+		registerListener(new PlayerListener(playerManager));
+		registerListener(new BlockedActionsListener(playerManager));
 		if (MCVersion.isAtLeast(MCVersion.V1_20_4)) {
-			new EntityListener1_20_4(playerHandler);
+			new EntityListener1_20_4(playerManager);
 		}
 		dependencyManager.startListeners(this);
 	}
@@ -107,17 +108,17 @@ public class PvPManager extends SDPlugin {
 				sender -> Lang.ERROR_NOT_PLAYER.msg(),
 				Lang.ERROR_PLAYER_NOT_FOUND::msg);
 
-		registerCommand("pvp", cmd -> new PvP(cmd, playerHandler));
-		registerCommand("newbie", cmd -> new Newbie(cmd, playerHandler));
+		registerCommand("pvp", cmd -> new PvP(cmd, playerManager));
+		registerCommand("newbie", cmd -> new Newbie(cmd, playerManager));
 		registerCommand("pvpmanager", cmd -> new PM(cmd, this));
-		registerCommand("pvpoverride", cmd -> new PvPOverride(cmd, playerHandler));
-		registerCommand("pvpinfo", cmd -> new PvPInfo(cmd, playerHandler));
-		registerCommand("pvplist", cmd -> new PvPList(cmd, playerHandler));
-		registerCommand("pvpstatus", cmd -> new PvPStatus(cmd, playerHandler));
-		registerCommand("pvptag", cmd -> new Tag(cmd, playerHandler));
-		registerCommand("untag", cmd -> new Untag(cmd, playerHandler));
+		registerCommand("pvpoverride", cmd -> new PvPOverride(cmd, playerManager));
+		registerCommand("pvpinfo", cmd -> new PvPInfo(cmd, playerManager));
+		registerCommand("pvplist", cmd -> new PvPList(cmd, playerManager));
+		registerCommand("pvpstatus", cmd -> new PvPStatus(cmd, playerManager));
+		registerCommand("pvptag", cmd -> new Tag(cmd, playerManager));
+		registerCommand("untag", cmd -> new Untag(cmd, playerManager));
 		registerCommand("announce", Announce::new);
-		registerCommand("pvpglobal", cmd -> new PvPGlobal(cmd, playerHandler));
+		registerCommand("pvpglobal", cmd -> new PvPGlobal(cmd, playerManager));
 	}
 
 	private void startMetrics() {
@@ -133,7 +134,7 @@ public class PvPManager extends SDPlugin {
 	}
 
 	public PlayerManager getPlayerManager() {
-		return playerHandler;
+		return playerManager;
 	}
 
 	public UpdateManager getUpdateManager() {

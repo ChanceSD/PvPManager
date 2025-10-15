@@ -17,7 +17,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
-
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.pvpmanager.PvPManager;
@@ -58,8 +57,6 @@ public class PlayerManager {
 		if (Conf.PVP_DISABLED_FEE.asInt() != 0) {
 			ScheduleUtils.runAsyncTimer(new PvPToggleFeeTask(this), 0, 1, TimeUnit.HOURS);
 		}
-
-		addOnlinePlayers();
 	}
 
 	public final ProtectionResult checkProtection(@NotNull final Player damager, @NotNull final Player defender) {
@@ -111,26 +108,44 @@ public class PlayerManager {
 	}
 
 	/**
+	 * Gets an existing CombatPlayer instance for the provided player.
+	 * Returns null if the player hasn't joined yet or has already left.
+	 *
+	 * @param player the player instance
+	 * @return CombatPlayer instance for the provided player, or null if not found
+	 */
+	public final CombatPlayer get(final Player player) {
+		return players.get(player.getUniqueId());
+	}
+
+	/**
+	 * Creates a new CombatPlayer instance for the provided player.
+	 * Should only be called from join events or server startup.
+	 *
 	 * @param player the player instance
 	 * @return CombatPlayer instance for the provided player
 	 */
 	@NotNull
-	public final CombatPlayer get(final Player player) {
+	public final CombatPlayer createPlayer(final Player player) {
 		if (player == null) {
 			throw new IllegalArgumentException("Player cannot be null");
 		}
 
-		final CombatPlayer pvPlayer = players.get(player.getUniqueId());
-		if (pvPlayer != null)
-			return pvPlayer;
+		// Check if player already exists to prevent duplicates
+		final CombatPlayer existing = players.get(player.getUniqueId());
+		if (existing != null) {
+			return existing;
+		}
 
 		final CombatPlayer combatPlayer = new CombatPlayer(player, plugin);
-		addUser(combatPlayer);
 
-		// Don't load data for NPCs
-		if (!CombatUtils.isNPC(player)) {
+		// Only save data for real players
+		final boolean save = CombatUtils.isReal(combatPlayer.getUUID()) && !CombatUtils.isNPC(player);
+		if (save) {
+			players.put(combatPlayer.getUUID(), combatPlayer);
 			loadPlayerDataAsync(combatPlayer);
 		}
+		Log.debug("Creating " + combatPlayer + " Saved: " + save);
 
 		return combatPlayer;
 	}
@@ -170,17 +185,6 @@ public class PlayerManager {
 		}
 	}
 
-	@NotNull
-	private CombatPlayer addUser(final CombatPlayer p) {
-		final boolean save = CombatUtils.isReal(p.getUUID());
-		// Save only if player actually exists
-		if (save) {
-			players.put(p.getUUID(), p);
-		}
-		Log.debug("Creating " + p + " Saved: " + save);
-		return p;
-	}
-
 	public final void removeUser(final CombatPlayer player) {
 		if (player.isInCombat()) {
 			player.untag(UntagReason.LOGOUT);
@@ -214,7 +218,7 @@ public class PlayerManager {
 		}
 	}
 
-	private void addOnlinePlayers() {
+	public void handlePluginEnable() {
 		final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 		if (scoreboardManager != null) {
 			scoreboardManager.getMainScoreboard().getTeams().forEach(team -> {
@@ -225,7 +229,7 @@ public class PlayerManager {
 			});
 		}
 		for (final Player p : plugin.getServer().getOnlinePlayers()) {
-			get(p);
+			createPlayer(p);
 		}
 	}
 

@@ -489,8 +489,9 @@ public class CombatPlayer extends EcoPlayer {
 
 	/**
 	 * @param player the player instance
-	 * @return PvPlayer instance for the provided player
+	 * @return CombatPlayer instance for the provided player, or null if not found
 	 */
+	@Nullable
 	public static CombatPlayer get(final Player player) {
 		return PvPManager.getInstance().getPlayerManager().get(player);
 	}
