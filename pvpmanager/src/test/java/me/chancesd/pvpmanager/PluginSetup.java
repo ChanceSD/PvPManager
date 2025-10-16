@@ -90,13 +90,6 @@ public class PluginSetup {
 		return player;
 	}
 
-	@NotNull
-	public final Player createPlayer(final String name, final Player killer) {
-		final Player player = createPlayer(name);
-		when(player.getKiller()).thenReturn(killer);
-		return player;
-	}
-
 	public final void tearDown() {
 		plugin.onDisable();
 		deleteDir(new File(filePath + "TestServer"));

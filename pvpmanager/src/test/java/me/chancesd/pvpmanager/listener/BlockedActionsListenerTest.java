@@ -43,13 +43,13 @@ class BlockedActionsListenerTest {
 	}
 
 	private void tagPlayer(final CombatPlayer player) {
-		tagPlayer(player, ph.get(pt.createPlayer("Attacker")));
+		tagPlayer(player, ph.createPlayer(pt.createPlayer("Attacker"), true));
 	}
 
 	@Test
 	final void onCommandTest() {
 		final Player player = pt.createPlayer("onCommandTest");
-		final CombatPlayer pvPlayer = ph.get(player);
+		final CombatPlayer pvPlayer = ph.createPlayer(player, true);
 		final PlayerCommandPreprocessEvent commandPreprocessEvent = new PlayerCommandPreprocessEvent(player, "/spawn");
 
 		assertFalse(commandPreprocessEvent.isCancelled());

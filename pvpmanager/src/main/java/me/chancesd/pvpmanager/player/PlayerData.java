@@ -13,6 +13,7 @@ import me.chancesd.pvpmanager.utils.CombatUtils;
  */
 public class PlayerData {
 
+	private final boolean defaultData;
     private final UUID uuid;
     private final String name;
     private final String displayName;
@@ -23,7 +24,8 @@ public class PlayerData {
     private final long lastSeen;
 
     // Private constructor - use Builder instead
-    private PlayerData(final Builder builder) {
+	private PlayerData(final Builder builder, final boolean defaultData) {
+		this.defaultData = defaultData;
         this.uuid = builder.uuid;
         this.name = builder.name;
         this.displayName = builder.displayName;
@@ -88,8 +90,8 @@ public class PlayerData {
             return this;
         }
 
-        public PlayerData build() {
-            return new PlayerData(this);
+		public PlayerData build(final boolean defaultData) {
+			return new PlayerData(this, defaultData);
         }
     }
 
@@ -173,14 +175,14 @@ public class PlayerData {
                 .newbie(newbie)
                 .newbieTimeLeft(newbieTimeLeft)
                 .lastSeen(lastSeen)
-                .build();
+				.build(false);
     }
 
     /**
      * Creates default PlayerData for new players
      */
     public static PlayerData createDefault() {
-		return builder().pvpEnabled(Conf.DEFAULT_PVP.asBool()).build();
+		return builder().pvpEnabled(Conf.DEFAULT_PVP.asBool()).build(true);
     }
 
     /**
@@ -206,6 +208,7 @@ public class PlayerData {
     }
 
     // Getters
+    public boolean isDefault() { return defaultData; }
     public UUID getUuid() { return uuid; }
     public String getName() { return name; }
     public String getDisplayName() { return displayName; }

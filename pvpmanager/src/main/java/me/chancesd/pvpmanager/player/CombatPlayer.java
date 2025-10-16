@@ -59,7 +59,7 @@ public class CombatPlayer extends EcoPlayer {
 	public CombatPlayer(@NotNull final Player player, final PvPManager plugin) {
 		super(player, plugin.getDependencyManager().getEconomy());
 		this.plugin = plugin;
-		this.pvpState = Conf.DEFAULT_PVP.asBool();
+		this.pvpState = Conf.DEFAULT_PVP.asBool() || CombatUtils.isNPC(player);
 		setCombatWorld(plugin.getWorldManager().getWorld(getPlayer().getWorld()));
 		initializeNameTag();
 	}
@@ -420,11 +420,11 @@ public class CombatPlayer extends EcoPlayer {
 	 */
 	public void applyPlayerData(final PlayerData data) {
 		// Apply loaded data (overriding defaults)
-		this.pvpState = data.isPvpEnabled() || CombatUtils.isNPC(getPlayer());
+		this.pvpState = data.isPvpEnabled();
 		this.toggleTime = data.getToggleTime();
 		this.newbie = data.isNewbie();
 
-		if (Conf.NEWBIE_ENABLED.asBool() && (this.newbie && data.getNewbieTimeLeft() > 0 || !getPlayer().hasPlayedBefore())) {
+		if (Conf.NEWBIE_ENABLED.asBool() && (this.newbie && data.getNewbieTimeLeft() > 0 || data.isDefault() && !getPlayer().hasPlayedBefore())) {
 			setNewbie(true, data.getNewbieTimeLeft());
 		} else if (!Conf.NEWBIE_ENABLED.asBool() && this.newbie) {
 			// If newbie protection is disabled but player has newbie flag, clear it
@@ -454,7 +454,7 @@ public class CombatPlayer extends EcoPlayer {
 				.newbie(isNewbie())
 				.newbieTimeLeft(getNewbieTimeLeft())
 				.lastSeen(System.currentTimeMillis())
-				.build();
+				.build(false);
 	}
 
 	public final void cleanForRemoval() {

@@ -31,6 +31,10 @@ class PlayerListenerTest {
 	private static PlayerListener listener;
 	private static PlayerManager ph;
 	private static PluginSetup pt;
+	private Player attacker;
+	private Player defender;
+	private CombatPlayer combatAttacker;
+	private CombatPlayer combatDefender;
 
 	@BeforeAll
 	static void setupClass() {
@@ -43,6 +47,11 @@ class PlayerListenerTest {
 	@BeforeEach
 	final void setup() {
 		ph.getPlayers().clear();
+		// Create fresh players for each test
+		attacker = pt.createPlayer("Attacker");
+		defender = pt.createPlayer("Defender");
+		combatAttacker = ph.createPlayer(attacker, true);
+		combatDefender = ph.createPlayer(defender, true);
 	}
 
 	private void tagPlayer(final CombatPlayer player, final CombatPlayer enemy) {
@@ -51,29 +60,27 @@ class PlayerListenerTest {
 	}
 
 	private void tagPlayer(final CombatPlayer player) {
-		tagPlayer(player, ph.get(pt.createPlayer("Attacker")));
+		tagPlayer(player, combatAttacker);
 	}
 
 	@Test
 	void onPlayerJoinTest() {
-		final Player playerJoined = pt.createPlayer("onPlayerJoinTest");
+		ph.getPlayers().clear();
+		final Player testPlayer = pt.createPlayer("TestJoinPlayer");
+
 		assertEquals(0, ph.getPlayers().size());
-		listener.onPlayerJoin(new PlayerJoinEvent(playerJoined, ""));
+		listener.onPlayerJoin(new PlayerJoinEvent(testPlayer, ""));
 		assertEquals(1, ph.getPlayers().size());
-		assertEquals(playerJoined, ph.getPlayers().values().stream().findFirst().get().getPlayer());
+		assertEquals(testPlayer, ph.getPlayers().values().stream().findFirst().get().getPlayer());
 	}
 
 	@Test
 	void onPlayerLogoutTest() {
-		final Player player = pt.createPlayer("onPlayerLogoutTest");
-		final CombatPlayer pvPlayer = ph.get(player);
-		final Player attacker = pt.createPlayer("Attacker");
-		final CombatPlayer pvpAttacker = ph.get(attacker);
-		tagPlayer(pvPlayer, pvpAttacker);
+		tagPlayer(combatDefender, combatAttacker);
 
-		listener.onPlayerLogout(new PlayerQuitEvent(player, ""));
-		listener.onPlayerLogoutMonitor(new PlayerQuitEvent(player, ""));
-		verify(player, times(1)).setHealth(0);
+		listener.onPlayerLogout(new PlayerQuitEvent(defender, ""));
+		listener.onPlayerLogoutMonitor(new PlayerQuitEvent(defender, ""));
+		verify(defender, times(1)).setHealth(0);
 
 		assertEquals(1, ph.getPlayers().size());
 		listener.onPlayerLogoutMonitor(new PlayerQuitEvent(attacker, ""));
@@ -82,70 +89,61 @@ class PlayerListenerTest {
 
 	@Test
 	void onPlayerKickTest() {
-		final Player kickPlayer = pt.createPlayer("onPlayerKickTest");
-		final CombatPlayer pvPlayer = ph.get(kickPlayer);
-
-		tagPlayer(pvPlayer);
-		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "", ""));
-		assertTrue(pvPlayer.isInCombat());
+		tagPlayer(combatAttacker);
+		listener.onPlayerKick(new PlayerKickEvent(attacker, "", ""));
+		assertTrue(combatAttacker.isInCombat());
 
 		Conf.MATCH_KICK_REASON.set(true);
-		tagPlayer(pvPlayer);
-		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "", ""));
-		assertFalse(pvPlayer.isInCombat());
+		tagPlayer(combatAttacker);
+		listener.onPlayerKick(new PlayerKickEvent(attacker, "", ""));
+		assertFalse(combatAttacker.isInCombat());
 
-		tagPlayer(pvPlayer);
-		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "Kicked for spamming", ""));
-		assertTrue(pvPlayer.isInCombat());
+		tagPlayer(combatAttacker);
+		listener.onPlayerKick(new PlayerKickEvent(attacker, "Kicked for spamming", ""));
+		assertTrue(combatAttacker.isInCombat());
 
-		pvPlayer.untag(UntagReason.PLUGIN_API);
-		assertFalse(pvPlayer.isInCombat());
-		tagPlayer(pvPlayer);
-		listener.onPlayerKick(new PlayerKickEvent(kickPlayer, "Random text - Kicked for spamming", ""));
-		assertTrue(pvPlayer.isInCombat());
+		combatAttacker.untag(UntagReason.PLUGIN_API);
+		assertFalse(combatAttacker.isInCombat());
+		tagPlayer(combatAttacker);
+		listener.onPlayerKick(new PlayerKickEvent(attacker, "Random text - Kicked for spamming", ""));
+		assertTrue(combatAttacker.isInCombat());
 	}
 
 	private PlayerDeathEvent createDeathEvent(final Player player) {
 		final PlayerDeathEvent event = mock(PlayerDeathEvent.class);
 		when(event.getEntity()).thenReturn(player);
+		when(player.getKiller()).thenReturn(attacker);
 		return event;
 	}
 
 	@Test
 	final void regularDeath() {
-		final Player player = pt.createPlayer("regularDeath");
-		final CombatPlayer pDefender = ph.get(player);
-		assertFalse(pDefender.isInCombat());
-		listener.onPlayerDeath(createDeathEvent(player));
+		assertFalse(combatDefender.isInCombat());
+		listener.onPlayerDeath(createDeathEvent(defender));
 	}
 
 	@Test
 	final void inCombatDeath() {
-		final Player attacker = pt.createPlayer("Attacker");
-		final CombatPlayer pAttacker = ph.get(attacker);
-		final Player defender = pt.createPlayer("Defender", attacker);
-		final CombatPlayer pDefender = ph.get(defender);
-
-		tagPlayer(pDefender, pAttacker);
-		tagPlayer(pAttacker, pDefender);
+		tagPlayer(combatDefender, combatAttacker);
+		tagPlayer(combatAttacker, combatDefender);
 		listener.onPlayerDeath(createDeathEvent(defender));
-		assertFalse(pDefender.isInCombat());
-		assertTrue(pAttacker.isInCombat());
+		assertFalse(combatDefender.isInCombat());
+		assertTrue(combatAttacker.isInCombat());
 
 		Conf.UNTAG_ON_KILL.set(true);
-		tagPlayer(pDefender, pAttacker);
-		tagPlayer(pAttacker, pDefender);
+		tagPlayer(combatDefender, combatAttacker);
+		tagPlayer(combatAttacker, combatDefender);
 		listener.onPlayerDeath(createDeathEvent(defender));
-		assertFalse(pDefender.isInCombat());
-		assertFalse(pAttacker.isInCombat());
+		assertFalse(combatDefender.isInCombat());
+		assertFalse(combatAttacker.isInCombat());
 
 		Conf.SELF_TAG.set(true);
-		tagPlayer(pAttacker, pAttacker);
-		tagPlayer(pDefender, pAttacker);
-		tagPlayer(pAttacker, pDefender);
+		tagPlayer(combatAttacker, combatAttacker);
+		tagPlayer(combatDefender, combatAttacker);
+		tagPlayer(combatAttacker, combatDefender);
 		listener.onPlayerDeath(createDeathEvent(defender));
-		assertFalse(pDefender.isInCombat());
-		assertFalse(pAttacker.isInCombat());
+		assertFalse(combatDefender.isInCombat());
+		assertFalse(combatAttacker.isInCombat());
 	}
 
 }

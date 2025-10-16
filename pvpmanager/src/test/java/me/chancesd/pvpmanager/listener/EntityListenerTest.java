@@ -64,8 +64,8 @@ class EntityListenerTest {
 		// Create fresh players for each test
 		attacker = PT.createPlayer("Attacker");
 		defender = PT.createPlayer("Defender");
-		combatAttacker = ph.get(attacker);
-		combatDefender = ph.get(defender);
+		combatAttacker = ph.createPlayer(attacker, true);
+		combatDefender = ph.createPlayer(defender, true);
 	}
 
 	private void createAttack(final boolean cancelled, final Player attackerPlayer) {

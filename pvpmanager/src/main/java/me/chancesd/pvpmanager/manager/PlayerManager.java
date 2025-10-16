@@ -2,6 +2,7 @@ package me.chancesd.pvpmanager.manager;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +18,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.pvpmanager.PvPManager;
@@ -115,6 +118,21 @@ public class PlayerManager {
 	 * @return CombatPlayer instance for the provided player, or null if not found
 	 */
 	public final CombatPlayer get(final Player player) {
+		final CombatPlayer combatPlayer = players.get(player.getUniqueId());
+		if (combatPlayer != null) {
+			return combatPlayer;
+		}
+
+		final boolean save = CombatUtils.isReal(player.getUniqueId()) && !CombatUtils.isNPC(player);
+		if (!save) {
+			return createPlayer(player, save);
+		}
+
+		return null;
+	}
+
+	@Nullable
+	public final CombatPlayer getUnchecked(final Player player) {
 		return players.get(player.getUniqueId());
 	}
 
@@ -126,21 +144,12 @@ public class PlayerManager {
 	 * @return CombatPlayer instance for the provided player
 	 */
 	@NotNull
-	public final CombatPlayer createPlayer(final Player player) {
-		if (player == null) {
-			throw new IllegalArgumentException("Player cannot be null");
-		}
-
-		// Check if player already exists to prevent duplicates
-		final CombatPlayer existing = players.get(player.getUniqueId());
-		if (existing != null) {
-			return existing;
-		}
+	public final CombatPlayer createPlayer(final Player player, final boolean save) {
+		Objects.requireNonNull(player, "Player cannot be null");
 
 		final CombatPlayer combatPlayer = new CombatPlayer(player, plugin);
 
 		// Only save data for real players
-		final boolean save = CombatUtils.isReal(combatPlayer.getUUID()) && !CombatUtils.isNPC(player);
 		if (save) {
 			players.put(combatPlayer.getUUID(), combatPlayer);
 			loadPlayerDataAsync(combatPlayer);
@@ -229,7 +238,7 @@ public class PlayerManager {
 			});
 		}
 		for (final Player p : plugin.getServer().getOnlinePlayers()) {
-			createPlayer(p);
+			createPlayer(p, true);
 		}
 	}
 

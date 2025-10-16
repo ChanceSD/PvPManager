@@ -118,7 +118,7 @@ public abstract class BasePlayer {
 
 	@Override
 	public String toString() {
-		return "PvPlayer[" + getName() + ", " + uuid + "]";
+		return "CombatPlayer[" + getName() + ", " + uuid + "]";
 	}
 
 	public boolean getWasAllowedFlight() {

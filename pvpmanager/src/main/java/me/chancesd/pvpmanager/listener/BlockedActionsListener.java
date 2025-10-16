@@ -149,10 +149,10 @@ public class BlockedActionsListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
 		final Player player = event.getPlayer();
-		if (CombatUtils.isNPC(player)) // Citizens seems to teleport NPCs very often so let's avoid creating new PvPlayer instances
+		final CombatPlayer pvplayer = playerHandler.getUnchecked(player);
+		if (pvplayer == null)
 			return;
 
-		final CombatPlayer pvplayer = playerHandler.get(player);
 		if (!Conf.COMBAT_TAG_ENABLED.asBool() || !pvplayer.isInCombat())
 			return;
 
