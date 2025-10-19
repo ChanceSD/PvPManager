@@ -34,7 +34,7 @@ Artifact Information:
 <dependency>
     <groupId>me.chancesd.pvpmanager</groupId>
     <artifactId>pvpmanager</artifactId>
-    <version>4.0.3</version>
+    <version>4.0.4</version>
     <scope>provided</scope>
 </dependency>
  ```
