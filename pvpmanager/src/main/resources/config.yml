@@ -193,6 +193,10 @@ Newbie Protection:
     Enabled: true
     # Message to show in the boss bar. Use <time> placeholder for remaining time (auto-formatted as min:sec)
     Message: '&6✦ &a&lNewbie Protection &6✦ &e&l<time>'
+    # See here for bar color options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
+    BarColor: GREEN
+    # See here for bar style options - https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarStyle.html
+    BarStyle: SOLID
   Command Blacklist:
     - 'examplecommand'
 

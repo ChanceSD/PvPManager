@@ -115,6 +115,8 @@ public enum Conf {
 	NEWBIE_GODMODE(ConfSection.NEWBIE_PROTECTION, "Protect From Everything", false, Boolean.class),
 	NEWBIE_BOSS_BAR_ENABLED(ConfSection.NEWBIE_PROTECTION, "Boss Bar." + ConfSection.ENABLED, bool -> MCVersion.isAtLeast(MCVersion.V1_9) && bool, Boolean.class, Boolean.class),
 	NEWBIE_BOSS_BAR_MESSAGE(ConfSection.NEWBIE_PROTECTION, "Boss Bar.Message", ChatUtils::colorize, String.class, String.class),
+	NEWBIE_BOSS_BAR_COLOR(ConfSection.NEWBIE_PROTECTION, "Boss Bar.BarColor", s -> Conf.loadEnum("org.bukkit.boss.BarColor", (String) s, MCVersion.V1_9)),
+	NEWBIE_BOSS_BAR_STYLE(ConfSection.NEWBIE_PROTECTION, "Boss Bar.BarStyle", s -> Conf.loadEnum("org.bukkit.boss.BarStyle", (String) s, MCVersion.V1_9)),
 	NEWBIE_BLACKLIST(ConfSection.NEWBIE_PROTECTION, "Command Blacklist", Conf::getList, List.class, List.class),
 
 	// Item cooldowns

@@ -70,8 +70,8 @@ public class NewbieTask extends PausableTask {
 		final DisplayManager displayManager = getDisplayManager();
 
 		final BossBarBuilder bossBar = BossBarBuilder.create()
-				.barColor(BarColor.GREEN)
-				.barStyle(BarStyle.SOLID);
+				.barColor(Conf.NEWBIE_BOSS_BAR_COLOR.asEnum(BarColor.class))
+				.barStyle(Conf.NEWBIE_BOSS_BAR_STYLE.asEnum(BarStyle.class));
 
 		final TimeProgressSource timeProgressSource = new TimeProgressSource() {
 			@Override
