@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
@@ -32,6 +33,8 @@ public class EntityListener1_9 implements Listener {
 
 	private final PlayerManager ph;
 	private final Cache<UUID, Set<AreaEffectCloud>> potionMessageCache = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
+	private final Cache<UUID, AtomicInteger> elytraSpamCache = CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.SECONDS).build();
+	private static final int ELYTRA_SPAM_THRESHOLD = 3;
 
 	public EntityListener1_9(final PlayerManager ph) {
 		this.ph = ph;
@@ -41,10 +44,24 @@ public class EntityListener1_9 implements Listener {
 	public void onEntityGlide(final EntityToggleGlideEvent event) {
 		if (!Conf.BLOCK_GLIDE_IN_COMBAT.asBool() || !event.isGliding())
 			return;
-		final CombatPlayer combatPlayer = ph.get((Player) event.getEntity());
+		final Player player = (Player) event.getEntity();
+		final CombatPlayer combatPlayer = ph.get(player);
 		if (combatPlayer.isInCombat()) {
 			combatPlayer.sendActionBar(Lang.ELYTRA_BLOCKED_IN_COMBAT.msg(), 1000);
 			event.setCancelled(true);
+
+			final UUID playerId = player.getUniqueId();
+			AtomicInteger attemptCount = elytraSpamCache.getIfPresent(playerId);
+			if (attemptCount == null) {
+				attemptCount = new AtomicInteger(1);
+				elytraSpamCache.put(playerId, attemptCount);
+			} else {
+				final int attempts = attemptCount.incrementAndGet();
+				if (attempts >= ELYTRA_SPAM_THRESHOLD) {
+					CombatUtils.removeElytra(player);
+					elytraSpamCache.invalidate(playerId);
+				}
+			}
 		}
 	}
 

@@ -180,8 +180,13 @@ public final class CombatUtils {
 		p.setFallDistance(-200);
 		if (!Conf.PUSHBACK_REMOVE_ELYTRA.asBool())
 			return;
+		removeElytra(p);
+	}
+
+	public static void removeElytra(final Player p) {
 		final ItemStack chestplate = p.getInventory().getChestplate();
-		if (chestplate == null || chestplate.getType() != Material.ELYTRA)
+		final Location playerLocation = p.getLocation();
+		if (chestplate == null || chestplate.getType() != Material.ELYTRA || playerLocation == null)
 			return;
 		p.getInventory().setChestplate(null);
 		final Map<Integer, ItemStack> item = p.getInventory().addItem(chestplate);

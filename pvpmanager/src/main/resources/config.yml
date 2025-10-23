@@ -70,7 +70,7 @@ Combat Tag:
     Break Blocks: false
     Open Inventory: false
     Elytra:
-      # Prevents players from gliding with elytra while in combat
+      # Prevents players from gliding with elytra while in combat, will unequip elytra if players spam glide
       Block Gliding: false
       # Prevents players from using firework rockets while gliding in combat
       Block Fireworks: false
