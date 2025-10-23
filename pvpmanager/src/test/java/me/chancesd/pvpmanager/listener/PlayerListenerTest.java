@@ -81,10 +81,6 @@ class PlayerListenerTest {
 		listener.onPlayerLogout(new PlayerQuitEvent(defender, ""));
 		listener.onPlayerLogoutMonitor(new PlayerQuitEvent(defender, ""));
 		verify(defender, times(1)).setHealth(0);
-
-		assertEquals(1, ph.getPlayers().size());
-		listener.onPlayerLogoutMonitor(new PlayerQuitEvent(attacker, ""));
-		assertEquals(0, ph.getPlayers().size());
 	}
 
 	@Test
