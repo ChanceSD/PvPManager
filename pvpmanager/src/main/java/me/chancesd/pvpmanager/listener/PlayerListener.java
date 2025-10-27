@@ -82,12 +82,12 @@ public class PlayerListener implements Listener {
 	@EventHandler // normal priority to avoid conflict with griefprevention
 	public final void onPlayerLogout(final PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
-		final CombatPlayer pvPlayer = playerManager.get(player);
-		Log.debug(player.getName() + " quit with message: " + event.getQuitMessage() + " - In combat: " + pvPlayer.isInCombat());
-		if (pvPlayer.isInCombat() && !pvPlayer.hasPerm(Permissions.EXEMPT_COMBAT_LOG)) {
-			playerManager.getConfigManager().getLog().logCombatLog(pvPlayer);
+		final CombatPlayer combatPlayer = playerManager.get(player);
+		Log.debug(player.getName() + " quit with message: " + event.getQuitMessage() + " - In combat: " + combatPlayer.isInCombat());
+		if (combatPlayer.isInCombat() && !combatPlayer.hasPerm(Permissions.EXEMPT_COMBAT_LOG)) {
+			playerManager.getConfigManager().getLog().logCombatLog(combatPlayer);
 			CombatUtils.executeCommands(Conf.COMMANDS_ON_COMBATLOG.asList(), player, player.getName());
-			playerManager.applyPunishments(pvPlayer);
+			playerManager.applyPunishments(combatPlayer);
 		}
 	}
 
@@ -176,7 +176,7 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST) // Create player as early as possible
 	public final void onPlayerJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
 		final CombatPlayer pvPlayer = playerManager.createPlayer(player, true);
@@ -207,7 +207,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 		if (CombatUtils.isWorldExcluded(player.getWorld().getName()))
 			return;
 		final CombatPlayer combatPlayer = playerManager.getUnchecked(player);
