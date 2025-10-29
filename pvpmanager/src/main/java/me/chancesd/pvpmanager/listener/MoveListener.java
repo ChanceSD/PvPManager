@@ -13,8 +13,7 @@ import org.bukkit.util.Vector;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import me.chancesd.pvpmanager.integration.Hook;
-import me.chancesd.pvpmanager.integration.type.RegionDependency;
+import me.chancesd.pvpmanager.manager.DependencyManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Conf;
@@ -23,13 +22,13 @@ import me.chancesd.pvpmanager.setting.Lang;
 public class MoveListener implements Listener {
 
 	private final PlayerManager ph;
-	private final RegionDependency wg;
+	private final DependencyManager depManager;
 	private final Cache<UUID, Player> cache = CacheBuilder.newBuilder().weakValues().expireAfterWrite(1, TimeUnit.SECONDS).build();
 	private final double pushbackForce = Conf.PUSHBACK_FORCE.asDouble();
 
 	public MoveListener(final PlayerManager ph) {
 		this.ph = ph;
-		wg = (RegionDependency) ph.getPlugin().getDependencyManager().getDependency(Hook.WORLDGUARD);
+		this.depManager = ph.getPlugin().getDependencyManager();
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -45,7 +44,7 @@ public class MoveListener implements Listener {
 		if (!pvplayer.isInCombat())
 			return;
 
-		if (!wg.canAttackAt(null, locTo) && wg.canAttackAt(null, locFrom)) {
+		if (!depManager.canAttackAt(null, locTo) && depManager.canAttackAt(null, locFrom)) {
 			final Vector newVel = locFrom.toVector().subtract(locTo.toVector());
 			newVel.setY(newVel.getY() + 0.1).normalize().multiply(pushbackForce);
 			player.setVelocity(newVel);

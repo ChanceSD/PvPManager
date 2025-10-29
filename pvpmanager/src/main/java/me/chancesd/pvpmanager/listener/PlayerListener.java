@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import me.chancesd.pvpmanager.manager.DeathHandler;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionResult;
@@ -40,10 +41,12 @@ import me.chancesd.sdutils.scheduler.ScheduleUtils;
 public class PlayerListener implements Listener {
 
 	private final PlayerManager playerManager;
+	private final DeathHandler deathHandler;
 	private final Cache<UUID, String> msgCooldown = CacheBuilder.newBuilder().weakValues().expireAfterWrite(800, TimeUnit.MILLISECONDS).build();
 
-	public PlayerListener(final PlayerManager ph) {
-		this.playerManager = ph;
+	public PlayerListener(final PlayerManager pM) {
+		this.playerManager = pM;
+		this.deathHandler = new DeathHandler(pM);
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -94,14 +97,14 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public final void onPlayerLogoutMonitor(final PlayerQuitEvent event) {
 		// Paper still calls some events after PlayerQuitEvent, so delay removal to next tick
-		ScheduleUtils.runPlatformTask(() -> playerManager.removeUser(playerManager.get(event.getPlayer())));
+		ScheduleUtils.runPlatformTask(() -> playerManager.removePlayer(playerManager.get(event.getPlayer())));
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public final void onPlayerDeath(final PlayerDeathEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()))
 			return;
-		playerManager.getDeathHandler().processDeath(event);
+		deathHandler.processDeath(event);
 	}
 
 	@EventHandler

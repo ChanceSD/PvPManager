@@ -41,7 +41,6 @@ public class PlayerManager {
 	private final Map<UUID, CombatPlayer> players = new ConcurrentHashMap<>();
 	private final ConfigManager configManager;
 	private final DependencyManager dependencyManager;
-	private final DeathHandler deathHandler;
 	private final PvPManager plugin;
 	private final TagTask tagTask;
 	private boolean globalStatus = true;
@@ -50,7 +49,6 @@ public class PlayerManager {
 		this.plugin = plugin;
 		this.configManager = plugin.getConfigM();
 		this.dependencyManager = plugin.getDependencyManager();
-		this.deathHandler = new DeathHandler(this);
 		this.tagTask = new TagTask(plugin.getDisplayManager());
 		Bukkit.getPluginManager().registerEvents(tagTask, plugin);
 
@@ -60,6 +58,10 @@ public class PlayerManager {
 		if (Conf.PVP_DISABLED_FEE.asInt() != 0) {
 			ScheduleUtils.runAsyncTimer(new PvPToggleFeeTask(this), 0, 1, TimeUnit.HOURS);
 		}
+
+		// Create CombatPlayer instances for online players (in case of reload)
+		removeTeams();
+		Bukkit.getOnlinePlayers().forEach(player -> createPlayer(player, true));
 	}
 
 	public final ProtectionResult checkProtection(@NotNull final Player damager, @NotNull final Player defender) {
@@ -148,13 +150,13 @@ public class PlayerManager {
 		Objects.requireNonNull(player, "Player cannot be null");
 
 		final CombatPlayer combatPlayer = new CombatPlayer(player, plugin);
+		Log.debug("Created " + combatPlayer + " Saved: " + save);
 
 		// Only save data for real players
 		if (save) {
 			players.put(combatPlayer.getUUID(), combatPlayer);
 			loadPlayerDataAsync(combatPlayer);
 		}
-		Log.debug("Creating " + combatPlayer + " Saved: " + save);
 
 		return combatPlayer;
 	}
@@ -194,7 +196,7 @@ public class PlayerManager {
 		}
 	}
 
-	public final void removeUser(final CombatPlayer player) {
+	public final void removePlayer(final CombatPlayer player) {
 		if (player.isInCombat()) {
 			player.untag(UntagReason.LOGOUT);
 		}
@@ -227,25 +229,10 @@ public class PlayerManager {
 		}
 	}
 
-	public void handlePluginEnable() {
-		final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-		if (scoreboardManager != null) {
-			scoreboardManager.getMainScoreboard().getTeams().forEach(team -> {
-				if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
-					Log.debug("Unregistered leftover team: " + team.getName() + " Entries: " + team.getEntries());
-					team.unregister();
-				}
-			});
-		}
-		for (final Player p : plugin.getServer().getOnlinePlayers()) {
-			createPlayer(p, true);
-		}
-	}
-
 	public void handlePluginDisable() {
 		tagTask.cancel();
 		for (final CombatPlayer p : new HashSet<>(players.values())) {
-			removeUser(p);
+			removePlayer(p);
 		}
 		removeTeams();
 		Log.infoColor(ChatColor.RED + "Saving player data to storage...");
@@ -255,6 +242,13 @@ public class PlayerManager {
 		final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 		if (scoreboardManager == null)
 			return;
+
+		scoreboardManager.getMainScoreboard().getTeams().forEach(team -> {
+			if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
+				Log.debug("Unregistered leftover team: " + team.getName() + " Entries: " + team.getEntries());
+				team.unregister();
+			}
+		});
 		final Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
 		final Team pvpon = scoreboard.getTeam("PvPOn");
 		if (pvpon != null) {
@@ -293,10 +287,6 @@ public class PlayerManager {
 
 	public ConfigManager getConfigManager() {
 		return configManager;
-	}
-
-	public DeathHandler getDeathHandler() {
-		return deathHandler;
 	}
 
 }

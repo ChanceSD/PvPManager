@@ -18,7 +18,6 @@ import com.sk89q.worldguard.session.handler.FlagValueChangeHandler;
 import com.sk89q.worldguard.session.handler.Handler;
 
 import me.chancesd.pvpmanager.PvPManager;
-import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.utils.Log;
@@ -33,11 +32,10 @@ public class WorldGuardFlagHandler extends FlagValueChangeHandler<State> {
 	}
 
 	private static StateFlag noProtectionFlag;
-	private final PlayerManager playerManager;
+	private final PvPManager plugin = PvPManager.getInstance();
 
 	public WorldGuardFlagHandler(final Session session) {
 		super(session, noProtectionFlag);
-		this.playerManager = PvPManager.getInstance().getPlayerManager();
 	}
 
 	public static void initializeFlags() {
@@ -61,7 +59,7 @@ public class WorldGuardFlagHandler extends FlagValueChangeHandler<State> {
 		Log.debug("Changed value: " + currentValue + " from " + lastValue);
 		if (currentValue != State.DENY)
 			return true;
-		final CombatPlayer cplayer = playerManager.get(BukkitAdapter.adapt(player));
+		final CombatPlayer cplayer = plugin.getPlayerManager().get(BukkitAdapter.adapt(player));
 		if (!cplayer.hasPvPEnabled()) {
 			cplayer.setPvP(true);
 			cplayer.message(Lang.PVP_FORCE_ENABLED_WG);

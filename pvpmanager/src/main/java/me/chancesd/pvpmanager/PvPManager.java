@@ -59,12 +59,11 @@ public class PvPManager extends SDPlugin {
 			Log.infoColor(ChatColor.AQUA + "Please report any errors you find, most likely nobody reported them yet as not many people use Folia");
 		}
 		loadFiles();
+		dependencyManager.onEnableSetup();
 		updateManager = new UpdateManager(this);
 		storageManager = new StorageManager(this);
 		worldManager = new WorldManager(this);
 		playerManager = new PlayerManager(this);
-		dependencyManager.onEnableSetup();
-		playerManager.handlePluginEnable();
 		startListeners();
 		registerCommands();
 		startMetrics();
