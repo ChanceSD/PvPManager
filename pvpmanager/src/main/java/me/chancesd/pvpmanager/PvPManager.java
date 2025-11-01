@@ -58,10 +58,11 @@ public class PvPManager extends SDPlugin {
 			Log.infoColor(ChatColor.AQUA + "Running on Folia. Support for Folia is still experimental");
 			Log.infoColor(ChatColor.AQUA + "Please report any errors you find, most likely nobody reported them yet as not many people use Folia");
 		}
-		loadFiles();
+		configM = new ConfigManager(this);
+		Lang.setup(this);
+		storageManager = new StorageManager(this);
 		dependencyManager.onEnableSetup();
 		updateManager = new UpdateManager(this);
-		storageManager = new StorageManager(this);
 		worldManager = new WorldManager(this);
 		playerManager = new PlayerManager(this);
 		startListeners();
@@ -77,11 +78,6 @@ public class PvPManager extends SDPlugin {
 		dependencyManager.onDisableCleanup();
 		storageManager.shutdown();
 		instance = null;
-	}
-
-	private void loadFiles() {
-		this.configM = new ConfigManager(this);
-		Lang.setup(this);
 	}
 
 	private void startListeners() {

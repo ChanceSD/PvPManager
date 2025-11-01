@@ -89,6 +89,7 @@ permissions:
        pvpmanager.command.pvpinfo: true
        pvpmanager.command.pvpinfo.others: true
        pvpmanager.command.pvplist: true
+       pvpmanager.command.pvplist.offline: true
        pvpmanager.command.pvpstatus: true
        pvpmanager.command.pvpstatus.others: true
        pvpmanager.command.tag: true
@@ -134,6 +135,9 @@ permissions:
    pvpmanager.command.pvplist:
      description: Allows access to the pvplist command
      default: true
+   pvpmanager.command.pvplist.offline:
+     description: Allows access to the pvplist offline command
+     default: false
    pvpmanager.command.pvpstatus:
      description: Allows checking your own PvP status
      default: true

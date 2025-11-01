@@ -16,85 +16,148 @@ import me.chancesd.pvpmanager.storage.fields.UserDataFields;
 import me.chancesd.sdutils.command.ArgumentType;
 import me.chancesd.sdutils.command.BaseCommand;
 import me.chancesd.sdutils.command.CommandArgument;
+import me.chancesd.sdutils.display.chat.ChatMenu;
+import me.chancesd.sdutils.display.chat.NavigationButtons;
+import me.chancesd.sdutils.display.chat.content.StaticContentProvider;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PvPList extends BaseCommand {
 
+	private static final int LINES_PER_PAGE = 16;
 	private final PlayerManager ph;
 
 	public PvPList(final PluginCommand pluginCommand, final PlayerManager ph) {
 		super(pluginCommand);
 		this.ph = ph;
 		this.description("List the PvP state of all players")
-				.usage("/pvplist [alloffline]").permission(Permissions.COMMAND_PVPLIST.getPermission())
-				.argument("alloffline", ArgumentType.STRING).endArgument();
+				.usage("/pvplist [offline]")
+				.permission(Permissions.COMMAND_PVPLIST.getPermission())
+				.argument("mode", ArgumentType.STRING).tabComplete("offline").endArgument()
+				.argument("page", ArgumentType.INTEGER).defaultValue("1").dependsOn("mode").endArgument();
 	}
 
 	@Override
 	public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 		final boolean isPlayer = sender instanceof Player;
 
-		if (args.isEmpty()) {
-			sendList(sender, isPlayer);
-		} else {
-			final CommandArgument modeArg = args.get(0);
-			if (modeArg.getValue().equalsIgnoreCase("alloffline")) {
-				ScheduleUtils.runAsync(() -> {
-					sender.sendMessage(Lang.PVP_LIST_TITLE.msg());
-					sender.sendMessage(ChatColor.DARK_GRAY + "Gathering all offline players with PvP disabled, please wait...");
-					sender.sendMessage(Lang.PVP_LIST_DISABLED.msg());
-					sender.sendMessage(ChatColor.GRAY + "  " + pvpListOffline());
-				});
+		boolean offlineMode = false;
+		int page = 1;
+
+		if (!args.isEmpty()) {
+			final CommandArgument firstArg = getArgument(args, "mode");
+
+			if (firstArg.getValue().equalsIgnoreCase("offline")) {
+				if (!Permissions.COMMAND_PVPLIST_OFFLINE.hasPerm(sender)) {
+					return;
+				}
+				offlineMode = true;
+				if (args.size() > 1) {
+					page = getArgument(args, "page").getAsInt();
+				}
 			} else {
-				sendList(sender, isPlayer);
+				try {
+					page = Integer.parseInt(firstArg.getValue());
+				} catch (final NumberFormatException e) {
+					sender.sendMessage(ChatColor.RED + "Usage: " + ChatColor.YELLOW + "/pvplist [page]"
+							+ ChatColor.GRAY + " or " + ChatColor.YELLOW + "/pvplist offline [page]");
+					return;
+				}
 			}
+		}
+
+		if (offlineMode) {
+			showOfflineList(sender, page);
+		} else {
+			showOnlineList(sender, isPlayer, page);
 		}
 	}
 
-	private void sendList(final CommandSender sender, final boolean isPlayer) {
-		sender.sendMessage(Lang.PVP_LIST_TITLE.msg());
-		sender.sendMessage(ChatColor.DARK_GRAY + "You can use " + ChatColor.YELLOW + "/pvplist alloffline" + ChatColor.DARK_GRAY
-				+ " to see the PvP status of all offline players.");
+	private void showOnlineList(final CommandSender sender, final boolean isPlayer, final int page) {
+		final StaticContentProvider contentProvider = new StaticContentProvider();
 
-		sender.sendMessage(Lang.PVP_LIST_ENABLED.msg());
-		sender.sendMessage(ChatColor.GRAY + "  " + pvpList(sender, true, !isPlayer));
-
-		sender.sendMessage(Lang.PVP_LIST_DISABLED.msg());
-		sender.sendMessage(ChatColor.GRAY + "  " + pvpList(sender, false, !isPlayer));
-	}
-
-	private String pvpListOffline() {
-		final StringBuilder list = new StringBuilder();
-		final Storage storage = ph.getPlugin().getStorageManager().getStorage();
-		for (final Map<String, Object> userData : storage.getAllUserData()) {
-			final String name = (String) userData.get(UserDataFields.NAME);
-			final Object pvpstatus = userData.get(UserDataFields.PVPSTATUS);
-			boolean pvpState = true;
-			if (pvpstatus instanceof Integer) {
-				pvpState = (int) pvpstatus != 0;
-			} else if (pvpstatus instanceof Boolean) {
-				pvpState = (boolean) pvpstatus;
-			}
-			if (!pvpState && name != null)
-				list.append(name).append(", ");
+		// Add hint about offline command if user has permission
+		if (Permissions.COMMAND_PVPLIST_OFFLINE.hasPerm(sender)) {
+			contentProvider.addLine(ChatColor.DARK_GRAY + "Tip: Use " + ChatColor.YELLOW + "/pvplist offline"
+					+ ChatColor.DARK_GRAY + " to see all offline players.", null, null);
+			contentProvider.addLine("");
 		}
-		if (list.isEmpty())
-			return Lang.PVP_LIST_NO_RESULTS.msg();
-		list.delete(list.length() - 2, list.length());
-		return list.toString();
+
+		// Add enabled players section
+		contentProvider.addLine(Lang.PVP_LIST_ENABLED.msg(), null, null);
+		addPlayerList(sender, contentProvider, true, !isPlayer);
+
+		// Add disabled players section
+		contentProvider.addLine("");
+		contentProvider.addLine(Lang.PVP_LIST_DISABLED.msg(), null, null);
+		addPlayerList(sender, contentProvider, false, !isPlayer);
+
+		final ChatMenu menu = ChatMenu.builder()
+				.header(Lang.PVP_LIST_TITLE.msg() + " #9E9E9E(Page {page}/{total})")
+				.linesPerPage(LINES_PER_PAGE)
+				.contentProvider(contentProvider)
+				.navigation(NavigationButtons.builder()
+						.navigationPrefix("/pvplist")
+						.build())
+				.build();
+
+		menu.show(sender, page);
 	}
 
-	private String pvpList(final CommandSender sender, final boolean enabled, final boolean console) {
-		final StringBuilder list = new StringBuilder();
+	private void addPlayerList(final CommandSender sender, final StaticContentProvider contentProvider, final boolean enabled, final boolean console) {
+		int count = 0;
 		for (final CombatPlayer p : ph.getPlayers().values()) {
 			final Player player = p.getPlayer();
 			if (enabled == p.hasPvPEnabled() && (console || ((Player) sender).canSee(player))) {
-				list.append(p.getName()).append(", ");
+				contentProvider.addLine(ChatColor.GRAY + "  • " + ChatColor.GRAY + player.getDisplayName());
+				count++;
 			}
 		}
-		if (list.isEmpty())
-			return Lang.PVP_LIST_NO_RESULTS.msg();
-		list.delete(list.length() - 2, list.length());
-		return list.toString();
+		if (count == 0) {
+			contentProvider.addLine(ChatColor.GRAY + "  " + Lang.PVP_LIST_NO_RESULTS.msg());
+		}
+	}
+
+	private void showOfflineList(final CommandSender sender, final int page) {
+		sender.sendMessage(ChatColor.DARK_GRAY + "Gathering all offline players with PvP disabled...");
+
+		ScheduleUtils.runAsync(() -> {
+			final StaticContentProvider contentProvider = new StaticContentProvider();
+			final Storage storage = ph.getPlugin().getStorageManager().getStorage();
+
+			contentProvider.addLine(Lang.PVP_LIST_DISABLED.msg(), null, null);
+
+			int count = 0;
+			for (final Map<String, Object> userData : storage.getAllUserData()) {
+				final String displayName = (String) userData.get(UserDataFields.DISPLAYNAME);
+				final Object pvpstatus = userData.get(UserDataFields.PVPSTATUS);
+				boolean pvpState = true;
+
+				if (pvpstatus instanceof Integer) {
+					pvpState = (int) pvpstatus != 0;
+				} else if (pvpstatus instanceof Boolean) {
+					pvpState = (boolean) pvpstatus;
+				}
+
+				if (!pvpState && displayName != null) {
+					contentProvider.addLine(ChatColor.GRAY + "  • " + ChatColor.GRAY + displayName);
+					count++;
+				}
+			}
+
+			if (count == 0) {
+				contentProvider.addLine(ChatColor.GRAY + "  " + Lang.PVP_LIST_NO_RESULTS.msg(), null, null);
+			}
+
+			final ChatMenu menu = ChatMenu.builder()
+					.header(Lang.PVP_LIST_TITLE.msg() + " #FF5722(Offline) #9E9E9E(Page {page}/{total})")
+					.linesPerPage(LINES_PER_PAGE)
+					.contentProvider(contentProvider)
+					.navigation(NavigationButtons.builder()
+							.navigationPrefix("/pvplist offline")
+							.build())
+					.build();
+
+			menu.show(sender, page);
+		});
 	}
 }

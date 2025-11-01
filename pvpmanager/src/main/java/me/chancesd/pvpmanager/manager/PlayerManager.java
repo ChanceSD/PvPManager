@@ -185,10 +185,6 @@ public class PlayerManager {
 	 * Saves player data to storage
 	 */
 	public void savePlayer(final CombatPlayer player) {
-		if (!CombatUtils.isReal(player.getUUID())) {
-			return; // Don't save NPCs or invalid players
-		}
-
 		try {
 			plugin.getStorageManager().getStorage().saveUserData(player);
 		} catch (final Exception e) {
@@ -201,7 +197,9 @@ public class PlayerManager {
 			player.untag(UntagReason.LOGOUT);
 		}
 
-		savePlayer(player);
+		if (player.isLoaded()) {
+			ScheduleUtils.runAsync(() -> savePlayer(player));
+		}
 
 		player.cleanForRemoval();
 		players.remove(player.getUUID());

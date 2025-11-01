@@ -17,6 +17,7 @@ public enum Permissions {
 	COMMAND_PVPINFO("pvpmanager.command.pvpinfo"),
 	COMMAND_PVPINFO_OTHERS("pvpmanager.command.pvpinfo.others"),
 	COMMAND_PVPLIST("pvpmanager.command.pvplist"),
+	COMMAND_PVPLIST_OFFLINE("pvpmanager.command.pvplist.offline"),
 	COMMAND_PVPSTATUS("pvpmanager.command.pvpstatus"),
 	COMMAND_PVPSTATUS_OTHERS("pvpmanager.command.pvpstatus.others"),
 	COMMAND_TAG("pvpmanager.command.tag"),
