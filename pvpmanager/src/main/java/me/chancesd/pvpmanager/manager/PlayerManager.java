@@ -193,12 +193,20 @@ public class PlayerManager {
 	}
 
 	public final void removePlayer(final CombatPlayer player) {
+		removePlayer(player, true);
+	}
+
+	private void removePlayer(final CombatPlayer player, final boolean asyncSave) {
 		if (player.isInCombat()) {
 			player.untag(UntagReason.LOGOUT);
 		}
 
 		if (player.isLoaded()) {
-			ScheduleUtils.runAsync(() -> savePlayer(player));
+			if (asyncSave) {
+				ScheduleUtils.runAsync(() -> savePlayer(player));
+			} else {
+				savePlayer(player);
+			}
 		}
 
 		player.cleanForRemoval();
@@ -229,8 +237,9 @@ public class PlayerManager {
 
 	public void handlePluginDisable() {
 		tagTask.cancel();
+		// Save players synchronously to ensure saving before storage shutdown
 		for (final CombatPlayer p : new HashSet<>(players.values())) {
-			removePlayer(p);
+			removePlayer(p, false);
 		}
 		removeTeams();
 		Log.infoColor(ChatColor.RED + "Saving player data to storage...");
