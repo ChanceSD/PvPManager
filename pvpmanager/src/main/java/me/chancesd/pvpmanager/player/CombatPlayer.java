@@ -45,8 +45,8 @@ public class CombatPlayer extends EcoPlayer {
 	private boolean lastDeathWasPvP;
 	private long toggleTime;
 	private long respawnTime;
-	private long taggedTime;
-	private long totalTagTime;
+	private volatile long taggedTime;
+	private volatile long totalTagTime;
 	private long lastKillCommandTime;
 	private NewbieTask newbieTask;
 	private CombatPlayer enemy;
@@ -100,6 +100,7 @@ public class CombatPlayer extends EcoPlayer {
 	public void addEnemy(final CombatPlayer enemyPlayer) {
 		if (enemyPlayer == this)
 			return;
+		this.enemy = enemyPlayer;
 		this.lastHitters.add(enemyPlayer);
 	}
 
@@ -157,11 +158,11 @@ public class CombatPlayer extends EcoPlayer {
 		}
 
 		this.taggedTime = System.currentTimeMillis();
-		this.enemy = other;
 		addEnemy(other);
 
-		if (tagged)
+		if (tagged) {
 			return;
+		}
 
 		this.totalTagTime = timeMiliseconds;
 
@@ -207,6 +208,10 @@ public class CombatPlayer extends EcoPlayer {
 	 * Takes the player out of combat
 	 */
 	public final void untag(final UntagReason reason) {
+		if (!isInCombat()) {
+			Log.debug("Not untagging " + getName() + " because player is not tagged.");
+			return;
+		}
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this, reason);
 		ScheduleUtils.ensureMainThread(() -> {
 			Bukkit.getPluginManager().callEvent(event);

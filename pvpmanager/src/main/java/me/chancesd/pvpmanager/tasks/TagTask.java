@@ -63,12 +63,12 @@ public class TagTask implements Listener {
 		final TimeProgressSource timeProgressSource = new TimeProgressSource() {
 			@Override
 			public long getGoal() {
-				return combatPlayer.getTotalTagTime() / 1000;
+				return combatPlayer.getTotalTagTime();
 			}
 
 			@Override
-			public double getProgress() {
-				return (System.currentTimeMillis() - combatPlayer.getTaggedTime()) / 1000D;
+			public long getProgress() {
+				return System.currentTimeMillis() - combatPlayer.getTaggedTime();
 			}
 		};
 
@@ -82,13 +82,16 @@ public class TagTask implements Listener {
 		}
 		if (Conf.BOSS_BAR_ENABLED.asBool()) {
 			builder.withBossBar(bossBar.build(), timeSource -> {
+				final double secondsRemaining = (timeSource.getGoal() - timeSource.getProgress()) / 1000.0;
 				final String message = Conf.BOSS_BAR_MESSAGE.asString().replace("<time>",
-						Double.toString(Utils.roundTo1Decimal(timeSource.getGoal() - timeSource.getProgress())));
+						Double.toString(Utils.roundTo1Decimal(secondsRemaining)));
 				return CombatUtils.processPlaceholders(combatPlayer.getPlayer(), message);
 			});
 		}
 		final CountdownData countdownData = builder.withTimeSource(timeProgressSource)
-				.onFinish(() -> combatPlayer.untag(UntagReason.TIME_EXPIRED))
+				.onFinish(() -> {
+					combatPlayer.untag(UntagReason.TIME_EXPIRED);
+				})
 				.build(combatPlayer.getPlayer());
 
 		display.createCountdown(combatPlayer.getPlayer(), countdownData);

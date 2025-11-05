@@ -120,12 +120,14 @@ class PlayerListenerTest {
 
 	@Test
 	final void inCombatDeath() {
+		// Test 1: Default config (UNTAG_ON_KILL=false, SELF_TAG=false)
 		tagPlayer(combatDefender, combatAttacker);
 		tagPlayer(combatAttacker, combatDefender);
 		listener.onPlayerDeath(createDeathEvent(defender));
 		assertFalse(combatDefender.isInCombat());
 		assertTrue(combatAttacker.isInCombat());
 
+		// Test 2: UNTAG_ON_KILL=true
 		Conf.UNTAG_ON_KILL.set(true);
 		tagPlayer(combatDefender, combatAttacker);
 		tagPlayer(combatAttacker, combatDefender);
@@ -133,6 +135,7 @@ class PlayerListenerTest {
 		assertFalse(combatDefender.isInCombat());
 		assertFalse(combatAttacker.isInCombat());
 
+		// Test 3: SELF_TAG=true
 		Conf.SELF_TAG.set(true);
 		tagPlayer(combatAttacker, combatAttacker);
 		tagPlayer(combatDefender, combatAttacker);
@@ -140,6 +143,27 @@ class PlayerListenerTest {
 		listener.onPlayerDeath(createDeathEvent(defender));
 		assertFalse(combatDefender.isInCombat());
 		assertFalse(combatAttacker.isInCombat());
+	}
+
+	@Test
+	final void deathEdgeCases() {
+		Conf.SELF_TAG.set(false);
+		tagPlayer(combatDefender, combatAttacker);
+		PlayerDeathEvent event = mock(PlayerDeathEvent.class);
+		when(event.getEntity()).thenReturn(defender);
+		when(defender.getKiller()).thenReturn(defender);
+		
+		listener.onPlayerDeath(event);
+		assertFalse(combatDefender.isInCombat(), "Player should be untagged after self-kill");
+		
+		// Test 2: Environmental death (killer = null)
+		tagPlayer(combatDefender, combatAttacker);
+		event = mock(PlayerDeathEvent.class);
+		when(event.getEntity()).thenReturn(defender);
+		when(defender.getKiller()).thenReturn(null);
+		
+		listener.onPlayerDeath(event);
+		assertFalse(combatDefender.isInCombat(), "Player should be untagged after environmental death");
 	}
 
 }

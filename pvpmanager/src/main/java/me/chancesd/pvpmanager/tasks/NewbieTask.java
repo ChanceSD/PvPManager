@@ -76,12 +76,12 @@ public class NewbieTask extends PausableTask {
 		final TimeProgressSource timeProgressSource = new TimeProgressSource() {
 			@Override
 			public long getGoal() {
-				return getDuration() / 1000;
+				return getDuration();
 			}
 
 			@Override
-			public double getProgress() {
-				return (getDuration() - getTimeleft()) / 1000.0;
+			public long getProgress() {
+				return getDuration() - getTimeleft();
 			}
 		};
 

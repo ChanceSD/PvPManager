@@ -63,7 +63,7 @@ public class LogFile {
 			locationInfo = " | Location:Unknown";
 		}
 
-		final String data = player.getName() + " tried to escape combat! (" + player.getTagTimeLeft() / 1000 + "s left)"
+		final String data = player.getName() + " tried to escape combat! (" + String.format("%.3f", player.getTagTimeLeft() / 1000.0) + "s left)"
 				+ " | In combat with: " + player.getEnemies().stream().map(CombatPlayer::getName).toList() + locationInfo;
 		write(format.format(new Date()) + data);
 	}
