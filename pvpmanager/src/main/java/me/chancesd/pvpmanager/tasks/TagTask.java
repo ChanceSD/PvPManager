@@ -53,24 +53,12 @@ public class TagTask implements Listener {
 
 	@EventHandler
 	public final void onPlayerUntag(final PlayerUntagEvent event) {
-		stopTracking(event.getCombatPlayer());
+		stopTracking(event.getCombatPlayer(), event.getReason());
 	}
 
 	private final void startTracking(final CombatPlayer combatPlayer) {
 		final ProgressBar progressBar = new ProgressBar(Conf.ACTION_BAR_MESSAGE.asString(), Conf.ACTION_BAR_BARS.asInt(), combatPlayer.getTotalTagTime(),
 				Conf.ACTION_BAR_SYMBOL.asString());
-
-		final TimeProgressSource timeProgressSource = new TimeProgressSource() {
-			@Override
-			public long getGoal() {
-				return combatPlayer.getTotalTagTime();
-			}
-
-			@Override
-			public long getProgress() {
-				return System.currentTimeMillis() - combatPlayer.getTaggedTime();
-			}
-		};
 
 		final CountdownData.Builder builder = new CountdownData.Builder();
 		if (Conf.ACTION_BAR_ENABLED.asBool()) {
@@ -83,24 +71,37 @@ public class TagTask implements Listener {
 		if (Conf.BOSS_BAR_ENABLED.asBool()) {
 			builder.withBossBar(bossBar.build(), timeSource -> {
 				final double secondsRemaining = (timeSource.getGoal() - timeSource.getProgress()) / 1000.0;
-				final String message = Conf.BOSS_BAR_MESSAGE.asString().replace("<time>",
-						Double.toString(Utils.roundTo1Decimal(secondsRemaining)));
+				final String message = Conf.BOSS_BAR_MESSAGE.asString().replace("<time>", Double.toString(Utils.roundTo1Decimal(secondsRemaining)));
 				return CombatUtils.processPlaceholders(combatPlayer.getPlayer(), message);
 			});
 		}
+
+		final TimeProgressSource timeProgressSource = new TimeProgressSource() {
+			@Override
+			public long getGoal() {
+				return combatPlayer.getTotalTagTime();
+			}
+
+			@Override
+			public long getProgress() {
+				return System.currentTimeMillis() - combatPlayer.getTaggedTime();
+			}
+		};
 		final CountdownData countdownData = builder.withTimeSource(timeProgressSource)
-				.onFinish(() -> {
-					combatPlayer.untag(UntagReason.TIME_EXPIRED);
-				})
+				.onFinish(() -> combatPlayer.untag(UntagReason.TIME_EXPIRED))
 				.build(combatPlayer.getPlayer());
 
 		display.createCountdown(combatPlayer.getPlayer(), countdownData);
 		taggedCountdowns.put(combatPlayer, countdownData);
 	}
 
-	private final void stopTracking(final CombatPlayer combatPlayer) {
+	private final void stopTracking(final CombatPlayer combatPlayer, final UntagReason reason) {
 		final CountdownData countdownData = taggedCountdowns.remove(combatPlayer);
-		display.cancelCountdown(combatPlayer.getPlayer(), countdownData);
+
+		// Don't call cancelCountdown for TIME_EXPIRED, already removed by display
+		if (reason != UntagReason.TIME_EXPIRED) {
+			display.cancelCountdown(combatPlayer.getPlayer(), countdownData);
+		}
 	}
 
 	public Set<CombatPlayer> getTaggedPlayers() {

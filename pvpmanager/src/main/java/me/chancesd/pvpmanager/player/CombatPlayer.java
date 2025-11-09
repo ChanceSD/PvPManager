@@ -30,6 +30,7 @@ import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.tasks.NewbieTask;
 import me.chancesd.pvpmanager.utils.CombatUtils;
+import me.chancesd.sdutils.scheduler.SDTask;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
@@ -49,6 +50,7 @@ public class CombatPlayer extends EcoPlayer {
 	private volatile long totalTagTime;
 	private long lastKillCommandTime;
 	private NewbieTask newbieTask;
+	private SDTask pendingUntagTask;
 	private CombatPlayer enemy;
 	private final Set<CombatPlayer> lastHitters = new HashSet<>();
 	private final Map<String, Integer> victim = new HashMap<>();
@@ -151,7 +153,7 @@ public class CombatPlayer extends EcoPlayer {
 	 * @param other           The other player involved in the attack
 	 * @param timeMiliseconds How long the player should be tagged for
 	 */
-	public final void tag(final boolean isAttacker, final CombatPlayer other, final long timeMiliseconds) {
+	public final synchronized void tag(final boolean isAttacker, final CombatPlayer other, final long timeMiliseconds) {
 		if (hasPerm(Permissions.EXEMPT_COMBAT_TAG)) {
 			Log.debug("Not tagging " + getName() + " because player has permission: " + Permissions.EXEMPT_COMBAT_TAG);
 			return;
@@ -162,6 +164,13 @@ public class CombatPlayer extends EcoPlayer {
 
 		if (tagged) {
 			return;
+		}
+
+		// Cancel any pending untag task
+		if (pendingUntagTask != null && !pendingUntagTask.isCancelled()) {
+			pendingUntagTask.cancel();
+			Log.debug("Cancelled stale untag task for " + getName());
+			pendingUntagTask = null;
 		}
 
 		this.totalTagTime = timeMiliseconds;
@@ -207,17 +216,17 @@ public class CombatPlayer extends EcoPlayer {
 	/**
 	 * Takes the player out of combat
 	 */
-	public final void untag(final UntagReason reason) {
+	public final synchronized void untag(final UntagReason reason) {
 		if (!isInCombat()) {
-			Log.debug("Not untagging " + getName() + " because player is not tagged.");
 			return;
 		}
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this, reason);
-		ScheduleUtils.ensureMainThread(() -> {
+		pendingUntagTask = ScheduleUtils.ensureMainThread(() -> {
 			Bukkit.getPluginManager().callEvent(event);
 			if (Conf.DISABLE_FLY.asBool() && Conf.RESTORE_FLY.asBool() && getWasAllowedFlight()) {
 				getPlayer().setAllowFlight(getWasAllowedFlight()); // Sync because there's an async catcher on MC 1.8
 			}
+			pendingUntagTask = null;
 		}, getPlayer());
 
 		if (Conf.GLOWING_IN_COMBAT.asBool() && MCVersion.isAtLeast(MCVersion.V1_9)) {
@@ -423,7 +432,7 @@ public class CombatPlayer extends EcoPlayer {
 	/**
 	 * Apply loaded player data to this CombatPlayer
 	 */
-	public void applyPlayerData(final PlayerData data) {
+	public synchronized void applyPlayerData(final PlayerData data) {
 		// Apply loaded data (overriding defaults)
 		this.pvpState = data.isPvpEnabled();
 		this.toggleTime = data.getToggleTime();
@@ -443,9 +452,7 @@ public class CombatPlayer extends EcoPlayer {
 
 		this.loaded = true;
 		// Wake up any threads waiting for data to load
-		synchronized (this) {
-			notifyAll();
-		}
+		notifyAll();
 		Log.debug("Finished loading data for " + this + (nametag != null ? " with " + nametag.getClass().getSimpleName() : ""));
 	}
 
