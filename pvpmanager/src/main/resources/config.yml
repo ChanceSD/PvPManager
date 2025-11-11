@@ -203,14 +203,17 @@ Newbie Protection:
 #####################
 ####  Cooldowns  ####
 #####################
-# Here you can set a cooldown, in seconds, to any item such as golden apples and enchanted golden apples
+# Here you can set a cooldown, in seconds, to ANY item, such as golden apples and enchanted golden apples
 # You can add other material types from here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 # If the item is not edible the cooldown will only be activated for right clicks
 # Combat section sets cooldowns only while in combat, global means cooldowns will always apply
 # You can disable the Minecraft builtin cooldown for an item by setting it to 0, like for enderpearls, or -1 for default cooldown
 Item Cooldowns:
   Combat:
-    ENDER_PEARL: 10
+    ENDER_PEARL: 5
+    WIND_CHARGE: 1
+    GOLDEN_APPLE: 30
+    ENCHANTED_GOLDEN_APPLE: 60
   Global:
     GOLDEN_APPLE: 30
     ENCHANTED_GOLDEN_APPLE: 60

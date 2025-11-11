@@ -408,7 +408,7 @@ public enum Conf {
 		materials.addAll(globalCooldowns.keySet());
 
 		for (final Material material : materials) {
-			itemCooldowns.put(material, new ItemCooldown(combatCooldowns.getOrDefault(material, 0), globalCooldowns.getOrDefault(material, 0)));
+			itemCooldowns.put(material, new ItemCooldown(combatCooldowns.getOrDefault(material, -1), globalCooldowns.getOrDefault(material, -1)));
 		}
 		return itemCooldowns;
 	}
