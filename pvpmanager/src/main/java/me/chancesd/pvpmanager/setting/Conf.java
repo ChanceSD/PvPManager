@@ -146,6 +146,8 @@ public enum Conf {
 	HEALTH_BELOW_NAME(ConfSection.OTHER_SETTINGS, "Show health under name.Enabled", true, Boolean.class),
 	HEALTH_BELOW_NAME_SYMBOL(ConfSection.OTHER_SETTINGS, "Show health under name.Display Name", ChatUtils::colorize, String.class, String.class),
 
+	PROTECTION_MESSAGES_TO_ACTIONBAR(ConfSection.OTHER_SETTINGS, "Protection Messages to Action Bar", bool -> MCVersion.isAtLeast(MCVersion.V1_10) && bool, Boolean.class, Boolean.class),
+
 	// Disable on hit
 	DISABLE_FLY(ConfSection.DISABLE_ON_HIT, "Fly", true, Boolean.class),
 	RESTORE_FLY(ConfSection.DISABLE_ON_HIT, "Restore Fly", true, Boolean.class),

@@ -69,7 +69,7 @@ ext {
         'project.groupId'    : project.group,
         'project.version'    : project.version,
         'project.description': project.description,
-        'config.version'     : '201',
+        'config.version'     : '204',
         'database.version'   : '1'
     ]
 }

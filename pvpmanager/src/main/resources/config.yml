@@ -266,6 +266,8 @@ Other Settings:
   PvP Blood: true
   # Ignore hits from snowballs, eggs, fishing rod and others
   Ignore No Damage Hits: true
+  # Send protection messages (PvP disabled, newbie protection, etc.) to action bar instead of chat
+  Protection Messages to Action Bar: true
   # Player Drop Mode -> What happens to a player's drops and exp on death
   # The options are 'ALWAYS' - (PvPManager does nothing, feature is disabled, usually best to avoid conflicts with death chest plugins, etc),
   # mode 'DROP' - (Players drop items when killed in PvP but not in PvE),

@@ -16,7 +16,6 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
-import me.chancesd.sdutils.utils.Log;
 
 public class RegionCheckTask extends BukkitRunnable implements Listener {
 

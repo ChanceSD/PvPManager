@@ -32,7 +32,6 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionType;
-import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 
@@ -204,7 +203,6 @@ class EntityListenerTest {
 		createAttack(false);
 
 		assertEquals(ProtectionType.NEWBIE, ph.checkProtection(attacker, defender).type());
-		verify(attacker, times(2)).sendMessage(Lang.NEWBIE_PROTECTION_ON_HIT.msg());
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);
@@ -216,7 +214,6 @@ class EntityListenerTest {
 		createAttack(false);
 
 		assertEquals(ProtectionType.PVPDISABLED, ph.checkProtection(attacker, defender).type());
-		verify(attacker, times(2)).sendMessage(Lang.ATTACK_DENIED_OTHER.msg(defender.getName()));
 
 		verify(mockEvent).setCancelled(true);
 		verify(projMockEvent).setCancelled(true);
@@ -316,7 +313,6 @@ class EntityListenerTest {
 		assertTrue(CombatUtils.isPvP(tntEvent));
 
 		callEvent(tntEvent);
-		// Verify combat tagging behavior for TNT attacks
 		assertTrue(combatAttacker.isInCombat());
 		assertTrue(combatDefender.isInCombat());
 	}
@@ -330,7 +326,6 @@ class EntityListenerTest {
 		assertTrue(CombatUtils.isPvP(cloudEvent));
 
 		callEvent(cloudEvent);
-		// Verify combat tagging for area effect clouds
 		assertTrue(combatAttacker.isInCombat());
 		assertTrue(combatDefender.isInCombat());
 	}
