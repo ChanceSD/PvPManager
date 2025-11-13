@@ -16,6 +16,7 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
+import me.chancesd.sdutils.utils.Log;
 
 public class RegionCheckTask extends BukkitRunnable implements Listener {
 
@@ -40,7 +41,7 @@ public class RegionCheckTask extends BukkitRunnable implements Listener {
 					continue;
 				lastLocation.setPitch(playerLocation.getPitch());
 				lastLocation.setYaw(playerLocation.getYaw());
-				ScheduleUtils.teleport(player, lastLocation);
+				ScheduleUtils.teleport(player, lastLocation, "Failed to teleport player out of non-PvP region");
 				pvPlayer.message(Lang.PUSHBACK_WARNING);
 			} else {
 				lastLocations.put(pvPlayer, playerLocation);

@@ -176,7 +176,7 @@ public final class CombatUtils {
 			return;
 		final Location playerLocation = p.getLocation();
 		p.setGliding(false);
-		ScheduleUtils.teleport(p, playerLocation);
+		ScheduleUtils.teleport(p, playerLocation, "Failed to teleport player after disabling glide");
 		p.setFallDistance(-200);
 		if (!Conf.PUSHBACK_REMOVE_ELYTRA.asBool())
 			return;
