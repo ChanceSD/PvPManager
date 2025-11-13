@@ -29,7 +29,7 @@ public class TABHook extends BaseDependency {
 			throw new DependencyException("Can't hook into TAB, update TAB to 4.0.0 or above", hook);
 		}
 		this.showInPlayerlist = getConfigBoolean("Show In Tab", true);
-		this.showAboveHead =getConfigBoolean("Show Above Player", true);
+		this.showAboveHead = getConfigBoolean("Show Above Player", true);
 
 		registerLoadEvent();
 	}
@@ -41,12 +41,14 @@ public class TABHook extends BaseDependency {
 		eventBus.register(PlayerLoadEvent.class, event -> {
 			final TabPlayer tabPlayer = event.getPlayer();
 			if (event.isJoin()) {
-				final CombatPlayer pvPlayer = CombatPlayer.get((Player) tabPlayer.getPlayer());
+				final CombatPlayer combatPlayer = PvPManager.getInstance().getPlayerManager().getUnchecked((Player) tabPlayer.getPlayer());
+				if (combatPlayer == null)
+					return;
 				// wait 1 second because TAB was overwriting it
 				ScheduleUtils.runAsyncLater(() -> {
-					final NameTag nameTag = pvPlayer.getNameTag();
+					final NameTag nameTag = combatPlayer.getNameTag();
 					if (nameTag != null)
-						nameTag.setPvP(pvPlayer.hasPvPEnabled());
+						nameTag.setPvP(combatPlayer.hasPvPEnabled());
 				}, 1, TimeUnit.SECONDS);
 			}
 		});
