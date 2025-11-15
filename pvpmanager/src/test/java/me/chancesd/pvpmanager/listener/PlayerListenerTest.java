@@ -52,6 +52,8 @@ class PlayerListenerTest {
 		defender = pt.createPlayer("Defender");
 		combatAttacker = ph.createPlayer(attacker, true);
 		combatDefender = ph.createPlayer(defender, true);
+		combatAttacker.waitForPlayerToLoad();
+		combatDefender.waitForPlayerToLoad();
 	}
 
 	private void tagPlayer(final CombatPlayer player, final CombatPlayer enemy) {

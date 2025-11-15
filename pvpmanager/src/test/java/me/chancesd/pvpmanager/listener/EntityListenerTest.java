@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.RETURNS_MOCKS;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -65,6 +66,8 @@ class EntityListenerTest {
 		defender = PT.createPlayer("Defender");
 		combatAttacker = ph.createPlayer(attacker, true);
 		combatDefender = ph.createPlayer(defender, true);
+		combatAttacker.waitForPlayerToLoad();
+		combatDefender.waitForPlayerToLoad();
 	}
 
 	private void createAttack(final boolean cancelled, final Player attackerPlayer) {
@@ -221,10 +224,10 @@ class EntityListenerTest {
 
 	@Test
 	final void failCancel() {
-		when(attacker.getAllowFlight()).thenReturn(true);
-		when(defender.getAllowFlight()).thenReturn(true);
-		when(attacker.isFlying()).thenReturn(true);
-		when(defender.isFlying()).thenReturn(true);
+		doReturn(true).when(attacker).getAllowFlight();
+		doReturn(true).when(defender).getAllowFlight();
+		doReturn(true).when(attacker).isFlying();
+		doReturn(true).when(defender).isFlying();
 		assertEquals(ProtectionType.FAIL, ph.checkProtection(attacker, defender).type());
 		createAttack(false);
 		assertTrue(combatAttacker.isInCombat());
