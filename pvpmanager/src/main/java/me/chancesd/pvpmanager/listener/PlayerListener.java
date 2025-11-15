@@ -227,30 +227,32 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onChangeWorld(final PlayerChangedWorldEvent event) {
 		final Player player = event.getPlayer();
-		final CombatPlayer pvPlayer = playerManager.get(player);
+		final CombatPlayer combatPlayer = playerManager.getUnchecked(player);
+		if (combatPlayer == null)
+			return;
 		final CombatWorld combatWorld = playerManager.getPlugin().getWorldManager().getWorld(player.getWorld());
-		pvPlayer.setCombatWorld(combatWorld);
+		combatPlayer.setCombatWorld(combatWorld);
 
 		// Handle newbie protection pause in excluded worlds
-		if (pvPlayer.isNewbie() && pvPlayer.getNewbieTask() != null) {
+		if (combatPlayer.isNewbie() && combatPlayer.getNewbieTask() != null) {
 			if (CombatUtils.isWorldExcluded(player.getWorld().getName())) {
-				pvPlayer.getNewbieTask().pause();
+				combatPlayer.getNewbieTask().pause();
 			} else {
-				pvPlayer.getNewbieTask().resume();
+				combatPlayer.getNewbieTask().resume();
 			}
 		}
 
-		final CombatWorld.WorldOptionState optionState = pvPlayer.getCombatWorld().isPvPForced();
+		final CombatWorld.WorldOptionState optionState = combatPlayer.getCombatWorld().isPvPForced();
 		if (optionState == CombatWorld.WorldOptionState.NONE)
 			return;
-		if (pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.OFF) {
-			pvPlayer.setPvP(false);
-			pvPlayer.message(Lang.ERROR_PVP_TOGGLE_NO_PVP);
+		if (combatPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.OFF) {
+			combatPlayer.setPvP(false);
+			combatPlayer.message(Lang.ERROR_PVP_TOGGLE_NO_PVP);
 			return;
 		}
-		if (!pvPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.ON) {
-			pvPlayer.setPvP(true);
-			pvPlayer.message(Lang.ERROR_PVP_TOGGLE_FORCE_PVP);
+		if (!combatPlayer.hasPvPEnabled() && optionState == CombatWorld.WorldOptionState.ON) {
+			combatPlayer.setPvP(true);
+			combatPlayer.message(Lang.ERROR_PVP_TOGGLE_FORCE_PVP);
 		}
 	}
 
