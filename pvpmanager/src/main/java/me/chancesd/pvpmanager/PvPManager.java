@@ -19,6 +19,7 @@ import me.chancesd.pvpmanager.listener.EntityListener1_20_4;
 import me.chancesd.pvpmanager.listener.EntityListener1_9;
 import me.chancesd.pvpmanager.listener.PlayerListener;
 import me.chancesd.pvpmanager.listener.PlayerListener1_11;
+import me.chancesd.pvpmanager.listener.TridentListener;
 import me.chancesd.pvpmanager.manager.ConfigManager;
 import me.chancesd.pvpmanager.manager.DependencyManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
@@ -93,6 +94,9 @@ public class PvPManager extends SDPlugin {
 		registerListener(new BlockedActionsListener(playerManager));
 		if (MCVersion.isAtLeast(MCVersion.V1_20_4)) {
 			new EntityListener1_20_4(playerManager);
+		}
+		if (MCVersion.isAtLeast(MCVersion.V1_13)) {
+			registerListener(new TridentListener(playerManager));
 		}
 		dependencyManager.startListeners(this);
 	}
