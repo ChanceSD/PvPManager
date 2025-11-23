@@ -192,13 +192,11 @@ public class CombatPlayer extends EcoPlayer {
 			ScheduleUtils.runAsync(nametag::setInCombat);
 		}
 
-		final String message;
 		if (isAttacker) {
-			message = Lang.TAGGED_ATTACKER.msg(other.getName());
+			message(Lang.TAGGED_ATTACKER, other.getName());
 		} else {
-			message = Lang.TAGGED_DEFENDER.msg(other.getName());
+			message(Lang.TAGGED_DEFENDER, other.getName());
 		}
-		message(message);
 
 		this.tagged = true;
 	}
@@ -284,7 +282,7 @@ public class CombatPlayer extends EcoPlayer {
 				victim.put(victimName, totalKills);
 			}
 			if (Conf.KILL_ABUSE_WARN.asBool() && totalKills + 1 == Conf.KILL_ABUSE_MAX.asInt()) {
-				message(Lang.KILL_ABUSE_WARNING.msg());
+				message(Lang.KILL_ABUSE_WARNING);
 			}
 			if (totalKills >= Conf.KILL_ABUSE_MAX.asInt()) {
 				untag(UntagReason.KICKED);

@@ -126,6 +126,7 @@ public enum Lang implements TimeLangProvider {
 	private final String messageKey;
 	private final Replacement[] replacements;
 	private String message;
+	private DisplayMode displayMode = DisplayMode.CHAT;
 
 	Lang(final String messageKey, final Replacement... replacements) {
 		this.messageKey = messageKey;
@@ -142,7 +143,9 @@ public enum Lang implements TimeLangProvider {
 	}
 
 	public void loadMessage() {
-		this.message = getString(messageKey);
+		final String[] parsed = parseMessageWithMode(messageKey);
+		this.message = parsed[0];
+		this.displayMode = DisplayMode.valueOf(parsed[1]);
 	}
 
 	@NotNull
@@ -156,6 +159,10 @@ public enum Lang implements TimeLangProvider {
 
 	public String getMessageKey() {
 		return messageKey;
+	}
+
+	public DisplayMode getDisplayMode() {
+		return displayMode;
 	}
 
 	@NotNull
@@ -216,6 +223,7 @@ public enum Lang implements TimeLangProvider {
 				LANG_PROPERTIES.clear();
 				LANG_PROPERTIES.load(in);
 				checkChanges();
+				migrateProtectionMessages();
 				Stream.of(Lang.values()).forEach(Lang::loadMessage);
 			}
 		} catch (final IOException e) {
@@ -268,6 +276,24 @@ public enum Lang implements TimeLangProvider {
 	public static String getString(final String key) {
 		final String message = new String(LANG_PROPERTIES.getProperty(key).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 		return ChatUtils.colorize(message).replace(Replacement.PREFIX.getPlaceholder(), PREFIX.msg());
+	}
+
+	@NotNull
+	private static String[] parseMessageWithMode(final String key) {
+		String message = new String(LANG_PROPERTIES.getProperty(key).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+		DisplayMode mode = DisplayMode.CHAT;
+
+		// Check for display mode prefix (case-insensitive)
+		if (message.toLowerCase().startsWith("!actionbar ")) {
+			mode = DisplayMode.ACTION_BAR;
+			message = message.substring(11); // Remove "!actionbar "
+		} else if (message.toLowerCase().startsWith("!chat ")) {
+			mode = DisplayMode.CHAT;
+			message = message.substring(6); // Remove "!chat "
+		}
+
+		message = ChatUtils.colorize(message).replace(Replacement.PREFIX.getPlaceholder(), PREFIX.msg());
+		return new String[] { message, mode.name() };
 	}
 
 	private static void checkChanges() {
@@ -358,28 +384,126 @@ public enum Lang implements TimeLangProvider {
 		return null;
 	}
 
-	public static void messageProtection(final ProtectionResult result, final Player player, final Player attacked) {
-		final String message = getProtectionMessage(result, attacked);
-		final CombatPlayer receiver = plugin.getPlayerManager().get(player);
-		if (Conf.PROTECTION_MESSAGES_TO_ACTIONBAR.asBool()) {
-			receiver.sendActionBar(message, 500);
-		} else {
-			receiver.message(message);
+	private static void migrateProtectionMessages() {
+		final int configVersion = plugin.getConfigM().getOldVersion();
+		if (configVersion >= 205) {
+			return;
+		}
+
+		final String[] protectionKeys = {
+			"Respawn_Protection",
+			"Respawn_Protection_Other",
+			"World_Protection",
+			"AFK_Protection",
+			"Global_Protection",
+			"Newbie_Protection_Attacker",
+			"Attack_Denied_You",
+			"Attack_Denied_Other",
+			"Block_Place_Blocked_InCombat",
+			"Block_Break_Blocked_InCombat",
+			"Eating_Blocked_InCombat",
+			"Elytra_Blocked_InCombat",
+			"Firework_Blocked_InCombat",
+			"Firework_Power_Limited_InCombat",
+			"Interact_Blocked_InCombat",
+			"Newbie_Pickup_Items_Blocked",
+			"Inventory_Blocked_InCombat",
+			"Item_Cooldown"
+		};
+
+		final String[] timeKeys = {
+			"Time_Days",
+			"Time_Hours",
+			"Time_Minutes",
+			"Time_Seconds"
+		};
+
+		boolean modified = false;
+		for (final String key : protectionKeys) {
+			final String value = LANG_PROPERTIES.getProperty(key);
+			if (value != null && !value.toLowerCase().startsWith("!actionbar ") && !value.toLowerCase().startsWith("!chat ")) {
+				LANG_PROPERTIES.setProperty(key, "!actionbar " + value);
+				modified = true;
+			}
+		}
+
+		for (final String key : timeKeys) {
+			final String value = LANG_PROPERTIES.getProperty(key);
+			if (value != null && !value.startsWith(" ") && !value.equals("now")) {
+				LANG_PROPERTIES.setProperty(key, " " + value);
+				modified = true;
+			}
+		}
+
+		if (modified) {
+			try {
+				// Read current file content to preserve formatting and comments
+				final List<String> lines = Files.readAllLines(messagesFile.toPath(), StandardCharsets.UTF_8);
+				final List<String> updatedLines = new LinkedList<>();
+				boolean documentationAdded = false;
+
+				for (final String line : lines) {
+					String updatedLine = line;
+
+					// Add documentation after the first comment block (before Prefix line)
+					if (!documentationAdded && line.trim().startsWith("Prefix = ")) {
+						updatedLines.add("# You can prefix any message with !actionbar or !chat to control where it appears");
+						updatedLines.add("# - !actionbar = Message shows above hotbar (recommended for frequent spam messages)");
+						updatedLines.add("# - !chat = Message shows in chat (default if no prefix)");
+						updatedLines.add("# Example: Item_Cooldown = !actionbar {prefix} &cYou can't use this yet! Available in &e{time}");
+						updatedLines.add("");
+						documentationAdded = true;
+					}
+
+					for (final String key : protectionKeys) {
+						if (line.trim().startsWith(key + " = ")) {
+							final String newValue = LANG_PROPERTIES.getProperty(key);
+							updatedLine = key + " = " + newValue;
+							break;
+						}
+					}
+					for (final String key : timeKeys) {
+						if (line.trim().startsWith(key + " = ")) {
+							final String newValue = LANG_PROPERTIES.getProperty(key);
+							updatedLine = key + " = \\" + newValue;
+							break;
+						}
+					}
+					updatedLines.add(updatedLine);
+				}
+
+				Files.write(messagesFile.toPath(), updatedLines, StandardCharsets.UTF_8);
+				Log.infoColor(ChatColor.AQUA + "Migrated messages to use action bar display mode and added spacing to time units");
+			} catch (final IOException e) {
+				Log.warning("Failed to save migrated protection messages", e);
+			}
 		}
 	}
 
-	public static String getProtectionMessage(final ProtectionResult result, final Player attacked) {
+	public static void messageProtection(final ProtectionResult result, final Player player, final Player attacked) {
+		final CombatPlayer receiver = plugin.getPlayerManager().get(player);
+		final Lang message = getProtectionMessage(result);
+		if (message != null) {
+			if (result.isAttacker()) {
+				receiver.messageWithDuration(message, 500);
+			} else {
+				receiver.messageWithDuration(message, 500, attacked.getName());
+			}
+		}
+	}
+
+	public static Lang getProtectionMessage(final ProtectionResult result) {
 		return switch (result.type()) {
 		case NEWBIE ->
-			result.isAttacker() ? NEWBIE_PROTECTION_ON_HIT.msg() : NEWBIE_PROTECTION_ATTACKER.msg(attacked.getName());
+			result.isAttacker() ? NEWBIE_PROTECTION_ON_HIT : NEWBIE_PROTECTION_ATTACKER;
 		case PVPDISABLED ->
-			result.isAttacker() ? ATTACK_DENIED_YOU.msg() : ATTACK_DENIED_OTHER.msg(attacked.getName());
+			result.isAttacker() ? ATTACK_DENIED_YOU : ATTACK_DENIED_OTHER;
 		case RESPAWN_PROTECTION ->
-			result.isAttacker() ? RESPAWN_PROTECTION_SELF.msg() : RESPAWN_PROTECTION_OTHER.msg(attacked.getName());
-		case WORLD_PROTECTION -> WORLD_PROTECTION.msg();
-		case AFK_PROTECTION -> AFK_PROTECTION.msg();
-		case GLOBAL_PROTECTION -> GLOBAL_PROTECTION.msg();
-		default -> "";
+			result.isAttacker() ? RESPAWN_PROTECTION_SELF : RESPAWN_PROTECTION_OTHER;
+		case WORLD_PROTECTION -> WORLD_PROTECTION;
+		case AFK_PROTECTION -> AFK_PROTECTION;
+		case GLOBAL_PROTECTION -> GLOBAL_PROTECTION;
+		default -> null;
 		};
 	}
 

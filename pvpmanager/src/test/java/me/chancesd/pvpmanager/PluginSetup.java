@@ -17,10 +17,8 @@ import org.bukkit.GameMode;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.boss.BossBar;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
@@ -48,13 +46,11 @@ public class PluginSetup {
 		final String decoded = filePath + "TestServer/plugins/PvPManager";
 		final File pluginDirectory = new File(decoded);
 		pluginDirectory.mkdirs();
-		server = mock(Server.class);
+		server = mock(Server.class, Mockito.RETURNS_MOCKS);
 		Mockito.when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
 		Mockito.when(server.getUpdateFolderFile()).thenReturn(new File(filePath + "TestServer/plugins/update"));
 		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [%4$-7s] %5$s %n");
 		Mockito.when(server.getLogger()).thenReturn(Logger.getLogger("Minecraft"));
-		Mockito.when(server.getConsoleSender()).thenReturn(mock(ConsoleCommandSender.class));
-		Mockito.when(server.getScheduler()).thenReturn(mock(BukkitScheduler.class, Mockito.RETURNS_MOCKS));
 		Mockito.when(server.getBukkitVersion()).thenReturn("1.20.4-R0.1-SNAPSHOT");
 		this.world = mock(World.class);
 		Mockito.when(this.world.getName()).thenReturn("");
@@ -90,6 +86,7 @@ public class PluginSetup {
 		Mockito.when(defender.getKiller()).thenReturn(attacker);
 	}
 
+	@SuppressWarnings("deprecation")
 	@NotNull
 	public final Player createPlayer(final String name) {
 		final Player player = mock(Player.class);

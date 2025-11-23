@@ -3,6 +3,7 @@ package me.chancesd.pvpmanager.player;
 import java.util.UUID;
 
 import me.chancesd.pvpmanager.player.world.CombatWorld;
+import me.chancesd.pvpmanager.setting.DisplayMode;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.utils.CombatUtils;
@@ -72,16 +73,37 @@ public abstract class BasePlayer {
 		}
 	}
 
-	public final void message(final Lang message, final String... args) {
-		if (isOnline()) {
-			getPlayer().sendMessage(message.msg(args));
+	/**
+	 * Sends a message according to its display mode (chat or action bar)
+	 *
+	 * @param message The Lang message to be sent
+	 * @param duration The duration for action bar messages (ignored for chat)
+	 * @param args    Optional arguments for message replacements
+	 */
+	public final void messageWithDuration(final Lang message, final long duration, final Object... args) {
+		if (!isOnline()) {
+			return;
+		}
+
+		final String formattedMessage = args.length > 0 ? message.msg(args) : message.msg();
+		if (formattedMessage.isEmpty()) {
+			return;
+		}
+		if (message.getDisplayMode() == DisplayMode.ACTION_BAR) {
+			sendActionBar(formattedMessage, duration);
+		} else {
+			getPlayer().sendMessage(formattedMessage);
 		}
 	}
 
-	public final void message(final Lang message) {
-		if (isOnline()) {
-			getPlayer().sendMessage(message.msg());
-		}
+	/**
+	 * Sends a message according to its display mode (chat or action bar) with default duration
+	 *
+	 * @param message The Lang message to be sent
+	 * @param args    Optional arguments for message replacements
+	 */
+	public final void message(final Lang message, final Object... args) {
+		messageWithDuration(message, 1000, args);
 	}
 
 	/**

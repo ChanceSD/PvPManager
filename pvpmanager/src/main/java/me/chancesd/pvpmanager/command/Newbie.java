@@ -58,7 +58,7 @@ public class Newbie extends BaseCommand {
 			final CombatPlayer combatPlayer = ph.get(player);
 
 			if (!combatPlayer.isNewbie()) {
-				combatPlayer.message(Lang.ERROR_NOT_NEWBIE.msg());
+				combatPlayer.message(Lang.ERROR_NOT_NEWBIE);
 				return;
 			}
 			combatPlayer.setNewbie(false);
@@ -90,7 +90,7 @@ public class Newbie extends BaseCommand {
 				final CombatPlayer combatPlayer = ph.get(player);
 
 				if (!combatPlayer.isNewbie()) {
-					combatPlayer.message(Lang.ERROR_NOT_NEWBIE.msg());
+					combatPlayer.message(Lang.ERROR_NOT_NEWBIE);
 				} else {
 					combatPlayer.message(Lang.NEWBIE_TIME_CHECK.msgTime(combatPlayer.getNewbieTimeLeft()));
 				}

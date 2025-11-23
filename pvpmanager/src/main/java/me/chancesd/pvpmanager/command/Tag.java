@@ -49,7 +49,7 @@ public class Tag extends BaseCommand {
 		final CommandArgument targetArg = getArgument(args, ARG_TARGET);
 		final CommandArgument timeArg = getArgument(args, ARG_TIME);
 		final long timeInMs = timeArg.getAsInt() * 1000L;
-		
+
 		if (timeInMs <= 0) {
 			ChatUtils.send(sender, Lang.PREFIX + " &#FF5555Combat time must be positive (greater than 0)");
 			return;
@@ -65,7 +65,7 @@ public class Tag extends BaseCommand {
 
 	private void showPlayerTagStatus(final CombatPlayer pvPlayer) {
 		if (!pvPlayer.isInCombat()) {
-			pvPlayer.message(Lang.TAG_NOT_IN_COMBAT.msg());
+			pvPlayer.message(Lang.TAG_NOT_IN_COMBAT);
 			return;
 		}
 		pvPlayer.message(Lang.TAG_TIME_LEFT.msgTime(pvPlayer.getTagTimeLeft()));

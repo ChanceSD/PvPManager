@@ -37,6 +37,7 @@ import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
+import me.chancesd.sdutils.utils.TimeUtil;
 
 public class PlayerListener implements Listener {
 
@@ -55,12 +56,12 @@ public class PlayerListener implements Listener {
 		final CombatPlayer player = playerManager.get(event.getPlayer());
 		if (Conf.BLOCK_EAT.asBool() && player.isInCombat() && type.isEdible()) {
 			event.setCancelled(true);
-			playerManager.get(event.getPlayer()).sendActionBar(Lang.EAT_BLOCKED_IN_COMBAT.msg(), 1000);
+			player.message(Lang.EAT_BLOCKED_IN_COMBAT);
 		}
 		if (Conf.ITEM_COOLDOWNS.asMap().containsKey(type)) {
 			if (player.hasItemCooldown(type)) {
 				event.setCancelled(true);
-				player.message(Lang.ITEM_COOLDOWN.msgTimeUntil(player.getItemCooldown(type)));
+				player.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, player.getItemCooldown(type)));
 				return;
 			}
 			player.setItemCooldown(type, Conf.ITEM_COOLDOWNS.asMap().get(type));
@@ -115,16 +116,16 @@ public class PlayerListener implements Listener {
 
 		final Material type = e.getMaterial();
 		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && Conf.ITEM_COOLDOWNS.asMap().containsKey(type)) {
-			final CombatPlayer pvplayer = playerManager.get(player);
-			if (pvplayer.hasItemCooldown(type)) {
-				final String msg = Lang.ITEM_COOLDOWN.msgTimeUntil(pvplayer.getItemCooldown(type));
+			final CombatPlayer combatPlayer = playerManager.get(player);
+			if (combatPlayer.hasItemCooldown(type)) {
+				final String msg = Lang.ITEM_COOLDOWN.msgTimeUntil(combatPlayer.getItemCooldown(type));
 				if (!msg.equals(msgCooldown.getIfPresent(player.getUniqueId()))) {
-					pvplayer.message(msg);
+					combatPlayer.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, combatPlayer.getItemCooldown(type)));
 					msgCooldown.put(player.getUniqueId(), msg);
 				}
 				e.setCancelled(true);
 			} else if (!type.isEdible()) {
-				ScheduleUtils.runPlatformTask(() -> pvplayer.setItemCooldown(type, Conf.ITEM_COOLDOWNS.asMap().get(type)));
+				ScheduleUtils.runPlatformTask(() -> combatPlayer.setItemCooldown(type, Conf.ITEM_COOLDOWNS.asMap().get(type)));
 			}
 		}
 	}
@@ -149,7 +150,7 @@ public class PlayerListener implements Listener {
 				}
 				final CombatPlayer target = playerManager.get(p);
 				if ((!target.hasPvPEnabled() || !pvplayer.hasPvPEnabled()) && clickedBlock.getLocation().distanceSquared(p.getLocation()) < 9) {
-					pvplayer.message(Lang.ATTACK_DENIED_OTHER.msg(target.getName()));
+					pvplayer.message(Lang.ATTACK_DENIED_OTHER, target.getName());
 					e.setCancelled(true);
 					return;
 				}
@@ -171,7 +172,7 @@ public class PlayerListener implements Listener {
 				final Location playerLocation = p.getLocation();
 				if ((!target.hasPvPEnabled() || !combatPlayer.hasPvPEnabled())
 						&& playerLocation != null && clickedBlock.getLocation().distanceSquared(playerLocation) < 25) {
-					combatPlayer.message(Lang.ATTACK_DENIED_OTHER.msg(target.getName()));
+					combatPlayer.message(Lang.ATTACK_DENIED_OTHER, target.getName());
 					event.setCancelled(true);
 					return;
 				}

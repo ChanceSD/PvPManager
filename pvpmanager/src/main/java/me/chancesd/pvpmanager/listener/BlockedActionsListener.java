@@ -51,7 +51,7 @@ public class BlockedActionsListener implements Listener {
 		final CombatPlayer combatPlayer = playerHandler.get(event.getPlayer());
 		if (Conf.BLOCK_PLACE_BLOCKS.asBool() && combatPlayer.isInCombat() || Conf.NEWBIE_BLOCK_PLACE.asBool() && combatPlayer.isNewbie()) {
 			event.setCancelled(true);
-			combatPlayer.sendActionBar(Lang.BLOCK_PLACE_BLOCKED_IN_COMBAT.msg(), 1000);
+			combatPlayer.message(Lang.BLOCK_PLACE_BLOCKED_IN_COMBAT);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class BlockedActionsListener implements Listener {
 		final CombatPlayer combatPlayer = playerHandler.get(event.getPlayer());
 		if (Conf.BLOCK_BREAK_BLOCKS.asBool() && combatPlayer.isInCombat() || Conf.NEWBIE_BLOCK_BREAK.asBool() && combatPlayer.isNewbie()) {
 			event.setCancelled(true);
-			combatPlayer.sendActionBar(Lang.BLOCK_BREAK_BLOCKED_IN_COMBAT.msg(), 1000);
+			combatPlayer.message(Lang.BLOCK_BREAK_BLOCKED_IN_COMBAT);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class BlockedActionsListener implements Listener {
 
 		if (Conf.BLOCK_FIREWORKS_IN_COMBAT.asBool()) {
 			event.setCancelled(true);
-			pvPlayer.sendActionBar(Lang.FIREWORK_BLOCKED_IN_COMBAT.msg(), 1000);
+			pvPlayer.message(Lang.FIREWORK_BLOCKED_IN_COMBAT);
 			return;
 		}
 
@@ -104,7 +104,7 @@ public class BlockedActionsListener implements Listener {
 			final FireworkMeta meta = (FireworkMeta) item.getItemMeta();
 			if (meta != null && meta.getPower() > powerLimit) {
 				event.setCancelled(true);
-				pvPlayer.sendActionBar(Lang.FIREWORK_POWER_LIMITED_IN_COMBAT.msg(meta.getPower()), 1000);
+				pvPlayer.message(Lang.FIREWORK_POWER_LIMITED_IN_COMBAT, meta.getPower());
 			}
 		}
 	}
@@ -125,7 +125,7 @@ public class BlockedActionsListener implements Listener {
 			for (final String material : Conf.BLOCK_INTERACT_ITEM_LIST.asList()) {
 				if (blockType.name().endsWith(material)) {
 					e.setCancelled(true);
-					combatPlayer.sendActionBar(Lang.INTERACT_BLOCKED_IN_COMBAT.msg(), 1000);
+					combatPlayer.message(Lang.INTERACT_BLOCKED_IN_COMBAT);
 					return;
 				}
 			}
@@ -139,7 +139,7 @@ public class BlockedActionsListener implements Listener {
 			final CombatPlayer player = playerHandler.get(e.getPlayer());
 			if (player.isNewbie()) {
 				e.setCancelled(true);
-				player.sendActionBar(Lang.NEWBIE_PICKUP_ITEM_BLOCKED.msg(), 1000);
+				player.message(Lang.NEWBIE_PICKUP_ITEM_BLOCKED);
 			}
 		}
 	}
@@ -191,7 +191,7 @@ public class BlockedActionsListener implements Listener {
 			}
 			if (player.isNewbie() && CombatUtils.recursiveContainsCommand(givenCommand, Conf.NEWBIE_BLACKLIST.asList())) {
 				event.setCancelled(true);
-				player.message(Lang.NEWBIE_COMMAND_BLOCKED.msg());
+				player.message(Lang.NEWBIE_COMMAND_BLOCKED);
 			}
 		}
 	}
@@ -203,7 +203,7 @@ public class BlockedActionsListener implements Listener {
 		final CombatPlayer combatPlayer = playerHandler.get((Player) event.getPlayer());
 		if (combatPlayer.isInCombat()) {
 			event.setCancelled(true);
-			combatPlayer.sendActionBar(Lang.INVENTORY_BLOCKED_IN_COMBAT.msg(), 1000);
+			combatPlayer.message(Lang.INVENTORY_BLOCKED_IN_COMBAT);
 		}
 	}
 

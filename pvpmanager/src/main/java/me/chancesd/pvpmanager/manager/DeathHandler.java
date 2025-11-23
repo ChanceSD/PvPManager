@@ -75,7 +75,7 @@ public class DeathHandler {
 				final int expWon = pKiller.giveExp(pvPlayer);
 				event.setDroppedExp(0);
 				event.setNewExp(player.getTotalExperience() - expWon);
-				pvPlayer.message(Lang.EXP_STOLEN.msg(pKiller.getName(), expWon));
+				pvPlayer.message(Lang.EXP_STOLEN, pKiller.getName(), expWon);
 			}
 		}
 	}

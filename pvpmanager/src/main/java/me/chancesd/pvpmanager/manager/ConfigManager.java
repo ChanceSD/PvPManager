@@ -147,6 +147,10 @@ public class ConfigManager {
 		return oldVersion != 0 && oldVersion < 200;
 	}
 
+	public int getOldVersion() {
+		return oldVersion;
+	}
+
 	public YamlConfiguration getHooksConfig() {
 		return pluginHooksConfig;
 	}

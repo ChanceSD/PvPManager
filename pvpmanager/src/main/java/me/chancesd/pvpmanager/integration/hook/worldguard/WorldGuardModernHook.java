@@ -146,14 +146,14 @@ public class WorldGuardModernHook extends BaseDependency implements WorldGuardDe
 	private void disableNewbieProtection(final CombatPlayer player) {
 		if (player.isNewbie()) {
 			player.setNewbie(false);
-			player.message(Lang.NEWBIE_FORCE_REMOVED_WG.msg());
+			player.message(Lang.NEWBIE_FORCE_REMOVED_WG);
 		}
 	}
 
 	private void disablePvPProtection(final CombatPlayer player) {
 		if (!player.hasPvPEnabled()) {
 			player.setPvP(true);
-			player.message(Lang.PVP_FORCE_ENABLED_WG.msg());
+			player.message(Lang.PVP_FORCE_ENABLED_WG);
 		}
 	}
 

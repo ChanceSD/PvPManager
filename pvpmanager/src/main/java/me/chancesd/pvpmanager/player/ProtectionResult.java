@@ -3,7 +3,7 @@ package me.chancesd.pvpmanager.player;
 public record ProtectionResult(ProtectionType type, boolean isAttacker) {
 
 	public ProtectionResult(final ProtectionType type) {
-		this(type, false);
+		this(type, true);
 	}
 
 	public boolean isProtected() {

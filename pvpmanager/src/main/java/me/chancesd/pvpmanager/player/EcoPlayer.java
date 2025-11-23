@@ -42,11 +42,11 @@ public abstract class EcoPlayer extends BasePlayer {
 	public final void applyPenalty() {
 		final double penalty = getMoneyPercentage(Conf.MONEY_PENALTY.asDouble());
 		withdrawMoney(penalty);
-		message(Lang.MONEY_PENALTY.msg(CombatUtils.formatTo2Digits(penalty)));
+		message(Lang.MONEY_PENALTY, CombatUtils.formatTo2Digits(penalty));
 	}
 
 	public final boolean applyPvPDisabledFee() {
-		message(Lang.PVP_DISABLED_FEE.msg(CombatUtils.formatTo2Digits(Conf.PVP_DISABLED_FEE.asInt())));
+		message(Lang.PVP_DISABLED_FEE, CombatUtils.formatTo2Digits(Conf.PVP_DISABLED_FEE.asInt()));
 		return withdrawMoney(Conf.PVP_DISABLED_FEE.asInt());
 	}
 
@@ -60,7 +60,7 @@ public abstract class EcoPlayer extends BasePlayer {
 				moneyWon = vbalance;
 			}
 			victim.withdrawMoney(moneyWon);
-			victim.message(Lang.MONEY_STEAL.msg(getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
+			victim.message(Lang.MONEY_STEAL, getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon));
 		}
 		depositMoney(moneyWon);
 		message(Lang.MONEY_REWARD.msg(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
@@ -75,7 +75,7 @@ public abstract class EcoPlayer extends BasePlayer {
 			expWon = exp;
 		}
 		setExp(getPlayer().getTotalExperience() + expWon);
-		message(Lang.EXP_WON.msg(victim.getPlayer().getName(), expWon));
+		message(Lang.EXP_WON, victim.getPlayer().getName(), expWon);
 		return expWon;
 	}
 
