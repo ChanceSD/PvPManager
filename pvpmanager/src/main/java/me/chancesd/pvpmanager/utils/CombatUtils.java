@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.PvPManager;
+import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.integration.hook.placeholderapi.PlaceholderProcessor;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
@@ -171,12 +172,15 @@ public final class CombatUtils {
 	}
 
 	@SuppressWarnings("null")
-	public static void checkGlide(final Player p) {
+	public static void checkGlide(final CombatPlayer combatPlayer) {
+		final Player p = combatPlayer.getPlayer();
 		if (!p.isGliding())
 			return;
 		final Location playerLocation = p.getLocation();
 		p.setGliding(false);
-		ScheduleUtils.teleport(p, playerLocation, "Failed to teleport player after disabling glide");
+		combatPlayer.getExemptions().setCanBypassTeleportBlock(true);
+		ScheduleUtils.teleport(p, playerLocation, "Failed to teleport player after disabling glide")
+				.thenAccept(success -> combatPlayer.getExemptions().setCanBypassTeleportBlock(false));
 		p.setFallDistance(-200);
 		if (!Conf.PUSHBACK_REMOVE_ELYTRA.asBool())
 			return;

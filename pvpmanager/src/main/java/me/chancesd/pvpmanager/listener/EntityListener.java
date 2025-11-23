@@ -167,9 +167,9 @@ public class EntityListener implements Listener {
 		}
 		if (Conf.DISABLE_ELYTRA.asBool()) {
 			if (!hasExemptPerm)
-				CombatUtils.checkGlide(attacker);
+				CombatUtils.checkGlide(pvpAttacker);
 			if (!pvpDefender.hasPerm(Permissions.EXEMPT_DISABLE_ACTIONS))
-				CombatUtils.checkGlide(defender);
+				CombatUtils.checkGlide(pvpDefender);
 		}
 
 		if (hasExemptPerm)

@@ -88,12 +88,10 @@ public class BlockedActionsListener implements Listener {
 		if (!pvPlayer.isInCombat())
 			return;
 
-		@SuppressWarnings("deprecation")
-		final ItemStack item = player.getInventory().getItemInHand();
-		if (item.getType() != fireworkMaterial)
+		final ItemStack item = event.getItem();
+		if (item == null || item.getType() != fireworkMaterial)
 			return;
 
-		// Check if fireworks are completely blocked
 		if (Conf.BLOCK_FIREWORKS_IN_COMBAT.asBool()) {
 			event.setCancelled(true);
 			pvPlayer.sendActionBar(Lang.FIREWORK_BLOCKED_IN_COMBAT.msg(), 1000);
@@ -149,24 +147,24 @@ public class BlockedActionsListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public final void onPlayerTeleport(final PlayerTeleportEvent event) {
 		final Player player = event.getPlayer();
-		final CombatPlayer pvplayer = playerHandler.getUnchecked(player);
-		if (pvplayer == null)
+		final CombatPlayer combatPlayer = playerHandler.getUnchecked(player);
+		if (combatPlayer == null)
 			return;
 
-		if (!Conf.COMBAT_TAG_ENABLED.asBool() || !pvplayer.isInCombat())
+		if (!Conf.COMBAT_TAG_ENABLED.asBool() || !combatPlayer.isInCombat())
 			return;
 
 		final TeleportCause cause = event.getCause();
 		if (cause.equals(TeleportCause.ENDER_PEARL) && Conf.BLOCK_ENDERPEARL.asBool()) {
 			event.setCancelled(true);
-			pvplayer.message(Lang.ENDERPEARL_BLOCKED_INCOMBAT);
+			combatPlayer.message(Lang.ENDERPEARL_BLOCKED_INCOMBAT);
 		} else if (MCVersion.isAtLeast(MCVersion.V1_9) && cause == TeleportCause.CHORUS_FRUIT
 				&& Conf.BLOCK_CHORUSFRUIT.asBool()) {
 			event.setCancelled(true);
-			pvplayer.message(Lang.CHORUS_BLOCKED_IN_COMBAT);
-		} else if (shouldBlockTeleport(cause)) {
+			combatPlayer.message(Lang.CHORUS_BLOCKED_IN_COMBAT);
+		} else if (shouldBlockTeleport(cause) && !combatPlayer.getExemptions().canBypassTeleportBlock()) {
 			event.setCancelled(true);
-			pvplayer.message(Lang.TELEPORT_BLOCKED_IN_COMBAT);
+			combatPlayer.message(Lang.TELEPORT_BLOCKED_IN_COMBAT);
 		}
 	}
 

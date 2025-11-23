@@ -63,17 +63,17 @@ public class MoveListener1_9 implements Listener {
 			return;
 
 		final Player player = event.getPlayer();
-		final CombatPlayer pvplayer = playerManager.get(player);
-		if (!pvplayer.isInCombat())
+		final CombatPlayer combatPlayer = playerManager.get(player);
+		if (!combatPlayer.isInCombat())
 			return;
 
 		if (!depManager.canAttackAt(null, locTo) && depManager.canAttackAt(null, locFrom)) {
 			final Vector newVel = locFrom.toVector().subtract(locTo.toVector());
 			newVel.setY(0).normalize().multiply(pushbackForce).setY(0.5);
-			CombatUtils.checkGlide(player);
+			CombatUtils.checkGlide(combatPlayer);
 			player.setVelocity(sanitizeVector(newVel));
 			if (!cache.asMap().containsKey(player.getUniqueId())) {
-				pvplayer.message(Lang.PUSHBACK_WARNING);
+				combatPlayer.message(Lang.PUSHBACK_WARNING);
 				player.getWorld().playEffect(player.getEyeLocation(), Effect.SMOKE, 3);
 				cache.put(player.getUniqueId(), player);
 			}

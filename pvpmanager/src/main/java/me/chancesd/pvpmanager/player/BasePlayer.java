@@ -24,6 +24,7 @@ public abstract class BasePlayer {
 	private long actionBarCooldown;
 	private String lastActionBarMessage;
 	private boolean wasAllowedFlight;
+	private final PlayerExemptions exemptions = new PlayerExemptions();
 
 	protected BasePlayer(@NotNull final Player player) {
 		this.player = player;
@@ -127,6 +128,10 @@ public abstract class BasePlayer {
 
 	public void setWasAllowedFlight(final boolean wasAllowedFlight) {
 		this.wasAllowedFlight = wasAllowedFlight;
+	}
+
+	public PlayerExemptions getExemptions() {
+		return exemptions;
 	}
 
 	@Override

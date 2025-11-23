@@ -16,6 +16,7 @@ import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
+import me.chancesd.sdutils.utils.Log;
 
 public class RegionCheckTask extends BukkitRunnable implements Listener {
 
@@ -31,19 +32,22 @@ public class RegionCheckTask extends BukkitRunnable implements Listener {
 	@SuppressWarnings("null") // playerLocation can't be null
 	@Override
 	public void run() {
-		for (final CombatPlayer pvPlayer : playerHandler.getPlayersInCombat()) {
-			final Player player = pvPlayer.getPlayer();
+		for (final CombatPlayer combatPlayer : playerHandler.getPlayersInCombat()) {
+			final Player player = combatPlayer.getPlayer();
 			final Location playerLocation = player.getLocation();
 			if (!dependencyManager.canAttackAt(player, playerLocation)) {
-				final Location lastLocation = lastLocations.get(pvPlayer);
+				final Location lastLocation = lastLocations.get(combatPlayer);
 				if (lastLocation == null)
 					continue;
 				lastLocation.setPitch(playerLocation.getPitch());
 				lastLocation.setYaw(playerLocation.getYaw());
-				ScheduleUtils.teleport(player, lastLocation, "Failed to teleport player out of non-PvP region");
-				pvPlayer.message(Lang.PUSHBACK_WARNING);
+				combatPlayer.getExemptions().setCanBypassTeleportBlock(true);
+				ScheduleUtils.teleport(player, lastLocation, "Failed to teleport player out of non-PvP region")
+						.thenAccept(success -> combatPlayer.getExemptions().setCanBypassTeleportBlock(false));
+				Log.debug("Tried to teleport " + player.getName() + " out of a safezone");
+				combatPlayer.message(Lang.PUSHBACK_WARNING);
 			} else {
-				lastLocations.put(pvPlayer, playerLocation);
+				lastLocations.put(combatPlayer, playerLocation);
 			}
 		}
 	}
