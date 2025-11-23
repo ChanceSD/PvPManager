@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityKnockbackByEntityEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.ProtectionResult;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.utils.Utils;
 
@@ -43,17 +44,17 @@ public class EntityListener1_20_4 implements Listener {
 				attacker = playerAttacker;
 			if (entityAttacker instanceof final Projectile proj) {
 				final ProjectileSource projSource = proj.getShooter();
-				if (projSource instanceof final Player player && !projSource.equals(attacked)) {
+				if (projSource instanceof final Player player) {
 					attacker = player;
 				}
 			}
 		}
-		if (attacked == null || attacker == null)
+		if (attacked == null || attacker == null || attacker.equals(attacked))
 			return;
 		final ProtectionResult result = ph.checkProtection(attacker, attacked);
-
 		if (result.isProtected()) {
 			event.setCancelled(true);
+			Lang.messageProtection(result, attacker, attacked);
 		}
 	}
 
