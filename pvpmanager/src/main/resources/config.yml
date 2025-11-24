@@ -32,6 +32,9 @@ Combat Tag:
   EnderPearl Renews Tag: true
   # If enabled, will retag the player when they use a wind charge
   WindCharge Renews Tag: true
+  # Trident cooldown in seconds. Set to 0 to disable cooldown, -1 to completely ban tridents
+  # When set to a positive number, players must wait that many seconds between trident uses
+  Trident Cooldown: 10
   
   Display:
     # Adds a prefix or suffix while the player is in combat
