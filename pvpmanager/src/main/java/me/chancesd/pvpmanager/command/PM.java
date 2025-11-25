@@ -328,7 +328,7 @@ public class PM extends BaseCommand {
 			}
 
 			Conf.LOCALE.set(locale.name());
-			changeConfigSetting("General.Locale", locale.name());
+			changeConfigSetting("General Settings.Locale", locale.name());
 			Lang.setup(plugin);
 			ChatUtils.send(sender, Lang.PREFIX + " &aLanguage changed to &e" + Lang.getLocale() + "&a - &7Filename: " + Lang.getLocale().fileName());
 		}

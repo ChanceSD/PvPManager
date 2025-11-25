@@ -212,13 +212,12 @@ public enum Lang implements TimeLangProvider {
 	private static void load() {
 		messagesFile = new File(plugin.getDataFolder(), locale.fileName());
 		checkForVersionUpgrade();
-		deletePreviousMessageFile();
 
 		if (!messagesFile.exists()) {
 			createMessagesFile();
 		}
 
-		try (FileInputStream in = new FileInputStream(messagesFile)) {
+		try (InputStreamReader in = new InputStreamReader(new FileInputStream(messagesFile), StandardCharsets.UTF_8)) {
 			if (messagesFile.exists()) {
 				LANG_PROPERTIES.clear();
 				LANG_PROPERTIES.load(in);
@@ -238,7 +237,7 @@ public enum Lang implements TimeLangProvider {
 		}
 	}
 
-	private static void deletePreviousMessageFile() {
+	public static void deletePreviousMessageFile() {
 		final File[] listFiles = plugin.getDataFolder().listFiles();
 		if (listFiles != null) {
 			for (final File file : listFiles) {
@@ -274,16 +273,15 @@ public enum Lang implements TimeLangProvider {
 
 	@NotNull
 	public static String getString(final String key) {
-		final String message = new String(LANG_PROPERTIES.getProperty(key).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+		final String message = LANG_PROPERTIES.getProperty(key);
 		return ChatUtils.colorize(message).replace(Replacement.PREFIX.getPlaceholder(), PREFIX.msg());
 	}
 
 	@NotNull
 	private static String[] parseMessageWithMode(final String key) {
-		String message = new String(LANG_PROPERTIES.getProperty(key).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+		String message = getString(key);
 		DisplayMode mode = DisplayMode.CHAT;
 
-		// Check for display mode prefix (case-insensitive)
 		if (message.toLowerCase().startsWith("!actionbar ")) {
 			mode = DisplayMode.ACTION_BAR;
 			message = message.substring(11); // Remove "!actionbar "
@@ -292,24 +290,31 @@ public enum Lang implements TimeLangProvider {
 			message = message.substring(6); // Remove "!chat "
 		}
 
-		message = ChatUtils.colorize(message).replace(Replacement.PREFIX.getPlaceholder(), PREFIX.msg());
 		return new String[] { message, mode.name() };
 	}
 
+	private static Properties loadPropertiesFromStream(final InputStream inputStream) {
+		final Properties props = new Properties();
+		try (InputStreamReader in = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+			props.load(in);
+		} catch (final IOException e) {
+			Log.severe("Error loading properties from stream", e);
+		}
+		return props;
+	}
+
 	private static void checkChanges() {
-		final Properties originalEN = new Properties();
-		final Properties original = new Properties();
 		try (InputStream inputStreamEN = plugin.getResource(LOCALE_FOLDER + Locale.EN.fileName());
 				InputStream inputStream = plugin.getResource(LOCALE_FOLDER + locale.fileName())) {
-			originalEN.load(inputStreamEN);
-			original.load(inputStream);
+			final Properties originalEN = loadPropertiesFromStream(inputStreamEN);
+			final Properties original = loadPropertiesFromStream(inputStream);
 			final Enumeration<Object> originalKeys = originalEN.keys();
 			while (originalKeys.hasMoreElements()) {
 				final String a = (String) originalKeys.nextElement();
 				if (!LANG_PROPERTIES.containsKey(a)) {
 					Log.info("Added missing '" + a + "' key to messages file.");
 					final String newProperty = original.getProperty(a) != null ? original.getProperty(a) : originalEN.getProperty(a);
-					final String messageToAdd = a + " = " + new String(newProperty.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+					final String messageToAdd = a + " = " + newProperty;
 					addMessage(messageToAdd);
 					LANG_PROPERTIES.setProperty(a, newProperty);
 				}
@@ -326,7 +331,7 @@ public enum Lang implements TimeLangProvider {
 
 		// Find insertion position from internal file
 		try (InputStream inputStream = plugin.getResource(LOCALE_FOLDER + Locale.EN.fileName());
-			 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -367,14 +372,15 @@ public enum Lang implements TimeLangProvider {
 
 	private static String findKeyBefore(final String targetKey) {
 		try (InputStream inputStream = plugin.getResource(LOCALE_FOLDER + Locale.EN.fileName());
-			 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 			String line;
 			String previousKey = null;
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
 				if (line.contains(" = ") && !line.startsWith("#")) {
 					final String currentKey = line.split(" = ")[0];
-					if (currentKey.equals(targetKey)) return previousKey;
+					if (currentKey.equals(targetKey))
+						return previousKey;
 					previousKey = currentKey;
 				}
 			}
@@ -391,31 +397,31 @@ public enum Lang implements TimeLangProvider {
 		}
 
 		final String[] protectionKeys = {
-			"Respawn_Protection",
-			"Respawn_Protection_Other",
-			"World_Protection",
-			"AFK_Protection",
-			"Global_Protection",
-			"Newbie_Protection_Attacker",
-			"Attack_Denied_You",
-			"Attack_Denied_Other",
-			"Block_Place_Blocked_InCombat",
-			"Block_Break_Blocked_InCombat",
-			"Eating_Blocked_InCombat",
-			"Elytra_Blocked_InCombat",
-			"Firework_Blocked_InCombat",
-			"Firework_Power_Limited_InCombat",
-			"Interact_Blocked_InCombat",
-			"Newbie_Pickup_Items_Blocked",
-			"Inventory_Blocked_InCombat",
-			"Item_Cooldown"
+				"Respawn_Protection",
+				"Respawn_Protection_Other",
+				"World_Protection",
+				"AFK_Protection",
+				"Global_Protection",
+				"Newbie_Protection_Attacker",
+				"Attack_Denied_You",
+				"Attack_Denied_Other",
+				"Block_Place_Blocked_InCombat",
+				"Block_Break_Blocked_InCombat",
+				"Eating_Blocked_InCombat",
+				"Elytra_Blocked_InCombat",
+				"Firework_Blocked_InCombat",
+				"Firework_Power_Limited_InCombat",
+				"Interact_Blocked_InCombat",
+				"Newbie_Pickup_Items_Blocked",
+				"Inventory_Blocked_InCombat",
+				"Item_Cooldown"
 		};
 
 		final String[] timeKeys = {
-			"Time_Days",
-			"Time_Hours",
-			"Time_Minutes",
-			"Time_Seconds"
+				"Time_Days",
+				"Time_Hours",
+				"Time_Minutes",
+				"Time_Seconds"
 		};
 
 		boolean modified = false;
