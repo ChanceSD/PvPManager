@@ -39,7 +39,6 @@ public class TagTask implements Listener {
 		for (final Entry<CombatPlayer, CountdownData> entry : taggedCountdowns.entrySet()) {
 			final CombatPlayer combatPlayer = entry.getKey();
 			if (combatPlayer.isInCombat()) {
-				display.cancelCountdown(combatPlayer.getPlayer(), entry.getValue());
 				combatPlayer.untag(UntagReason.PLUGIN_DISABLE);
 			}
 		}
