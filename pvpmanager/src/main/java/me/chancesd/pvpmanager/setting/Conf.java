@@ -2,7 +2,6 @@ package me.chancesd.pvpmanager.setting;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,7 +14,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -186,7 +184,7 @@ public enum Conf {
 	private List<String> stringList;
 	private Set<String> stringSet;
 	private Enum<?> enumValue;
-	private Map<Material, ItemCooldown> map;
+	private Map<ItemKey, ItemCooldown> map;
 
 	private <T> Conf(final String section, final String configKey, final T def, final Class<T> clazz) {
 		this.section = section;
@@ -255,7 +253,7 @@ public enum Conf {
 		} else if (clazzResult == null || clazzResult.isEnum()) { // Null check for some class that didn't exist in lower MC versions
 			enumValue = (Enum<?>) function.apply(config.getString(path));
 		} else if (clazzResult == Map.class) {
-			map = (Map<Material, ItemCooldown>) function.apply(config.getConfigurationSection(path));
+			map = (Map<ItemKey, ItemCooldown>) function.apply(config.getConfigurationSection(path));
 		} else if (clazzResult == String.class) {
 			stringValue = (String) function.apply(config.getString(path));
 		} else if (clazzResult == Boolean.class) {
@@ -299,7 +297,7 @@ public enum Conf {
 		return en.cast(enumValue);
 	}
 
-	public Map<Material, ItemCooldown> asMap() {
+	public Map<ItemKey, ItemCooldown> asMap() {
 		return map;
 	}
 
@@ -393,40 +391,53 @@ public enum Conf {
 		return list;
 	}
 
-	private static Map<Material, ItemCooldown> loadItemCooldowns(final ConfigurationSection section) {
-		final EnumMap<Material, ItemCooldown> itemCooldowns = new EnumMap<>(Material.class);
+	private static Map<ItemKey, ItemCooldown> loadItemCooldowns(final ConfigurationSection section) {
+		final Map<ItemKey, ItemCooldown> itemCooldowns = new HashMap<>();
 		if (section == null)
 			return Collections.emptyMap();
 
 		final ConfigurationSection combat = section.getConfigurationSection("Combat");
-		final Map<Material, Integer> combatCooldowns = readItemCooldowns(combat);
+		final Map<ItemKey, Integer> combatCooldowns = readItemCooldowns(combat);
 
 		final ConfigurationSection global = section.getConfigurationSection("Global");
-		final Map<Material, Integer> globalCooldowns = readItemCooldowns(global);
+		final Map<ItemKey, Integer> globalCooldowns = readItemCooldowns(global);
 
-		final Set<Material> materials = new HashSet<>(combatCooldowns.keySet());
-		materials.addAll(globalCooldowns.keySet());
+		final Set<ItemKey> keys = new HashSet<>(combatCooldowns.keySet());
+		keys.addAll(globalCooldowns.keySet());
 
-		for (final Material material : materials) {
-			itemCooldowns.put(material, new ItemCooldown(combatCooldowns.getOrDefault(material, -1), globalCooldowns.getOrDefault(material, -1)));
+		for (final ItemKey key : keys) {
+			itemCooldowns.put(key, new ItemCooldown(combatCooldowns.getOrDefault(key, -1), globalCooldowns.getOrDefault(key, -1)));
 		}
 		return itemCooldowns;
 	}
 
-	private static Map<Material, Integer> readItemCooldowns(final ConfigurationSection cooldownSection) {
+	private static Map<ItemKey, Integer> readItemCooldowns(final ConfigurationSection cooldownSection) {
 		if (cooldownSection == null)
 			return Collections.emptyMap();
-		final Map<Material, Integer> results = new HashMap<>();
+		final Map<ItemKey, Integer> results = new HashMap<>();
 		for (final Entry<String, Object> e : cooldownSection.getValues(false).entrySet()) {
-			final Material material = Material.getMaterial(e.getKey().toUpperCase());
-			if (material == null) {
-				Log.warning("The material " + e.getKey()
-						+ " in Item Cooldowns doesn't exist. You might have typed it incorrectly or it might not exist in this MC version");
+			final ItemKey key = ItemKey.fromString(e.getKey());
+			if (key == null) {
+				Log.warning("The item " + e.getKey()
+						+ " in Item Cooldowns doesn't exist or is not valid for this MC version. Check your config");
 				continue;
 			}
-			results.put(material, (int) e.getValue());
+			results.put(key, (int) e.getValue());
 		}
 		return results;
+	}
+
+	public static ItemCooldown getItemCooldown(final ItemKey key) {
+		if (key == null)
+			return null;
+		final Map<ItemKey, ItemCooldown> map = ITEM_COOLDOWNS.asMap();
+		if (map == null)
+			return null;
+		final ItemCooldown exact = map.get(key);
+		if (exact != null)
+			return exact;
+		final ItemKey wildcard = ItemKey.wildcard(key.material());
+		return map.get(wildcard);
 	}
 
 	public static boolean setDebug(final Boolean debug) {

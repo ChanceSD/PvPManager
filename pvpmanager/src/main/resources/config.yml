@@ -208,6 +208,8 @@ Newbie Protection:
 # If the item is not edible the cooldown will only be activated for right clicks
 # Combat section sets cooldowns only while in combat, global means cooldowns will always apply
 # You can disable the Minecraft builtin cooldown for an item by setting it to 0, like for enderpearls, or -1 for default cooldown
+# You can also specify an item data value using `NAME-DATA`, e.g. `WOOL-14` for red wool or `POTION-16421` for a legacy potion.
+# On older server versions `ENCHANTED_GOLDEN_APPLE` will be automatically mapped to `GOLDEN_APPLE-1`.
 Item Cooldowns:
   Combat:
     ENDER_PEARL: 5

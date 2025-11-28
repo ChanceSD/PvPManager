@@ -15,6 +15,7 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.ItemCooldown;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.setting.ItemKey;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PlayerListener1_11 implements Listener {
@@ -29,7 +30,8 @@ public class PlayerListener1_11 implements Listener {
 	public void onProjectileLaunchEvent(final ProjectileLaunchEvent event) {
 		final Projectile entity = event.getEntity();
 		final ProjectileSource shooter = entity.getShooter();
-		final ItemCooldown itemCooldown = Conf.ITEM_COOLDOWNS.asMap().get(Material.ENDER_PEARL);
+		final ItemKey key = ItemKey.wildcard(Material.ENDER_PEARL);
+		final ItemCooldown itemCooldown = Conf.getItemCooldown(key);
 		if (itemCooldown == null || entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof Player))
 			return;
 
@@ -37,7 +39,7 @@ public class PlayerListener1_11 implements Listener {
 		final CombatPlayer pvPlayer = playerHandler.get(player);
 
 		// Run in next tick otherwise doesn't work
-		ScheduleUtils.runPlatformTask(() -> pvPlayer.setItemCooldown(Material.ENDER_PEARL, itemCooldown), player);
+		ScheduleUtils.runPlatformTask(() -> pvPlayer.setItemCooldown(key, itemCooldown), player);
 	}
 
 	@EventHandler

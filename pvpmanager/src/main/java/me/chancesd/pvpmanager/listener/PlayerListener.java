@@ -35,6 +35,8 @@ import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.setting.ItemKey;
+import me.chancesd.pvpmanager.setting.ItemCooldown;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.TimeUtil;
@@ -52,19 +54,21 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public final void onPlayerEat(final PlayerItemConsumeEvent event) {
-		final Material type = event.getItem().getType();
 		final CombatPlayer player = playerManager.get(event.getPlayer());
-		if (Conf.BLOCK_EAT.asBool() && player.isInCombat() && type.isEdible()) {
+		if (Conf.BLOCK_EAT.asBool() && player.isInCombat() && event.getItem().getType().isEdible()) {
 			event.setCancelled(true);
 			player.message(Lang.EAT_BLOCKED_IN_COMBAT);
+			return;
 		}
-		if (Conf.ITEM_COOLDOWNS.asMap().containsKey(type)) {
-			if (player.hasItemCooldown(type)) {
+		final ItemKey key = ItemKey.fromItemStack(event.getItem());
+		final ItemCooldown cooldown = Conf.getItemCooldown(key);
+		if (cooldown != null) {
+			if (player.hasItemCooldown(key)) {
 				event.setCancelled(true);
-				player.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, player.getItemCooldown(type)));
+				player.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, player.getItemCooldown(key)));
 				return;
 			}
-			player.setItemCooldown(type, Conf.ITEM_COOLDOWNS.asMap().get(type));
+			player.setItemCooldown(key, cooldown);
 		}
 	}
 
@@ -115,17 +119,21 @@ public class PlayerListener implements Listener {
 			return;
 
 		final Material type = e.getMaterial();
-		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && Conf.ITEM_COOLDOWNS.asMap().containsKey(type)) {
-			final CombatPlayer combatPlayer = playerManager.get(player);
-			if (combatPlayer.hasItemCooldown(type)) {
-				final String msg = Lang.ITEM_COOLDOWN.msgTimeUntil(combatPlayer.getItemCooldown(type));
-				if (!msg.equals(msgCooldown.getIfPresent(player.getUniqueId()))) {
-					combatPlayer.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, combatPlayer.getItemCooldown(type)));
-					msgCooldown.put(player.getUniqueId(), msg);
+		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)) {
+			final ItemKey key = ItemKey.fromItemStack(e.getItem());
+			final ItemCooldown cooldown = Conf.getItemCooldown(key);
+			if (cooldown != null) {
+				final CombatPlayer combatPlayer = playerManager.get(player);
+				if (combatPlayer.hasItemCooldown(key)) {
+					final String msg = Lang.ITEM_COOLDOWN.msgTimeUntil(combatPlayer.getItemCooldown(key));
+					if (!msg.equals(msgCooldown.getIfPresent(player.getUniqueId()))) {
+						combatPlayer.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, combatPlayer.getItemCooldown(key)));
+						msgCooldown.put(player.getUniqueId(), msg);
+					}
+					e.setCancelled(true);
+				} else if (!type.isEdible()) {
+					ScheduleUtils.runPlatformTask(() -> combatPlayer.setItemCooldown(key, cooldown));
 				}
-				e.setCancelled(true);
-			} else if (!type.isEdible()) {
-				ScheduleUtils.runPlatformTask(() -> combatPlayer.setItemCooldown(type, Conf.ITEM_COOLDOWNS.asMap().get(type)));
 			}
 		}
 	}

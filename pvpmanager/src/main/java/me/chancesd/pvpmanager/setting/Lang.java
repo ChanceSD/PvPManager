@@ -30,6 +30,7 @@ import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.setting.lang.Replacement;
 import me.chancesd.sdutils.utils.ChatUtils;
 import me.chancesd.sdutils.utils.Log;
+import me.chancesd.sdutils.utils.MCVersion;
 import me.chancesd.sdutils.utils.TimeUtil;
 import me.chancesd.sdutils.utils.TimeUtil.TimeLangProvider;
 import me.chancesd.sdutils.utils.Utils;
@@ -283,10 +284,11 @@ public enum Lang implements TimeLangProvider {
 		DisplayMode mode = DisplayMode.CHAT;
 
 		if (message.toLowerCase().startsWith("!actionbar ")) {
-			mode = DisplayMode.ACTION_BAR;
+			if (MCVersion.isAtLeast(MCVersion.V1_10)) {
+				mode = DisplayMode.ACTION_BAR;
+			}
 			message = message.substring(11); // Remove "!actionbar "
 		} else if (message.toLowerCase().startsWith("!chat ")) {
-			mode = DisplayMode.CHAT;
 			message = message.substring(6); // Remove "!chat "
 		}
 

@@ -26,6 +26,7 @@ import me.chancesd.pvpmanager.player.nametag.TABNameTag;
 import me.chancesd.pvpmanager.player.world.CombatWorld;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.setting.ItemCooldown;
+import me.chancesd.pvpmanager.setting.ItemKey;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.tasks.NewbieTask;
@@ -54,7 +55,7 @@ public class CombatPlayer extends EcoPlayer {
 	private CombatPlayer enemy;
 	private final Set<CombatPlayer> lastHitters = new HashSet<>();
 	private final Map<String, Integer> victim = new HashMap<>();
-	private final Map<Material, Long> itemCooldown = new EnumMap<>(Material.class);
+	private final Map<ItemKey, Long> itemCooldown = new HashMap<>();
 	private final PvPManager plugin;
 	private NameTag nametag;
 
@@ -303,35 +304,35 @@ public class CombatPlayer extends EcoPlayer {
 		return victim.getOrDefault(victimPlayer.getName(), 0);
 	}
 
-	public final boolean hasItemCooldown(final Material material) {
-		final Long time = itemCooldown.get(material);
+	public final boolean hasItemCooldown(final ItemKey key) {
+		Long time = itemCooldown.get(key);
 		if (time == null)
 			return false;
 		if (System.currentTimeMillis() > time) {
-			itemCooldown.remove(material);
+			itemCooldown.remove(key);
 			return false;
 		}
 		return true;
 	}
 
-	public final void setItemCooldown(@NotNull final Material material, final ItemCooldown cooldown) {
+	public final void setItemCooldown(@NotNull final ItemKey key, final ItemCooldown cooldown) {
 		final int time = isInCombat() ? cooldown.getCombatCooldown() : cooldown.getGlobalCooldown();
 		if (time < 0)
 			return;
-		itemCooldown.put(material, System.currentTimeMillis() + time * 1000);
+		itemCooldown.put(key, System.currentTimeMillis() + time * 1000);
 		if (MCVersion.isAtLeast(MCVersion.V1_11_2)) {
-			getPlayer().setCooldown(material, time * 20);
+			getPlayer().setCooldown(key.material(), time * 20);
 		}
 	}
 
 	/**
 	 * Returns the time when the cooldown for the specified item will expire
 	 *
-	 * @param material The item material
+	 * @param key The item key
 	 * @return The time in milliseconds when the cooldown will expire, or 0 if there is no cooldown
 	 */
-	public final Long getItemCooldown(final Material material) {
-		return itemCooldown.getOrDefault(material, 0L);
+	public final Long getItemCooldown(final ItemKey key) {
+		return itemCooldown.getOrDefault(key, 0L);
 	}
 
 	public final void clearVictims() {
