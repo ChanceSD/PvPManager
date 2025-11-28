@@ -40,6 +40,8 @@ public enum Conf {
 	PEARL_RENEW_TAG(ConfSection.COMBAT_TAG, "EnderPearl Renews Tag", true, Boolean.class),
 	WIND_CHARGE_RENEW_TAG(ConfSection.COMBAT_TAG, "WindCharge Renews Tag", bool -> MCVersion.isAtLeast(MCVersion.V1_21) && bool, Boolean.class, Boolean.class),
 
+	DUEL_MODE_ENABLED(ConfSection.COMBAT_TAG, "Duel Mode", false, Boolean.class),
+
 	NAMETAG_COMBAT_ENABLED(ConfSection.NAMETAG, ConfSection.ENABLED, true, Boolean.class),
 	NAMETAG_PREFIX(ConfSection.NAMETAG, "Prefix", "&4&lCombat &c", String.class),
 	NAMETAG_SUFFIX(ConfSection.NAMETAG, "Suffix", "", String.class),

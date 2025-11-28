@@ -52,6 +52,7 @@ public enum Lang implements TimeLangProvider {
 	COMMAND_DENIED_INCOMBAT("Command_Denied_InCombat"),
 	ATTACK_DENIED_YOU("Attack_Denied_You"),
 	ATTACK_DENIED_OTHER("Attack_Denied_Other", Replacement.PLAYER),
+	DUEL_MODE_PROTECTION("Duel_Mode_Protection"),
 	PVP_DISABLED_FEE("PvP_Disabled_Fee", Replacement.MONEY),
 	PVP_FEE_NOT_ENOUGH("PvP_Disabled_Fee_Not_Enough"),
 	TAGGED_ATTACKER("Tagged_Attacker", Replacement.PLAYER),
@@ -511,6 +512,7 @@ public enum Lang implements TimeLangProvider {
 		case WORLD_PROTECTION -> WORLD_PROTECTION;
 		case AFK_PROTECTION -> AFK_PROTECTION;
 		case GLOBAL_PROTECTION -> GLOBAL_PROTECTION;
+		case DUEL_PROTECTION -> DUEL_MODE_PROTECTION;
 		default -> null;
 		};
 	}

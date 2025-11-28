@@ -68,6 +68,11 @@ public class PlayerManager {
 		final CombatPlayer attacker = get(damager);
 		final CombatPlayer attacked = get(defender);
 
+		if (Conf.DUEL_MODE_ENABLED.asBool()
+			&& (attacker.isInCombat() || attacked.isInCombat())
+			&& (!attacker.isEnemyOf(attacked) || !attacked.isEnemyOf(attacker))) {
+			return new ProtectionResult(ProtectionType.DUEL_PROTECTION);
+		}
 		if (attacker.hasOverride() || Conf.VULNERABLE_ENABLED.asBool() && canAttackVulnerable(attacker, attacked))
 			return new ProtectionResult(ProtectionType.FAIL_OVERRIDE);
 		if (!globalStatus)

@@ -32,6 +32,10 @@ Combat Tag:
   EnderPearl Renews Tag: true
   # If enabled, will retag the player when they use a wind charge
   WindCharge Renews Tag: true
+
+  # Allows for a fair fight between only two combat tagged players, without third party interference
+  # Useful for FFA or mass PvP scenarios
+  Duel Mode: false
   
   Display:
     # Adds a prefix or suffix while the player is in combat
