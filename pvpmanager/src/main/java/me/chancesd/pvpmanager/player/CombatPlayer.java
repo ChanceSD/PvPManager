@@ -1,6 +1,5 @@
 package me.chancesd.pvpmanager.player;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -305,7 +303,7 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public final boolean hasItemCooldown(final ItemKey key) {
-		Long time = itemCooldown.get(key);
+		final Long time = itemCooldown.get(key);
 		if (time == null)
 			return false;
 		if (System.currentTimeMillis() > time) {
@@ -409,22 +407,27 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	private void initializeNameTag() {
-		if (Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
-			try {
-				final TABHook tab = (TABHook) plugin.getDependencyManager().getDependency(Hook.TAB);
-				this.nametag = tab != null && (tab.showAboveHead() || tab.showInPlayerlist()) ? new TABNameTag(tab, this) : new BukkitNameTag(this);
-			} catch (final NoSuchMethodError e) {
-				Conf.NAMETAG_COMBAT_ENABLED.disable();
-				Conf.TOGGLE_NAMETAG_ENABLED.disable();
-				this.nametag = null;
-				Log.warning("Colored nametags disabled. You need to update your Spigot version.");
-			} catch (final UnsupportedOperationException e) {
-				Conf.NAMETAG_COMBAT_ENABLED.disable();
-				Conf.TOGGLE_NAMETAG_ENABLED.disable();
-				this.nametag = null;
-				Log.infoColor(ChatColor.RED
-						+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
+		if (!Conf.NAMETAG_COMBAT_ENABLED.asBool() && !Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
+			return;
+		}
+		try {
+			final TABHook tab = (TABHook) plugin.getDependencyManager().getDependency(Hook.TAB);
+			if (tab != null && (tab.showAboveHead() || tab.showInPlayerlist())) {
+				this.nametag = new TABNameTag(tab, this);
+			} else if (Conf.USE_TEAMS.asBool()) {
+				this.nametag = new BukkitNameTag(this);
 			}
+		} catch (final NoSuchMethodError e) {
+			Conf.NAMETAG_COMBAT_ENABLED.disable();
+			Conf.TOGGLE_NAMETAG_ENABLED.disable();
+			this.nametag = null;
+			Log.warning("Colored nametags disabled. You need to update your Spigot version.");
+		} catch (final UnsupportedOperationException e) {
+			Conf.NAMETAG_COMBAT_ENABLED.disable();
+			Conf.TOGGLE_NAMETAG_ENABLED.disable();
+			this.nametag = null;
+			Log.infoColor(ChatColor.RED
+					+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
 		}
 	}
 
