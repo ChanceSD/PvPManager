@@ -20,10 +20,10 @@ import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PlayerListener1_11 implements Listener {
 
-	private final PlayerManager playerHandler;
+	private final PlayerManager playerManager;
 
 	public PlayerListener1_11(final PlayerManager ph) {
-		this.playerHandler = ph;
+		this.playerManager = ph;
 	}
 
 	@EventHandler
@@ -36,10 +36,12 @@ public class PlayerListener1_11 implements Listener {
 			return;
 
 		final Player player = (Player) shooter;
-		final CombatPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer combatPlayer = playerManager.getUnchecked(player);
+		if (combatPlayer == null)
+			return;
 
 		// Run in next tick otherwise doesn't work
-		ScheduleUtils.runPlatformTask(() -> pvPlayer.setItemCooldown(key, itemCooldown), player);
+		ScheduleUtils.runPlatformTask(() -> combatPlayer.setItemCooldown(key, itemCooldown), player);
 	}
 
 	@EventHandler
@@ -48,7 +50,7 @@ public class PlayerListener1_11 implements Listener {
 			return;
 
 		final Player player = (Player) event.getEntity();
-		final CombatPlayer pvPlayer = playerHandler.get(player);
+		final CombatPlayer pvPlayer = playerManager.get(player);
 		if (pvPlayer.isInCombat()) {
 			event.setCancelled(true);
 			pvPlayer.message(Lang.TOTEM_BLOCKED_IN_COMBAT);
