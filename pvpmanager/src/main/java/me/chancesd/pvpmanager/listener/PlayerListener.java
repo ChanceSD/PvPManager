@@ -119,7 +119,7 @@ public class PlayerListener implements Listener {
 			return;
 
 		final Material type = e.getMaterial();
-		if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)) {
+		if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
 			final ItemKey key = ItemKey.fromItemStack(e.getItem());
 			final ItemCooldown cooldown = Conf.getItemCooldown(key);
 			if (cooldown != null) {
@@ -176,11 +176,10 @@ public class PlayerListener implements Listener {
 				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
 					continue;
 				}
-				final CombatPlayer target = playerManager.get(p);
 				final Location playerLocation = p.getLocation();
-				if ((!target.hasPvPEnabled() || !combatPlayer.hasPvPEnabled())
-						&& playerLocation != null && clickedBlock.getLocation().distanceSquared(playerLocation) < 25) {
-					combatPlayer.message(Lang.ATTACK_DENIED_OTHER, target.getName());
+				if (playerLocation != null && clickedBlock.getLocation().distanceSquared(playerLocation) < 25
+						&& playerManager.checkProtection(player, p).isProtected()) {
+					combatPlayer.message(Lang.ATTACK_DENIED_OTHER, p.getName());
 					event.setCancelled(true);
 					return;
 				}
