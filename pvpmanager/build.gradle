@@ -36,13 +36,13 @@ dependencies {
     compileOnly 'com.github.NEZNAMY:TAB-API:5.2.5'
 
     compileOnly 'com.zaxxer:HikariCP:4.0.3'
-    compileOnly 'org.apache.logging.log4j:log4j-core:2.23.1'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.25.3'
 
     implementation 'me.chancesd.sdutils:sdutils:1.4-SNAPSHOT'
 
     testImplementation 'org.xerial:sqlite-jdbc:3.46.0.0'
     testImplementation 'com.zaxxer:HikariCP:4.0.3'
-    testImplementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+    testImplementation 'org.apache.logging.log4j:log4j-core:2.25.3'
     testImplementation 'org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT'
 }
 
