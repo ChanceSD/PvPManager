@@ -24,14 +24,19 @@ public abstract class EcoPlayer extends BasePlayer {
 	private boolean withdrawMoney(final double amount) {
 		final EconomyResponse response = economy.withdrawPlayer(getPlayer(), amount);
 		Log.debug(
-		        "Withdraw money from " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " " + response.errorMessage);
+		        "Withdraw from " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " " + response.errorMessage);
 		return response.transactionSuccess() && response.balance > 0;
 	}
 
-	private void depositMoney(final double amount) {
+	private boolean depositMoney(final double amount) {
 		final EconomyResponse response = economy.depositPlayer(getPlayer(), amount);
-		Log.debug("Deposit money to " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " "
+		Log.debug("Deposit to " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " "
 				+ response.errorMessage);
+		return response.transactionSuccess();
+	}
+
+	public double getBalance() {
+		return economy.getBalance(getPlayer());
 	}
 
 	public final void applyFine() {
@@ -53,17 +58,15 @@ public abstract class EcoPlayer extends BasePlayer {
 	public final void giveReward(final EcoPlayer victim) {
 		double moneyWon = getMoneyPercentage(Conf.MONEY_REWARD.asDouble());
 		if (Conf.MONEY_STEAL.asBool()) {
-			final double vbalance = economy.getBalance(victim.getPlayer());
-			if (Conf.MONEY_REWARD.asDouble() <= 1) {
-				moneyWon = Utils.roundTo2Decimal(Conf.MONEY_REWARD.asDouble() * vbalance);
-			} else if (Conf.MONEY_REWARD.asDouble() > vbalance) {
-				moneyWon = vbalance;
+			moneyWon = victim.getMoneyPercentage(Conf.MONEY_REWARD.asDouble());
+			if (!victim.withdrawMoney(moneyWon)) {
+				return;
 			}
-			victim.withdrawMoney(moneyWon);
 			victim.message(Lang.MONEY_STEAL, getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon));
 		}
-		depositMoney(moneyWon);
-		message(Lang.MONEY_REWARD.msg(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
+		if (depositMoney(moneyWon)) {
+			message(Lang.MONEY_REWARD.msg(victim.getPlayer().getName(), CombatUtils.formatTo2Digits(moneyWon)));
+		}
 	}
 
 	public final int giveExp(final EcoPlayer victim) {
@@ -85,10 +88,12 @@ public abstract class EcoPlayer extends BasePlayer {
 		getPlayer().giveExp(exp);
 	}
 
-	private double getMoneyPercentage(final double percentage) {
+	public double getMoneyPercentage(final double percentage) {
 		if (percentage > 1)
 			return percentage;
-		return Utils.roundTo2Decimal(percentage * economy.getBalance(getPlayer()));
+		final double balance = getBalance();
+		final double amount = Utils.roundTo2Decimal(percentage * balance);
+		return Math.min(amount, balance);
 	}
 
 	@Override
