@@ -25,14 +25,14 @@ public abstract class EcoPlayer extends BasePlayer {
 		final EconomyResponse response = economy.withdrawPlayer(getPlayer(), amount);
 		Log.debug(
 		        "Withdraw from " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " " + response.errorMessage);
-		return response.transactionSuccess() && response.balance > 0;
+		return response.transactionSuccess() && response.amount != 0;
 	}
 
 	private boolean depositMoney(final double amount) {
 		final EconomyResponse response = economy.depositPlayer(getPlayer(), amount);
 		Log.debug("Deposit to " + getName() + " - Response: " + response.type + " " + response.amount + " " + response.balance + " "
 				+ response.errorMessage);
-		return response.transactionSuccess();
+		return response.transactionSuccess() && response.amount != 0;
 	}
 
 	public double getBalance() {
@@ -75,7 +75,7 @@ public abstract class EcoPlayer extends BasePlayer {
 		if (Conf.EXP_STEAL.asDouble() <= 1) {
 			expWon = (int) (Conf.EXP_STEAL.asDouble() * exp);
 		} else {
-			expWon = exp;
+			expWon = Math.min((int) Conf.EXP_STEAL.asDouble(), exp);
 		}
 		setExp(getPlayer().getTotalExperience() + expWon);
 		message(Lang.EXP_WON, victim.getPlayer().getName(), expWon);
