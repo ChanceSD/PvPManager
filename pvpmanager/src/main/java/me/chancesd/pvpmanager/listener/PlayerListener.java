@@ -101,8 +101,12 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public final void onPlayerLogoutMonitor(final PlayerQuitEvent event) {
+		final CombatPlayer player = playerManager.get(event.getPlayer());
+		if (player.isInCombat()) {
+			player.untag(UntagReason.LOGOUT);
+		}
 		// Paper still calls some events after PlayerQuitEvent, so delay removal to next tick
-		ScheduleUtils.runPlatformTask(() -> playerManager.removePlayer(playerManager.get(event.getPlayer())));
+		ScheduleUtils.runPlatformTask(() -> playerManager.removePlayer(player));
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)

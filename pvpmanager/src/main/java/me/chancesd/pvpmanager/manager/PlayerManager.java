@@ -28,7 +28,6 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.PlayerData;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.player.ProtectionType;
-import me.chancesd.pvpmanager.player.UntagReason;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.tasks.CleanKillersTask;
 import me.chancesd.pvpmanager.tasks.PvPToggleFeeTask;
@@ -202,10 +201,6 @@ public class PlayerManager {
 	}
 
 	private void removePlayer(final CombatPlayer player, final boolean asyncSave) {
-		if (player.isInCombat()) {
-			player.untag(UntagReason.LOGOUT);
-		}
-
 		if (player.isLoaded()) {
 			if (asyncSave) {
 				ScheduleUtils.runAsync(() -> savePlayer(player));
