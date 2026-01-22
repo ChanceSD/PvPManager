@@ -89,7 +89,7 @@ public class PlaceholderProcessor {
 		case "combat_prefix":
 			return p.isInCombat() ? Conf.NAMETAG_PREFIX.asString() : "";
 		case "combat_timeleft":
-			return String.valueOf(p.getTagTimeLeft() / 1000);
+			return String.valueOf(Math.round(p.getTagTimeLeft() / 1000D));
 		case "combat_timeleft_ms":
 			return String.valueOf(Utils.roundTo1Decimal(p.getTagTimeLeft() / 1000D));
 		case "newbie_timeleft":
