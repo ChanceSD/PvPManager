@@ -86,12 +86,12 @@ public class MoveListener1_9 implements Listener {
 		if (event.getCause() != TeleportCause.ENDER_PEARL)
 			return;
 		final Player player = event.getPlayer();
-		final CombatPlayer pvplayer = playerManager.get(player);
+		final CombatPlayer combatPlayer = playerManager.getUnchecked(player);
 		final Location locTo = event.getTo();
 		final Location locFrom = event.getFrom();
-		if (pvplayer.isInCombat() && !depManager.canAttackAt(null, locTo) && depManager.canAttackAt(null, locFrom)) {
+		if (combatPlayer != null && combatPlayer.isInCombat() && !depManager.canAttackAt(null, locTo) && depManager.canAttackAt(null, locFrom)) {
 			event.setCancelled(true);
-			pvplayer.message(Lang.PUSHBACK_WARNING);
+			combatPlayer.message(Lang.PUSHBACK_WARNING);
 		}
 	}
 

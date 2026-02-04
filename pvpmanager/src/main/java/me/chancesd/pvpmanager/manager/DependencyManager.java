@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -81,9 +82,11 @@ public class DependencyManager {
 			if (hooks.length == 0)
 				return;
 			final List<String> softDepend = PvPManager.getInstance().getDescription().getSoftDepend();
-			if (Arrays.stream(hooks).anyMatch(h -> softDepend.contains(h.toString()))) {
-				Log.severe("Found plugins that PvPManager declared as soft dependencies but were still loaded out of order.");
-				Log.severe("If you're not using any server flags that cause this, please report it to your server software developers.");
+			final Stream<Hook> missingHooks = Arrays.stream(hooks).filter(h -> softDepend.contains(h.toString()));
+			if (missingHooks.count() > 0) {
+				Log.severe("Found plugins that PvPManager declared as soft dependencies but were loaded out of order: "
+						+ missingHooks.map(Hook::toString).toList());
+				Log.severe("If you're not using any server flags that cause this, please report it to the server software developers.");
 			}
 			Log.infoColor(ChatColor.LIGHT_PURPLE + "Delayed checking for any missing hooks...");
 			setupHooks(hooks);
