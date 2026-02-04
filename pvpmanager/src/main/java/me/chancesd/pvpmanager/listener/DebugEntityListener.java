@@ -52,7 +52,7 @@ public class DebugEntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public final void onPlayerDamage(final EntityDamageByEntityEvent event) {
-		Log.debug("Processing damage between " + getEntityNames(event) + ". Cause: " + event.getCause());
+		Log.debug("- Processing damage between " + getEntityNames(event) + ". Cause: " + event.getCause());
 		final String worldName = event.getEntity().getWorld().getName();
 		if (CombatUtils.isWorldExcluded(worldName)) {
 			Log.debug("Ignoring damage between " + getEntityNames(event) + " because world " + worldName + " is excluded");
@@ -101,11 +101,10 @@ public class DebugEntityListener implements Listener {
 		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
 			return;
 
-		if (ph.checkProtection(getAttacker(event.getDamager()), (Player) event.getEntity()).type() == ProtectionType.FAIL_OVERRIDE) {
+		final ProtectionResult protectionResult = ph.checkProtection(getAttacker(event.getDamager()), (Player) event.getEntity());
+		if (protectionResult.type() == ProtectionType.FAIL_OVERRIDE) {
 			event.setCancelled(false);
 			Log.debug("Force allowing PvP even though a plugin blocked it because a player has override or Vulnerable is enabled");
-		} else {
-			Log.debug("Damage was cancelled by another plugin, doing nothing");
 		}
 	}
 
@@ -118,6 +117,17 @@ public class DebugEntityListener implements Listener {
 
 		onDamageActions(attacker, attacked);
 		Log.debug("Finished processing damage.");
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public final void onPlayerDamageMon(final EntityDamageByEntityEvent event) {
+		if (!CombatUtils.isPvP(event) || CombatUtils.isWorldExcluded(event.getEntity().getWorld().getName()) || !event.isCancelled())
+			return;
+
+		final ProtectionResult protectionResult = ph.checkProtection(getAttacker(event.getDamager()), (Player) event.getEntity());
+		if (protectionResult.isVulnerable()) {
+			Log.debug("Damage was cancelled by another plugin, doing nothing");
+		}
 	}
 
 	@SuppressWarnings("null") // defender.getLocation() never null
