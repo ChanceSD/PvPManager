@@ -39,6 +39,7 @@ public enum Conf {
 	SELF_TAG(ConfSection.COMBAT_TAG, "Self Tag", false, Boolean.class),
 	PEARL_RENEW_TAG(ConfSection.COMBAT_TAG, "EnderPearl Renews Tag", true, Boolean.class),
 	WIND_CHARGE_RENEW_TAG(ConfSection.COMBAT_TAG, "WindCharge Renews Tag", bool -> MCVersion.isAtLeast(MCVersion.V1_21) && bool, Boolean.class, Boolean.class),
+	CLOSE_INVENTORY_ON_TAG(ConfSection.COMBAT_TAG, "Close Inventory On Tag", true, Boolean.class),
 
 	DUEL_MODE_ENABLED(ConfSection.COMBAT_TAG, "Duel Mode", false, Boolean.class),
 

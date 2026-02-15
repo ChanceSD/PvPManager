@@ -185,7 +185,9 @@ public class CombatPlayer extends EcoPlayer {
 			getPlayer().setGlowing(true);
 		}
 
-		getPlayer().closeInventory();
+		if (Conf.CLOSE_INVENTORY_ON_TAG.asBool()) {
+			getPlayer().closeInventory();
+		}
 
 		if (nametag != null) {
 			ScheduleUtils.runAsync(nametag::setInCombat);
