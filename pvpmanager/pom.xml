@@ -55,6 +55,11 @@
 
 		<!-- LibsDisguises -->
 		<repository>
+			<id>libsdisguises-public</id>
+			<url>https://mvn.lib.co.nz/public/</url>
+		</repository>
+
+		<repository>
 			<id>md_5-public</id>
 			<url>https://repo.md-5.net/content/groups/public/</url>
 		</repository>
@@ -154,7 +159,7 @@
 		<dependency>
 			<groupId>io.papermc.paper</groupId>
 			<artifactId>paper-api</artifactId>
-			<version>1.21-R0.1-SNAPSHOT</version>
+			<version>1.21.11-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -264,9 +269,9 @@
 
 		<!-- LibsDisguises -->
 		<dependency>
-			<groupId>LibsDisguises</groupId>
-			<artifactId>LibsDisguises</artifactId>
-			<version>10.0.44</version>
+			<groupId>me.libraryaddict.disguises</groupId>
+			<artifactId>libsdisguises</artifactId>
+			<version>11.0.0</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
