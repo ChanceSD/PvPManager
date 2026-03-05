@@ -25,11 +25,11 @@ subprojects {
         maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
         maven { url = 'https://maven.enginehub.org/repo/' }
         maven { url = 'https://repo.roinujnosde.me/releases/' }
-        maven { url = 'https://repo.md-5.net/content/groups/public/' }
         maven { url = 'https://repo.codemc.org/repository/maven-public' }
         maven { url = 'https://repo.glaremasters.me/repository/towny/' }
         maven { url = 'https://repo.papermc.io/repository/maven-public/' }
         maven { url = 'https://repo.william278.net/releases' }
+        maven { url = 'https://mvn.lib.co.nz/public/' }
     }
 
     dependencies {

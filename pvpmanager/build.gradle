@@ -28,7 +28,7 @@ dependencies {
     compileOnly 'com.palmergames.bukkit.towny:towny:0.101.0.0'
     compileOnly 'net.william278.huskclaims:huskclaims-bukkit:1.5.2'
     compileOnly 'net.william278.husktowns:husktowns-bukkit:3.1.2'
-    compileOnly('LibsDisguises:LibsDisguises:10.0.44') {
+    compileOnly('me.libraryaddict.disguises:libsdisguises:11.0.0') {
         exclude group: '*', module: '*'
     }
     compileOnly 'com.github.cryptomorin:kingdoms:1.16.8.1.1'
