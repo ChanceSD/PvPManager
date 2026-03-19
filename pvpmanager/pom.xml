@@ -258,7 +258,7 @@
 		<dependency>
 			<groupId>net.william278.husktowns</groupId>
 			<artifactId>husktowns-bukkit</artifactId>
-			<version>3.1.2</version>
+			<version>3.1.4</version>
 			<scope>provided</scope>
 		</dependency>
 
