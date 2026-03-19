@@ -74,7 +74,10 @@ public class PlaceholderProcessor {
 		if (player == null)
 			return "";
 
-		final CombatPlayer p = plugin.getPlayerManager().get(player);
+		final CombatPlayer p = plugin.getPlayerManager().getUnchecked(player);
+		if (p == null) {
+			return null;
+		}
 		switch (identifier) {
 		case "in_combat":
 			return getPAPIBoolean(p.isInCombat());
