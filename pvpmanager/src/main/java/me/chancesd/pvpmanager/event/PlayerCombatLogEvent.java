@@ -1,6 +1,7 @@
 package me.chancesd.pvpmanager.event;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -11,9 +12,10 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
  * <br>
  * Meaning the player disconnected while in combat.
  */
-public final class PlayerCombatLogEvent extends Event {
+public final class PlayerCombatLogEvent extends Event implements Cancellable {
 
 	private static final HandlerList handlers = new HandlerList();
+	private boolean cancelled = false;
 	private final Player player;
 	private final CombatPlayer pvplayer;
 
@@ -38,6 +40,16 @@ public final class PlayerCombatLogEvent extends Event {
 	 */
 	public final CombatPlayer getCombatPlayer() {
 		return pvplayer;
+	}
+
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	@Override
+	public void setCancelled(final boolean cancel) {
+		cancelled = cancel;
 	}
 
 	@Override

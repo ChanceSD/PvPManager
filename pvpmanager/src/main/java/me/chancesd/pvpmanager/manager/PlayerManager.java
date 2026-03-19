@@ -29,6 +29,7 @@ import me.chancesd.pvpmanager.player.PlayerData;
 import me.chancesd.pvpmanager.player.ProtectionResult;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.tasks.CleanKillersTask;
 import me.chancesd.pvpmanager.tasks.PvPToggleFeeTask;
 import me.chancesd.pvpmanager.tasks.TagTask;
@@ -215,8 +216,8 @@ public class PlayerManager {
 
 	public final void applyPunishments(final CombatPlayer player) {
 		final Player p = player.getPlayer();
-		final PlayerCombatLogEvent event = new PlayerCombatLogEvent(p, player);
-		Bukkit.getPluginManager().callEvent(event);
+		getConfigManager().getLog().logCombatLog(player);
+		CombatUtils.executeCommands(Conf.COMMANDS_ON_COMBATLOG.asList(), p, player.getName());
 		if (Conf.KILL_ON_LOGOUT.asBool()) {
 			player.setPvpLogged(true);
 			if (MCVersion.isAtLeast(MCVersion.V1_20_5)) {

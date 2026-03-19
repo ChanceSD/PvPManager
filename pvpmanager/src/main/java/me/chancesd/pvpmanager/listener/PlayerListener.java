@@ -4,6 +4,7 @@ import me.chancesd.sdutils.utils.Log;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,6 +27,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import me.chancesd.pvpmanager.event.PlayerCombatLogEvent;
 import me.chancesd.pvpmanager.manager.DeathHandler;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
@@ -92,9 +94,12 @@ public class PlayerListener implements Listener {
 		final Player player = event.getPlayer();
 		final CombatPlayer combatPlayer = playerManager.get(player);
 		Log.debug(player.getName() + " quit with message: " + event.getQuitMessage() + " - In combat: " + combatPlayer.isInCombat());
-		if (combatPlayer.isInCombat() && !combatPlayer.hasPerm(Permissions.EXEMPT_COMBAT_LOG)) {
-			playerManager.getConfigManager().getLog().logCombatLog(combatPlayer);
-			CombatUtils.executeCommands(Conf.COMMANDS_ON_COMBATLOG.asList(), player, player.getName());
+		if (combatPlayer.isInCombat()) {
+			final PlayerCombatLogEvent combatLogEvent = new PlayerCombatLogEvent(player, combatPlayer);
+			Bukkit.getPluginManager().callEvent(combatLogEvent);
+			if (combatPlayer.hasPerm(Permissions.EXEMPT_COMBAT_LOG) || combatLogEvent.isCancelled()) {
+				return;
+			}
 			playerManager.applyPunishments(combatPlayer);
 		}
 	}
