@@ -325,6 +325,10 @@ public class CombatPlayer extends EcoPlayer {
 		}
 	}
 
+	public final void resetItemCooldowns() {
+		itemCooldown.clear();
+	}
+
 	/**
 	 * Returns the time when the cooldown for the specified item will expire
 	 *

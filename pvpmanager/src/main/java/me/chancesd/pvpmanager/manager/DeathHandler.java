@@ -46,6 +46,9 @@ public class DeathHandler {
 			combatPlayer.setLastDeathWasPvP(false);
 		}
 
+		// Reset item cooldowns
+		combatPlayer.resetItemCooldowns(); 
+
 		// Let's process player's inventory/exp according to config file
 		if (combatPlayer.hasPvPLogged()) {
 			handleCombatLogDrops(event, player);
