@@ -170,7 +170,7 @@ public enum Lang implements TimeLangProvider {
 	@NotNull
 	public String msg(final String... arguments) {
 		String finalMessage = message;
-		for (int i = 0; i < replacements.length; i++) {
+		for (int i = 0; i < replacements.length && i < arguments.length; i++) {
 			final String placeholder = replacements[i].getPlaceholder();
 			finalMessage = finalMessage.replace(placeholder, arguments[i]);
 		}
