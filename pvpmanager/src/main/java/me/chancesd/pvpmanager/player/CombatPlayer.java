@@ -99,7 +99,7 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public void addEnemy(final CombatPlayer enemyPlayer) {
-		if (enemyPlayer == this)
+		if (enemyPlayer == null || enemyPlayer == this)
 			return;
 		this.enemy = enemyPlayer;
 		this.lastHitters.add(enemyPlayer);
