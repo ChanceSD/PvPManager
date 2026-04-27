@@ -110,7 +110,8 @@ public class PlayerListener implements Listener {
 		if (player.isInCombat()) {
 			player.untag(UntagReason.LOGOUT);
 		}
-		// Paper still calls some events after PlayerQuitEvent, so delay removal to next tick
+		// Delay removal because server fires game logic (entity ticks, damage) after PlayerQuitEvent during disconnect
+		// TODO: fix with transient map
 		ScheduleUtils.runPlatformTask(() -> playerManager.removePlayer(player));
 	}
 

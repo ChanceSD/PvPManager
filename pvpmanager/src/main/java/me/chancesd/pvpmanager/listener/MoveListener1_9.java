@@ -63,8 +63,8 @@ public class MoveListener1_9 implements Listener {
 			return;
 
 		final Player player = event.getPlayer();
-		final CombatPlayer combatPlayer = playerManager.get(player);
-		if (!combatPlayer.isInCombat())
+		final CombatPlayer combatPlayer = playerManager.getUnchecked(player);
+		if (combatPlayer == null || !combatPlayer.isInCombat())
 			return;
 
 		if (!depManager.canAttackAt(null, locTo) && depManager.canAttackAt(null, locFrom)) {

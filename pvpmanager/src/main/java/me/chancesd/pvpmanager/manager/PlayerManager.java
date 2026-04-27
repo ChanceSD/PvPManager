@@ -209,7 +209,9 @@ public class PlayerManager {
 		}
 
 		player.cleanForRemoval();
-		players.remove(player.getUUID());
+		// Conditional remove: only evicts this specific instance. Prevents a delayed or
+		// out-of-order call from removing a newer session's entry sharing the same UUID.
+		players.remove(player.getUUID(), player);
 	}
 
 	public final void applyPunishments(final CombatPlayer player) {
