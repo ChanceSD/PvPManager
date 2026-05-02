@@ -70,6 +70,7 @@ public enum Conf {
 	BLOCK_GLIDE_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Elytra.Block Gliding", false, Boolean.class),
 	BLOCK_FIREWORKS_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Elytra.Block Fireworks", false, Boolean.class),
 	FIREWORK_POWER_LIMIT(ConfSection.ACTIONS_BLOCKED, "Elytra.Firework Power Limit", -1, Integer.class),
+	FIREWORK_ELYTRA_COOLDOWN(ConfSection.ACTIONS_BLOCKED, "Elytra.Firework Cooldown", 2, Integer.class),
 	BLOCK_INTERACT_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Interact.Enabled", false, Boolean.class),
 	BLOCK_INTERACT_ITEM_LIST(ConfSection.ACTIONS_BLOCKED, "Interact.List", new ArrayList<>(), List.class),
 	BLOCK_COMMANDS(ConfSection.ACTIONS_BLOCKED, "Commands.Enabled", true, Boolean.class),

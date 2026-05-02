@@ -81,8 +81,9 @@ Combat Tag:
       # Prevents players from using firework rockets while gliding in combat
       Block Fireworks: false
       # Maximum firework power level allowed while in combat (-1 = no limit, 1-3 = max power)
-      # This setting is ignored if Block Fireworks is true
       Firework Power Limit: -1
+      # Cooldown in seconds between firework uses while gliding in combat (-1 = disabled)
+      Firework Cooldown: 2
     Interact:
       Enabled: false
       # List of materials to block interaction, adding DOOR means all materials that end with DOOR like IRON_DOOR and so on

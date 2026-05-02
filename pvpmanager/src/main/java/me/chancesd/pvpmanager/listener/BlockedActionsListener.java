@@ -27,7 +27,10 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Permissions;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.setting.ItemCooldown;
+import me.chancesd.pvpmanager.setting.ItemKey;
 import me.chancesd.pvpmanager.utils.CombatUtils;
+import me.chancesd.sdutils.utils.TimeUtil;
 
 public class BlockedActionsListener implements Listener {
 
@@ -106,6 +109,17 @@ public class BlockedActionsListener implements Listener {
 				event.setCancelled(true);
 				pvPlayer.message(Lang.FIREWORK_POWER_LIMITED_IN_COMBAT, meta.getPower());
 			}
+		}
+
+		final int elytraCooldown = Conf.FIREWORK_ELYTRA_COOLDOWN.asInt();
+		if (elytraCooldown >= 0) {
+			final ItemKey fireworkKey = ItemKey.wildcard(fireworkMaterial);
+			if (pvPlayer.hasItemCooldown(fireworkKey)) {
+				event.setCancelled(true);
+				pvPlayer.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, pvPlayer.getItemCooldown(fireworkKey)));
+				return;
+			}
+			pvPlayer.setItemCooldown(fireworkKey, new ItemCooldown(elytraCooldown, -1));
 		}
 	}
 
