@@ -129,11 +129,12 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public final void setNewbie(final boolean newbie, final long time) {
-		if (newbie) {
-			this.newbieTask = new NewbieTask(this, time);
-		} else if (this.newbie && newbieTask != null) {
+		if (newbieTask != null) {
 			newbieTask.cancel();
 			this.newbieTask = null;
+		}
+		if (newbie) {
+			this.newbieTask = new NewbieTask(this, time);
 		}
 
 		// Fire event if the newbie state actually changed
