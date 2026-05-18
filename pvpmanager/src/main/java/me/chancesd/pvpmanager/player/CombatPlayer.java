@@ -130,6 +130,14 @@ public class CombatPlayer extends EcoPlayer {
 
 	public final void setNewbie(final boolean newbie, final long time) {
 		if (newbie) {
+			// FIX: Cancel existing newbieTask before overwriting the reference.
+			// Without this, the old task stays in the ScheduledThreadPoolExecutor queue
+			// (potentially for hours) while holding a strong CombatPlayer -> CraftPlayer
+			// reference, causing each orphaned task to retain ~4.85 GB of heap in aggregate.
+			// Triggered by repeated /newbie add on a player already under protection.
+			if (newbieTask != null) {
+				newbieTask.cancel();
+			}
 			this.newbieTask = new NewbieTask(this, time);
 		} else if (this.newbie && newbieTask != null) {
 			newbieTask.cancel();
@@ -480,6 +488,8 @@ public class CombatPlayer extends EcoPlayer {
 	public final void cleanForRemoval() {
 		if (newbieTask != null) {
 			newbieTask.cancel();
+			// FIX: Null out after cancel so the reference is released immediately.
+			newbieTask = null;
 		}
 		if (nametag != null) {
 			nametag.cleanup();
