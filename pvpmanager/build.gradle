@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'me.chancesd.pvpmanager'
-version = '4.0.3'
+version = '4.0.10'
 description = 'A powerful plugin to manage various PvP combat features'
 
 dependencies {
