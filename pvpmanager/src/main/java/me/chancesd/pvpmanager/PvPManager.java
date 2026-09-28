@@ -55,8 +55,8 @@ public class PvPManager extends SDPlugin {
 	public void onPluginEnable() {
 		final long start = System.currentTimeMillis();
 		if (ScheduleUtils.isFolia()) {
-			Log.infoColor(ChatColor.AQUA + "Running on Folia. Support for Folia is still experimental");
-			Log.infoColor(ChatColor.AQUA + "Please report any errors you find, most likely nobody reported them yet as not many people use Folia");
+			Log.infoColor(ChatColor.AQUA + "Running on Folia. Folia support is experimental");
+			Log.infoColor(ChatColor.AQUA + "Please report any errors you find, as not many servers use Folia");
 		}
 		configM = new ConfigManager(this);
 		Lang.setup(this);

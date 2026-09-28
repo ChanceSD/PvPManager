@@ -429,12 +429,11 @@ public class CombatPlayer extends EcoPlayer {
 			Conf.TOGGLE_NAMETAG_ENABLED.disable();
 			this.nametag = null;
 			Log.warning("Colored nametags disabled. You need to update your Spigot version.");
-		} catch (final UnsupportedOperationException e) {
+		} catch (final UnsupportedOperationException | IllegalStateException e) { // IllegalStateException for Canvas
 			Conf.NAMETAG_COMBAT_ENABLED.disable();
 			Conf.TOGGLE_NAMETAG_ENABLED.disable();
 			this.nametag = null;
-			Log.infoColor(ChatColor.RED
-					+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
+			Log.infoColor(ChatColor.RED + "Nametag support disabled until Folia supports the scoreboard API, or use the TAB plugin");
 		}
 	}
 
