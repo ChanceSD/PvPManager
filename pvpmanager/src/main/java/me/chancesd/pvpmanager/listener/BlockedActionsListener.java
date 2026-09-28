@@ -1,5 +1,6 @@
 package me.chancesd.pvpmanager.listener;
 
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 import java.util.Arrays;
@@ -119,7 +120,7 @@ public class BlockedActionsListener implements Listener {
 				pvPlayer.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, pvPlayer.getItemCooldown(fireworkKey)));
 				return;
 			}
-			pvPlayer.setItemCooldown(fireworkKey, new ItemCooldown(elytraCooldown, -1));
+			ScheduleUtils.runPlatformTask(() -> pvPlayer.setItemCooldown(fireworkKey, new ItemCooldown(elytraCooldown, -1)));
 		}
 	}
 
