@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -163,7 +164,7 @@ public class PlayerListener implements Listener {
 		final Material type = e.getMaterial();
 		if (type == Material.FLINT_AND_STEEL) {
 			for (final Player p : clickedBlock.getWorld().getPlayers()) {
-				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
+				if (isInvalidAttack(player, p) || !clickedBlock.getWorld().equals(p.getWorld())) {
 					continue;
 				}
 				final CombatPlayer target = playerManager.get(p);
@@ -183,7 +184,7 @@ public class PlayerListener implements Listener {
 		final Block clickedBlock = event.getBlockClicked();
 		if (event.getBucket() == Material.LAVA_BUCKET) {
 			for (final Player p : clickedBlock.getWorld().getPlayers()) {
-				if (player.equals(p) || !clickedBlock.getWorld().equals(p.getWorld()) || !player.canSee(p)) {
+				if (isInvalidAttack(player, p) || !clickedBlock.getWorld().equals(p.getWorld())) {
 					continue;
 				}
 				final Location playerLocation = p.getLocation();
@@ -195,6 +196,10 @@ public class PlayerListener implements Listener {
 				}
 			}
 		}
+	}
+
+	public boolean isInvalidAttack(final Player attacker, final Player victim) {
+		return victim == null || attacker.equals(victim) || !attacker.canSee(victim) || victim.getGameMode() == GameMode.SPECTATOR;
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST) // Create player as early as possible
