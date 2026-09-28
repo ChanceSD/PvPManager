@@ -147,14 +147,14 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.21.11-R0.1-SNAPSHOT</version>
+			<version>26.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.papermc.paper</groupId>
 			<artifactId>paper-api</artifactId>
-			<version>1.21.11-R0.1-SNAPSHOT</version>
+			<version>26.2.build.121-stable</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -234,7 +234,7 @@
 		<dependency>
   		  	<groupId>com.github.NEZNAMY</groupId>
   			<artifactId>TAB-API</artifactId>
-  		  	<version>6.0.0</version>
+  		  	<version>6.1.2</version>
    		 	<scope>provided</scope>
 		</dependency>
 
@@ -280,7 +280,7 @@
 		<dependency>
 			<groupId>com.github.cryptomorin</groupId>
 			<artifactId>kingdoms</artifactId>
-			<version>1.16.8.1.1</version>
+			<version>1.16.20.5</version>
 			<scope>provided</scope>
 		</dependency>
 
