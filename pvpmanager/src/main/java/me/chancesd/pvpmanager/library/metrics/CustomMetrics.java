@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.integration.type.Dependency;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.metrics.Metrics;
 
 public class CustomMetrics {
@@ -86,7 +87,7 @@ public class CustomMetrics {
 			return valueMap;
 		}));
 
-		metrics.addCustomChart(new Metrics.SimplePie("locale", Conf.LOCALE::asString));
+		metrics.addCustomChart(new Metrics.SimplePie("locale", Lang.getLocale()::name));
 
 		metrics.addCustomChart(
 				new Metrics.SingleLineChart("players_in_combat", () -> PvPManager.getInstance().getPlayerManager().getPlayersInCombat().size()));
@@ -118,11 +119,11 @@ public class CustomMetrics {
 	}
 
 	private Map<String, Integer> getMapEntryFeature(final boolean value) {
-		return value ? getMapEntry("Enabled") : getMapEntry("Disabled");
+		return getMapEntry(value ? "Enabled" : "Disabled");
 	}
 
 	private Map<String, Integer> getMapEntry(final boolean value) {
-		return value ? getMapEntry("True") : getMapEntry("False");
+		return getMapEntry(value ? "True" : "False");
 	}
 
 	private Map<String, Integer> getMapEntry(final String key) {

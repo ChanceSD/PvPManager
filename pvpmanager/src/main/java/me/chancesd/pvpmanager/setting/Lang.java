@@ -120,6 +120,8 @@ public enum Lang implements TimeLangProvider {
 	ITEM_COOLDOWN("Item_Cooldown", Replacement.TIME);
 
 	private static final String LOCALE_FOLDER = "locale/";
+	private static final String ACTIONBAR_PREFIX = "!actionbar ";
+	private static final String CHAT_PREFIX = "!chat ";
 	private static PvPManager plugin;
 	private static final Properties LANG_PROPERTIES = new Properties();
 	private static final Queue<String> messageQueue = new LinkedList<>();
@@ -284,13 +286,13 @@ public enum Lang implements TimeLangProvider {
 		String message = getString(key);
 		DisplayMode mode = DisplayMode.CHAT;
 
-		if (message.toLowerCase().startsWith("!actionbar ")) {
+		if (message.toLowerCase().startsWith(ACTIONBAR_PREFIX)) {
 			if (MCVersion.isAtLeast(MCVersion.V1_10)) {
 				mode = DisplayMode.ACTION_BAR;
 			}
-			message = message.substring(11); // Remove "!actionbar "
-		} else if (message.toLowerCase().startsWith("!chat ")) {
-			message = message.substring(6); // Remove "!chat "
+			message = message.substring(ACTIONBAR_PREFIX.length()); // Remove "!actionbar "
+		} else if (message.toLowerCase().startsWith(CHAT_PREFIX)) {
+			message = message.substring(CHAT_PREFIX.length()); // Remove "!chat "
 		}
 
 		return new String[] { message, mode.name() };
@@ -430,8 +432,8 @@ public enum Lang implements TimeLangProvider {
 		boolean modified = false;
 		for (final String key : protectionKeys) {
 			final String value = LANG_PROPERTIES.getProperty(key);
-			if (value != null && !value.toLowerCase().startsWith("!actionbar ") && !value.toLowerCase().startsWith("!chat ")) {
-				LANG_PROPERTIES.setProperty(key, "!actionbar " + value);
+			if (value != null && !value.toLowerCase().startsWith(ACTIONBAR_PREFIX) && !value.toLowerCase().startsWith(CHAT_PREFIX)) {
+				LANG_PROPERTIES.setProperty(key, ACTIONBAR_PREFIX + value);
 				modified = true;
 			}
 		}

@@ -48,7 +48,8 @@ public class PluginSetup {
 		final File pluginDirectory = new File(decoded);
 		pluginDirectory.mkdirs();
 		server = mock(Server.class, Mockito.RETURNS_MOCKS);
-		when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
+		final PluginManager pluginManager = mock(PluginManager.class);
+		when(server.getPluginManager()).thenReturn(pluginManager);
 		when(server.getUpdateFolderFile()).thenReturn(new File(filePath + "TestServer/plugins/update"));
 		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [%4$-7s] %5$s %n");
 		when(server.getLogger()).thenReturn(Logger.getLogger("Minecraft"));
@@ -60,7 +61,9 @@ public class PluginSetup {
 		this.scoreboard = mock(Scoreboard.class, Mockito.RETURNS_MOCKS);
 		when(server.getScoreboardManager()).thenReturn(scoreboardManager);
 		when(scoreboardManager.getMainScoreboard()).thenReturn(this.scoreboard);
-		when(server.createBossBar(ArgumentMatchers.anyString(), ArgumentMatchers.any(org.bukkit.boss.BarColor.class), ArgumentMatchers.any(org.bukkit.boss.BarStyle.class))).thenReturn(mock(BossBar.class));
+		final BossBar bossBar = mock(BossBar.class);
+		when(server.createBossBar(ArgumentMatchers.anyString(), ArgumentMatchers.any(org.bukkit.boss.BarColor.class),
+				ArgumentMatchers.any(org.bukkit.boss.BarStyle.class))).thenReturn(bossBar);
 		Bukkit.setServer(server);
 
 		plugin = mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
@@ -104,7 +107,8 @@ public class PluginSetup {
 		when(player.getInventory()).thenReturn(inventory);
 		final Player.Spigot spigot = mock(Player.Spigot.class);
 		when(player.spigot()).thenReturn(spigot);
-		when(player.getItemInHand()).thenReturn(mock(ItemStack.class, Mockito.RETURNS_MOCKS));
+		final ItemStack itemInHand = mock(ItemStack.class, Mockito.RETURNS_MOCKS);
+		when(player.getItemInHand()).thenReturn(itemInHand);
 		when(player.canSee(ArgumentMatchers.any(Player.class))).thenReturn(true);
 		return player;
 	}

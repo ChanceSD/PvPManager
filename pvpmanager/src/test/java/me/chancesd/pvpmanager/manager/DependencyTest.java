@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalMatchers;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
-
 import me.chancesd.pvpmanager.InstanceCreator;
 import me.chancesd.pvpmanager.PluginSetup;
 import me.chancesd.sdutils.utils.Utils;
@@ -29,12 +27,13 @@ class DependencyTest {
 	static void setupClass() {
 		final PluginSetup pt = InstanceCreator.getPt();
 		server = pt.getServer();
-		when(server.getServicesManager()).thenReturn(mock(ServicesManager.class));
+		final ServicesManager servicesManager = mock(ServicesManager.class);
+		when(server.getServicesManager()).thenReturn(servicesManager);
 	}
 
 	@Test
 	void allEnabled() {
-		final JavaPlugin plugin = Mockito.mock(JavaPlugin.class);
+		final JavaPlugin plugin = mock(JavaPlugin.class);
 		when(plugin.getDescription()).thenReturn(new PluginDescriptionFile("Plugin", "1.0", "plugin"));
 		when(server.getPluginManager().getPlugin(AdditionalMatchers.not(ArgumentMatchers.eq("Towny")))).thenReturn(plugin);
 		assertEquals(server.getPluginManager().getPlugin("PvPManager"), plugin);

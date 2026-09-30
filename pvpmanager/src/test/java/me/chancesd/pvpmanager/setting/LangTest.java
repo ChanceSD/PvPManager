@@ -41,7 +41,7 @@ class LangTest {
 				final String messageKey = lang.getMessageKey();
 				final String rawMessage = properties.getProperty(messageKey);
 				if (rawMessage == null) {
-					// fail("Missing message key '" + messageKey + "' in locale " + locale);
+					System.out.printf("::notice file=%s::Missing message key '%s' in locale %s%n", locale.fileName(), messageKey, locale);
 					continue;
 				}
 				final String message = new String(rawMessage.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
