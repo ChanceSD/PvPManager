@@ -126,6 +126,10 @@ public class Newbie extends BaseCommand {
 		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 			final Player targetPlayer = getArgument(args, ARG_PLAYER).getAsPlayer();
 			final CombatPlayer target = ph.get(targetPlayer);
+			if (target.isNewbie()) {
+				sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " &#FFFF55" + target.getName() + " &#FFAAAAalready has newbie protection"));
+				return;
+			}
 			target.setNewbie(true);
 			sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " Added newbie protection to &#FFFF55" + target.getName()));
 		}
@@ -147,6 +151,10 @@ public class Newbie extends BaseCommand {
 		public void execute(final CommandSender sender, final String label, final List<CommandArgument> args) {
 			final Player targetPlayer = getArgument(args, ARG_PLAYER).getAsPlayer();
 			final CombatPlayer target = ph.get(targetPlayer);
+			if (!target.isNewbie()) {
+				sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " &#FFFF55" + target.getName() + " &#FFAAAAdoesn't have newbie protection"));
+				return;
+			}
 			target.setNewbie(false);
 			sender.sendMessage(ChatUtils.colorize(Lang.PREFIX + " Removed newbie protection from &#FFFF55" + target.getName()));
 		}

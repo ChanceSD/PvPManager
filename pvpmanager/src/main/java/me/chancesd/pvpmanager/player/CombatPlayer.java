@@ -99,7 +99,7 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public void addEnemy(final CombatPlayer enemyPlayer) {
-		if (enemyPlayer == this)
+		if (enemyPlayer == null || enemyPlayer == this)
 			return;
 		this.enemy = enemyPlayer;
 		this.lastHitters.add(enemyPlayer);
@@ -129,11 +129,12 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public final void setNewbie(final boolean newbie, final long time) {
-		if (newbie) {
-			this.newbieTask = new NewbieTask(this, time);
-		} else if (this.newbie && newbieTask != null) {
+		if (newbieTask != null) {
 			newbieTask.cancel();
 			this.newbieTask = null;
+		}
+		if (newbie) {
+			this.newbieTask = new NewbieTask(this, time);
 		}
 
 		// Fire event if the newbie state actually changed
@@ -428,12 +429,11 @@ public class CombatPlayer extends EcoPlayer {
 			Conf.TOGGLE_NAMETAG_ENABLED.disable();
 			this.nametag = null;
 			Log.warning("Colored nametags disabled. You need to update your Spigot version.");
-		} catch (final UnsupportedOperationException e) {
+		} catch (final UnsupportedOperationException | IllegalStateException e) { // IllegalStateException for Canvas
 			Conf.NAMETAG_COMBAT_ENABLED.disable();
 			Conf.TOGGLE_NAMETAG_ENABLED.disable();
 			this.nametag = null;
-			Log.infoColor(ChatColor.RED
-					+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
+			Log.infoColor(ChatColor.RED + "Nametag support disabled until Folia supports the scoreboard API, or use the TAB plugin");
 		}
 	}
 

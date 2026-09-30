@@ -2,6 +2,7 @@ package me.chancesd.pvpmanager;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -47,22 +48,22 @@ public class PluginSetup {
 		final File pluginDirectory = new File(decoded);
 		pluginDirectory.mkdirs();
 		server = mock(Server.class, Mockito.RETURNS_MOCKS);
-		Mockito.when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
-		Mockito.when(server.getUpdateFolderFile()).thenReturn(new File(filePath + "TestServer/plugins/update"));
+		when(server.getPluginManager()).thenReturn(mock(PluginManager.class));
+		when(server.getUpdateFolderFile()).thenReturn(new File(filePath + "TestServer/plugins/update"));
 		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [%4$-7s] %5$s %n");
-		Mockito.when(server.getLogger()).thenReturn(Logger.getLogger("Minecraft"));
-		Mockito.when(server.getBukkitVersion()).thenReturn("1.20.4-R0.1-SNAPSHOT");
+		when(server.getLogger()).thenReturn(Logger.getLogger("Minecraft"));
+		when(server.getBukkitVersion()).thenReturn("1.20.4-R0.1-SNAPSHOT");
 		this.world = mock(World.class);
-		Mockito.when(this.world.getName()).thenReturn("");
-		Mockito.when(server.getWorlds()).thenReturn(Arrays.asList(this.world));
+		when(this.world.getName()).thenReturn("");
+		when(server.getWorlds()).thenReturn(Arrays.asList(this.world));
 		final ScoreboardManager scoreboardManager = mock(ScoreboardManager.class);
 		this.scoreboard = mock(Scoreboard.class, Mockito.RETURNS_MOCKS);
-		Mockito.when(server.getScoreboardManager()).thenReturn(scoreboardManager);
-		Mockito.when(scoreboardManager.getMainScoreboard()).thenReturn(this.scoreboard);
-		Mockito.when(server.createBossBar(ArgumentMatchers.anyString(), ArgumentMatchers.any(org.bukkit.boss.BarColor.class), ArgumentMatchers.any(org.bukkit.boss.BarStyle.class))).thenReturn(mock(BossBar.class));
+		when(server.getScoreboardManager()).thenReturn(scoreboardManager);
+		when(scoreboardManager.getMainScoreboard()).thenReturn(this.scoreboard);
+		when(server.createBossBar(ArgumentMatchers.anyString(), ArgumentMatchers.any(org.bukkit.boss.BarColor.class), ArgumentMatchers.any(org.bukkit.boss.BarStyle.class))).thenReturn(mock(BossBar.class));
 		Bukkit.setServer(server);
 
-		plugin = Mockito.mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
+		plugin = mock(PvPManager.class, Mockito.CALLS_REAL_METHODS);
 		// Initialize registeredCommands field that doesn't get initialized in mocks
 		final Field registeredCommandsField = plugin.getClass().getSuperclass().getDeclaredField("registeredCommands");
 		registeredCommandsField.setAccessible(true);
@@ -73,7 +74,7 @@ public class PluginSetup {
 		        ClassLoader.class);
 		method.setAccessible(true);
 		method.invoke(plugin, (Object) null, server, pdf, pluginDirectory, new File(filePath), PluginSetup.class.getClassLoader());
-		Mockito.doReturn(mock(PluginCommand.class)).when(plugin).getCommand(ArgumentMatchers.anyString());
+		doReturn(mock(PluginCommand.class)).when(plugin).getCommand(ArgumentMatchers.anyString());
 
 		plugin.onPluginLoad();
 		plugin.onEnable();
@@ -83,27 +84,28 @@ public class PluginSetup {
 	public final void setupPlayers() {
 		attacker = createPlayer("Attacker");
 		defender = createPlayer("Defender");
-		Mockito.when(defender.getKiller()).thenReturn(attacker);
+		when(defender.getKiller()).thenReturn(attacker);
 	}
 
 	@SuppressWarnings("deprecation")
 	@NotNull
 	public final Player createPlayer(final String name) {
 		final Player player = mock(Player.class);
-		Mockito.when(player.hasPlayedBefore()).thenReturn(true);
+		when(player.hasPlayedBefore()).thenReturn(true);
 		doReturn(name).when(player).getName();
-		Mockito.when(player.getDisplayName()).thenReturn(name);
-		Mockito.when(player.getUniqueId()).thenReturn(UUID.randomUUID());
-		Mockito.when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);
-		Mockito.when(player.getWorld()).thenReturn(world);
-		Mockito.when(player.getServer()).thenReturn(this.server);
-		Mockito.when(player.getScoreboard()).thenReturn(this.scoreboard);
-		Mockito.when(player.isOnline()).thenReturn(true);
+		when(player.getDisplayName()).thenReturn(name);
+		when(player.getUniqueId()).thenReturn(UUID.randomUUID());
+		when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);
+		when(player.getWorld()).thenReturn(world);
+		when(player.getServer()).thenReturn(this.server);
+		when(player.getScoreboard()).thenReturn(this.scoreboard);
+		when(player.isOnline()).thenReturn(true);
 		final PlayerInventory inventory = mock(PlayerInventory.class, Mockito.RETURNS_MOCKS);
-		Mockito.when(player.getInventory()).thenReturn(inventory);
+		when(player.getInventory()).thenReturn(inventory);
 		final Player.Spigot spigot = mock(Player.Spigot.class);
-		Mockito.when(player.spigot()).thenReturn(spigot);
-		Mockito.when(player.getItemInHand()).thenReturn(mock(ItemStack.class, Mockito.RETURNS_MOCKS));
+		when(player.spigot()).thenReturn(spigot);
+		when(player.getItemInHand()).thenReturn(mock(ItemStack.class, Mockito.RETURNS_MOCKS));
+		when(player.canSee(ArgumentMatchers.any(Player.class))).thenReturn(true);
 		return player;
 	}
 

@@ -172,6 +172,18 @@ class EntityListenerTest {
 	}
 
 	@Test
+	final void testVanishTag() {
+		assertFalse(combatAttacker.isInCombat());
+		assertFalse(combatDefender.isInCombat());
+
+		when(defender.canSee(attacker)).thenReturn(false);
+		createAttack(false);
+
+		assertFalse(combatAttacker.isInCombat());
+		assertFalse(combatDefender.isInCombat());
+	}
+
+	@Test
 	final void testNoDamageHits() {
 		final Projectile proj = mock(Projectile.class);
 		when(proj.getShooter()).thenReturn(attacker);

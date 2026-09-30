@@ -146,6 +146,9 @@ public class EntityListener implements Listener {
 
 		disableActions(attacker, defender, pvpAttacker, pvpDefender);
 		if (Conf.COMBAT_TAG_ENABLED.asBool()) {
+			if (!defender.canSee(attacker)) {
+				return;
+			}
 			if (Conf.VULNERABLE_ENABLED.asBool() && wg != null && !Conf.VULNERABLE_RENEW_TAG.asBool() && wg.hasDenyPvPFlag(attacker)
 					&& wg.hasDenyPvPFlag(defender)) {
 				return;

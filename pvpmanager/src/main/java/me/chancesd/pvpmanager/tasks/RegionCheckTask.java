@@ -1,7 +1,8 @@
 package me.chancesd.pvpmanager.tasks;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +22,7 @@ import me.chancesd.sdutils.utils.Log;
 public class RegionCheckTask extends BukkitRunnable implements Listener {
 
 	private final PlayerManager playerHandler;
-	private final Map<CombatPlayer, Location> lastLocations = new HashMap<>();
+	private final Map<CombatPlayer, Location> lastLocations = new ConcurrentHashMap<>();
 	private final DependencyManager dependencyManager;
 
 	public RegionCheckTask(final PlayerManager playerHandler, final DependencyManager dependencyManager) {
@@ -54,7 +55,10 @@ public class RegionCheckTask extends BukkitRunnable implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerTag(final PlayerTagEvent event) {
-		lastLocations.put(event.getCombatPlayer(), event.getPlayer().getLocation());
+		final Location location = event.getPlayer().getLocation();
+		if (dependencyManager.canAttackAt(event.getPlayer(), location)) {
+			lastLocations.put(event.getCombatPlayer(), location);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

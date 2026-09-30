@@ -16,7 +16,7 @@
 	<url>https://github.com/ChanceSD/PvPManager</url>
 
 	<properties>
-		<config.version>206</config.version>
+		<config.version>207</config.version>
 		<database.version>1</database.version>
 		<argLine/>
 	</properties>
@@ -101,7 +101,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.5</version>
+				<version>3.5.6</version>
 				<configuration>
 					<includes>
 						<include>**/*InstanceCreator.java</include>
@@ -147,14 +147,14 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.21.11-R0.1-SNAPSHOT</version>
+			<version>26.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>io.papermc.paper</groupId>
 			<artifactId>paper-api</artifactId>
-			<version>1.21.11-R0.1-SNAPSHOT</version>
+			<version>26.2.build.121-stable</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -207,7 +207,7 @@
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard-bukkit</artifactId>
-			<version>7.0.16-SNAPSHOT</version>
+			<version>7.0.19</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 			<exclusions>
@@ -234,7 +234,7 @@
 		<dependency>
   		  	<groupId>com.github.NEZNAMY</groupId>
   			<artifactId>TAB-API</artifactId>
-  		  	<version>5.5.0</version>
+  		  	<version>6.1.2</version>
    		 	<scope>provided</scope>
 		</dependency>
 
@@ -242,7 +242,7 @@
 		<dependency>
 			<groupId>com.palmergames.bukkit.towny</groupId>
 			<artifactId>towny</artifactId>
-			<version>0.102.0.7</version>
+			<version>0.103.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -297,13 +297,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>6.0.3</version>
+			<version>6.1.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite</artifactId>
-			<version>6.0.3</version>
+			<version>6.1.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -321,13 +321,13 @@
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
-			<version>3.51.3.0</version>
+			<version>3.53.1.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.25.3</version>
+			<version>2.26.0</version>
 			<scope>test</scope>
 		</dependency>
 
