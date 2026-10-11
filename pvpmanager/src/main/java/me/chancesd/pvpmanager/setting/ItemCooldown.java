@@ -10,6 +10,14 @@ public class ItemCooldown {
 		this.globalCooldown = globalCooldown;
 	}
 
+	public int getCooldown(final boolean inCombat) {
+		return inCombat ? combatCooldown : globalCooldown;
+	}
+
+	public boolean isEnabled(final boolean inCombat) {
+		return getCooldown(inCombat) >= 0;
+	}
+
 	public int getCombatCooldown() {
 		return combatCooldown;
 	}

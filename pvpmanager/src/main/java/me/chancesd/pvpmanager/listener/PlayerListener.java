@@ -9,12 +9,15 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -43,6 +46,7 @@ import me.chancesd.pvpmanager.setting.ItemCooldown;
 import me.chancesd.pvpmanager.utils.CombatUtils;
 import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.TimeUtil;
+import me.chancesd.sdutils.utils.MCVersion;
 
 public class PlayerListener implements Listener {
 
@@ -142,11 +146,39 @@ public class PlayerListener implements Listener {
 						msgCooldown.put(player.getUniqueId(), msg);
 					}
 					e.setCancelled(true);
-				} else if (!type.isEdible()) {
+				} else if (!type.isEdible() && !isCooldownEventDriven(type) && cooldown.isEnabled(combatPlayer.isInCombat())) {
 					ScheduleUtils.runPlatformTask(() -> combatPlayer.setItemCooldown(key, cooldown));
 				}
 			}
 		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public final void onProjectileLaunchEvent(final ProjectileLaunchEvent event) {
+		final Projectile projectile = event.getEntity();
+		EntityType type = projectile.getType();
+
+		final ItemKey key;
+		if (type == EntityType.ENDER_PEARL) {
+			key = ItemKey.wildcard(Material.ENDER_PEARL);
+		} else if (MCVersion.isAtLeast(MCVersion.V1_13) && type == EntityType.TRIDENT) {
+			key = ItemKey.wildcard(Material.TRIDENT);
+		} else if (MCVersion.isAtLeast(MCVersion.V1_21) && type == EntityType.WIND_CHARGE) {
+			key = ItemKey.wildcard(Material.WIND_CHARGE);
+		} else {
+			return;
+		}
+
+		final ItemCooldown cooldown = Conf.getItemCooldown(key);
+		if (cooldown == null || !(projectile.getShooter() instanceof final Player player))
+			return;
+
+		final CombatPlayer combatPlayer = playerManager.getUnchecked(player);
+		if (combatPlayer == null || !cooldown.isEnabled(combatPlayer.isInCombat()))
+			return;
+
+		// Run in next tick otherwise doesn't work
+		ScheduleUtils.runPlatformTask(() -> combatPlayer.setItemCooldown(key, cooldown), player);
 	}
 
 	@SuppressWarnings("null") // p.getLocation() is not null
@@ -277,6 +309,12 @@ public class PlayerListener implements Listener {
 			combatPlayer.setPvP(true);
 			combatPlayer.message(Lang.ERROR_PVP_TOGGLE_FORCE_PVP);
 		}
+	}
+
+	private boolean isCooldownEventDriven(final Material type) {
+		return type == Material.ENDER_PEARL
+				|| MCVersion.isAtLeast(MCVersion.V1_13) && type == Material.TRIDENT
+				|| MCVersion.isAtLeast(MCVersion.V1_21) && type == Material.WIND_CHARGE;
 	}
 
 }

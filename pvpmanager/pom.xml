@@ -16,7 +16,7 @@
 	<url>https://github.com/ChanceSD/PvPManager</url>
 
 	<properties>
-		<config.version>207</config.version>
+		<config.version>209</config.version>
 		<database.version>1</database.version>
 		<argLine/>
 	</properties>
@@ -79,7 +79,6 @@
 	</repositories>
 
 	<build>
-		<finalName>${project.name}</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>

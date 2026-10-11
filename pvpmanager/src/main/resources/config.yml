@@ -32,6 +32,8 @@ Combat Tag:
   EnderPearl Renews Tag: true
   # If enabled, will retag the player when they use a wind charge
   WindCharge Renews Tag: true
+  # If enabled, will renew the tag when an already-tagged player activates Riptide or their trident hits something
+  Trident Renews Tag: true
   # Automatically close the player inventory and chat when they get tagged
   Close Inventory On Tag: true
 
@@ -75,6 +77,8 @@ Combat Tag:
     Place Blocks: false
     Break Blocks: false
     Open Inventory: false
+    # Cooldown in seconds between spear Lunge uses while in combat (-1 = disabled)
+    Lunge Cooldown: 3
     Elytra:
       # Prevents players from gliding with elytra while in combat, will unequip elytra if players spam glide
       Block Gliding: false
@@ -210,20 +214,22 @@ Newbie Protection:
 #####################
 ####  Cooldowns  ####
 #####################
-# Here you can set a cooldown, in seconds, to ANY item, such as golden apples and enchanted golden apples
+# Here you can set a cooldown, in seconds, to ANY item, such as golden apples, ender pearls, and tridents
 # You can add other material types from here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
-# If the item is not edible the cooldown will only be activated for right clicks
 # Combat section sets cooldowns only while in combat, global means cooldowns will always apply
-# You can disable the Minecraft builtin cooldown for an item by setting it to 0, like for enderpearls, or -1 for default cooldown
+# For most non-edible items, the cooldown starts on right-click. Ender pearls and tridents start on successful launch/use instead.
 # You can also specify an item data value using `NAME-DATA`, e.g. `WOOL-14` for red wool or `POTION-16421` for a legacy potion.
 # On older server versions `ENCHANTED_GOLDEN_APPLE` will be automatically mapped to `GOLDEN_APPLE-1`.
+# Disable the Minecraft builtin cooldown for an item by setting it to 0, which means they can be spammed, or -1 for default cooldown
 Item Cooldowns:
   Combat:
-    ENDER_PEARL: 5
+    ENDER_PEARL: 3
     WIND_CHARGE: 1
+    TRIDENT: 5
     GOLDEN_APPLE: 30
     ENCHANTED_GOLDEN_APPLE: 60
   Global:
+    TRIDENT: 2
     GOLDEN_APPLE: 30
     ENCHANTED_GOLDEN_APPLE: 60
 

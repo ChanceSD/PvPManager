@@ -39,6 +39,7 @@ public enum Conf {
 	SELF_TAG(ConfSection.COMBAT_TAG, "Self Tag", false, Boolean.class),
 	PEARL_RENEW_TAG(ConfSection.COMBAT_TAG, "EnderPearl Renews Tag", true, Boolean.class),
 	WIND_CHARGE_RENEW_TAG(ConfSection.COMBAT_TAG, "WindCharge Renews Tag", bool -> MCVersion.isAtLeast(MCVersion.V1_21) && bool, Boolean.class, Boolean.class),
+	TRIDENT_RENEW_TAG(ConfSection.COMBAT_TAG, "Trident Renews Tag", bool -> MCVersion.isAtLeast(MCVersion.V1_13) && bool, Boolean.class, Boolean.class),
 	CLOSE_INVENTORY_ON_TAG(ConfSection.COMBAT_TAG, "Close Inventory On Tag", true, Boolean.class),
 
 	DUEL_MODE_ENABLED(ConfSection.COMBAT_TAG, "Duel Mode", false, Boolean.class),
@@ -71,6 +72,7 @@ public enum Conf {
 	BLOCK_FIREWORKS_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Elytra.Block Fireworks", false, Boolean.class),
 	FIREWORK_POWER_LIMIT(ConfSection.ACTIONS_BLOCKED, "Elytra.Firework Power Limit", -1, Integer.class),
 	FIREWORK_ELYTRA_COOLDOWN(ConfSection.ACTIONS_BLOCKED, "Elytra.Firework Cooldown", 2, Integer.class),
+	LUNGE_COOLDOWN(ConfSection.ACTIONS_BLOCKED, "Lunge Cooldown", 3, Integer.class),
 	BLOCK_INTERACT_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Interact.Enabled", false, Boolean.class),
 	BLOCK_INTERACT_ITEM_LIST(ConfSection.ACTIONS_BLOCKED, "Interact.List", new ArrayList<>(), List.class),
 	BLOCK_COMMANDS(ConfSection.ACTIONS_BLOCKED, "Commands.Enabled", true, Boolean.class),

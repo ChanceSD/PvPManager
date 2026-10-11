@@ -10,7 +10,7 @@ version = '4.0.3'
 description = 'A powerful plugin to manage various PvP combat features'
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.2.build.121-stable'
     compileOnly 'net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.19.2'
     compileOnly('com.github.EssentialsX.Essentials:EssentialsX:2.20.0') {
         exclude group: '*', module: '*'

@@ -17,14 +17,17 @@ import me.chancesd.pvpmanager.listener.BlockedActionsListener;
 import me.chancesd.pvpmanager.listener.EntityListener;
 import me.chancesd.pvpmanager.listener.EntityListener1_20_4;
 import me.chancesd.pvpmanager.listener.EntityListener1_9;
+import me.chancesd.pvpmanager.listener.LungeListener;
 import me.chancesd.pvpmanager.listener.PlayerListener;
 import me.chancesd.pvpmanager.listener.PlayerListener1_11;
+import me.chancesd.pvpmanager.listener.TridentListener;
 import me.chancesd.pvpmanager.manager.ConfigManager;
 import me.chancesd.pvpmanager.manager.DependencyManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.manager.StorageManager;
 import me.chancesd.pvpmanager.manager.UpdateManager;
 import me.chancesd.pvpmanager.manager.WorldManager;
+import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.command.BaseCommand;
 import me.chancesd.sdutils.plugin.SDPlugin;
@@ -88,6 +91,16 @@ public class PvPManager extends SDPlugin {
 		registerListener(entityListener);
 		if (MCVersion.isAtLeast(MCVersion.V1_11_2)) {
 			registerListener(new PlayerListener1_11(playerManager));
+		}
+		if (MCVersion.isAtLeast(MCVersion.V1_13)) {
+			registerListener(new TridentListener(playerManager));
+		}
+		try {
+			Class.forName("io.papermc.paper.event.entity.EntityLungeEvent", false, getClass().getClassLoader());
+			registerListener(new LungeListener(playerManager));
+		} catch (final ClassNotFoundException e) {
+			if (MCVersion.isAtLeast(MCVersion.V26_1) && Conf.LUNGE_COOLDOWN.asInt() >= 0)
+				Log.warning("Lunge cooldown is unavailable because this server does not provide the EntityLungeEvent.");
 		}
 		registerListener(new PlayerListener(playerManager));
 		registerListener(new BlockedActionsListener(playerManager));

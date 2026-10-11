@@ -47,6 +47,7 @@ public class CombatPlayer extends EcoPlayer {
 	private long respawnTime;
 	private volatile long taggedTime;
 	private volatile long totalTagTime;
+	private volatile long lungeCooldownEnd;
 	private long lastKillCommandTime;
 	private NewbieTask newbieTask;
 	private SDTask pendingUntagTask;
@@ -317,7 +318,7 @@ public class CombatPlayer extends EcoPlayer {
 	}
 
 	public final void setItemCooldown(@NotNull final ItemKey key, final ItemCooldown cooldown) {
-		final int time = isInCombat() ? cooldown.getCombatCooldown() : cooldown.getGlobalCooldown();
+		final int time = cooldown.getCooldown(isInCombat());
 		if (time < 0)
 			return;
 		itemCooldown.put(key, System.currentTimeMillis() + time * 1000);
@@ -328,6 +329,19 @@ public class CombatPlayer extends EcoPlayer {
 
 	public final void resetItemCooldowns() {
 		itemCooldown.clear();
+		lungeCooldownEnd = 0;
+	}
+
+	public final boolean hasLungeCooldown() {
+		return System.currentTimeMillis() < lungeCooldownEnd;
+	}
+
+	public final long getLungeCooldownEnd() {
+		return lungeCooldownEnd;
+	}
+
+	public final void setLungeCooldown(final int seconds) {
+		lungeCooldownEnd = System.currentTimeMillis() + seconds * 1000L;
 	}
 
 	/**

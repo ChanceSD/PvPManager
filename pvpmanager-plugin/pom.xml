@@ -10,10 +10,8 @@
 
 	<artifactId>pvpmanager-plugin</artifactId>
 	<packaging>jar</packaging>
-	<name>PvPManager</name>
 
 	<build>
-		<finalName>${project.name}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -21,6 +19,7 @@
 				<version>3.6.2</version>
 				<configuration>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<outputFile>${project.build.directory}/PvPManager.jar</outputFile>
 					<transformers>
 						<!-- Exclude MANIFEST.MF to avoid overlapping files warning -->
 						<transformer

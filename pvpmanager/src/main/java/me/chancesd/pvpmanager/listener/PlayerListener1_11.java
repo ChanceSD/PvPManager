@@ -1,22 +1,15 @@
 package me.chancesd.pvpmanager.listener;
 
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityResurrectEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.projectiles.ProjectileSource;
 
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
-import me.chancesd.pvpmanager.setting.ItemCooldown;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.pvpmanager.setting.Conf;
-import me.chancesd.pvpmanager.setting.ItemKey;
-import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class PlayerListener1_11 implements Listener {
 
@@ -24,24 +17,6 @@ public class PlayerListener1_11 implements Listener {
 
 	public PlayerListener1_11(final PlayerManager ph) {
 		this.playerManager = ph;
-	}
-
-	@EventHandler
-	public void onProjectileLaunchEvent(final ProjectileLaunchEvent event) {
-		final Projectile entity = event.getEntity();
-		final ProjectileSource shooter = entity.getShooter();
-		final ItemKey key = ItemKey.wildcard(Material.ENDER_PEARL);
-		final ItemCooldown itemCooldown = Conf.getItemCooldown(key);
-		if (itemCooldown == null || entity.getType() != EntityType.ENDER_PEARL || !(shooter instanceof Player))
-			return;
-
-		final Player player = (Player) shooter;
-		final CombatPlayer combatPlayer = playerManager.getUnchecked(player);
-		if (combatPlayer == null)
-			return;
-
-		// Run in next tick otherwise doesn't work
-		ScheduleUtils.runPlatformTask(() -> combatPlayer.setItemCooldown(key, itemCooldown), player);
 	}
 
 	@EventHandler
