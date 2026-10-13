@@ -20,6 +20,11 @@ public abstract class NameTag {
 		this.pvpOffPrefix = ChatUtils.colorize(Conf.TOGGLE_PREFIX_OFF.asString());
 	}
 
+	/**
+	 * Schedules a nametag operation on the thread required by this implementation.
+	 */
+	public abstract void schedule(Runnable task);
+
 	public abstract void setInCombat();
 
 	public abstract void restoreNametag();

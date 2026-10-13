@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'java'
-    id 'com.gradleup.shadow' version '8.3.6'
+    id 'com.gradleup.shadow' version '9.6.1'
 }
 
 group = 'me.chancesd.pvpmanager'
@@ -38,7 +38,7 @@ dependencies {
     compileOnly 'com.zaxxer:HikariCP:4.0.3'
     compileOnly 'org.apache.logging.log4j:log4j-core:2.25.4'
 
-    implementation 'me.chancesd.sdutils:sdutils:1.4-SNAPSHOT'
+    implementation 'me.chancesd.sdutils:sdutils:1.5-SNAPSHOT'
 
     testImplementation 'org.xerial:sqlite-jdbc:3.46.0.0'
     testImplementation 'com.zaxxer:HikariCP:4.0.3'

@@ -1,10 +1,14 @@
 package me.chancesd.pvpmanager.player.nametag;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 import org.jetbrains.annotations.Nullable;
 
 import me.chancesd.pvpmanager.integration.hook.TABHook;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.nametag.NameTagManager;
@@ -14,10 +18,42 @@ public class TABNameTag extends NameTag {
 
 	private boolean needsRestore;
 	private final TABHook tab;
+	private final Queue<Runnable> scheduledTasks = new ArrayDeque<>();
+	private boolean taskRunning;
 
 	public TABNameTag(final TABHook hook, final CombatPlayer p) {
 		super(p);
 		this.tab = hook;
+	}
+
+	@Override
+	public final void schedule(final Runnable task) {
+		synchronized (scheduledTasks) {
+			scheduledTasks.add(task);
+			if (taskRunning)
+				return;
+			taskRunning = true;
+		}
+		runNextTask();
+	}
+
+	private void runNextTask() {
+		final Runnable task;
+		synchronized (scheduledTasks) {
+			task = scheduledTasks.poll();
+			if (task == null) {
+				taskRunning = false;
+				return;
+			}
+		}
+
+		ScheduleUtils.runAsync(() -> {
+			try {
+				task.run();
+			} finally {
+				runNextTask();
+			}
+		});
 	}
 
 	private boolean changeTABPrefix(final String tabPrefix, final String tabSuffix) {

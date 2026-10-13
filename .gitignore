@@ -9,6 +9,7 @@ NCUtils
 .project
 .classpath
 .flattened-pom.xml
+.github/copilot-instructions.md
 *.jar
 *.iml
 *.bat

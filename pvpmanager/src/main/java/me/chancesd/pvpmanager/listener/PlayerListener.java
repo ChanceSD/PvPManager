@@ -140,9 +140,11 @@ public class PlayerListener implements Listener {
 			if (cooldown != null) {
 				final CombatPlayer combatPlayer = playerManager.get(player);
 				if (combatPlayer.hasItemCooldown(key)) {
-					final String msg = Lang.ITEM_COOLDOWN.msgTimeUntil(combatPlayer.getItemCooldown(key));
+					final long cooldownEnd = combatPlayer.getItemCooldown(key);
+					final String formattedTime = TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, cooldownEnd);
+					final String msg = Lang.ITEM_COOLDOWN.msg(formattedTime);
 					if (!msg.equals(msgCooldown.getIfPresent(player.getUniqueId()))) {
-						combatPlayer.message(Lang.ITEM_COOLDOWN, TimeUtil.getDiffUntil(Lang.ITEM_COOLDOWN, combatPlayer.getItemCooldown(key)));
+						combatPlayer.message(Lang.ITEM_COOLDOWN, formattedTime);
 						msgCooldown.put(player.getUniqueId(), msg);
 					}
 					e.setCancelled(true);

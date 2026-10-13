@@ -25,7 +25,7 @@ public class NewbieTask extends PausableTask {
 		super(time == 0 ? Conf.NEWBIE_TIME.asInt() * 1000L : time);
 		this.player = player;
 		if (time == 0) {
-			player.message(Lang.NEWBIE_PROTECTION.msgTimeUntil(getFinishTime()));
+			player.message(Lang.NEWBIE_PROTECTION.msgTime(getDuration()));
 		} else {
 			player.message(Lang.NEWBIE_TIME_CHECK.msgTime(time));
 		}

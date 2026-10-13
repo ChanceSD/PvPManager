@@ -48,7 +48,7 @@ public class TABHook extends BaseDependency {
 				ScheduleUtils.runAsyncLater(() -> {
 					final NameTag nameTag = combatPlayer.getNameTag();
 					if (nameTag != null)
-						nameTag.setPvP(combatPlayer.hasPvPEnabled());
+						nameTag.schedule(() -> nameTag.setPvP(combatPlayer.hasPvPEnabled()));
 				}, 1, TimeUnit.SECONDS);
 			}
 		});

@@ -1,6 +1,7 @@
 package me.chancesd.pvpmanager.player.nametag;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Criteria;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 import me.chancesd.sdutils.utils.Log;
 import me.chancesd.sdutils.utils.MCVersion;
 
@@ -25,21 +27,38 @@ public class BukkitNameTag extends NameTag {
 	private String previousTeamName;
 	@NotNull
 	private final String combatTeamID;
-	private final Scoreboard scoreboard;
+	private Scoreboard scoreboard;
 	private static final String PVPOFF = "PvPOff";
 	private static final String PVPON = "PvPOn";
 	private static final String HEALTHOBJ = "PvP_Health";
 	private Objective health;
 
-	public BukkitNameTag(final CombatPlayer p) {
+	public BukkitNameTag(final CombatPlayer p, final Consumer<BukkitNameTag> onReady) {
 		super(p);
 		this.combatTeamID = "PVP-" + processPlayerID(pvPlayer.getUUID());
-		this.scoreboard = pvPlayer.getPlayer().getScoreboard();
-		setup();
+		schedule(() -> setupSafely(onReady));
+	}
+
+	private void setupSafely(final Consumer<BukkitNameTag> onReady) {
+		try {
+			setup();
+			onReady.accept(this);
+		} catch (final NoSuchMethodError e) {
+			disableUnsupportedNametags("Colored nametags disabled. You need to update your Spigot version.");
+		} catch (final UnsupportedOperationException e) {
+			disableUnsupportedNametags("Nametag support disabled until Folia supports the scoreboard API, or use the TAB plugin");
+		}
+	}
+
+	private void disableUnsupportedNametags(final String message) {
+		Conf.NAMETAG_COMBAT_ENABLED.disable();
+		Conf.TOGGLE_NAMETAG_ENABLED.disable();
+		Log.infoColor(ChatColor.RED + message);
 	}
 
 	@SuppressWarnings({ "deprecation" })
 	private void setup() {
+		scoreboard = pvPlayer.getPlayer().getScoreboard();
 		setupCombatTeam();
 		if (Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
 			pvpOnTeam = setupToggleTeam(pvpOnPrefix, PVPON);
@@ -123,6 +142,11 @@ public class BukkitNameTag extends NameTag {
 		if (lastColors.isEmpty())
 			return null;
 		return ChatColor.getByChar(lastColors.replace("§", ""));
+	}
+
+	@Override
+	public final void schedule(final Runnable task) {
+		ScheduleUtils.ensureMainThread(task);
 	}
 
 	@Override

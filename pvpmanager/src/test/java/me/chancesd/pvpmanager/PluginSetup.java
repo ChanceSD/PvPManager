@@ -51,7 +51,7 @@ public class PluginSetup {
 		final PluginManager pluginManager = mock(PluginManager.class);
 		when(server.getPluginManager()).thenReturn(pluginManager);
 		when(server.getUpdateFolderFile()).thenReturn(new File(filePath + "TestServer/plugins/update"));
-		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [%4$-7s] %5$s %n");
+		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tT] [%4$-7s] %5$s%6$s%n");
 		when(server.getLogger()).thenReturn(Logger.getLogger("Minecraft"));
 		when(server.getBukkitVersion()).thenReturn("1.20.4-R0.1-SNAPSHOT");
 		this.world = mock(World.class);
@@ -95,7 +95,7 @@ public class PluginSetup {
 	public final Player createPlayer(final String name) {
 		final Player player = mock(Player.class);
 		when(player.hasPlayedBefore()).thenReturn(true);
-		doReturn(name).when(player).getName();
+		when(player.getName()).thenReturn(name);
 		when(player.getDisplayName()).thenReturn(name);
 		when(player.getUniqueId()).thenReturn(UUID.randomUUID());
 		when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);

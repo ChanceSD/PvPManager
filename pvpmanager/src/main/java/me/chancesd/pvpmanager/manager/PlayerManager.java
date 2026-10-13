@@ -177,6 +177,7 @@ public class PlayerManager {
 					if (userData.isEmpty()) {
 						savePlayer(combatPlayer);
 					}
+					combatPlayer.markLoaded();
 				}
 			} catch (final Exception e) {
 				Log.severe("Failed to load player data for " + combatPlayer.getName(), e);
@@ -247,29 +248,35 @@ public class PlayerManager {
 	}
 
 	private void removeTeams() {
-		final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-		if (scoreboardManager == null)
+		if (ScheduleUtils.isServerStopping()) {
 			return;
+		}
 
-		scoreboardManager.getMainScoreboard().getTeams().forEach(team -> {
-			if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
-				Log.debug("Unregistered leftover team: " + team.getName() + " Entries: " + team.getEntries());
-				team.unregister();
+		ScheduleUtils.ensureMainThread(() -> {
+			final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+			if (scoreboardManager == null)
+				return;
+
+			scoreboardManager.getMainScoreboard().getTeams().forEach(team -> {
+				if (team.getName().startsWith("PVP-") && team.getName().length() == 16) {
+					Log.debug("Unregistered leftover team: " + team.getName() + " Entries: " + team.getEntries());
+					team.unregister();
+				}
+			});
+			final Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+			final Team pvpon = scoreboard.getTeam("PvPOn");
+			if (pvpon != null) {
+				pvpon.unregister();
+			}
+			final Team pvpoff = scoreboard.getTeam("PvPOff");
+			if (pvpoff != null) {
+				pvpoff.unregister();
+			}
+			final Objective health = scoreboard.getObjective("PvP_Health");
+			if (health != null) {
+				health.unregister();
 			}
 		});
-		final Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
-		final Team pvpon = scoreboard.getTeam("PvPOn");
-		if (pvpon != null) {
-			pvpon.unregister();
-		}
-		final Team pvpoff = scoreboard.getTeam("PvPOff");
-		if (pvpoff != null) {
-			pvpoff.unregister();
-		}
-		final Objective health = scoreboard.getObjective("PvP_Health");
-		if (health != null) {
-			health.unregister();
-		}
 	}
 
 	public boolean getGlobalStatus() {

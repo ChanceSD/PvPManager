@@ -69,10 +69,19 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.5.0</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.16.0</version>
 				<configuration>
-					<release>17</release>
+					<release>21</release>
 					<showDeprecation>true</showDeprecation>
 					<showWarnings>true</showWarnings>
 				</configuration>
@@ -133,6 +142,12 @@
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 						<version>0.8.15</version>
+						<configuration>
+							<excludes>
+								<exclude>org/bukkit/**</exclude>
+								<exclude>org/mockito/**</exclude>
+							</excludes>
+						</configuration>
 						<executions>
 							<execution>
 								<id>prepare-agent</id>

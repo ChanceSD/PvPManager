@@ -6,15 +6,14 @@ plugins {
 group = 'me.chancesd.pvpmanager'
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 subprojects {
     apply plugin: 'java'
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        toolchain.languageVersion.set(JavaLanguageVersion.of(25))
     }
 
     repositories {
@@ -40,6 +39,18 @@ subprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
+        options.release = 21
+    }
+
+    configurations.matching {
+        it.name in ['compileClasspath', 'testCompileClasspath']
+    }.configureEach {
+        attributes {
+            attribute(
+                org.gradle.api.attributes.java.TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE,
+                25
+            )
+        }
     }
 }
 

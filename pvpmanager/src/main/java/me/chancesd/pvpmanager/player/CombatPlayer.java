@@ -41,7 +41,7 @@ public class CombatPlayer extends EcoPlayer {
 	private boolean pvpState;
 	private boolean pvpLogged;
 	private boolean override;
-	private boolean loaded;
+	private volatile boolean loaded;
 	private boolean lastDeathWasPvP;
 	private long toggleTime;
 	private long respawnTime;
@@ -192,7 +192,7 @@ public class CombatPlayer extends EcoPlayer {
 		}
 
 		if (nametag != null) {
-			ScheduleUtils.runAsync(nametag::setInCombat);
+			nametag.schedule(nametag::setInCombat);
 		}
 
 		if (isAttacker) {
@@ -235,7 +235,7 @@ public class CombatPlayer extends EcoPlayer {
 		}
 
 		if (nametag != null) {
-			ScheduleUtils.runAsync(nametag::restoreNametag);
+			nametag.schedule(nametag::restoreNametag);
 		}
 
 		message(Lang.OUT_OF_COMBAT);
@@ -263,7 +263,7 @@ public class CombatPlayer extends EcoPlayer {
 		this.toggleTime = System.currentTimeMillis();
 
 		if (nametag != null && Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
-			nametag.setPvP(pvpState);
+			nametag.schedule(() -> nametag.setPvP(pvpState));
 		}
 		if (!pvpState) {
 			message(Lang.PVPDISABLED);
@@ -431,23 +431,11 @@ public class CombatPlayer extends EcoPlayer {
 		if (!Conf.NAMETAG_COMBAT_ENABLED.asBool() && !Conf.TOGGLE_NAMETAG_ENABLED.asBool()) {
 			return;
 		}
-		try {
-			final TABHook tab = (TABHook) plugin.getDependencyManager().getDependency(Hook.TAB);
-			if (tab != null && (tab.showAboveHead() || tab.showInPlayerlist())) {
-				this.nametag = new TABNameTag(tab, this);
-			} else if (Conf.USE_TEAMS.asBool()) {
-				this.nametag = new BukkitNameTag(this);
-			}
-		} catch (final NoSuchMethodError e) {
-			Conf.NAMETAG_COMBAT_ENABLED.disable();
-			Conf.TOGGLE_NAMETAG_ENABLED.disable();
-			this.nametag = null;
-			Log.warning("Colored nametags disabled. You need to update your Spigot version.");
-		} catch (final UnsupportedOperationException | IllegalStateException e) { // IllegalStateException for Canvas
-			Conf.NAMETAG_COMBAT_ENABLED.disable();
-			Conf.TOGGLE_NAMETAG_ENABLED.disable();
-			this.nametag = null;
-			Log.infoColor(ChatColor.RED + "Nametag support disabled until Folia supports the scoreboard API, or use the TAB plugin");
+		final TABHook tab = (TABHook) plugin.getDependencyManager().getDependency(Hook.TAB);
+		if (tab != null && (tab.showAboveHead() || tab.showInPlayerlist())) {
+			this.nametag = new TABNameTag(tab, this);
+		} else if (Conf.USE_TEAMS.asBool()) {
+			new BukkitNameTag(this, bukkitTag -> this.nametag = bukkitTag);
 		}
 	}
 
@@ -471,11 +459,16 @@ public class CombatPlayer extends EcoPlayer {
 		if (getCombatWorld().isPvPForced() != CombatWorld.WorldOptionState.NONE) {
 			this.pvpState = getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON;
 		}
+	}
 
+	/**
+	 * Marks player loading complete after the data has been loaded and saved
+	 */
+	public synchronized void markLoaded() {
 		this.loaded = true;
-		// Wake up any threads waiting for data to load
-		notifyAll();
 		Log.debug("Finished loading data for " + this + (nametag != null ? " with " + nametag.getClass().getSimpleName() : ""));
+		// Wake up any threads waiting for data to load after completion work is finished
+		notifyAll();
 	}
 
 	public PlayerData exportPlayerData() {
@@ -495,8 +488,8 @@ public class CombatPlayer extends EcoPlayer {
 		if (newbieTask != null) {
 			newbieTask.cancel();
 		}
-		if (nametag != null) {
-			nametag.cleanup();
+		if (nametag != null && !ScheduleUtils.isServerStopping()) {
+			nametag.schedule(nametag::cleanup);
 		}
 	}
 
