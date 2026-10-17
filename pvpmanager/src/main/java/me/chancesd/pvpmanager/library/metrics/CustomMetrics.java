@@ -9,8 +9,11 @@ import org.bukkit.Bukkit;
 import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.integration.type.Dependency;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.setting.ItemCooldown;
+import me.chancesd.pvpmanager.setting.ItemKey;
 import me.chancesd.pvpmanager.setting.Lang;
 import me.chancesd.sdutils.metrics.Metrics;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 public class CustomMetrics {
 
@@ -38,6 +41,10 @@ public class CustomMetrics {
 			map.put("Drop Mode", getMapEntry(Conf.PLAYER_DROP_MODE.asEnum(Conf.DropMode.class).toString()));
 			map.put("Combat Nametags", getMapEntryFeature(Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool()));
 			map.put("Database Type", getMapEntry(plugin.getStorageManager().getStorage().getDatabaseType().toString()));
+			map.put("Duel Mode", getMapEntryFeature(Conf.DUEL_MODE_ENABLED.asBool()));
+			map.put("Vulnerable", getMapEntryFeature(Conf.VULNERABLE_ENABLED.asBool()));
+			map.put("Push Back", getMapEntryFeature(Conf.PUSHBACK_ENABLED.asBool()));
+			map.put("Item Cooldowns", getMapEntry(getItemCooldownScope()));
 			final String displayType = "Display Type";
 			if (Conf.BOSS_BAR_ENABLED.asBool() && Conf.ACTION_BAR_ENABLED.asBool())
 				map.put(displayType, getMapEntry("Both"));
@@ -45,6 +52,17 @@ public class CustomMetrics {
 				map.put(displayType, getMapEntry("None"));
 			else
 				map.put(displayType, getMapEntry(Conf.BOSS_BAR_ENABLED.asBool() ? "Only Bossbar" : "Only Actionbar"));
+			return map;
+		}));
+
+		metrics.addCustomChart(new Metrics.DrilldownPie("combat_log_features", () -> {
+			final Map<String, Map<String, Integer>> map = new HashMap<>();
+
+			map.put("Kill On Logout", getMapEntryFeature(Conf.KILL_ON_LOGOUT.asBool()));
+			map.put("Punish On Kick", getMapEntryFeature(Conf.PUNISH_ON_KICK.asBool()));
+			map.put("Kick Reason Matching", getMapEntryFeature(Conf.MATCH_KICK_REASON.asBool()));
+			map.put("Money Fine", getMapEntryFeature(Conf.FINE_AMOUNT.asDouble() != 0));
+			map.put("Commands On Combat Log", getMapEntryFeature(!Conf.COMMANDS_ON_COMBATLOG.asList().isEmpty()));
 			return map;
 		}));
 
@@ -89,6 +107,13 @@ public class CustomMetrics {
 
 		metrics.addCustomChart(new Metrics.SimplePie("locale", Lang.getLocale()::name));
 
+		metrics.addCustomChart(new Metrics.DrilldownPie("server_platform", () -> {
+			final Map<String, Map<String, Integer>> map = new HashMap<>();
+			final String platform = ScheduleUtils.isFolia() ? "Folia" : "Bukkit";
+			map.put(platform, getMapEntry(Bukkit.getName()));
+			return map;
+		}));
+
 		metrics.addCustomChart(
 				new Metrics.SingleLineChart("players_in_combat", () -> PvPManager.getInstance().getPlayerManager().getPlayersInCombat().size()));
 
@@ -100,11 +125,14 @@ public class CustomMetrics {
 			map.put("Teleport", getMapEntry(Conf.BLOCK_TELEPORT.asBool()));
 			map.put("Unsafe Teleports", getMapEntry(Conf.BLOCK_UNSAFE_TELEPORTS.asBool()));
 			map.put("Place Blocks", getMapEntry(Conf.BLOCK_PLACE_BLOCKS.asBool()));
+			map.put("Break Blocks", getMapEntry(Conf.BLOCK_BREAK_BLOCKS.asBool()));
 			map.put("Interact", getMapEntry(Conf.BLOCK_INTERACT_IN_COMBAT.asBool()));
 			map.put("Elytra", getMapEntry(Conf.BLOCK_GLIDE_IN_COMBAT.asBool()));
+			map.put("Fireworks", getMapEntry(Conf.BLOCK_FIREWORKS_IN_COMBAT.asBool()));
 			map.put("Eat", getMapEntry(Conf.BLOCK_EAT.asBool()));
 			map.put("Totem of Undying", getMapEntry(Conf.BLOCK_TOTEM_UNDYING.asBool()));
 			map.put("Open Inventory", getMapEntry(Conf.BLOCK_INVENTORY_OPEN.asBool()));
+			map.put("Lunge Cooldown", getMapEntry(Conf.LUNGE_COOLDOWN.asInt() >= 0));
 			final HashMap<String, Integer> result = new HashMap<>();
 			if (Conf.BLOCK_COMMANDS.asBool()) {
 				if (Conf.BLOCK_COMMANDS_WHITELIST.asBool())
@@ -116,6 +144,25 @@ public class CustomMetrics {
 			map.put("Commands", result);
 			return map;
 		}));
+	}
+
+	private String getItemCooldownScope() {
+		boolean combat = false;
+		boolean global = false;
+		final Map<ItemKey, ItemCooldown> itemCooldowns = Conf.ITEM_COOLDOWNS.asMap();
+		if (itemCooldowns != null) {
+			for (final ItemCooldown itemCooldown : itemCooldowns.values()) {
+				combat |= itemCooldown.isEnabled(true);
+				global |= itemCooldown.isEnabled(false);
+				if (combat && global)
+					return "Combat and Global";
+			}
+		}
+		if (combat)
+			return "Combat Only";
+		if (global)
+			return "Global Only";
+		return "Disabled";
 	}
 
 	private Map<String, Integer> getMapEntryFeature(final boolean value) {

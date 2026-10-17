@@ -80,7 +80,7 @@ public final class CombatUtils {
 				if (preparedCommand.toLowerCase().startsWith("!console")) {
 					ScheduleUtils.executeConsoleCommand(preparedCommand.substring(9));
 				} else if (preparedCommand.toLowerCase().startsWith("!player")) {
-					player.performCommand(preparedCommand.substring(8));
+					ScheduleUtils.executePlayerCommand(player, preparedCommand.substring(8));
 				} else {
 					ScheduleUtils.executeConsoleCommand(preparedCommand);
 				}

@@ -176,7 +176,7 @@ public class BukkitNameTag extends NameTag {
 		try {
 			if (previousTeamName != null && scoreboard.getTeam(previousTeamName) != null) {
 				addToTeam(previousTeam, pvPlayer.getName());
-			} else if (inCombat != null) { // combat nametags off and toggle nametags on
+			} else if (inCombat != null && teamExists(combatTeamID)) { // combat nametags off and toggle nametags on
 				removeFromTeam(inCombat, pvPlayer.getName());
 			}
 		} catch (final IllegalStateException e) {

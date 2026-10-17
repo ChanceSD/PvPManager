@@ -188,7 +188,7 @@ public class CombatPlayer extends EcoPlayer {
 		}
 
 		if (Conf.CLOSE_INVENTORY_ON_TAG.asBool()) {
-			getPlayer().closeInventory();
+			ScheduleUtils.ensureEntityThread(() -> getPlayer().closeInventory(), getPlayer());
 		}
 
 		if (nametag != null) {
@@ -222,7 +222,7 @@ public class CombatPlayer extends EcoPlayer {
 			return;
 		}
 		final PlayerUntagEvent event = new PlayerUntagEvent(getPlayer(), this, reason);
-		pendingUntagTask = ScheduleUtils.ensureMainThread(() -> {
+		pendingUntagTask = ScheduleUtils.ensureEntityThread(() -> {
 			Bukkit.getPluginManager().callEvent(event);
 			if (Conf.DISABLE_FLY.asBool() && Conf.RESTORE_FLY.asBool() && getWasAllowedFlight()) {
 				getPlayer().setAllowFlight(getWasAllowedFlight()); // Sync because there's an async catcher on MC 1.8
