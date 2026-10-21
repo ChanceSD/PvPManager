@@ -344,7 +344,7 @@ public enum Conf {
 				Log.severe("Error loading settings for " + setting.section + "." + setting.configKey, ex);
 			}
 		});
-		Log.infoColor(ChatColor.GREEN + "Using player nametags: " + ChatColor.AQUA + (NAMETAG_COMBAT_ENABLED.asBool() || TOGGLE_NAMETAG_ENABLED.asBool()));
+		Log.infoColor(ChatColor.GREEN + "Using player nametags: " + ChatColor.AQUA + (USE_TEAMS.asBool() && (NAMETAG_COMBAT_ENABLED.asBool() || TOGGLE_NAMETAG_ENABLED.asBool())));
 	}
 
 	private static <R extends Enum<R>> R loadEnum(final Class<R> clazz, final String value) {
