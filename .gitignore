@@ -4,6 +4,7 @@ build
 NCUtils
 .gradle
 .idea
+.sonar
 .vscode
 .settings
 .project
