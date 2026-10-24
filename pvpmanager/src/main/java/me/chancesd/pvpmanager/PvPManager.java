@@ -77,9 +77,16 @@ public class PvPManager extends SDPlugin {
 
 	@Override
 	public void onPluginDisable() {
-		playerManager.handlePluginDisable();
-		dependencyManager.onDisableCleanup();
-		storageManager.shutdown();
+		// enabling can fail midway (e.g. database unavailable) so fields may not be initialized
+		if (playerManager != null) {
+			playerManager.handlePluginDisable();
+		}
+		if (dependencyManager != null) {
+			dependencyManager.onDisableCleanup();
+		}
+		if (storageManager != null) {
+			storageManager.shutdown();
+		}
 		instance = null;
 	}
 
