@@ -66,12 +66,23 @@ public class DependencyManager {
 		}
 	}
 
-	public void onEnableSetup() {
-		if (Bukkit.getPluginManager().getPlugin("TAB-Bridge") != null && (Conf.NAMETAG_COMBAT_ENABLED.asBool() || Conf.TOGGLE_NAMETAG_ENABLED.asBool())) {
-			Log.info("TAB-Bridge detected. Nametags in combat disabled due to incompatibility. Use the prefix/suffix placeholders instead");
-			Conf.NAMETAG_COMBAT_ENABLED.disable();
-			Conf.TOGGLE_NAMETAG_ENABLED.disable();
+	private void disableNametagsIfPluginPresent(final String pluginName, final String reason) {
+		if (Bukkit.getPluginManager().getPlugin(pluginName) == null
+				|| (!Conf.NAMETAG_COMBAT_ENABLED.asBool() && !Conf.TOGGLE_NAMETAG_ENABLED.asBool())) {
+			return;
 		}
+
+		Log.info(pluginName + " detected. " + reason);
+		Conf.NAMETAG_COMBAT_ENABLED.disable();
+		Conf.TOGGLE_NAMETAG_ENABLED.disable();
+	}
+
+	public void onEnableSetup() {
+		disableNametagsIfPluginPresent("TAB-Bridge",
+				"Nametags in combat disabled due to incompatibility. Use the prefix/suffix placeholders instead");
+		disableNametagsIfPluginPresent("NametagEdit",
+				"Nametags disabled to avoid conflicts. Consider using the TAB plugin instead");
+
 		final List<Hook> failedHooks = setupHooks(Hook.values());
 		// Delayed check for hooks that do not use softdepend
 		ScheduleUtils.runPlatformTask(() -> {
