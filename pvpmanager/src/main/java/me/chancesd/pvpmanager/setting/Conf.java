@@ -69,6 +69,7 @@ public enum Conf {
 	BLOCK_BREAK_BLOCKS(ConfSection.ACTIONS_BLOCKED, "Break Blocks", false, Boolean.class),
 	BLOCK_INVENTORY_OPEN(ConfSection.ACTIONS_BLOCKED, "Open Inventory", false, Boolean.class),
 	BLOCK_GLIDE_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Elytra.Block Gliding", false, Boolean.class),
+	ELYTRA_UNEQUIP_ON_GLIDE_SPAM(ConfSection.ACTIONS_BLOCKED, "Elytra.Unequip On Glide Spam", true, Boolean.class),
 	BLOCK_FIREWORKS_IN_COMBAT(ConfSection.ACTIONS_BLOCKED, "Elytra.Block Fireworks", false, Boolean.class),
 	FIREWORK_POWER_LIMIT(ConfSection.ACTIONS_BLOCKED, "Elytra.Firework Power Limit", -1, Integer.class),
 	FIREWORK_ELYTRA_COOLDOWN(ConfSection.ACTIONS_BLOCKED, "Elytra.Firework Cooldown", 2, Integer.class),

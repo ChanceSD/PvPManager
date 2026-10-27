@@ -51,6 +51,9 @@ public class EntityListener1_9 implements Listener {
 			event.setCancelled(true);
 
 			final UUID playerId = player.getUniqueId();
+			if (!Conf.ELYTRA_UNEQUIP_ON_GLIDE_SPAM.asBool())
+				return;
+
 			AtomicInteger attemptCount = elytraSpamCache.getIfPresent(playerId);
 			if (attemptCount == null) {
 				attemptCount = new AtomicInteger(1);
