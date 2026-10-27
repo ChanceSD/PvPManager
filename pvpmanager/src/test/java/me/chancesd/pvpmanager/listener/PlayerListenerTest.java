@@ -2,17 +2,38 @@ package me.chancesd.pvpmanager.listener;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.Event;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +44,11 @@ import me.chancesd.pvpmanager.PvPManager;
 import me.chancesd.pvpmanager.manager.PlayerManager;
 import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.UntagReason;
+import me.chancesd.pvpmanager.player.world.CombatWorld.WorldOptionState;
 import me.chancesd.pvpmanager.setting.Conf;
+import me.chancesd.pvpmanager.setting.ItemCooldown;
+import me.chancesd.pvpmanager.setting.ItemKey;
+import me.chancesd.sdutils.scheduler.ScheduleUtils;
 
 @ExtendWith(InstanceCreator.class)
 class PlayerListenerTest {
@@ -74,6 +99,90 @@ class PlayerListenerTest {
 		listener.onPlayerJoin(new PlayerJoinEvent(testPlayer, ""));
 		assertEquals(1, ph.getPlayers().size());
 		assertEquals(testPlayer, ph.getPlayers().values().stream().findFirst().get().getPlayer());
+	}
+
+	@Test
+	void onChangeWorldTest() {
+		combatAttacker.getCombatWorld().setForcePVP(WorldOptionState.OFF);
+		listener.onChangeWorld(new PlayerChangedWorldEvent(attacker, attacker.getWorld()));
+		assertFalse(combatAttacker.hasPvPEnabled());
+
+		combatAttacker.getCombatWorld().setForcePVP(WorldOptionState.ON);
+		listener.onChangeWorld(new PlayerChangedWorldEvent(attacker, attacker.getWorld()));
+		assertTrue(combatAttacker.hasPvPEnabled());
+	}
+
+	@Test
+	void onPlayerCooldownTest() {
+		final ItemStack item = new ItemStack(Material.STONE);
+		final ItemKey key = ItemKey.wildcard(Material.STONE);
+		final ItemCooldown oldCooldown = Conf.ITEM_COOLDOWNS.asMap().put(key, new ItemCooldown(30, 30));
+		try {
+			combatAttacker.setItemCooldown(key, new ItemCooldown(30, 30));
+
+			final PlayerInteractEvent interact = new PlayerInteractEvent(attacker, Action.RIGHT_CLICK_AIR, item, null, BlockFace.SELF);
+			listener.onPlayerCooldown(interact);
+			assertEquals(Event.Result.DENY, interact.useInteractedBlock());
+			assertEquals(Event.Result.DENY, interact.useItemInHand());
+		} finally {
+			if (oldCooldown == null) {
+				Conf.ITEM_COOLDOWNS.asMap().remove(key);
+			} else {
+				Conf.ITEM_COOLDOWNS.asMap().put(key, oldCooldown);
+			}
+		}
+	}
+
+	@Test
+	void onPlayerInteractAndBucketEmptyProtectionTest() {
+		final org.bukkit.World world = attacker.getWorld();
+		when(attacker.getLocation()).thenReturn(new Location(world, 0, 0, 0));
+		when(defender.getLocation()).thenReturn(new Location(world, 1, 0, 0));
+		when(world.getPlayers()).thenReturn(List.of(attacker, defender));
+		combatDefender.setPvP(false);
+
+		final Block block = mock(Block.class);
+		when(block.getWorld()).thenReturn(world);
+		when(block.getLocation()).thenReturn(new Location(world, 0, 0, 0));
+		final PlayerInteractEvent flintAndSteel = new PlayerInteractEvent(attacker, Action.RIGHT_CLICK_BLOCK,
+				new ItemStack(Material.FLINT_AND_STEEL), block, BlockFace.UP);
+		listener.onPlayerInteract(flintAndSteel);
+		assertEquals(Event.Result.DENY, flintAndSteel.useInteractedBlock());
+		assertEquals(Event.Result.DENY, flintAndSteel.useItemInHand());
+
+		final PlayerBucketEmptyEvent lavaBucket = new PlayerBucketEmptyEvent(attacker, block, block, BlockFace.UP,
+				Material.LAVA_BUCKET, new ItemStack(Material.LAVA_BUCKET), EquipmentSlot.HAND);
+		listener.onBucketEmpty(lavaBucket);
+		assertTrue(lavaBucket.isCancelled());
+	}
+
+	@Test
+	void onPlayerEatTest() {
+		final ItemStack goldenApple = new ItemStack(Material.GOLDEN_APPLE);
+		final PlayerItemConsumeEvent eat = new PlayerItemConsumeEvent(attacker, goldenApple, EquipmentSlot.HAND);
+		listener.onPlayerEat(eat);
+		assertFalse(eat.isCancelled());
+		verify(attacker).setCooldown(Material.GOLDEN_APPLE, 600);
+	}
+
+	@Test
+	void onProjectileLaunchEventTest() {
+		final Projectile pearl = mock(Projectile.class);
+		when(pearl.getType()).thenReturn(org.bukkit.entity.EntityType.ENDER_PEARL);
+		when(pearl.getShooter()).thenReturn(attacker);
+		tagPlayer(combatAttacker, combatDefender);
+		final AtomicReference<Runnable> scheduledTask = new AtomicReference<>();
+		try (MockedStatic<ScheduleUtils> scheduleUtils = Mockito.mockStatic(ScheduleUtils.class)) {
+			scheduleUtils.when(() -> ScheduleUtils.runPlatformTask(any(Runnable.class), eq(attacker)))
+					.thenAnswer(invocation -> {
+						scheduledTask.set(invocation.getArgument(0));
+						return null;
+					});
+			listener.onProjectileLaunchEvent(new ProjectileLaunchEvent(pearl));
+			assertNotNull(scheduledTask.get());
+			scheduledTask.get().run();
+			verify(attacker).setCooldown(Material.ENDER_PEARL, 60);
+		}
 	}
 
 	@Test

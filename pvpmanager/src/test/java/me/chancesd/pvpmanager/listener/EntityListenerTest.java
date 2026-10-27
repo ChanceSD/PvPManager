@@ -7,6 +7,7 @@ import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,7 +20,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Zombie;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,7 @@ import me.chancesd.pvpmanager.player.CombatPlayer;
 import me.chancesd.pvpmanager.player.ProtectionType;
 import me.chancesd.pvpmanager.setting.Conf;
 import me.chancesd.pvpmanager.utils.CombatUtils;
+import org.bukkit.entity.EntityType;
 
 @ExtendWith(InstanceCreator.class)
 class EntityListenerTest {
@@ -354,6 +358,41 @@ class EntityListenerTest {
 
 		assertTrue(combatAttacker.isInCombat());
 		assertTrue(combatDefender.isInCombat());
+	}
+
+	@Test
+	final void entityCombustProtection() {
+		EntityCombustByEntityEvent event = mock(EntityCombustByEntityEvent.class);
+		when(event.getCombuster()).thenReturn(attacker);
+		when(event.getEntity()).thenReturn(defender);
+		Mockito.doCallRealMethod().when(event).setCancelled(ArgumentMatchers.anyBoolean());
+		when(event.isCancelled()).thenCallRealMethod();
+		damageListener.onEntityCombust(event);
+		assertFalse(event.isCancelled());
+
+		combatDefender.setPvP(false);
+		event = mock(EntityCombustByEntityEvent.class);
+		when(event.getCombuster()).thenReturn(attacker);
+		when(event.getEntity()).thenReturn(defender);
+		Mockito.doCallRealMethod().when(event).setCancelled(ArgumentMatchers.anyBoolean());
+		when(event.isCancelled()).thenCallRealMethod();
+		damageListener.onEntityCombust(event);
+		assertTrue(event.isCancelled());
+	}
+
+	@Test
+	final void pearlHitRenewsCombatTag() {
+		final Projectile pearl = mock(Projectile.class);
+		when(pearl.getShooter()).thenReturn(attacker);
+		when(pearl.getType()).thenReturn(EntityType.ENDER_PEARL);
+
+		final CombatPlayer combatAttackerSpy = spy(ph.createPlayer(attacker, true));
+		ph.getPlayers().put(attacker.getUniqueId(), combatAttackerSpy);
+		Conf.PEARL_RENEW_TAG.set(true);
+		combatAttackerSpy.tag(true, combatDefender);
+
+		damageListener.onProjectileHitEvent(new ProjectileHitEvent(pearl, defender, null, null));
+		verify(combatAttackerSpy, times(2)).tag(true, combatDefender);
 	}
 
 	@Test
