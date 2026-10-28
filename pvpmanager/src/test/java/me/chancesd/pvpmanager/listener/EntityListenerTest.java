@@ -388,7 +388,6 @@ class EntityListenerTest {
 
 		final CombatPlayer combatAttackerSpy = spy(ph.createPlayer(attacker, true));
 		ph.getPlayers().put(attacker.getUniqueId(), combatAttackerSpy);
-		Conf.PEARL_RENEW_TAG.set(true);
 		combatAttackerSpy.tag(true, combatDefender);
 
 		damageListener.onProjectileHitEvent(new ProjectileHitEvent(pearl, defender, null, null));
