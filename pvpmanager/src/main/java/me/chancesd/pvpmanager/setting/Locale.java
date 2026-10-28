@@ -19,6 +19,7 @@ public enum Locale {
 	PT_BR("messages_pt_BR.properties", "Portuguese Brazilian"),
 	RU("messages_ru.properties", "Russian"),
 	TR("messages_tr.properties", "Turkish"),
+	UK("messages_uk.properties", "Ukrainian"),
 	ZH_TW("messages_zh_TW.properties", "Chinese Traditional"),
 	ZH("messages_zh.properties", "Chinese Simplified"),
 	EN("messages.properties", "English");
